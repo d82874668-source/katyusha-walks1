@@ -21,7 +21,7 @@ function ensureLeaflet(done){if(window.L){done();return}if(!leafletPromise){leaf
 function drawMap(id,items,isRoute,options){
  options=options||{};
  var el=document.getElementById(id);if(!el)return;
- var valid=(items||[]).filter(function(p){return p.latitude!=null&&p.longitude!=null&&isFinite(Number(p.latitude))&&isFinite(Number(p.longitude))});
+ var allItems=items||[];var pendingCount=allItems.filter(function(p){return p.coord_source==='pending_exact_geocoding'&&(!options.city||cityName(p)===options.city)}).length;var valid=allItems.filter(function(p){return p.coord_source!=='pending_exact_geocoding'&&p.latitude!=null&&p.longitude!=null&&isFinite(Number(p.latitude))&&isFinite(Number(p.longitude))});
  var city=options.city||'';
  if(city)valid=valid.filter(function(p){return cityName(p)===city});
  if(!valid.length){el.innerHTML='<div class="k-map-empty"><span class="k-map-empty-mark">К</span><b>Для этого выбора пока нет точек</b><small>Попробуй другой город или сбрось фильтры.</small></div>';return}
@@ -42,7 +42,7 @@ function drawMap(id,items,isRoute,options){
   var map=L.map(el,{scrollWheelZoom:false,zoomControl:false,preferCanvas:false,keyboard:true});
   mapInstances[id]=map;
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',crossOrigin:true}).addTo(map);
-  L.control.zoom({position:'bottomright'}).addTo(map);
+  L.control.zoom({position:'bottomright'}).addTo(map);if(pendingCount){var pendingControl=L.control({position:'topleft'});pendingControl.onAdd=function(){var note=L.DomUtil.create('div','k-map-pending-note');note.textContent=pendingCount+' мест: уточняем точное расположение';return note};pendingControl.addTo(map);}
   var bounds=[];
   if(cityOverview){
    plotted.forEach(function(g){
