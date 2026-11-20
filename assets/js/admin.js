@@ -96,10 +96,10 @@ function fillPlaceEditor(place) {
 
 async function loadPlacePhotos() {
   if (!selectedPlaceId) return;
-  const { data, error } = await sb.from("place_photos").select("id,url,license,attribution").eq("place_id", selectedPlaceId).order("id");
+  const { data, error } = await sb.from("place_photos").select("id,url,license,attribution,sort_order").eq("place_id", selectedPlaceId).order("sort_order").order("id");
   $("#placePhotos").innerHTML = error ? esc(error.message) : (data?.length ? data.map((p) => {
     const href = safeHttpUrl(p.url);
-    return `<div class="row2" style="align-items:center">${href ? `<a href="${href}" target="_blank" rel="noopener">${esc(p.url.slice(0,90))}</a>` : esc(p.url.slice(0,90))}<small class="muted">${esc(p.license)} · ${esc(p.attribution || "автор не указан")}</small><button class="btn" type="button" data-delete-photo="${p.id}">Удалить</button></div>`;
+    return `<div class="row2" style="align-items:center">${href ? `<a href="${href}" target="_blank" rel="noopener">${esc(p.url.slice(0,90))}</a>` : esc(p.url.slice(0,90))}<small class="muted">${esc(p.license)} · ${esc(p.attribution || "автор не указан")}</small><button class="btn" type="button" data-photo-move="up" data-photo-id="${p.id}">↑</button><button class="btn" type="button" data-photo-move="down" data-photo-id="${p.id}">↓</button><button class="btn" type="button" data-delete-photo="${p.id}">Удалить</button></div>`;
   }).join("") : "Дополнительные фотографии не добавлены.");
 }
 
@@ -173,12 +173,29 @@ $("#addPlacePhoto").addEventListener("click", async () => {
   const url = $("#photoUrl").value.trim(), license = $("#photoLicense").value.trim(), attribution = $("#photoAttribution").value.trim();
   if (!safeHttpUrl(url)) { $("#placeSaveMsg").textContent = "Укажите корректную ссылку на фото (http/https)."; return; }
   if (!license) { $("#placeSaveMsg").textContent = "Укажите лицензию или условия использования фотографии."; return; }
-  const { error } = await sb.from("place_photos").insert({ place_id: selectedPlaceId, url, license, attribution: attribution || null });
+  const { data: last } = await sb.from("place_photos").select("sort_order").eq("place_id", selectedPlaceId).order("sort_order", { ascending: false }).limit(1).maybeSingle();
+  const { error } = await sb.from("place_photos").insert({ place_id: selectedPlaceId, url, license, attribution: attribution || null, sort_order: (last?.sort_order ?? -1) + 1 });
   $("#placeSaveMsg").textContent = error ? "Ошибка: " + error.message : "Фотография добавлена.";
   if (!error) { $("#photoUrl").value = ""; await loadPlacePhotos(); }
 });
 
 $("#placePhotos").addEventListener("click", async (event) => {
+  const move = event.target.closest("[data-photo-move]");
+  if (move) {
+    const { data } = await sb.from("place_photos").select("id,sort_order").eq("place_id", selectedPlaceId).order("sort_order").order("id");
+    const index = (data || []).findIndex((p) => String(p.id) === move.dataset.photoId);
+    const target = index + (move.dataset.photoMove === "up" ? -1 : 1);
+    if (index < 0 || target < 0 || target >= data.length) return;
+    const first = data[index], second = data[target];
+    const updates = await Promise.all([
+      sb.from("place_photos").update({ sort_order: second.sort_order }).eq("id", first.id),
+      sb.from("place_photos").update({ sort_order: first.sort_order }).eq("id", second.id)
+    ]);
+    const error = updates.find((x) => x.error)?.error;
+    $("#placeSaveMsg").textContent = error ? "Ошибка: " + error.message : "Порядок фото обновлён.";
+    if (!error) loadPlacePhotos();
+    return;
+  }
   const button = event.target.closest("[data-delete-photo]");
   if (!button) return;
   if (!confirm("Удалить эту фотографию из карточки?")) return;
