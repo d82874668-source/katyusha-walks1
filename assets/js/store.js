@@ -30,7 +30,7 @@ export async function loadData() {
       sb.from("routes").select("*").order("id"),
       sb.from("favorites").select("place_id"),
     ]);
-    const photoResult = await sb.from("place_photos").select("place_id,url,license,attribution").order("id");
+    const photoResult = await sb.from("place_photos").select("place_id,url,license,attribution,sort_order").order("sort_order").order("id");
     const photosByPlace = new Map();
     if (!photoResult.error) for (const photo of photoResult.data || []) {
       const list = photosByPlace.get(photo.place_id) || []; list.push(photo); photosByPlace.set(photo.place_id, list);
