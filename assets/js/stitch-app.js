@@ -181,7 +181,7 @@ function renderFavorites() {
   grid.innerHTML=favs.length?favs.map(stitchCard).join(""):'<div class="col-span-full text-center py-16 bg-surface-container-low rounded-xl"><span class="material-symbols-outlined text-4xl text-secondary">favorite_border</span><p class="font-headline-md text-primary mt-3">Коллекция пока пуста</p><p class="font-body-md text-on-surface-variant mt-2">Нажимайте на сердечко в карточках мест, чтобы сохранять интересное.</p><a href="catalog.html" class="inline-flex mt-5 px-5 py-2.5 rounded-full bg-primary-container text-on-primary">Открыть каталог</a></div>';
   const headings=$("main h1,main h2");const title=headings.find(h=>/персональн|коллекц/i.test(h.textContent));if(title)title.textContent="Ваша персональная коллекция";
   const savedText=$$("main h1,main h2,main p,main span").find(el=>/18 сохранённых мест/.test(el.textContent));if(savedText)savedText.textContent=favs.length+" сохранённых мест";
-  const callout=$$("main a").find(a=>/Собрать в Конструкторе прогулок/.test(a.textContent));if(callout)callout.href="planner.html";
+  const callout=$$("main a").find(a=>/В Конструктор|Собрать в Конструкторе прогулок/.test(a.textContent));if(callout)callout.href="planner.html";
   syncHeader();
 }
 function initFavoritesPage() {
