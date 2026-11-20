@@ -139,7 +139,7 @@ for offset, item in enumerate(extras, start=len(places)+1):
   if region not in {"Азербайджан", "Екатеринбург", "Москва", "Санкт-Петербург", "Нижний Тагил", "Грузия", "Посёлок Аять, Свердловская область"}:
     raise ValueError(f"Unknown region for {item.get('title')}: {region}")
   places.append(dict(
-    id=offset, title=item["title"], description=item["description"], category=category,
+    id=int(item.get("id", offset)), title=item["title"], description=item["description"], category=category,
     latitude=float(item["latitude"]), longitude=float(item["longitude"]), image=item.get("image_path") or item["image_url"],
     rating=round(float(item["rating"]), 1), is_approx=False, region=region, city=item["city"],
     address=item["address"], price_min=float(item["price_min"]), price_max=float(item["price_max"]),
