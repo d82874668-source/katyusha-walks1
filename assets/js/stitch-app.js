@@ -86,7 +86,11 @@ function renderHome() {
   fillSelect(heroCity,allCities());
   if(heroCity){if(allCities().includes(heroCity.value))activeCity=heroCity.value;else{heroCity.value=allCities().includes("Баку")?"Баку":allCities()[0]||"";activeCity=heroCity.value;}}
   const mapWrap=$("#home-map-wrap");
-  if(mapWrap){mapWrap.innerHTML='<div id="homeMapCanvas" class="w-full h-full min-h-[420px]"></div><a href="map.html" class="absolute bottom-4 right-4 z-[500] px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg shadow-lg">Открыть полную карту ↗</a>';}
+  if(mapWrap&&!$("#homeMapCanvas")){mapWrap.innerHTML='<div id="homeMapCanvas" class="w-full h-full min-h-[420px]"></div><a href="map.html" class="absolute bottom-4 right-4 z-[500] px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg shadow-lg">Открыть полную карту ↗</a>';}
+  const heroRoute=state.routes[0];
+  const heroStops=(heroRoute?.places||[]).map(placeById).filter(Boolean);
+  const heroStory=[...$("#top").querySelectorAll("div")].find(el=>el.classList.contains("lg:col-span-7")&&el.classList.contains("relative")&&el.querySelector("img"));
+  if(heroStory&&heroRoute){const cover=heroStops.find(imageOf);heroStory.innerHTML=`<div class="absolute inset-0">${cover&&imageOf(cover)?`<img src="${esc(imageOf(cover))}" alt="${esc(heroRoute.title)}" class="w-full h-full object-cover">`:""}</div><div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/35 to-transparent"></div><div class="relative z-10 flex flex-col justify-between h-full min-h-[360px] p-space-lg"><div><span class="px-3 py-1.5 rounded-full bg-surface-bright/90 text-primary font-label-caps">Маршрут из каталога</span></div><div class="text-on-primary"><span class="font-label-caps uppercase tracking-widest text-secondary-container">Авторский сценарий</span><h3 class="font-headline-xl mt-2">${esc(heroRoute.title)}</h3><p class="font-body-md mt-2 text-surface-container-low/90">${esc(heroRoute.description||"")}</p><p class="font-body-sm mt-3">${heroStops.length} остановок · ${heroStops.map(p=>esc(p.title)).slice(0,3).join(" · ")}</p><a href="routes.html" class="inline-flex mt-4 px-4 py-2 rounded-full bg-surface-bright text-primary font-label-lg">Все маршруты →</a></div></div>`;}
   const featured=state.places.find(p=>cityOf(p)===activeCity&&imageOf(p))||state.places.find(imageOf);
   if(featured){
     const heroSection=$("main section");
@@ -95,8 +99,6 @@ function renderHome() {
   }
   const mapFilters=$("#map-filter-group");
   if(mapFilters){const cats=[...new Set(state.places.filter(p=>cityOf(p)===activeCity).map(p=>p.category).filter(Boolean))].slice(0,6);mapFilters.innerHTML='<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg" type="button" data-home-category="all">Все места</button>'+cats.map(c=>`<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface font-label-lg" type="button" data-home-category="${esc(c)}">${esc(categoryOf({category:c}))}</button>`).join("");}
-  const cityCount=$("header [data-path='glavnaya']")?.parentElement?.querySelector("span");
-  if(cityCount)cityCount.textContent=activeCity;
   const citySummary=[...$("#open-cities").querySelectorAll("span")].find(el=>/резиденц|локац/i.test(el.textContent));
   if(citySummary)citySummary.textContent=allCities().length+" городов · "+state.places.length+" мест";
 }
@@ -115,6 +117,8 @@ function renderCatalog() {
   const categoryPills=$("#category-pills");
   if(categoryPills)categoryPills.innerHTML=['all',...cats].map(c=>`<button class="px-3.5 py-1.5 rounded-full ${activeCategory===c?"bg-primary-container text-on-primary":"bg-surface-container-lowest text-on-surface"} font-label-lg text-label-lg" data-category-filter="${esc(c)}">${c==="all"?"Все категории":esc(categoryOf({category:c}))}</button>`).join("");
   const total=$("[data-results-count]");if(total)total.textContent=list.length+" мест";
+  const stat=[...document.querySelectorAll("main span,main strong")].find(el=>/248 локаций|\d+ локаций/.test(el.textContent));if(stat)stat.textContent=state.places.length+" мест";
+  const verified=[...document.querySelectorAll("main span,main strong")].find(el=>/100% мест/.test(el.textContent));if(verified)verified.textContent="Адреса уточняются";
 }
 function initCatalog() {
   const search=$("#place-search");if(search)search.addEventListener("input",e=>{query=e.target.value;renderCatalog();});
@@ -166,7 +170,9 @@ function renderFavorites() {
   const grid=$("#favorites-grid");if(!grid)return;
   const favs=state.places.filter(p=>state.favs.has(p.id)||state.favs.has(String(p.id)));
   grid.innerHTML=favs.length?favs.map(stitchCard).join(""):'<div class="col-span-full text-center py-16 bg-surface-container-low rounded-xl"><span class="material-symbols-outlined text-4xl text-secondary">favorite_border</span><p class="font-headline-md text-primary mt-3">Коллекция пока пуста</p><p class="font-body-md text-on-surface-variant mt-2">Нажимайте на сердечко в карточках мест, чтобы сохранять интересное.</p><a href="catalog.html" class="inline-flex mt-5 px-5 py-2.5 rounded-full bg-primary-container text-on-primary">Открыть каталог</a></div>';
-  const headings=$$("main h1,main h2");const title=headings.find(h=>/персональн|коллекц/i.test(h.textContent));if(title)title.textContent="Ваша персональная коллекция";
+  const headings=$("main h1,main h2");const title=headings.find(h=>/персональн|коллекц/i.test(h.textContent));if(title)title.textContent="Ваша персональная коллекция";
+  const savedText=$("main h1,main h2,main p,main span").find(el=>/18 сохранённых мест/.test(el.textContent));if(savedText)savedText.textContent=favs.length+" сохранённых мест";
+  const callout=$("main a").find(a=>/Собрать в Конструкторе прогулок/.test(a.textContent));if(callout)callout.href="planner.html";
   syncHeader();
 }
 function readPlan() {
@@ -175,6 +181,7 @@ function readPlan() {
   if(params.has("plan"))plan.ids=params.get("plan").split(",").map(x=>placeById(x)?.id).filter(x=>x!=null);
 }
 function writePlan(){try{localStorage.setItem("rfn:plan",JSON.stringify(plan));}catch{}}
+let plannerMapView=null;
 function renderPlanPage() {
   const list=$("#stops-container");if(!list)return;
   const places=plan.ids.map(placeById).filter(Boolean);
@@ -183,9 +190,15 @@ function renderPlanPage() {
   let km=0;for(let i=1;i<places.length;i++)km+=haversineKm(places[i-1],places[i]);
   $("#route-dist").textContent=places.length>1?fmtDist(km):"—";
   const name=$("#config-city");if(name){fillSelect(name,allCities());if(!allCities().includes(name.value))name.value=activeCity;}
+  const points=places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
+  if(plannerMapView){plannerMapView.setPlaces(points,true,true);if(points.length>1)plannerMapView.drawRoute(points,"walk");}
 }
 function initPlannerPage() {
-  readPlan();renderPlanPage();
+  readPlan();
+  const mapSvg=$('main svg[viewBox="0 0 600 460"]');
+  const mapWrap=mapSvg?.parentElement;
+  if(mapWrap){mapWrap.innerHTML='<div id="plannerMap" class="w-full h-[460px] rounded-xl overflow-hidden"></div>';if(window.L){plannerMapView=new MapView($("#plannerMap"),id=>location.href="place.html?id="+encodeURIComponent(id));}}
+  renderPlanPage();
   $("#stops-container")?.addEventListener("click",e=>{
     const up=e.target.closest("[data-stop-up]"),down=e.target.closest("[data-stop-down]"),rm=e.target.closest("[data-stop-remove]");
     if(up){const i=+up.dataset.stopUp;if(i>0)[plan.ids[i-1],plan.ids[i]]=[plan.ids[i],plan.ids[i-1]];}
@@ -222,6 +235,12 @@ function renderSuggestedRoutes() {
 }
 function renderRoutesPage() {
   const grid=$("#routes-grid");if(grid)grid.innerHTML=state.routes.map(routeCard).join("");
+  const r=state.routes[0],stops=(r?.places||[]).map(placeById).filter(Boolean);
+  const featureTitle=$("main h2").find(h=>/Скрытый Петербург|Редакторские маршруты/i.test(h.textContent));
+  if(featureTitle&&r)featureTitle.textContent=r.title;
+  const featureImage=$("main img");if(featureImage&&stops.find(imageOf)){featureImage.src=imageOf(stops.find(imageOf));featureImage.alt=r.title;}
+  const featureText=$("main p").find(p=>p.textContent.includes("Здесь пахнет старой типографской"));
+  if(featureText&&r)featureText.textContent=r.description||"Авторский маршрут из реальных мест каталога.";
 }
 function renderPlacePage() {
   const id=new URLSearchParams(location.search).get("id");
