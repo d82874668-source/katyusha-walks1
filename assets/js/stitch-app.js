@@ -128,6 +128,14 @@ function renderCatalog() {
 }
 function initCatalog() {
   const search=$("#place-search");if(search)search.addEventListener("input",e=>{query=e.target.value;renderCatalog();});
+  const clearSearch=$('button[onclick*="place-search"]');clearSearch?.addEventListener("click",()=>{if(search)search.value="";query="";renderCatalog();});
+  const mic=$('button[title="Голосовой поиск"]');mic?.addEventListener("click",()=>{
+    const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!Speech)return toast("Голосовой поиск не поддерживается этим браузером.");
+    const recognition=new Speech();recognition.lang="ru-RU";recognition.interimResults=false;
+    recognition.onresult=event=>{if(search){search.value=event.results[0][0].transcript;query=search.value;renderCatalog();}};
+    recognition.onerror=()=>toast("Не удалось распознать запрос.");recognition.start();
+  });
   $("#city-select")?.addEventListener("change",e=>{activeCity=e.target.value;renderCatalog();});
   $("#city-pills")?.addEventListener("click",e=>{const b=e.target.closest("[data-city-filter]");if(!b)return;activeCity=b.dataset.cityFilter;renderCatalog();});
   $("#category-pills")?.addEventListener("click",e=>{const b=e.target.closest("[data-category-filter]");if(!b)return;activeCategory=b.dataset.categoryFilter;renderCatalog();});
