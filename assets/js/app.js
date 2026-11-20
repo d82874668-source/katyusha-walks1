@@ -200,11 +200,16 @@ function renderSheet() {
     ${p.image ? `<img class="sheet__img" src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy">` : ""}
     ${p.photos?.length ? `<div class="sheet__gallery">${p.photos.map((photo) => `<img class="sheet__img" src="${esc(photo.url)}" alt="${esc(p.title)}" loading="lazy">`).join("")}</div>` : ""}
     <p class="sheet__desc">${esc(p.description)}</p>
-    ${p.address ? `<p class="muted">${esc(p.address)}${p.city ? ` · ${esc(p.city)}` : ""}</p>` : ""}
+    ${p.address ? `<p class="muted">${esc(p.address)}${p.city ? ` · ${esc(p.city)}` : ""}${p.country ? ` · ${esc(p.country)}` : ""}</p>` : ""}
+    ${p.website ? `<p class="muted"><a href="${esc(p.website)}" target="_blank" rel="noopener">Официальный сайт</a></p>` : ""}
+    ${p.social_links && Object.keys(p.social_links).length ? `<p class="muted">${Object.entries(p.social_links).filter(([,url]) => typeof url === "string" && /^https?:\/\//i.test(url)).map(([name,url]) => `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>`).join(" · ")}</p>` : ""}
     ${p.opening_hours ? `<p class="muted">Часы работы: ${esc(p.opening_hours)}</p>` : ""}
     ${p.phone ? `<p class="muted"><a href="${esc(telUrl(p.phone))}">${esc(p.phone)}</a></p>` : ""}
     ${price ? `<p class="muted">Стоимость: ${esc(price)}</p>` : ""}
-    ${p.review_count != null ? `<p class="muted">${Number(p.review_count).toLocaleString("ru-RU")} отзывов</p>` : ""}
+    ${p.review_count != null ? `<p class="muted">${Number(p.review_count).toLocaleString("ru-RU")} отзывов${p.rating_source ? ` · источник: ${esc(p.rating_source)}` : ""}</p>` : ""}
+    ${p.last_verified_at ? `<p class="muted">Последняя проверка: ${new Date(p.last_verified_at).toLocaleDateString("ru-RU")}</p>` : ""}
+    ${p.features && Object.keys(p.features).length ? `<p class="muted">${Object.entries(p.features).map(([key,value]) => `${esc(key)}: ${esc(typeof value === "object" ? JSON.stringify(value) : value)}`).join(" · ")}</p>` : ""}
+    ${Array.isArray(p.additional_services) && p.additional_services.length ? `<p class="muted">Услуги: ${p.additional_services.map(esc).join(", ")}</p>` : ""}
     ${p.source_urls?.[0] ? `<p class="muted"><a href="${esc(p.source_urls[0])}" target="_blank" rel="noopener">Источник информации</a></p>` : ""}
     ${p.is_approx ? `<p class="note">Положение на карте приблизительное. Google Maps найдёт место по названию.</p>` : ""}
     <p class="eta" id="eta">${icon("route")}<span>Считаем маршрут…</span></p>
