@@ -413,7 +413,7 @@ export const PLACES = [
   "category": "spa",
   "latitude": 40.388,
   "longitude": 49.852,
-  "image": null,
+  "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/38/bc/14/caption.jpg?h=1100&s=1&w=1100",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -426,7 +426,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://www.tripadvisor.co.uk/Attraction_Review-g293934-d27737708-Reviews-Liana_Deluxe_Massage_Spa-Baku_Absheron_Region.html",
+   "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/38/bc/14/caption.jpg?h=1100&s=1&w=1100"
+  ]
  },
  {
   "id": 4,
@@ -507,7 +510,7 @@ export const PLACES = [
   "category": "hookah",
   "latitude": 40.3745,
   "longitude": 49.845,
-  "image": null,
+  "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/9f/a6/3a/caption.jpg?h=1200&s=1&w=1200",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -520,7 +523,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://www.tripadvisor.com/Restaurant_Review-g293934-d25314499-Reviews-Myata_Platinum-Baku_Absheron_Region.html",
+   "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/9f/a6/3a/caption.jpg?h=1200&s=1&w=1200"
+  ]
  },
  {
   "id": 8,
@@ -573,7 +579,7 @@ export const PLACES = [
   "category": "hookah",
   "latitude": 40.373,
   "longitude": 49.873,
-  "image": null,
+  "image": "https://monyo.az/v4/uploads2/uploads2023-06/a_1805_20230602161450233980715.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -586,7 +592,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://monyo.az/?r=terrace145",
+   "https://monyo.az/v4/uploads2/uploads2023-06/a_1805_20230602161450233980715.jpg"
+  ]
  },
  {
   "id": 11,
@@ -617,7 +626,7 @@ export const PLACES = [
   "category": "gaming",
   "latitude": 40.395,
   "longitude": 49.835,
-  "image": null,
+  "image": "https://langame.ru/storage/clubs/2023/Jun/12/1686582489648734d9e0ea9.webp",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -630,7 +639,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://langame.ru/azerbaijan/799452695_computerniy_club_cyber-arena_baku",
+   "https://langame.ru/storage/clubs/2023/Jun/12/1686582489648734d9e0ea9.webp"
+  ]
  },
  {
   "id": 13,
@@ -639,7 +651,7 @@ export const PLACES = [
   "category": "gaming",
   "latitude": 40.385,
   "longitude": 49.865,
-  "image": null,
+  "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/7f/62/6f/caption.jpg?h=1000&s=1&w=1000",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -652,7 +664,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://www.tripadvisor.com/Attraction_Review-g293934-d33262286-Reviews-Kenza_Gaming_Lounge-Baku_Absheron_Region.html",
+   "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/7f/62/6f/caption.jpg?h=1000&s=1&w=1000"
+  ]
  },
  {
   "id": 14,
@@ -880,7 +895,7 @@ export const PLACES = [
   "category": "trips",
   "latitude": 40.4931,
   "longitude": 50.1403,
-  "image": null,
+  "image": "https://medeniyyet.info.az/img/news/900x/_1584703175.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Азербайджан",
@@ -893,7 +908,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://medeniyyet.info.az/page/news/52050/Bura-agac-ve-bitki-muzeyi-de-demek-olar.html",
+   "https://medeniyyet.info.az/img/news/900x/_1584703175.jpg"
+  ]
  },
  {
   "id": 24,
