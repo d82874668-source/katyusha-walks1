@@ -2,7 +2,7 @@ import { loadData, setFavorite } from "./store.js";
 import { state } from "./state.js";
 import { PLACES, ROUTES, CATEGORIES } from "./data.js";
 import { MapView, googleUrl, osmUrl, haversineKm, fmtDist } from "./map.js";
-import { visitDialog } from "./visits.js";
+import { visitDialog, hydrateVisits } from "./visits.js";
 
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
@@ -298,10 +298,12 @@ function bindCommon() {
   });
 }
 async function init() {
+  window.addEventListener("katyusha:toast",e=>toast(e.detail||"Готово"));
   const loaded=await loadData();
   state.places=loaded.places?.length?loaded.places:PLACES;
   state.routes=loaded.routes?.length?loaded.routes:ROUTES;
   state.favs=loaded.favs||new Set();
+  hydrateVisits().catch(()=>{});
   readPlan();
   const cities=allCities();if(!cities.includes(activeCity))activeCity=cities.includes("Баку")?"Баку":cities[0]||"all";
   const params=new URLSearchParams(location.search);if(params.has("city"))activeCity=params.get("city");
