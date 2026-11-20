@@ -30,6 +30,11 @@ export async function loadData() {
       sb.from("routes").select("*").order("id"),
       sb.from("favorites").select("place_id"),
     ]);
+    const photoResult = await sb.from("place_photos").select("place_id,url,license,attribution").order("id");
+    const photosByPlace = new Map();
+    if (!photoResult.error) for (const photo of photoResult.data || []) {
+      const list = photosByPlace.get(photo.place_id) || []; list.push(photo); photosByPlace.set(photo.place_id, list);
+    }
     const err = p.error || r.error || f.error;
     if (err) throw err;
     if (!p.data.length) return local; // база пустая: показываем встроенные данные
@@ -39,9 +44,9 @@ export async function loadData() {
     const remoteIds = new Set(p.data.map((place) => String(place.id)));
     const mergedPlaces = p.data.map((remote) => {
       const local = localById.get(String(remote.id));
-      if (!local) return remote;
-      const merged = { ...local, ...remote };
-      ["description", "image", "rating", "region", "city", "address", "price_min", "price_max", "price_unit", "review_count", "opening_hours", "phone", "map_url", "source_urls"].forEach((key) => {
+      if (!local) return { ...remote, photos: photosByPlace.get(remote.id) || [] };
+      const merged = { ...local, ...remote, photos: photosByPlace.get(remote.id) || [] };
+      ["description", "image", "rating", "region", "city", "country", "address", "price_min", "price_max", "price_unit", "review_count", "opening_hours", "phone", "map_url", "website", "source_urls"].forEach((key) => {
         if (remote[key] == null || (Array.isArray(remote[key]) && !remote[key].length)) merged[key] = local[key];
       });
       return merged;
