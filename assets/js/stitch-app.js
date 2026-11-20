@@ -330,7 +330,7 @@ async function init() {
   hydrateVisits().catch(()=>{});
   readPlan();
   const cities=allCities();if(!cities.includes(activeCity))activeCity=cities.includes("Баку")?"Баку":cities[0]||"all";
-  const params=new URLSearchParams(location.search);if(params.has("city"))activeCity=params.get("city");
+  const params=new URLSearchParams(location.search);if(params.has("city"))activeCity=params.get("city");else if(page==="catalog")activeCity="all";
   bindCommon();
   const headerSearch=[...document.querySelectorAll("header button")].find(b=>/Найти место|Найти место, улицу/i.test(b.textContent));
   headerSearch?.addEventListener("click",()=>location.href="catalog.html");
