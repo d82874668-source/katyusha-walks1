@@ -757,10 +757,10 @@ export const PLACES = [
   "longitude": 49.901,
   "image": "https://az.trend.az/media/2021/10/28/trend_ag_sheher_bulvar_281021_10.jpg",
   "rating": null,
-  "is_approx": false,
+  "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "Baku White City, Khatai District, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -770,8 +770,10 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://az.trend.az/azerbaijan/society/3504484.html",
-   "https://az.trend.az/media/2021/10/28/trend_ag_sheher_bulvar_281021_10.jpg"
-  ]
+   "https://az.trend.az/media/2021/10/28/trend_ag_sheher_bulvar_281021_10.jpg",
+   "https://bakuwhitecity.com/ru/contact"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 17,
@@ -809,7 +811,7 @@ export const PLACES = [
   "longitude": 48.6364,
   "image": "https://ak-d.tripcdn.com/images/0102i12000o5vtw1m7297.jpg",
   "rating": null,
-  "is_approx": false,
+  "is_approx": true,
   "region": "Азербайджан",
   "city": "Шамахы",
   "address": null,
@@ -834,7 +836,7 @@ export const PLACES = [
   "longitude": 47.8458,
   "image": "https://static.wixstatic.com/media/ce4a22_fcdfd9ab682942fbbf4c2c032e5418a8~mv2.jpg/v1/fill/w_925%2Ch_520%2Cal_c%2Cq_85%2Cenc_avif%2Cquality_auto/ce4a22_fcdfd9ab682942fbbf4c2c032e5418a8~mv2.jpg",
   "rating": null,
-  "is_approx": false,
+  "is_approx": true,
   "region": "Азербайджан",
   "city": "Габала",
   "address": null,
@@ -859,7 +861,7 @@ export const PLACES = [
   "longitude": 48.5126,
   "image": "https://azertag.az/files/2022/2/1200x630/16564242895013132936_1200x630.jpg",
   "rating": null,
-  "is_approx": false,
+  "is_approx": true,
   "region": "Азербайджан",
   "city": "Губа",
   "address": null,
@@ -884,7 +886,7 @@ export const PLACES = [
   "longitude": 48.4297,
   "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Caucasus_Mountains._Qusar%2C_Azerbaijan.jpg/960px-Caucasus_Mountains._Qusar%2C_Azerbaijan.jpg",
   "rating": null,
-  "is_approx": false,
+  "is_approx": true,
   "region": "Азербайджан",
   "city": "Гусар",
   "address": null,
@@ -934,7 +936,7 @@ export const PLACES = [
   "longitude": 50.1403,
   "image": "https://medeniyyet.info.az/img/news/900x/_1584703175.jpg",
   "rating": null,
-  "is_approx": false,
+  "is_approx": true,
   "region": "Азербайджан",
   "city": "Мардакян",
   "address": null,
@@ -2017,7 +2019,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "Icherisheher (Old City), Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -2027,8 +2029,10 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://worldheritagesites.net/walled-city-of-baku/",
-   "https://worldheritagesites.net/wp-content/uploads/2025/06/Walled_City_Baku_2.jpg"
-  ]
+   "https://worldheritagesites.net/wp-content/uploads/2025/06/Walled_City_Baku_2.jpg",
+   "https://www.icherisheher.gov.az/en/activity/historical-reference"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 64,
@@ -2042,7 +2046,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "76, 1st Gasr Lane, Icherisheher, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -2052,8 +2056,10 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://infonews.az/?p=13785",
-   "https://infonews.az/wp-content/uploads/2021/10/Sirvansahlar_sarayi_2016-scaled.jpg"
-  ]
+   "https://infonews.az/wp-content/uploads/2021/10/Sirvansahlar_sarayi_2016-scaled.jpg",
+   "https://www.icherisheher.gov.az/en/activity/historical-reference"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 65,
@@ -2119,7 +2125,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "Baku Boulevard, beside the Azerbaijan National Carpet Museum, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -2129,22 +2135,24 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://www.advantour.com/azerbaijan/baku/things-to-do.htm",
-   "https://www.advantour.com/img/azarbaijan/baku/little-venice-baku.jpg"
-  ]
+   "https://www.advantour.com/img/azarbaijan/baku/little-venice-baku.jpg",
+   "https://inn.az/en/blog/little-venice-baku-location-boat-ride-prices-visitor-guide"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 68,
   "title": "Площадь Фонтанов",
   "description": "Пешеходная площадь в центре Баку, удобная отправная точка для прогулки к Старому городу.",
   "category": "square",
-  "latitude": 40.3725,
-  "longitude": 49.8355,
+  "latitude": 40.37094,
+  "longitude": 49.83681,
   "image": "https://tourister.az/public/uploads/images/2026/06/20260616_1908_NizamiStreetWalkingTour.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "20 Nigar Rafibeyli Street, Baku 1005, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -2154,8 +2162,10 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://tourister.az/tours/nizami-street-walking-tour/",
-   "https://tourister.az/public/uploads/images/2026/06/20260616_1908_NizamiStreetWalkingTour.jpg"
-  ]
+   "https://tourister.az/public/uploads/images/2026/06/20260616_1908_NizamiStreetWalkingTour.jpg",
+   "https://www.mypacer.com/parks/143252/fountains-square-baku"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 990001,
