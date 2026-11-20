@@ -2100,8 +2100,8 @@ export const PLACES = [
   "phone": "+994 12 493 23 87",
   "map_url": "https://www.google.com/maps/search/?api=1&query=National+Museum+of+History+of+Azerbaijan+Baku",
   "source_urls": [
-   "https://azhistorymuseum.gov.az/en/visit_plan/",
    "https://azerbaijan.travel/historic-building-fascinating-museum",
+   "https://azhistorymuseum.gov.az/en/visit_plan/",
    "https://www.google.com/maps/search/?api=1&query=National+Museum+of+History+of+Azerbaijan+Baku",
    "https://azerbaijan.travel/resize3000/center/pages/3275/9e37d259-6b58-4894-a6b2-b87ec389c2fb.jpeg"
   ]
@@ -2127,10 +2127,10 @@ export const PLACES = [
   "phone": "+994 12 492 07 07",
   "map_url": "https://www.google.com/maps/search/?api=1&query=Azerbaijan+National+Museum+of+Art+Baku",
   "source_urls": [
+   "https://azertag.az/en/xeber/azerbaijans_national_museum_of_art___cultural_treasure_preserving_national_and_universal_tangible_and_intangible_cultural_heritage_from_ancient_times_by_now-2002136",
    "https://nationalartmuseum.az/tickets/?lang=en",
    "https://nationalartmuseum.az/?lang=en",
    "https://azerbaijan.travel/azerbaijan-national-museum-of-arts",
-   "https://azertag.az/en/xeber/azerbaijans_national_museum_of_art___cultural_treasure_preserving_national_and_universal_tangible_and_intangible_cultural_heritage_from_ancient_times_by_now-2002136",
    "https://azertag.az/files/2022/1/1200x630/1644055111315315745_1200x630.jpg"
   ]
  },
