@@ -84,7 +84,7 @@ function renderHome() {
   if(routeGrid)routeGrid.innerHTML=state.routes.slice(0,3).map(routeCard).join("");
   const heroCity=$("#hero-city-select");
   fillSelect(heroCity,allCities());
-  if(heroCity){heroCity.value=allCities().includes("Баку")?"Баку":allCities()[0]||"";activeCity=heroCity.value;}
+  if(heroCity){if(allCities().includes(heroCity.value))activeCity=heroCity.value;else{heroCity.value=allCities().includes("Баку")?"Баку":allCities()[0]||"";activeCity=heroCity.value;}}
   const mapWrap=$("#home-map-wrap");
   if(mapWrap){mapWrap.innerHTML='<div id="homeMapCanvas" class="w-full h-full min-h-[420px]"></div><a href="map.html" class="absolute bottom-4 right-4 z-[500] px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg shadow-lg">Открыть полную карту ↗</a>';}
   const featured=state.places.find(p=>cityOf(p)===activeCity&&imageOf(p))||state.places.find(imageOf);
@@ -99,9 +99,6 @@ function renderHome() {
   if(cityCount)cityCount.textContent=activeCity;
   const citySummary=[...$("#open-cities").querySelectorAll("span")].find(el=>/резиденц|локац/i.test(el.textContent));
   if(citySummary)citySummary.textContent=allCities().length+" городов · "+state.places.length+" мест";
-  if(homeMapView){homeMapView.map.remove();homeMapView=null;}
-  const mapEl=$("#homeMapCanvas");
-  if(mapEl&&window.L){homeMapView=new MapView(mapEl,id=>location.href="place.html?id="+encodeURIComponent(id));homeMapView.setPlaces(state.places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)&&cityOf(p)===activeCity),true);}
 }
 function renderCatalog() {
   const grid=$("#places-grid"); if(!grid)return;
@@ -144,13 +141,13 @@ function initMapPage(home=false) {
   if(home)homeMapView=instance;else mapView=instance;
   if(!home){
     const citySelect=$("#map-city-select");
-    if(citySelect){fillSelect(citySelect,allCities(),"Все города");citySelect.value=activeCity;citySelect.addEventListener("change",()=>{activeCity=citySelect.value;instance.setPlaces(filtered(),true);renderList();});}
     const renderList=()=>{
       const q=mapQuery.toLocaleLowerCase("ru");
       const list=filtered().filter(p=>!q||[p.title,p.address,cityOf(p)].join(" ").toLocaleLowerCase("ru").includes(q));
       const target=$("#places-container");
       if(target)target.innerHTML=list.slice(0,100).map(p=>`<button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-container-low text-left" data-map-place="${esc(p.id)}"><span class="w-2.5 h-2.5 rounded-full ${p.is_approx?"bg-secondary":"bg-primary"}"></span><span class="min-w-0"><strong class="block truncate text-primary text-sm">${esc(p.title)}</strong><small class="block truncate text-on-surface-variant">${esc(p.address||"Адрес уточняется")}</small></span></button>`).join("");
     };
+    if(citySelect){fillSelect(citySelect,allCities(),"Все города");citySelect.value=activeCity;citySelect.addEventListener("change",()=>{activeCity=citySelect.value;instance.setPlaces(filtered(),true);renderList();});}
     renderList();
     $("#map-search-input")?.addEventListener("input",e=>{mapQuery=e.target.value;renderList();});
     $("#btn-geolocate")?.addEventListener("click",async()=>{try{const pos=await instance.locate();instance.map.setView([pos.latitude,pos.longitude],15);}catch{toast("Не удалось определить местоположение.");}});
@@ -261,7 +258,7 @@ async function init() {
   bindCommon();
   if(page==="home"){
     renderHome();initMapPage(true);
-    $("#hero-city-select")?.addEventListener("change",e=>{activeCity=e.target.value;syncHeader();renderHome();});
+    $("#hero-city-select")?.addEventListener("change",e=>{activeCity=e.target.value;syncHeader();renderHome();homeMapView?.setPlaces(state.places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)&&cityOf(p)===activeCity),true);});
     $("#map-filter-group")?.addEventListener("click",e=>{const b=e.target.closest("[data-home-category]");if(!b)return;const category=b.dataset.homeCategory;const points=state.places.filter(p=>cityOf(p)===activeCity&&(category==="all"||p.category===category)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));homeMapView?.setPlaces(points,true);});
   }
   if(page==="catalog")initCatalog();
