@@ -347,6 +347,12 @@ export const CATEGORIES = {
   "icon": "paw",
   "hue": 125,
   "blurb": "Зоопарки и знакомство с животными"
+ },
+ "cultural_space": {
+  "title": "Культурные пространства",
+  "icon": "building",
+  "hue": 205,
+  "blurb": "Арт-кластеры, творческие площадки и общественные пространства"
  }
 };
 export const PLACES = [
