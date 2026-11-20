@@ -52,6 +52,13 @@ const editor = $("#placeEditor");
 const editorField = (name) => editor.elements.namedItem(name);
 const nullableText = (value) => value.trim() || null;
 const nullableNumber = (value) => value === "" ? null : Number(value);
+const safeImageRef = (value) => {
+  const text = String(value || "").trim();
+  if (!text) return null;
+  if (/^https?:\/\//i.test(text)) return safeHttpUrl(text);
+  if (/^(?:\.\/|\/)?assets\/[a-z0-9_./-]+$/i.test(text) && !text.split("/").includes("..")) return text;
+  return null;
+};
 const safeHttpUrl = (value) => {
   const text = String(value || "").trim();
   if (!text) return null;
@@ -119,7 +126,7 @@ editor.addEventListener("submit", async (event) => {
     description: nullableText(editorField("description").value),
     latitude: nullableNumber(editorField("latitude").value),
     longitude: nullableNumber(editorField("longitude").value),
-    image: safeHttpUrl(editorField("image").value),
+    image: safeImageRef(editorField("image").value),
     rating: nullableNumber(editorField("rating").value),
     review_count: nullableNumber(editorField("review_count").value),
     rating_source: nullableText(editorField("rating_source").value),
