@@ -13,11 +13,26 @@
   (function(){var t;try{t=localStorage.getItem("katyusha:theme")}catch(e){}
   document.documentElement.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})();
 </script>
+<script>
+  // При обычном открытии и обновлении начинаем с верхней части главной страницы.
+  // Готовые ссылки на маршрут с ?plan= сохраняют своё поведение.
+  (function () {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    var params = new URLSearchParams(location.search);
+    if (params.has("plan")) return;
+    if (location.hash === "#planner") history.replaceState(null, "", location.pathname + location.search);
+    var resetScroll = function () { window.scrollTo(0, 0); };
+    window.addEventListener("pageshow", function () {
+      resetScroll();
+      requestAnimationFrame(resetScroll);
+    });
+  })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-<link rel="stylesheet" href="assets/css/styles.css?v=spott-figma-3">
+<link rel="stylesheet" href="assets/css/styles.css?v=home-top-card-remove-20261120">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script type="module" src="assets/js/app.js"></script>
 </head>
@@ -110,7 +125,6 @@
           <a class="btn btn--glass btn--lg" href="#discover">Открыть город</a>
         </div>
       </div>
-      <aside class="glass hero__card" id="heroRoute" aria-label="Пример маршрута"></aside>
     </div>
   </section>
 
