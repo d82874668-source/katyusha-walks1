@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-<link rel="stylesheet" href="assets/css/styles.css?v=spott-figma-1">
+<link rel="stylesheet" href="assets/css/styles.css?v=spott-figma-2">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script type="module" src="assets/js/app.js"></script>
 </head>
@@ -98,6 +98,13 @@
       <div class="hero__copy">
         <h1 id="h-hero">Откройте город за один день</h1>
         <p class="lead">Достопримечательности, заведения и готовые программы отдыха. Выберите настроение, и мы соберём день: от первой прогулки до вечера.</p>
+        
+        <form class="spott-search" id="heroSearchForm" role="search">
+          <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="heroSearch" type="search" placeholder="Найти места, кафе, впечатления..." autocomplete="off" aria-label="Поиск мест и впечатлений">
+          <button type="submit">Найти</button>
+        </form>
+        <div class="spott-quicklinks" aria-label="Популярные разделы"><a href="#discover">Достопримечательности</a><a href="#venues">Кафе и рестораны</a><a href="#map">Рядом со мной</a></div>
         <div class="hero__cta">
           <a class="btn btn--primary btn--lg" href="#ideal">Собрать идеальный день</a>
           <a class="btn btn--glass btn--lg" href="#discover">Открыть город</a>
