@@ -28,7 +28,7 @@ export const fmtMin = (m) => (m < 60 ? `${Math.round(m)} мин` : `${Math.floor
 export const cover = (p, cls = "cover") => {
   const c = cat(p);
   return p.image
-    ? `<div class="${cls}"><img src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy" decoding="async"></div>`
+    ? `<div class="${cls}"><img src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy" decoding="async">${p.source_urls?.[0] ? `<a class="cover__credit" href="${esc(p.source_urls[0])}" target="_blank" rel="noopener noreferrer" aria-label="Источник фотографии">Источник фото ↗</a>` : ""}</div>`
     : `<div class="${cls} cover--art" style="--h:${c.hue}" aria-hidden="true">${icon(c.icon)}</div>`;
 };
 
