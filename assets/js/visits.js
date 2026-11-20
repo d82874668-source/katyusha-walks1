@@ -186,10 +186,12 @@ export async function syncPendingVisits() {
       const { data: { session } } = await sb.auth.getSession();
       if (session) {
         const deleted = readDeleted();
+        const remaining = [];
         for (const id of deleted) {
-          await sb.from("place_visits").delete().eq("id", id).eq("user_id", session.user.id);
+          const { error } = await sb.from("place_visits").delete().eq("id", id).eq("user_id", session.user.id);
+          if (error) remaining.push(id);
         }
-        writeDeleted([]);
+        writeDeleted(remaining);
       }
     } catch (error) { console.warn("Не удалось синхронизировать удаления посещений:", error); }
   }
