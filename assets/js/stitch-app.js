@@ -338,7 +338,7 @@ async function init() {
   if(page==="routes")renderRoutesPage();
   if(page==="place")renderPlacePage();
   if(page==="about"){
-    const curatorHeading=$("main h1,main h2,main h3").find(h=>/редакция и кураторы/i.test(h.textContent));
+    const curatorHeading=$$("main h1,main h2,main h3").find(h=>/редакция и кураторы/i.test(h.textContent));
     curatorHeading?.closest("section")?.remove();
     const form=$("#suggest-place-form");
     form?.addEventListener("submit",e=>{e.preventDefault();const data=Object.fromEntries(new FormData(form));const items=JSON.parse(localStorage.getItem("katyusha:place-suggestions")||"[]");items.push({...data,created_at:new Date().toISOString()});localStorage.setItem("katyusha:place-suggestions",JSON.stringify(items));toast("Предложение сохранено на этом устройстве. Спасибо!");form.reset();});
