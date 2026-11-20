@@ -83,6 +83,11 @@ create policy "visit photos delete own" on storage.objects
     bucket_id = 'visit-photos' and (storage.foldername(name))[1] = auth.uid()::text
   );
 
+-- Дополнительные фотографии карточек может добавлять и удалять только администратор.
+drop policy if exists "place photos admin write" on public.place_photos;
+create policy "place photos admin write" on public.place_photos
+  for all to authenticated using (public.is_admin()) with check (public.is_admin());
+
 -- Редактирование каталога доступно только пользователям из public.admin_users.
 drop policy if exists "places admin write" on public.places;
 create policy "places admin write" on public.places
