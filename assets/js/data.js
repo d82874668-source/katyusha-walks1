@@ -535,7 +535,7 @@ export const PLACES = [
   "category": "hookah",
   "latitude": 40.388,
   "longitude": 49.87,
-  "image": null,
+  "image": "https://images.qfoodbeverage.com.tr/webp/22-1748604042-bdTGjXqUzu.webp",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -548,7 +548,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://huqqabaz.com/en/branch/huqqabaz-garden-baku/",
+   "https://images.qfoodbeverage.com.tr/webp/22-1748604042-bdTGjXqUzu.webp"
+  ]
  },
  {
   "id": 9,
@@ -557,7 +560,7 @@ export const PLACES = [
   "category": "hookah",
   "latitude": 40.3755,
   "longitude": 49.9,
-  "image": null,
+  "image": "https://cdn-media.choiceqr.com/prod-eat-zen-cafe/template-gallery/thumbnail_TzCvQHg-MUIGbjp-ZTkzVGS_F-F-b.jpeg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -570,7 +573,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://zen-cafe.choiceqr.com/menu",
+   "https://cdn-media.choiceqr.com/prod-eat-zen-cafe/template-gallery/thumbnail_TzCvQHg-MUIGbjp-ZTkzVGS_F-F-b.jpeg"
+  ]
  },
  {
   "id": 10,
