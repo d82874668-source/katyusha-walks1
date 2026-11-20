@@ -47,7 +47,7 @@ h3{letter-spacing:-.025em}
 .nav__tools .icon-btn{border:1px solid var(--line);background:var(--surface)}
 .hero{min-height:min(760px,88svh);padding:calc(var(--nav-h) + 70px) 0 76px;background:var(--sky);border-bottom:1px solid var(--line)}
 .hero:after{content:"";position:absolute;right:-9vw;top:10%;width:min(48vw,650px);aspect-ratio:1;border:1px solid rgba(49,91,70,.12);border-radius:50%;box-shadow:0 0 0 36px rgba(49,91,70,.025),0 0 0 72px rgba(49,91,70,.02);pointer-events:none}
-.hero__in{grid-template-columns:minmax(0,1fr) minmax(260px,.7fr);align-items:center;gap:clamp(28px,6vw,90px)}
+.hero__in{grid-template-columns:minmax(0,1fr);align-items:center;gap:0}
 .hero__copy{position:relative;z-index:1;max-width:760px}
 .hero__copy:before{content:"ГОРОДСКОЙ ГИД · КУРАТОРСКИЕ МЕСТА";display:block;margin-bottom:24px;color:var(--caspian);font-size:10px;font-weight:800;letter-spacing:.17em}
 .hero h1{max-width:10ch;font-size:clamp(58px,8.4vw,112px);line-height:.96;margin:0 0 26px;color:var(--accent)}
@@ -197,3 +197,5 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   .hero__tile figcaption strong{font-size:17px}
   .hero__tile--1 figcaption strong{font-size:22px}
 }
+
+.hero__copy{max-width:920px}
