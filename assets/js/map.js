@@ -177,7 +177,7 @@ export class MapView {
 
   focus(p) {
     if (!validPoint(p)) return;
-    this.map.flyTo([p.latitude, p.longitude], Math.max(this.map.getZoom(), 15), { duration: 0.8 });
+    this.map.flyTo([p.latitude, p.longitude], Math.max(this.map.getZoom(), 16), { duration: 0.8 });
     this.map.once("moveend", () => {
       this.markers.forEach((m) => m.getElement()?.classList.remove("is-active"));
       this.markers.get(p.id)?.getElement()?.classList.add("is-active");
