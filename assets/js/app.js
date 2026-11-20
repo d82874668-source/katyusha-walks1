@@ -10,6 +10,7 @@ import { initIdeal, refreshIdeal } from "./ideal.js";
 import { initPWA } from "./pwa.js";
 import { visitDialog, visitHistoryHtml, getVisits, deleteVisit, syncPendingVisits, hydrateVisits } from "./visits.js";
 
+const safeWebHref = (value) => typeof value === "string" && /^https?:\/\//i.test(value) ? esc(value) : "";
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
 const cityOrigin = (place) => {
   if (!place.city) return CENTER;
@@ -201,7 +202,7 @@ function renderSheet() {
     ${p.photos?.length ? `<div class="sheet__gallery">${p.photos.map((photo) => `<img class="sheet__img" src="${esc(photo.url)}" alt="${esc(p.title)}" loading="lazy">`).join("")}</div>` : ""}
     <p class="sheet__desc">${esc(p.description)}</p>
     ${p.address ? `<p class="muted">${esc(p.address)}${p.city ? ` · ${esc(p.city)}` : ""}${p.country ? ` · ${esc(p.country)}` : ""}</p>` : ""}
-    ${p.website ? `<p class="muted"><a href="${esc(p.website)}" target="_blank" rel="noopener">Официальный сайт</a></p>` : ""}
+    ${p.website ? `<p class="muted"><a href="${safeWebHref(p.website)}" target="_blank" rel="noopener">Официальный сайт</a></p>` : ""}
     ${p.social_links && Object.keys(p.social_links).length ? `<p class="muted">${Object.entries(p.social_links).filter(([,url]) => typeof url === "string" && /^https?:\/\//i.test(url)).map(([name,url]) => `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>`).join(" · ")}</p>` : ""}
     ${p.opening_hours ? `<p class="muted">Часы работы: ${esc(p.opening_hours)}</p>` : ""}
     ${p.phone ? `<p class="muted"><a href="${esc(telUrl(p.phone))}">${esc(p.phone)}</a></p>` : ""}
@@ -210,14 +211,14 @@ function renderSheet() {
     ${p.last_verified_at ? `<p class="muted">Последняя проверка: ${new Date(p.last_verified_at).toLocaleDateString("ru-RU")}</p>` : ""}
     ${p.features && Object.keys(p.features).length ? `<p class="muted">${Object.entries(p.features).map(([key,value]) => `${esc(key)}: ${esc(typeof value === "object" ? JSON.stringify(value) : value)}`).join(" · ")}</p>` : ""}
     ${Array.isArray(p.additional_services) && p.additional_services.length ? `<p class="muted">Услуги: ${p.additional_services.map(esc).join(", ")}</p>` : ""}
-    ${p.source_urls?.[0] ? `<p class="muted"><a href="${esc(p.source_urls[0])}" target="_blank" rel="noopener">Источник информации</a></p>` : ""}
+    ${p.source_urls?.[0] ? `<p class="muted"><a href="${safeWebHref(p.source_urls[0])}" target="_blank" rel="noopener">Источник информации</a></p>` : ""}
     ${p.is_approx ? `<p class="note">Положение на карте приблизительное. Google Maps найдёт место по названию.</p>` : ""}
     <p class="eta" id="eta">${icon("route")}<span>Считаем маршрут…</span></p>
     <div class="sheet__actions">
       <button class="btn btn--primary" data-visit-place="${p.id}">Были здесь${getVisits(p.id).length ? ` · ${getVisits(p.id).length}` : ""}</button>
       <a class="btn btn--primary" target="_blank" rel="noopener" href="${googleUrl(p, state.user)}">${icon("nav")}Построить маршрут</a>
       <a class="btn" target="_blank" rel="noopener" href="${osmUrl([state.user || cityOrigin(p), p])}">OpenStreetMap</a>
-      ${p.map_url ? `<a class="btn" target="_blank" rel="noopener" href="${esc(p.map_url)}">Открыть карточку на карте</a>` : ""}
+      ${p.map_url ? `<a class="btn" target="_blank" rel="noopener" href="${safeWebHref(p.map_url)}">Открыть карточку на карте</a>` : ""}
       <button class="btn" data-plan-add="${p.id}">${icon("plus")}В маршрут</button>
       ${favBtn(p, "icon-btn--lg")}
     </div>
