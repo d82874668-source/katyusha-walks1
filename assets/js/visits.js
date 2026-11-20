@@ -38,14 +38,29 @@ async function compressPhoto(file) {
   if (file.size > 15 * 1024 * 1024) throw new Error("Исходное фото больше 15 МБ.");
   if (!("createImageBitmap" in window)) return file;
   const bitmap = await createImageBitmap(file);
-  const max = 1600, scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
+  const max = 1280, scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
   const canvas = document.createElement("canvas");
   canvas.width = Math.max(1, Math.round(bitmap.width * scale));
   canvas.height = Math.max(1, Math.round(bitmap.height * scale));
   canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
   bitmap.close?.();
-  return await new Promise((resolve) => canvas.toBlob((blob) => resolve(blob || file), "image/jpeg", 0.82));
+  return await new Promise((resolve) => canvas.toBlob((blob) => resolve(blob || file), "image/jpeg", 0.72));
 }
+
+const blobToDataUrl = (blob) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = () => reject(reader.error);
+  reader.readAsDataURL(blob);
+});
+const dataUrlToBlob = (value) => {
+  if (!value || typeof value !== "string" || !value.startsWith("data:")) return null;
+  const [head, body] = value.split(",");
+  const mime = head.match(/data:([^;]+)/)?.[1] || "image/jpeg";
+  const binary = atob(body);
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  return new Blob([bytes], { type: mime });
+};
 
 async function syncVisit(visit) {
   if (!navigator.onLine) return false;
@@ -54,10 +69,11 @@ async function syncVisit(visit) {
   try {
     const session = await ensureSession(sb);
     let photoPath = visit.photo_path || null;
-    if (visit.photo_blob) {
+    const uploadBlob = visit.photo_blob || dataUrlToBlob(visit.photo_data);
+    if (uploadBlob) {
       const ext = "jpg";
       photoPath = `${session.user.id}/${visit.id}.${ext}`;
-      const { error: uploadError } = await sb.storage.from("visit-photos").upload(photoPath, visit.photo_blob, {
+      const { error: uploadError } = await sb.storage.from("visit-photos").upload(photoPath, uploadBlob, {
         contentType: "image/jpeg", upsert: true
       });
       if (uploadError) throw uploadError;
@@ -86,11 +102,12 @@ export async function saveVisit(data) {
   const items = read();
   const id = data.id || uuid();
   const photo = await compressPhoto(data.photo_file);
+  const photoData = photo ? await blobToDataUrl(photo) : data.photo_data || null;
   const visit = {
     id, place_id: Number(data.place_id), visit_date: data.visit_date,
     impression: String(data.impression || "").slice(0, 5000),
     rating: data.rating ? Number(data.rating) : null,
-    mood_tags: [], photo_blob: photo, photo_url: photo ? URL.createObjectURL(photo) : data.photo_url || null,
+    mood_tags: [], photo_data: photoData, photo_url: photoData || data.photo_url || null,
     photo_path: data.photo_path || null, synced: false
   };
   const idx = items.findIndex((v) => v.id === id);
@@ -161,7 +178,7 @@ export function visitDialog(place, existing = null) {
         impression: form.elements.impression.value,
         rating: form.elements.rating.value,
         photo_file: form.elements.photo.files?.[0] || null,
-        photo_url: existing?.photo_url, photo_path: existing?.photo_path
+        photo_url: existing?.photo_url, photo_data: existing?.photo_data, photo_path: existing?.photo_path
       });
       dialog.close();
       document.dispatchEvent(new CustomEvent("katyusha:visits-changed", { detail: { placeId: place.id } }));
