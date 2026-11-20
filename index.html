@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-<link rel="stylesheet" href="assets/css/styles.css?v=spott2">
+<link rel="stylesheet" href="assets/css/styles.css?v=spott-figma-2">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script type="module" src="assets/js/app.js"></script>
 </head>
@@ -98,6 +98,13 @@
       <div class="hero__copy">
         <h1 id="h-hero">Откройте город за один день</h1>
         <p class="lead">Достопримечательности, заведения и готовые программы отдыха. Выберите настроение, и мы соберём день: от первой прогулки до вечера.</p>
+        
+        <form class="spott-search" id="heroSearchForm" role="search">
+          <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="heroSearch" type="search" placeholder="Найти места, кафе, впечатления..." autocomplete="off" aria-label="Поиск мест и впечатлений">
+          <button type="submit">Найти</button>
+        </form>
+        <div class="spott-quicklinks" aria-label="Популярные разделы"><a href="#discover">Достопримечательности</a><a href="#venues">Кафе и рестораны</a><a href="#map">Рядом со мной</a></div>
         <div class="hero__cta">
           <a class="btn btn--primary btn--lg" href="#ideal">Собрать идеальный день</a>
           <a class="btn btn--glass btn--lg" href="#discover">Открыть город</a>
@@ -294,6 +301,17 @@
     <p class="muted">Карта © участники <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>. Маршруты: OSRM.</p>
   </div>
 </footer>
+
+
+
+<!-- SPOTT-style mobile app navigation -->
+<nav class="spott-tabbar" aria-label="Основная навигация">
+  <a class="spott-tab is-active" href="#top" aria-label="Главная"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></svg><span>Главная</span></a>
+  <a class="spott-tab" href="#discover" aria-label="Открыть"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5Z"/></svg><span>Открыть</span></a>
+  <a class="spott-tab" href="#map" aria-label="Карта"><svg viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Z"/><path d="M9 3v15m6-12v15"/></svg><span>Карта</span></a>
+  <a class="spott-tab" href="#favorites" aria-label="Избранное"><svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"/></svg><span>Избранное</span></a>
+  <a class="spott-tab" href="#about" aria-label="Профиль"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Профиль</span></a>
+</nav>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
