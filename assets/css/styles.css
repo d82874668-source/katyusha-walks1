@@ -470,6 +470,7 @@ body{background:var(--bg);letter-spacing:-.012em}
 .chip{padding:9px 15px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:12px;font-weight:650}
 .chip[aria-selected=true]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
 .pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.pgrid--venues{grid-template-columns:repeat(3,minmax(0,1fr))}
 .pcard{overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:0 4px 18px rgba(20,30,20,.035);transition:transform .22s,box-shadow .22s}
 .pcard:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
 .pcard .cover{height:218px;overflow:hidden;background:var(--surface-2)}
@@ -517,6 +518,7 @@ body{background:var(--bg);letter-spacing:-.012em}
  .hero__in{grid-template-columns:1fr .7fr;gap:28px}
  .dirs{grid-template-columns:repeat(2,1fr)}
  .pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pgrid--venues{grid-template-columns:repeat(2,minmax(0,1fr))}
  .mapbox{grid-template-columns:320px minmax(0,1fr)}
  .road{grid-template-columns:repeat(3,1fr)}
 }
