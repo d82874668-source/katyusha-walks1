@@ -25,7 +25,7 @@
 
 1. `supabase/migrations/20261120_expand_places.sql`
 2. `supabase/migrations/20261121_automation.sql`
-3. `supabase/migrations/20261122_visits_editor_pwa.sql`\n4. `supabase/migrations/20261123_security_hardening.sql`\n5. `supabase/migrations/20261124_data_api_grants.sql`
+3. `supabase/migrations/20261122_visits_editor_pwa.sql`\n4. `supabase/migrations/20261123_security_hardening.sql`\n5. `supabase/migrations/20261124_data_api_grants.sql`\n6. `supabase/migrations/20261125_favorites_deny_policy.sql`
 
 Затем при необходимости примените `supabase/seed.sql`. Seed использует `ON CONFLICT DO NOTHING` и не заменяет существующие записи с теми же ID.\n\nЧтобы передать оставшиеся названия из списка на проверку, выполните `supabase/seeds/requested_places_review_queue.sql`. Эти строки попадут только в очередь администратора и **не станут пустыми карточками** в публичном каталоге. Добавляйте их в каталог после проверки реальных адресов, координат, источников и фотографий.
 
