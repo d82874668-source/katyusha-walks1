@@ -41,8 +41,8 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opac
 
 /* KATYUSHA ATLAS — full visual redesign */
 :root{
- --k-ink:#172b26;--k-muted:#718078;--k-paper:#f3f1e8;--k-white:#fffef9;
- --k-green:#173f35;--k-green2:#245a4b;--k-lime:#d9ed79;--k-coral:#d66f4e;
+ --k-ink:#172b26;--k-muted:#5F6D64;--k-paper:#f3f1e8;--k-white:#fffef9;
+ --k-green:#173f35;--k-green2:#245a4b;--k-lime:#d9ed79;--k-coral:#B24D34;
  --k-line:#dfe4d9;--k-shadow:0 22px 60px rgba(19,47,39,.12);
  --k-serif:'Manrope',Arial,sans-serif;--k-sans:'DM Sans',Arial,sans-serif;
 }
@@ -84,12 +84,12 @@ body{background:var(--k-paper);color:var(--k-ink);font-family:var(--k-sans);back
 .k-map-finder{background:#fbfaf3;color:var(--k-ink);border-radius:23px;padding:25px 23px;box-shadow:0 20px 50px rgba(8,30,25,.15);display:flex;flex-direction:column;min-width:0}
 .k-finder-kicker{font:800 9px var(--k-sans);letter-spacing:.18em;color:var(--k-coral)}
 .k-map-finder h2{font:800 29px/1.05 var(--k-serif);letter-spacing:-.065em;margin:12px 0 25px}
-.k-map-finder label{font:800 9px var(--k-sans);letter-spacing:.12em;text-transform:uppercase;color:#7b8980;margin:0 0 7px}
+.k-map-finder label{font:800 9px var(--k-sans);letter-spacing:.12em;text-transform:uppercase;color:#5F6D64;margin:0 0 7px}
 .k-map-finder input,.k-map-finder select{width:100%;min-width:0;height:46px;border:1px solid #dfe5d9;border-radius:12px;background:#fffef9;padding:0 13px;color:var(--k-ink);font:600 12px var(--k-sans);outline:none;margin-bottom:17px;transition:border-color .2s,box-shadow .2s}
 .k-map-finder input:focus,.k-map-finder select:focus,.k-filter-panel input:focus,.k-filter-panel select:focus{border-color:#6d9a79;box-shadow:0 0 0 3px rgba(90,139,103,.13)}
 .k-finder-reset{width:100%;min-height:44px;margin-top:1px}
 .k-finder-tip{display:flex;gap:9px;align-items:flex-start;margin-top:auto;padding-top:22px;color:#7b8980;font-size:10px;line-height:1.55}
-.k-finder-dot,.k-live-dot{width:8px;height:8px;flex:none;border-radius:50%;background:#d66f4e;box-shadow:0 0 0 4px rgba(214,111,78,.12);margin-top:3px}
+.k-finder-dot,.k-live-dot{width:8px;height:8px;flex:none;border-radius:50%;background:#B24D34;box-shadow:0 0 0 4px rgba(214,111,78,.12);margin-top:3px}
 .k-home-map-panel{background:#fbfaf3;border-radius:23px;padding:12px;min-width:0;box-shadow:0 20px 50px rgba(8,30,25,.15)}
 .k-map-topline{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:7px 10px 12px;color:var(--k-ink);font-size:11px}
 .k-map-topline>div{display:flex;align-items:center;gap:9px}
@@ -97,7 +97,7 @@ body{background:var(--k-paper);color:var(--k-ink);font-family:var(--k-sans);back
 .k-live-dot{background:#71a76d;box-shadow:0 0 0 4px rgba(113,167,109,.13);margin:0}
 .k-map-topline>span{font-size:10px;color:var(--k-muted);text-align:right}
 .k-map{height:520px;border-radius:16px;overflow:hidden;background:#e8e9df;position:relative;z-index:1;border:1px solid rgba(65,85,64,.13)}
-.k-map-foot{display:flex;align-items:center;gap:18px;padding:12px 10px 2px;color:#77857b;font-size:9px;flex-wrap:wrap}
+.k-map-foot{display:flex;align-items:center;gap:18px;padding:12px 10px 2px;color:#5F6D64;font-size:9px;flex-wrap:wrap}
 .k-map-foot>span{display:inline-flex;align-items:center;gap:7px}
 .k-map-foot i{display:inline-block;width:8px;height:8px;border-radius:50%}
 .k-legend-city{background:var(--k-green)}
@@ -312,3 +312,10 @@ body{background:var(--k-paper);color:var(--k-ink);font-family:var(--k-sans);back
  .k-modal-content h2{font-size:25px}
  .k-mobile-nav{display:none}
 }
+
+/* Keyboard, motion and touch-target polish */
+#katyusha-app button:focus-visible,#katyusha-app a:focus-visible,#katyusha-app input:focus-visible,#katyusha-app select:focus-visible,
+#katyusha-app .leaflet-marker-icon:focus-visible{outline:3px solid #B24D34!important;outline-offset:3px}
+#katyusha-app .leaflet-control-zoom a{width:40px;height:40px;line-height:40px;font-size:20px}
+.k-place-marker-host{width:44px!important;height:44px!important;margin-left:-22px!important;margin-top:-22px!important}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
