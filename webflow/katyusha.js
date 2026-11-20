@@ -11,6 +11,7 @@ function cat(v){return CAT[v]||[v||'Интересное место',String(v||'
 function placeName(p){return p.title||p.official_name||p.original_name||'Интересное место'}
 function photo(p){var v=p&&p.image?String(p.image).trim():'';if(!v)return '';if(/^https?:\/\//i.test(v))return v;if(/^assets\//i.test(v)||/^\.\/assets\//i.test(v))return v.replace(/^\.\//,'');return ''}
 function cityName(p){return (p&& (p.city||p.region))||'Другие города'}
+function placesWord(n){var v=Math.abs(Number(n))%100,d=v%10;if(v>10&&v<20)return 'мест';if(d===1)return 'место';if(d>=2&&d<=4)return 'места';return 'мест'}
 
 function credit(p){var a=Array.isArray(p.photo_sources)?p.photo_sources[0]:p.photo_sources;if(!a||typeof a!=='object')return '';var author=a.author||a.photographer||a.artist||a.attribution||'';var license=a.license||a.license_name||'';var url=a.source_url||a.url||'';if(!author&&!license)return '';return '<small class="k-credit">Фото: '+esc(author||'автор')+(license?' · '+esc(license):'')+(url?' · <a href="'+esc(url)+'" target="_blank" rel="noopener">источник</a>':'')+'</small>'}
 function money(p){if(p.price_min==null&&p.price_max==null)return 'Стоимость уточняйте';var n=p.price_min!=null&&p.price_max!=null&&p.price_min!==p.price_max?Number(p.price_min).toLocaleString('ru-RU')+'–'+Number(p.price_max).toLocaleString('ru-RU'):Number(p.price_min!=null?p.price_min:p.price_max).toLocaleString('ru-RU');return n+' '+(p.price_unit||'₽')}
@@ -45,7 +46,7 @@ function drawMap(id,items,isRoute,options){
   var bounds=[];
   if(cityOverview){
    plotted.forEach(function(g){
-    var icon=L.divIcon({className:'k-city-marker-host',html:'<div class="k-city-marker"><b>'+esc(g.name)+'</b><span>'+g.items.length+' '+(g.items.length===1?'место':'мест')+'</span></div>',iconSize:[118,50],iconAnchor:[59,25]});
+    var icon=L.divIcon({className:'k-city-marker-host',html:'<div class="k-city-marker"><b>'+esc(g.name)+'</b><span>'+g.items.length+' '+placesWord(g.items.length)+'</span></div>',iconSize:[118,50],iconAnchor:[59,25]});
     var marker=L.marker([g.lat,g.lon],{icon:icon,keyboard:true,title:g.name,alt:'Открыть город '+g.name}).addTo(map);
     marker.on('click',function(){if(typeof options.onCitySelect==='function')options.onCitySelect(g.name);else document.dispatchEvent(new CustomEvent('katyusha:city-select',{detail:{city:g.name}}))});
     bounds.push([g.lat,g.lon]);
@@ -62,7 +63,7 @@ function drawMap(id,items,isRoute,options){
     }else{
      marker.bindPopup('<div class="k-map-popup"><b>'+esc(cityName(g.items[0]))+'</b><span>'+(approx?'Примерные метки · ':'')+count+' мест</span><div class="k-map-popup-list">'+g.items.slice(0,8).map(function(p){return '<button type="button" data-open="'+esc(p.id)+'">'+esc(placeName(p))+'</button>'}).join('')+'</div></div>');
     }
-    marker.bindTooltip(esc(placeName(g.items[0]))+(count>1?' · '+count+' мест':''),{direction:'top',offset:[0,-12]});
+    marker.bindTooltip(esc(placeName(g.items[0]))+(count>1?' · '+count+' '+placesWord(count):''),{direction:'top',offset:[0,-12]});
     bounds.push([g.lat,g.lon]);
    });
    if(isRoute){
@@ -101,7 +102,7 @@ function renderHome(){
  }
  function refresh(){
   var city=$('#k-home-city').value,result=filtered();
-  $('#k-home-map-caption').textContent=city?'На карте: '+city+' · '+result.length+' мест':'Обзор городов · '+result.length+' мест';
+  $('#k-home-map-caption').textContent=city?'На карте: '+city+' · '+result.length+' '+placesWord(result.length):'Обзор городов · '+result.length+' мест';
   $('#k-home-results').innerHTML=result.length?result.slice(0,3).map(card).join(''):'<div class="k-empty">По этому запросу ничего не найдено. Измени фильтры и попробуй ещё раз.</div>';
   drawMap('k-home-map',result,false,{city:city,onCitySelect:function(name){$('#k-home-city').value=name;refresh()}});
  }
