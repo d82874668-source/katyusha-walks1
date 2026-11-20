@@ -62,16 +62,13 @@ alter table public.places    enable row level security;
 alter table public.routes    enable row level security;
 alter table public.favorites enable row level security;
 
--- Читать всё может любой посетитель сайта
-create policy "places read"    on public.places    for select to anon, authenticated using (true);
-create policy "routes read"    on public.routes    for select to anon, authenticated using (true);
-create policy "favorites read" on public.favorites for select to anon, authenticated using (true);
+-- Читать каталог и маршруты может любой посетитель сайта.
+create policy "places read" on public.places for select to anon, authenticated using (true);
+create policy "routes read" on public.routes for select to anon, authenticated using (true);
 
--- Избранное могут менять все, у кого есть ссылка (для двоих удобно, для публичного сайта нет, см. README)
-create policy "favorites insert" on public.favorites for insert to anon, authenticated with check (true);
-create policy "favorites delete" on public.favorites for delete to anon, authenticated using (true);
+-- Избранное хранится локально в браузере. Не выдаём публичный доступ к таблице favorites.
+-- Для будущей синхронизации между устройствами потребуется авторизованный профиль и user_id.
 
 -- Места и маршруты редактируются только в панели Supabase (Table Editor / SQL Editor).
 
--- Мгновенная синхронизация избранного между вашими устройствами
-alter publication supabase_realtime add table public.favorites;
+-- Избранное не публикуется в Realtime: таблица закрыта от anon/authenticated.
