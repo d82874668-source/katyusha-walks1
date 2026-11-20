@@ -158,11 +158,23 @@ SIGHTS = [
  ("Маленькая Венеция","attraction","Каналы и лодки на Приморском бульваре.",40.3590,49.8400),
  ("Площадь Фонтанов","square","Пешеходная площадь в центре Баку, удобная отправная точка для прогулки к Старому городу.",40.3725,49.8355),
 ]
+SIGHT_MEDIA = {
+ "Старый город (Ичери-Шехер)": ("https://worldheritagesites.net/wp-content/uploads/2025/06/Walled_City_Baku_2.jpg", "https://worldheritagesites.net/walled-city-of-baku/"),
+ "Дворец Ширваншахов": ("https://infonews.az/wp-content/uploads/2021/10/Sirvansahlar_sarayi_2016-scaled.jpg", "https://infonews.az/?p=13785"),
+ "Башни Пламени (Flame Towers)": ("https://spectra.mhi.com/sites/g/files/jwhtju2216/files/styles/crop_freeform/public/Baku%2C-Azerbaijan-at-night.jpeg?itok=LK1awdF4", "https://spectra.mhi.com/energy-transition/cop29-3-areas-of-focus-for-the-finance-cop"),
+ "Приморский бульвар": ("https://hblimg.mmtcdn.com/content/hubble/img/additionalttdimages/mmt/activities/m_Baku_Boulevard_1_l_667_1000.jpg", "https://www.makemytrip.com/tripideas/attractions/baku-boulevard"),
+ "Маленькая Венеция": ("https://www.advantour.com/img/azarbaijan/baku/little-venice-baku.jpg", "https://www.advantour.com/azerbaijan/baku/things-to-do.htm"),
+ "Площадь Фонтанов": ("https://tourister.az/public/uploads/images/2026/06/20260616_1908_NizamiStreetWalkingTour.jpg", "https://tourister.az/tours/nizami-street-walking-tour/"),
+}
 for title, cat_, desc, lat, lng in SIGHTS:
+  image, photo_source = SIGHT_MEDIA.get(title, (None, None))
   places.append(dict(
-    id=len(places)+1, title=title, description=desc, category=cat_, latitude=lat, longitude=lng, image=None,
+    id=len(places)+1, title=title, description=desc, category=cat_, latitude=lat, longitude=lng, image=image,
     rating=None, is_approx=True, region="Азербайджан", city="Баку", address=None, price_min=None, price_max=None,
-    price_unit=None, review_count=None, opening_hours=None, phone=None, map_url=None, source_urls=[]))
+    price_unit=None, review_count=None, opening_hours=None, phone=None,
+    map_url=f"https://www.google.com/maps/search/?api=1&query={lat},{lng}",
+    source_urls=[photo_source] if photo_source else []))
+
 
 R = [
  ("Спа-день","Хаммам, SPA и никуда не спешить.",["Taze Bey Hamam","Carol Joy Spa (Fairmont)","LIANA Deluxe Spa"]),
