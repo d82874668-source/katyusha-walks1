@@ -66,6 +66,7 @@ function cityCard(city) {
 }
 function syncHeader() {
   const count=state.places.filter(p=>state.favs.has(p.id)||state.favs.has(String(p.id))).length;
+  const header=$("header");if(header){const cityButton=[...header.querySelectorAll("button")].find(b=>/Санкт-Петербург|Баку|Москва|Екатеринбург/.test(b.textContent));if(cityButton){const spans=cityButton.querySelectorAll("span");if(spans.length>1)spans[1].textContent=activeCity;}}
   const favLink=$('a[data-path="izbrannoe"]')||$('a[href="favorites.html"]');
   if(favLink){const spans=favLink.querySelectorAll("span"); if(spans.length)spans[spans.length-1].textContent=String(count);}
   const label=$("header [data-current-city]"); if(label)label.textContent=activeCity;
@@ -89,13 +90,17 @@ function renderHome() {
   const featured=state.places.find(p=>cityOf(p)===activeCity&&imageOf(p))||state.places.find(imageOf);
   if(featured){
     const heroSection=$("main section");
-    const img=heroSection?.querySelector("img");
-    if(img){img.src=imageOf(featured);img.alt=featured.title;}
-    const headings=heroSection?[...heroSection.querySelectorAll("h3,h4")]:[];
-    if(headings[0])headings[0].textContent=featured.title;
-    const headerCity=$("header [data-path='glavnaya']")?.parentElement?.querySelector("span");
-    if(headerCity)headerCity.textContent=activeCity;
+    const featurePanel=[...heroSection.querySelectorAll("div")].find(el=>el.classList.contains("lg:col-span-5")&&el.classList.contains("bg-surface-container-lowest"));
+    if(featurePanel)featurePanel.innerHTML=`<div class="relative h-56 overflow-hidden"><img src="${esc(imageOf(featured))}" alt="${esc(featured.title)}" class="w-full h-full object-cover"></div><div class="p-space-lg"><span class="font-label-caps text-label-caps uppercase text-secondary">Место из реального каталога</span><h3 class="font-headline-md text-primary mt-2">${esc(featured.title)}</h3><p class="font-body-md text-on-surface-variant mt-2">${esc(featured.description||"")}</p><p class="font-body-sm text-on-surface-variant mt-3">${esc(cityOf(featured))} · ${esc(featured.address||"Адрес уточняется")}</p><a class="inline-flex mt-4 text-secondary font-label-lg" href="place.html?id=${encodeURIComponent(featured.id)}">Открыть карточку →</a></div>`;
   }
+  const mapFilters=$("#map-filter-group");
+  if(mapFilters){const cats=[...new Set(state.places.filter(p=>cityOf(p)===activeCity).map(p=>p.category).filter(Boolean))].slice(0,6);mapFilters.innerHTML='<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg" type="button" data-home-category="all">Все места</button>'+cats.map(c=>`<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface font-label-lg" type="button" data-home-category="${esc(c)}">${esc(categoryOf({category:c}))}</button>`).join("");}
+  const cityCount=$("header [data-path='glavnaya']")?.parentElement?.querySelector("span");
+  if(cityCount)cityCount.textContent=activeCity;
+  const citySummary=[...$("#open-cities").querySelectorAll("span")].find(el=>/резиденц|локац/i.test(el.textContent));
+  if(citySummary)citySummary.textContent=allCities().length+" городов · "+state.places.length+" мест";
+  $("#hero-city-select")?.addEventListener("change",e=>{activeCity=e.target.value;renderHome();});
+  $("#map-filter-group")?.addEventListener("click",e=>{const b=e.target.closest("[data-home-category]");if(!b)return;const category=b.dataset.homeCategory;const points=state.places.filter(p=>cityOf(p)===activeCity&&(category==="all"||p.category===category)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));homeMapView?.setPlaces(points,true);});
   if(homeMapView){homeMapView.map.remove();homeMapView=null;}
   const mapEl=$("#homeMapCanvas");
   if(mapEl&&window.L){homeMapView=new MapView(mapEl,id=>location.href="place.html?id="+encodeURIComponent(id));homeMapView.setPlaces(state.places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)&&cityOf(p)===activeCity),true);}
@@ -128,13 +133,13 @@ function initCatalog() {
   renderCatalog();
 }
 function initMapPage(home=false) {
-  const canvas=home?$("#homeMapCanvas"):$("#mapCanvas");
-  if(!canvas||!window.L)return;
+  if(!window.L)return;
   if(!home){
     const container=$("#map-canvas-container");
     if(container)container.innerHTML='<div id="mapCanvas" class="absolute inset-0 w-full h-full min-h-[620px]"></div>';
   }
   const el=home?$("#homeMapCanvas"):$("#mapCanvas");
+  if(!el)return;
   const instance=new MapView(el,id=>location.href="place.html?id="+encodeURIComponent(id));
   const filtered=()=>state.places.filter(p=>(activeCity==="all"||cityOf(p)===activeCity)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
   instance.setPlaces(filtered(),true);
@@ -196,7 +201,7 @@ function initPlannerPage() {
     const pts=plan.ids.map(placeById).filter(p=>p&&!p.is_approx&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
     if(pts.length<2)return toast("Для точного маршрута нужны минимум две точные точки.");
     const mode=$("#config-pace")?.value==="drive"?"drive":"walk";
-    window.open(googleUrl(pts[pts.length-1],pts[0],pts.slice(1,-1),mode)," _blank");
+    window.open(googleUrl(pts[pts.length-1],pts[0],pts.slice(1,-1),mode),"_blank");
   });
   $("#btn-save-fav")?.addEventListener("click",()=>{
     const saved=JSON.parse(localStorage.getItem("katyusha:saved-routes")||"[]");
@@ -208,7 +213,7 @@ function initPlannerPage() {
     try{await navigator.clipboard.writeText(url.toString());toast("Ссылка на маршрут скопирована.");}catch{toast(url.toString());}
   });
   $("#btn-export-guide")?.addEventListener("click",()=>window.print());
-  const city=$("#config-city");city?.addEventListener("change",()=>{activeCity=city.value;renderSuggestedRoutes();});
+  const city=$("#config-city");if(city){fillSelect(city,allCities());city.value=allCities().includes(activeCity)?activeCity:allCities()[0];city.addEventListener("change",()=>{activeCity=city.value;renderSuggestedRoutes();});}
   $("#btn-recalculate")?.setAttribute("type","button");
   renderSuggestedRoutes();
 }
@@ -254,7 +259,7 @@ async function init() {
   const cities=allCities();if(!cities.includes(activeCity))activeCity=cities.includes("Баку")?"Баку":cities[0]||"all";
   const params=new URLSearchParams(location.search);if(params.has("city"))activeCity=params.get("city");
   bindCommon();
-  if(page==="home")renderHome();
+  if(page==="home"){renderHome();initMapPage(true);}
   if(page==="catalog")initCatalog();
   if(page==="map")initMapPage(false);
   if(page==="favorites")renderFavorites();
