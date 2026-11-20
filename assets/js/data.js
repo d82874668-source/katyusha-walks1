@@ -368,7 +368,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "14 Salyan Highway, Shikhov settlement, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -378,8 +378,10 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://azerbaijan.travel/relax-your-body-and-mind-at-the-hamambath-wellness-and-spa-complex",
-   "https://azerbaijan.travel/fit752x624/center/pages/3452/0dd97745-ecc1-415a-b18e-26b1b27a7dc0.JPG"
-  ]
+   "https://azerbaijan.travel/fit752x624/center/pages/3452/0dd97745-ecc1-415a-b18e-26b1b27a7dc0.JPG",
+   "https://cop29.az/storage/1357/cop29-discover-baku_.pdf"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 2,
@@ -393,7 +395,7 @@ export const PLACES = [
   "is_approx": false,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "1A Mehdi Huseyn Street, Baku AZ1006, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -404,7 +406,8 @@ export const PLACES = [
   "source_urls": [
    "https://www.fairmont.com/en/hotels/baku/fairmont-baku-flame-towers/wellness/spa.html",
    "https://m.ahstatic.com/is/image/accorhotels/met_p_a150-30%3A3by2?dpr=on%2C1.5&fmt=jpg&hei=223&icc=sRGB&iccEmbed=true&op_usm=1.75%2C0.3%2C2%2C0&qlt=80&resMode=sharp2&wid=335"
-  ]
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 3,
@@ -418,7 +421,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "52 Hazi Aslanov Street, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -428,8 +431,10 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://www.tripadvisor.co.uk/Attraction_Review-g293934-d27737708-Reviews-Liana_Deluxe_Massage_Spa-Baku_Absheron_Region.html",
-   "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/38/bc/14/caption.jpg?h=1100&s=1&w=1100"
-  ]
+   "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/38/bc/14/caption.jpg?h=1100&s=1&w=1100",
+   "https://spasommelier.com/baku/liana-deluxe-spa/"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 4,
@@ -443,7 +448,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "5A Izzat Hamidov Street, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -453,8 +458,10 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://sia.az/az/news/culture/923551.html",
-   "https://sia.az/storage/2022/01/17/40cf51d919a2475d2d2b61e5c0d19cd5.jpg"
-  ]
+   "https://sia.az/storage/2022/01/17/40cf51d919a2475d2d2b61e5c0d19cd5.jpg",
+   "https://above.guide/baku-f1/things-to-do/evenings-downtime"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 5,
@@ -493,7 +500,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "11 Rasul Rza Street, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -501,7 +508,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://www.145group.com/ru/projects/malacannes"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 7,
@@ -515,7 +525,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "43D Nigar Rafibeyli Street, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -526,7 +536,8 @@ export const PLACES = [
   "source_urls": [
    "https://www.tripadvisor.com/Restaurant_Review-g293934-d25314499-Reviews-Myata_Platinum-Baku_Absheron_Region.html",
    "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/9f/a6/3a/caption.jpg?h=1200&s=1&w=1200"
-  ]
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 8,
@@ -540,7 +551,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "20 Nigar Rafibeyli Street, Baku 1005, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -551,7 +562,8 @@ export const PLACES = [
   "source_urls": [
    "https://huqqabaz.com/en/branch/huqqabaz-garden-baku/",
    "https://images.qfoodbeverage.com.tr/webp/22-1748604042-bdTGjXqUzu.webp"
-  ]
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 9,
@@ -565,7 +577,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "Fuzuli Aliyev Street, Park Hill Tower, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -576,7 +588,8 @@ export const PLACES = [
   "source_urls": [
    "https://zen-cafe.choiceqr.com/menu",
    "https://cdn-media.choiceqr.com/prod-eat-zen-cafe/template-gallery/thumbnail_TzCvQHg-MUIGbjp-ZTkzVGS_F-F-b.jpeg"
-  ]
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 10,
@@ -590,7 +603,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "20 Boyuk Qala Street, Icherisheher, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -601,7 +614,8 @@ export const PLACES = [
   "source_urls": [
    "https://monyo.az/?r=terrace145",
    "https://monyo.az/v4/uploads2/uploads2023-06/a_1805_20230602161450233980715.jpg"
-  ]
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 11,
@@ -662,7 +676,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "54B Pushkin Street, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -672,8 +686,10 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://www.tripadvisor.com/Attraction_Review-g293934-d33262286-Reviews-Kenza_Gaming_Lounge-Baku_Absheron_Region.html",
-   "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/7f/62/6f/caption.jpg?h=1000&s=1&w=1000"
-  ]
+   "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/7f/62/6f/caption.jpg?h=1000&s=1&w=1000",
+   "https://gameyer.az/bakida-internet-klublari"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 14,
@@ -687,7 +703,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "176 Hasan Aliyev Passage, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -695,7 +711,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://gameyer.az/bakida-internet-klublari"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 15,
@@ -709,7 +728,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "97 Tabriz Street, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -717,7 +736,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://gameyer.az/"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 16,
@@ -756,7 +778,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "40 Badamdar Highway, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -766,8 +788,10 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://azerbaijan.travel/central-botanical-garden",
-   "https://azerbaijan.travel/resize3000/center/pages/10939/2d98e655-aed5-4d6b-84e3-590e95695da5.jpg"
-  ]
+   "https://azerbaijan.travel/resize3000/center/pages/10939/2d98e655-aed5-4d6b-84e3-590e95695da5.jpg",
+   "https://armnb.az/en/visit"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 18,
@@ -2033,7 +2057,7 @@ export const PLACES = [
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "1A Mehdi Huseyn Street, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -2043,8 +2067,10 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://spectra.mhi.com/energy-transition/cop29-3-areas-of-focus-for-the-finance-cop",
-   "https://spectra.mhi.com/sites/g/files/jwhtju2216/files/styles/crop_freeform/public/Baku%2C-Azerbaijan-at-night.jpeg?itok=LK1awdF4"
-  ]
+   "https://spectra.mhi.com/sites/g/files/jwhtju2216/files/styles/crop_freeform/public/Baku%2C-Azerbaijan-at-night.jpeg?itok=LK1awdF4",
+   "https://www.fairmont.com/en/hotels/baku/fairmont-baku-flame-towers/wellness/spa.html"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 66,
