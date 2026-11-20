@@ -72,12 +72,16 @@ export function estimateLeg(a, b, mode = "drive") {
 }
 
 /* ---------- Карта ---------- */
+const validPoint = (p) => Number.isFinite(Number(p?.latitude)) && Number.isFinite(Number(p?.longitude)) && Math.abs(Number(p.latitude)) <= 90 && Math.abs(Number(p.longitude)) <= 180;
+
 export class MapView {
   constructor(el, onSelect = () => {}) {
     this.onSelect = onSelect;
     this.markers = new Map();
+    this.places = [];
+    this.numbered = false;
     this.map = L.map(el, { zoomControl: false, attributionControl: true, scrollWheelZoom: false })
-      .setView([40.4, 49.87], 10);
+      .setView([40.3725, 49.8355], 12);
     L.control.zoom({ position: "topleft" }).addTo(this.map);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
@@ -87,38 +91,97 @@ export class MapView {
     // Колесо мыши масштабирует только после клика по карте: страница не «залипает» при скролле.
     this.map.on("focus", () => this.map.scrollWheelZoom.enable());
     this.map.on("blur", () => this.map.scrollWheelZoom.disable());
+    this.map.on("zoomend", () => this.renderMarkers());
   }
 
   setPlaces(places, fit = true, numbered = false) {
+    this.places = (places || []).filter(validPoint);
+    this.numbered = numbered;
+    this.renderMarkers();
+    if (fit) this.fit(this.places);
+  }
+
+  // Лёгкая кластеризация: близкие точки объединяются до увеличения масштаба.
+  renderMarkers() {
     this.markers.forEach((m) => m.remove());
     this.markers.clear();
-    places.forEach((p, idx) => {
-      const c = CATEGORIES[p.category] || { icon: "pin", hue: 340 };
-      const m = L.marker([p.latitude, p.longitude], {
-        title: p.title,
-        icon: L.divIcon({
-          className: "pin",
-          html: `<span class="pin__dot${p.is_approx ? " is-approx" : ""}" style="--h:${c.hue}">${numbered ? `<b>${idx + 1}</b>` : icon(c.icon)}</span>`,
-          iconSize: [38, 38],
-          iconAnchor: [19, 19],
-        }),
-      }).addTo(this.map);
-      m.on("click", () => this.onSelect(p.id));
-      this.markers.set(p.id, m);
+    const zoom = this.map.getZoom();
+    const buckets = new Map();
+    this.places.forEach((p) => {
+      const point = this.map.project([Number(p.latitude), Number(p.longitude)], zoom);
+      const key = Math.floor(point.x / 58) + ":" + Math.floor(point.y / 58);
+      if (!buckets.has(key)) buckets.set(key, []);
+      buckets.get(key).push(p);
     });
-    if (fit) this.fit(places);
+
+    buckets.forEach((group) => {
+      const samePoint = group.length > 1 && group.every((p) => Number(p.latitude) === Number(group[0].latitude) && Number(p.longitude) === Number(group[0].longitude));
+      if (group.length > 1 && (zoom < 16 || samePoint) && !this.numbered) {
+        const lat = group.reduce((sum, p) => sum + Number(p.latitude), 0) / group.length;
+        const lng = group.reduce((sum, p) => sum + Number(p.longitude), 0) / group.length;
+        const cluster = L.marker([lat, lng], {
+          icon: L.divIcon({
+            className: "pin-cluster",
+            html: '<span>' + group.length + '</span>',
+            iconSize: [44, 44],
+            iconAnchor: [22, 22],
+          }),
+          title: group.length + " мест рядом",
+        }).addTo(this.map);
+        cluster.on("click", () => {
+          if (samePoint) {
+            const list = document.createElement("div");
+            list.className = "pin-cluster-popup";
+            group.forEach((place) => {
+              const button = document.createElement("button");
+              button.type = "button";
+              button.dataset.place = place.id;
+              button.textContent = place.title;
+              list.append(button);
+            });
+            L.popup().setLatLng([lat, lng]).setContent(list).openOn(this.map);
+            return;
+          }
+          this.map.fitBounds(L.latLngBounds(group.map((p) => [p.latitude, p.longitude])), { padding: [70, 70], maxZoom: Math.min(17, zoom + 3) });
+        });
+        return;
+      }
+
+      group.forEach((p) => {
+        const c = CATEGORIES[p.category] || { icon: "pin", hue: 340 };
+        const marker = L.marker([p.latitude, p.longitude], {
+          title: p.title + (p.is_approx ? " — ориентировочная точка" : ""),
+          icon: L.divIcon({
+            className: "pin",
+            html: '<span class="pin__dot' + (p.is_approx ? ' is-approx' : '') + '" style="--h:' + c.hue + '">' + (this.numbered ? '<b>' + (this.places.indexOf(p) + 1) + '</b>' : icon(c.icon)) + '</span>',
+            iconSize: [38, 38],
+            iconAnchor: [19, 19],
+          }),
+        }).addTo(this.map);
+        marker.on("click", () => this.onSelect(p.id));
+        this.markers.set(p.id, marker);
+      });
+    });
   }
 
   fit(places) {
-    if (!places.length) return;
-    const b = L.latLngBounds(places.map((p) => [p.latitude, p.longitude]));
-    this.map.fitBounds(b, { padding: [60, 60], maxZoom: 13 });
+    const valid = (places || []).filter(validPoint);
+    if (!valid.length) return;
+    if (valid.length === 1) {
+      this.map.setView([valid[0].latitude, valid[0].longitude], 15);
+      return;
+    }
+    const bounds = L.latLngBounds(valid.map((p) => [p.latitude, p.longitude]));
+    this.map.fitBounds(bounds, { padding: [64, 64], maxZoom: 14 });
   }
 
   focus(p) {
-    this.markers.forEach((m) => m.getElement()?.classList.remove("is-active"));
-    this.markers.get(p.id)?.getElement()?.classList.add("is-active");
-    this.map.flyTo([p.latitude, p.longitude], Math.max(this.map.getZoom(), 13), { duration: 0.8 });
+    if (!validPoint(p)) return;
+    this.map.flyTo([p.latitude, p.longitude], Math.max(this.map.getZoom(), 16), { duration: 0.8 });
+    this.map.once("moveend", () => {
+      this.markers.forEach((m) => m.getElement()?.classList.remove("is-active"));
+      this.markers.get(p.id)?.getElement()?.classList.add("is-active");
+    });
   }
 
   clearRoute() { this.routeLayer.clearLayers(); }
@@ -127,9 +190,11 @@ export class MapView {
   async drawRoute(points, mode = "drive") {
     this.clearRoute();
     let line, info = null;
-    try { info = await route(points, mode); line = info.line; }
-    catch { line = points.map((p) => [p.latitude, p.longitude]); }
-    L.polyline(line, { color: "#D8365C", weight: 5, opacity: 0.9, dashArray: info ? null : "8 8", lineCap: "round" }).addTo(this.routeLayer);
+    const valid = (points || []).filter(validPoint);
+    if (valid.length < 2) return null;
+    try { info = await route(valid, mode); line = info.line; }
+    catch { line = valid.map((p) => [p.latitude, p.longitude]); }
+    L.polyline(line, { color: "#9D4229", weight: 5, opacity: 0.9, dashArray: info ? null : "8 8", lineCap: "round" }).addTo(this.routeLayer);
     this.map.fitBounds(L.latLngBounds(line), { padding: [70, 70] });
     return info;
   }
@@ -142,7 +207,7 @@ export class MapView {
         ({ coords }) => {
           const pos = { latitude: coords.latitude, longitude: coords.longitude };
           if (this.me) this.me.remove();
-          this.me = L.circleMarker([pos.latitude, pos.longitude], { radius: 8, color: "#fff", weight: 3, fillColor: "#1E4FA3", fillOpacity: 1 }).addTo(this.map);
+          this.me = L.circleMarker([pos.latitude, pos.longitude], { radius: 8, color: "#fff", weight: 3, fillColor: "#1E3A2F", fillOpacity: 1 }).addTo(this.map);
           resolve(pos);
         },
         () => reject(new Error("Нет доступа к геолокации")),

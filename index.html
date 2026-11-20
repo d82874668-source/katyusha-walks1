@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Прогулки с Катюшей — маршруты и места для отдыха</title>
 <meta name="description" content="Достопримечательности, заведения и готовые программы отдыха в разных городах: карта, конструктор прогулок и подбор идеального дня.">
-<meta name="theme-color" content="#F5F6FA">
+<meta name="theme-color" content="#FBF9F5">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <script>
@@ -30,9 +30,10 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <link rel="stylesheet" href="assets/css/styles.css?v=20261120-photo-credits-1">
+<link rel="stylesheet" href="assets/css/stitch-editorial.css?v=20261121-1">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script type="module" src="assets/js/app.js"></script>
 </head>
@@ -103,8 +104,8 @@
   <section class="hero" aria-labelledby="h-hero">
     <div class="wrap hero__in">
       <div class="hero__copy">
-        <h1 id="h-hero">Откройте город за один день</h1>
-        <p class="lead">Достопримечательности, заведения и готовые программы отдыха. Выберите настроение, и мы соберём день: от первой прогулки до вечера.</p>
+        <h1 id="h-hero">Город начинается с прогулки</h1>
+        <p class="lead">Находите места с характером, открывайте тихие улицы и собирайте маршруты, которые хочется запомнить. От первой чашки кофе до вечернего города.</p>
         
         <form class="spott-search" id="heroSearchForm" role="search">
           <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
@@ -208,15 +209,30 @@
       <div class="mapbox">
         <div class="mapbox__side">
           <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Найти место" autocomplete="off" aria-label="Поиск по названию, адресу, городу и описанию"></label>
-          <label class="search"><svg class="i"><use href="#i-pin"/></svg><select id="regionFilter" aria-label="Город или регион">
-            <option value="all">Все города и регионы</option>
-            <option value="Азербайджан" selected>Азербайджан</option>
+          <label class="search"><svg class="i"><use href="#i-pin"/></svg><select id="regionFilter" aria-label="Город">
+            <option value="all">Все города</option>
+            <option value="Баку" selected>Баку</option>
+            <option value="Сумгаит">Сумгаит</option>
             <option value="Екатеринбург">Екатеринбург</option>
             <option value="Москва">Москва</option>
             <option value="Санкт-Петербург">Санкт-Петербург</option>
             <option value="Нижний Тагил">Нижний Тагил</option>
-            <option value="Грузия">Грузия</option>
-            <option value="Посёлок Аять, Свердловская область">Посёлок Аять, Свердловская область</option>
+            <option value="Аять">Аять</option>
+            <option value="Шамахы">Шамахы</option>
+            <option value="Габала">Габала</option>
+            <option value="Губа">Губа</option>
+            <option value="Гусар">Гусар</option>
+            <option value="Шахдаг">Шахдаг</option>
+            <option value="Мардакян">Мардакян</option>
+            <option value="Бильгя">Бильгя</option>
+            <option value="Батуми">Батуми</option>
+            <option value="Тбилиси">Тбилиси</option>
+            <option value="Гала">Гала</option>
+            <option value="Рамана">Рамана</option>
+            <option value="Мамедли">Мамедли</option>
+            <option value="Нардаран">Нардаран</option>
+            <option value="Сураханы">Сураханы</option>
+            <option value="Масазыр">Масазыр</option>
           </select></label>
           <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="priceMin" type="number" min="0" step="any" placeholder="Мин. цена, местная валюта" aria-label="Минимальная цена в местной валюте"></label>
           <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="priceMax" type="number" min="0" step="any" placeholder="Макс. цена, местная валюта" aria-label="Максимальная цена в местной валюте"></label>
@@ -227,6 +243,7 @@
             <option value="popularity">Сначала популярные</option><option value="rating">По рейтингу</option><option value="price">По стоимости</option><option value="alphabetical">По алфавиту</option>
           </select></label>
           <button class="btn btn--ghost" id="resetFilters" type="button">Сбросить фильтры</button>
+          <div class="map-legend" aria-label="Точность расположения"><span><i class="map-legend__dot"></i>Точное расположение</span><span><i class="map-legend__dot is-approx"></i>Ориентировочная точка</span></div>
           <div class="chips" id="chips" role="tablist" aria-label="Подборки"></div>
           <ul class="list" id="placeList"></ul>
         </div>

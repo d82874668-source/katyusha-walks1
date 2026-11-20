@@ -2,7 +2,7 @@
 export const state = {
   places: [], routes: [], favs: new Set(), mode: "local",
   // карта и фильтры
-  filter: "all", region: "Азербайджан", q: "", minRating: 0, minPrice: null, maxPrice: null, sort: "popularity", active: null, user: null,
+  filter: "all", region: "Баку", q: "", minRating: 0, minPrice: null, maxPrice: null, sort: "popularity", active: null, user: null,
   // направления платформы
   city: "Баку", venueCity: "Баку", venueGroup: "all",
   plan: { ids: [], mode: "walk", name: "" },

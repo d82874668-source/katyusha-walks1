@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+
+<html lang="ru"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"tertiary-container":"#213a22","outline-variant":"#c1c8c3","tertiary":"#0b240e","on-tertiary-fixed":"#07200b","surface-bright":"#fbf9f5","on-surface-variant":"#424844","surface-container":"#efeeea","on-secondary-container":"#74240d","secondary-container":"#fd8c6d","on-background":"#1b1c1a","surface-variant":"#e4e2de","primary":"#07241a","inverse-primary":"#aecebe","on-secondary-fixed":"#3b0900","error":"#ba1a1a","primary-container":"#1e3a2f","tertiary-fixed-dim":"#b0cfad","secondary-fixed-dim":"#ffb5a0","surface-container-lowest":"#ffffff","secondary":"#9d4229","on-primary-fixed-variant":"#304c41","on-primary-fixed":"#032017","on-primary":"#ffffff","surface-dim":"#dbdad6","on-secondary":"#ffffff","primary-fixed-dim":"#aecebe","background":"#fbf9f5","surface-tint":"#486458","surface-container-highest":"#e4e2de","inverse-on-surface":"#f2f0ed","on-error-container":"#93000a","surface-container-high":"#eae8e4","error-container":"#ffdad6","surface-container-low":"#f5f3ef","outline":"#727974","secondary-fixed":"#ffdbd1","on-tertiary-fixed-variant":"#334d33","surface":"#fbf9f5","inverse-surface":"#30312e","on-surface":"#1b1c1a","tertiary-fixed":"#ccebc7","primary-fixed":"#caeada","on-primary-container":"#86a496","on-error":"#ffffff","on-tertiary-container":"#88a485","on-secondary-fixed-variant":"#7e2b14","on-tertiary":"#ffffff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","gutter-mobile":"1rem","gutter":"1.5rem","margin":"3rem","space-lg":"1.5rem","margin-mobile":"1.25rem","space-xs":"0.25rem","space-md":"1rem","space-xl":"2.5rem"},"fontFamily":{"headline-sm":["Playfair Display"],"display-lg":["Playfair Display"],"body-sm":["Plus Jakarta Sans"],"headline-md":["Playfair Display"],"label-caps":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"display-lg-mobile":["Playfair Display"],"label-lg":["Plus Jakarta Sans"],"body-xl":["Plus Jakarta Sans"],"headline-xl":["Playfair Display"],"headline-xl-mobile":["Playfair Display"]},"fontSize":{"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"20px","fontWeight":"400"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"500"}],"label-caps":["11px",{"lineHeight":"16px","letterSpacing":"0.08em","fontWeight":"700"}],"body-md":["15px",{"lineHeight":"24px","fontWeight":"400"}],"display-lg-mobile":["36px",{"lineHeight":"42px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"body-xl":["18px",{"lineHeight":"30px","fontWeight":"400"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.015em","fontWeight":"500"}],"headline-xl-mobile":["28px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"500"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><header class="fixed top-0 left-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_12px_rgba(27,28,26,0.05)] transition-all"><div class="h-20 max-w-[1360px] mx-auto px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md"><a class="flex items-center gap-space-sm group" data-path="glavnaya" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/ALJJyrC1yR2ddMGq02KhLuVF6n8XQyh2-u-g-kpMaKfwaW1JASqi1Ju2MkTarA8HZGj2aYC5bcXNMS66s874tbPQwhrG4OodGEIIuDfX9NmwiAjyLs0EbdyLMug4J4dW546YOzYF3q1HwoRNEDDTUr8upSg8s0B8pqFRZpN9Vy96WylOW0MTbKuVxOMVOs9zv8J5gP257W281k6HsVq00uSAAkczrxUhSyoTcrS-pl-sAKdP"/><span class="font-headline-sm text-headline-sm text-primary group-hover:text-primary-container transition-colors tracking-tight">Прогулки с Катюшей</span></a><div class="relative inline-flex items-center"><button class="flex items-center gap-space-xs px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface text-label-lg font-label-lg transition-colors" type="button"><span class="material-symbols-outlined text-secondary text-[18px]">location_on</span><span>Санкт-Петербург</span><span class="material-symbols-outlined text-on-surface-variant text-[16px]">expand_more</span></button></div></div><nav class="hidden xl:flex items-center gap-space-md" data-active-classes="text-primary font-label-lg bg-surface-container-low rounded-full px-3 py-1.5"><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1.5 px-3" data-path="otkroy-gorod" href="#">Открой город</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1.5 px-3" data-path="mesta" href="#">Места</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1.5 px-3" data-path="interaktivnaya-karta" href="#">Интерактивная карта</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1.5 px-3" data-path="marshruty" href="#">Маршруты</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1.5 px-3" data-path="splanirovat-progulku" href="#">Конструктор</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1.5 px-3" data-path="o-proekte" href="#">О проекте</a></nav><div class="flex items-center gap-space-sm"><button class="hidden md:flex items-center gap-space-xs px-3 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface transition-all text-body-sm font-body-sm shadow-[0_1px_4px_rgba(27,28,26,0.04)]" type="button"><span class="material-symbols-outlined text-[18px]">search</span><span class="pr-space-xs">Найти место, улицу...</span><kbd class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-label-caps font-label-caps">⌘K</kbd></button><a class="flex items-center gap-space-xs px-3 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface transition-colors shadow-[0_1px_4px_rgba(27,28,26,0.04)]" data-path="izbrannoe" href="#"><span class="material-symbols-outlined text-secondary text-[18px]">favorite</span><span class="font-label-lg text-label-lg">4</span></a><a class="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg transition-all shadow-[0_4px_16px_rgba(30,58,47,0.18)] hover:shadow-[0_6px_20px_rgba(30,58,47,0.24)]" data-path="splanirovat-progulku" href="#">Спланировать прогулку</a></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]"><div class="flex flex-col w-full">
+<!-- Breadcrumb Navigation & Top Metadata Bar -->
+<section class="max-w-[1360px] w-full mx-auto px-gutter pt-6 pb-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<nav aria-label="Хлебные крошки" class="flex items-center gap-space-xs text-body-sm font-body-sm text-on-surface-variant flex-wrap">
+<a class="hover:text-primary transition-colors" data-path="glavnaya" href="#">Главная</a>
+<span class="text-outline-variant">/</span>
+<a class="hover:text-primary transition-colors" data-path="spb" href="#">Санкт-Петербург</a>
+<span class="text-outline-variant">/</span>
+<a class="hover:text-primary transition-colors" data-path="mesta" href="#">Кофейни и заведения</a>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface font-label-lg font-medium">Тайная кофейня в Доме Архитектора</span>
+</nav>
+<div class="flex items-center gap-space-xs self-start sm:self-auto">
+<button class="inline-flex items-center gap-space-xs px-3.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface text-label-lg font-label-lg transition-all shadow-sm" id="save-btn" onclick="toggleSave()">
+<span class="material-symbols-outlined text-secondary text-[18px]" id="save-icon">favorite_border</span>
+<span id="save-text">В сохраненное</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-3.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface text-label-lg font-label-lg transition-all shadow-sm" onclick="shareLink()">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">share</span>
+<span>Поделиться</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Hero Photo Grid (Urban Flâneur Editorial Gallery) -->
+<section class="max-w-[1360px] w-full mx-auto px-gutter mb-space-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md rounded-2xl overflow-hidden relative">
+<!-- Main Atmospheric Photo (7 Cols) -->
+<div class="lg:col-span-8 group relative overflow-hidden rounded-xl bg-surface-container h-[360px] md:h-[500px]">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]" data-alt="Intimate view inside Polovtsov Mansion hidden coffee parlor in Saint Petersburg. Rich dark carved oak fireplace, ornate antique parquet, warm golden light streaming through tall gothic arch windows, vintage velvet armchair, delicate porcelain espresso cup on a marble side table, peaceful cinematic atmosphere, architectural fine art photography with Kinfolk editorial tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYy5Ep07QfQd0q52-U6qPvI5ne_8wgbJBKldAaysP4V-MmQtJZwkIWSk97SVO2_hOcrcufpJjnARJRLsHXe6qBZEMFeK848mjQDgbw57OaP_oIIl0RW-E2SlbZES8RPRFZ0rJ4B7kkVOX1lxzU2ZiYSeVHeqrlX4J5STQC5ShemiMUjU58jY9xWnDZxyHvhv_RxYBXWJSHV0LAK7DaiBddGvRUYHrWFeptBSEBvvY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent pointer-events-none"></div>
+<div class="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+<div class="space-y-1">
+<span class="inline-block px-3 py-1 rounded-full bg-surface-bright/90 backdrop-blur-md text-primary font-label-caps text-label-caps uppercase tracking-wider">
+              Каминный зал Бронзовой гостиной
+            </span>
+<p class="font-headline-sm text-headline-sm text-on-primary drop-shadow-sm hidden md:block">
+              Тишина XIX века и мерный звон тонкого фарфора
+            </p>
+</div>
+<span class="text-body-sm font-body-sm text-surface-container-lowest/80 hidden sm:inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">photo_camera</span>
+            Фото: Катюша Григорьева
+          </span>
+</div>
+</div>
+<!-- Right Stack of 3 Photographs (5 Cols) -->
+<div class="lg:col-span-4 grid grid-cols-2 lg:grid-cols-1 gap-space-md h-full">
+<!-- Photo 1: Ornate Stucco Detail -->
+<div class="group relative overflow-hidden rounded-xl bg-surface-container h-[170px] lg:h-[155px]">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Exquisite detailed close-up shot of historic gilded ceiling stucco medallion and carved wooden cornice inside Saint Petersburg 19th-century mansion, soft morning natural sidelight, warm muted creamy and sage tones, fine art architectural texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSGPY5R3_r2tT0hdxvDRZTw9xrl3vkyCa3xSigRFaYrPWGIcqSAwzrpryKCL0Qzi3G7j-E8-D2GqG3-qOFmHJLgz9Zw3KSKGmmE8ho-h51-D6PA-7-FlRTaE6tTwPJ9kX7lxFTF4otojFqoIKIK-3TmM2BnpuJCs1zCXExxLugAeN5h89eazLEr3XLNyblzFY0BVnKkn8G4acGptvvaQqqh6YceUxOxx-1IcSAFu4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="absolute bottom-3 left-3 px-2 py-0.5 rounded bg-surface/80 backdrop-blur-sm text-on-surface font-label-caps text-label-caps">Лепнина и роспись плафона</span>
+</div>
+<!-- Photo 2: Fresh Pastry Vitrine -->
+<div class="group relative overflow-hidden rounded-xl bg-surface-container h-[170px] lg:h-[155px]">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Artisanal glass pastry vitrine displaying freshly baked layered almond croissants, glazed lemon tartelette with fresh zest, warm bakery glow, brass tray accents, refined Scandinavian and Parisian cafe styling, shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAD2bC9yRXxR2VByfgNpCKhQuAvuNSnVBZLUO9XRrbe574QwMwX6ZxQ6q66zY_1d3wOzSETFeWCZc4lxuHeAYjDKfLVhf42d-HE9sNASgP4Spd9JNtVSz5vJIgDyQbIcPRlM7ruFLLqgyYaj4MSnXSl07Zun_XKjgDJQGe5gh3JzvnCA1nYi3MKzE3HNZje7ce5JfLsKWHiVwXVD04okYSCHvXjTuaito3qcovOns4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="absolute bottom-3 left-3 px-2 py-0.5 rounded bg-surface/80 backdrop-blur-sm text-on-surface font-label-caps text-label-caps">Свежая выпечка утра</span>
+</div>
+<!-- Photo 3: Cozy Window Nook -->
+<div class="col-span-2 lg:col-span-1 group relative overflow-hidden rounded-xl bg-surface-container h-[170px] lg:h-[158px]">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Cozy reading nook with deep green velvet wingback chair next to a tall French casement window overlooking a cobblestone inner courtyard garden in Saint Petersburg, open art book on a wooden stool, soft rain outside, poetic flâneur mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2o9cKs-rM0WKKBblFamjY-5Oqd2vNabQFhk5MNoaYTz0Vm1o09AJkS7301mlVOlNt-fWZd-x9CkD2FHA10aoHa1nNFWlNNLg0Q_Uoy5hCCLuJBnorfMIvCS9nJyoWqO0J-dxVCdQyojBv55K4ihLwIfPIPcntWVFraC2hby7Wqt-L_MyiQgwvVsmOsvROhnEcvGJh0ZpiL9rY4Gkekov0Ebq7WlmP22JAPKYXV-o"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent"></div>
+<button class="absolute bottom-3 right-3 inline-flex items-center gap-space-xs px-3.5 py-1.5 rounded-full bg-surface-bright/95 hover:bg-surface-bright text-primary font-label-lg text-label-lg shadow-md transition-all" onclick="openGalleryModal()">
+<span class="material-symbols-outlined text-[18px]">photo_library</span>
+<span>Все 18 фото</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Content Layout (2 Columns: 8/12 and 4/12) -->
+<section class="max-w-[1360px] w-full mx-auto px-gutter mb-space-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl">
+<!-- Left Narrative Column (8 Cols) -->
+<div class="lg:col-span-8 flex flex-col space-y-space-xl">
+<!-- Header & Badges Block -->
+<div class="space-y-space-sm pb-space-md border-b-0">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps uppercase tracking-wider">
+<span class="material-symbols-outlined text-[14px]">stars</span>
+              Кураторский выбор
+            </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-caps text-label-caps uppercase tracking-wider">
+<span class="material-symbols-outlined text-[14px]">account_balance</span>
+              Особняк Половцова
+            </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">
+<span class="material-symbols-outlined text-[14px]">coffee</span>
+              Спешелти кофе
+            </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">
+<span class="material-symbols-outlined text-[14px]">volume_off</span>
+              Тихий спот
+            </span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-primary font-medium tracking-tight">
+            Тайная кофейня в Доме Архитектора
+          </h1>
+<div class="flex flex-wrap items-center gap-y-2 gap-x-space-md text-body-sm font-body-sm text-on-surface-variant">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">4.9</span>
+<span class="text-outline">·</span>
+<a class="underline hover:text-primary transition-colors" href="#reviews-section">112 отзывов внимательных гостей</a>
+</div>
+<span class="text-outline-variant">|</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-outline text-[18px]">payments</span>
+<span>Средний чек: <strong class="text-on-surface font-medium">350–600 ₽</strong></span>
+</div>
+<span class="text-outline-variant">|</span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+<span class="text-emerald-800 font-medium">Открыто до 21:00</span>
+</div>
+</div>
+</div>
+<!-- Curator's Note (Kinfolk Callout Box) -->
+<div class="relative bg-surface-container-low rounded-2xl p-space-lg shadow-sm overflow-hidden">
+<div class="absolute -right-4 -bottom-6 text-surface-container-highest/60 select-none pointer-events-none">
+<span class="material-symbols-outlined text-[130px] opacity-20">format_quote</span>
+</div>
+<div class="relative flex flex-col sm:flex-row items-start gap-space-md">
+<img alt="Катюша Григорьева" class="w-14 h-14 rounded-full object-cover shadow-sm flex-shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC1yR2ddMGq02KhLuVF6n8XQyh2-u-g-kpMaKfwaW1JASqi1Ju2MkTarA8HZGj2aYC5bcXNMS66s874tbPQwhrG4OodGEIIuDfX9NmwiAjyLs0EbdyLMug4J4dW546YOzYF3q1HwoRNEDDTUr8upSg8s0B8pqFRZpN9Vy96WylOW0MTbKuVxOMVOs9zv8J5gP257W281k6HsVq00uSAAkczrxUhSyoTcrS-pl-sAKdP"/>
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-secondary font-bold tracking-widest">Заметка куратора</span>
+<span class="text-outline-variant">·</span>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Катюша Григорьева</span>
+</div>
+<blockquote class="font-headline-sm text-headline-sm text-primary font-normal italic leading-relaxed">
+                «Сюда приходят не просто выпить фильтр, а затаить дыхание. Входишь через неприметную дубовую дверь дома Половцова, поднимаешься по ковровой дорожке — и оказываешься в тишине XIX века под мерный звон фарфоровых чашек».
+              </blockquote>
+<p class="font-body-sm text-body-sm text-on-surface-variant pt-1">
+                Совет: садитесь за столик №4 у резного шкафа из ореха — там идеальный рассеянный свет для чтения писем или блокнота.
+              </p>
+</div>
+</div>
+</div>
+<!-- Narrative Section: About Place -->
+<article class="space-y-space-md">
+<div class="space-y-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Культурная анатомия</span>
+<h2 class="font-headline-md text-headline-md text-primary font-medium">
+              О месте: ускользающий Петербург за тяжелой портьерой
+            </h2>
+</div>
+<p class="font-body-xl text-body-xl text-on-surface leading-relaxed">
+            Внешне особняк сенатора Александра Половцова на Большой Морской улице выглядит сдержанно и строго — классический петербургский фасад эпохи позднего классицизма, спроектированный архитектором Александром Пелем. Однако за парадными дверями скрывается один из самых роскошных и целостно сохранившихся интерьерных ансамблей города.
+          </p>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Кофейня расположилась на стыке исторического фойе и бывшей курительной комнаты Дома Архитектора (ныне Санкт-Петербургского союза архитекторов). Здесь бережно обошлись с наследием: натертый воском наборный паркет из восьми ценных пород древесины, флорентийские зеркала в тяжелых багетах, гобелены и чугунные радиаторы времен императора Александра III гармонично соседствуют с лаконичной белой кофемашиной La Marzocco.
+          </p>
+<!-- Micro Visual Bento: Experience Highlights -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm pt-space-xs">
+<div class="bg-surface-container-low p-space-md rounded-xl space-y-space-xs shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[24px]">menu_book</span>
+<h4 class="font-headline-sm text-headline-sm text-primary">Книжная тишина</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                На открытых полках — раритетные альбомы по архитектуре ленинградского модерна и каталоги гравюр.
+              </p>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-xl space-y-space-xs shadow-sm">
+<span class="material-symbols-outlined text-primary-container text-[24px]">music_note</span>
+<h4 class="font-headline-sm text-headline-sm text-primary">Виниловый саундтрек</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Фоном негромко звучит французский кул-джаз 1950-х, фортепианные этюды Сати и эмбиент.
+              </p>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-xl space-y-space-xs shadow-sm">
+<span class="material-symbols-outlined text-tertiary-container text-[24px]">eco</span>
+<h4 class="font-headline-sm text-headline-sm text-primary">Оранжерейный свет</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Огромные стрельчатые окна выходят в тишайший внутренний двор-сад со старыми липами.
+              </p>
+</div>
+</div>
+</article>
+<!-- Signature Menu Highlights -->
+<section class="space-y-space-md">
+<div class="flex items-end justify-between">
+<div class="space-y-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-secondary tracking-wider">Редакторская дегустация</span>
+<h3 class="font-headline-md text-headline-md text-primary font-medium">
+                Меню-хайлайты: что заказывать
+              </h3>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant hidden sm:inline-block">Обжарка: Восход &amp; Submarine</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Item 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-space-sm group">
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-primary font-label-caps text-label-caps uppercase">Сигнатура</span>
+<span class="font-label-lg text-label-lg text-secondary font-bold">390 ₽</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">
+                  Кедровый раф особняка
+                </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Натуральный дикий кедровый урбеч, домашний сироп из шишек карельской сосны и шелковистая сливочная пенка.
+                </p>
+</div>
+<div class="pt-2 flex items-center gap-1 text-on-surface-variant text-[12px] font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+<span>Выбор редакции</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-space-sm group">
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps uppercase">Фильтр</span>
+<span class="font-label-lg text-label-lg text-secondary font-bold">290 ₽</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">
+                  Эфиопия Иргачеффе
+                </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Яркий цветочный профайл: бергамот, спелый персик и жасминовое послевкусие в винтажной чашке тонкого костяного фарфора.
+                </p>
+</div>
+<div class="pt-2 flex items-center gap-1 text-on-surface-variant text-[12px] font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary">spa</span>
+<span>Натуральная обработка</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-space-sm group">
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps uppercase">Выпечка</span>
+<span class="font-label-lg text-label-lg text-secondary font-bold">340 ₽</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">
+                  Миндальный круассан
+                </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Двойная выпечка с франжипаном на нормандском масле, посыпка из обжаренных лепестков миндаля. Подается теплым.
+                </p>
+</div>
+<div class="pt-2 flex items-center gap-1 text-on-surface-variant text-[12px] font-body-sm">
+<span class="material-symbols-outlined text-[16px] text-tertiary">bakery_dining</span>
+<span>Выпекают каждое утро</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Taste & Mood Sparklines / Rating Breakdown -->
+<div class="bg-surface-container-low rounded-xl p-space-lg shadow-sm space-y-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div>
+<span class="font-label-caps text-label-caps uppercase text-secondary">Сенсорная карта заведения</span>
+<h4 class="font-headline-sm text-headline-sm text-primary">Впечатления по шкале Катюши</h4>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">На основе 112 визитов резидентов</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md pt-2">
+<div class="space-y-1">
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="text-on-surface">Уровень тишины</span>
+<span class="font-semibold text-primary">96%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 96%"></div>
+</div>
+<span class="text-on-surface-variant text-[11px] font-body-sm">Идеально для книг и раздумий</span>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="text-on-surface">Эстетика интерьера</span>
+<span class="font-semibold text-primary">99%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 99%"></div>
+</div>
+<span class="text-on-surface-variant text-[11px] font-body-sm">Подлинный XIX век без новодела</span>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="text-on-surface">Баланс чашки</span>
+<span class="font-semibold text-primary">94%</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 94%"></div>
+</div>
+<span class="text-on-surface-variant text-[11px] font-body-sm">Точная экстракция зерна</span>
+</div>
+</div>
+</div>
+<!-- Community Reviews Section -->
+<section class="space-y-space-md pt-space-xs" id="reviews-section">
+<div class="flex items-center justify-between">
+<div class="space-y-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-secondary tracking-wider">Голоса сообщества</span>
+<h3 class="font-headline-md text-headline-md text-primary font-medium">
+                Отзывы резидентов клуба
+              </h3>
+</div>
+<button class="inline-flex items-center gap-space-xs px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg shadow-sm transition-all" onclick="toggleReviewModal()">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+<span>Оставить отзыв</span>
+</button>
+</div>
+<div class="space-y-space-md">
+<!-- Review 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed font-headline-sm flex items-center justify-center font-bold">
+                    МВ
+                  </div>
+<div>
+<h5 class="font-label-lg text-label-lg text-on-surface font-semibold">Михаил Воронов</h5>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Архитектурный критик · 3 дня назад</span>
+</div>
+</div>
+<div class="flex items-center text-secondary text-[16px]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                «Невероятная сохранность каминной полки и потолочной резьбы. Ощущение, что зашел в гости к петербургскому академику перед лекцией. Фильтр на зерне от Submarine сварен безукоризненно. И главное — никакой назойливой музыки, только приглушенный гул разговоров».
+              </p>
+</div>
+<!-- Review 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-headline-sm flex items-center justify-center font-bold">
+                    АС
+                  </div>
+<div>
+<h5 class="font-label-lg text-label-lg text-on-surface font-semibold">Анна Смирнова</h5>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Иллюстратор · 12 дней назад</span>
+</div>
+</div>
+<div class="flex items-center text-secondary text-[16px]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                «Приходила со скетчбуком в дождливый четверг. Села у арочного окна, заказала кедровый раф и лимонный тарт. Просидела два часа, сделала три акварельные зарисовки. Очень вежливые бариста, которые искренне любят и знают историю этого дома».
+              </p>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Action & Practical Sidebar (4 Cols, Sticky) -->
+<aside class="lg:col-span-4">
+<div class="sticky top-24 space-y-space-md">
+<!-- Main Action Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-md space-y-space-md">
+<div class="space-y-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-secondary">Спланировать визит</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Добавить в свой день</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Включите эту локацию в персональную медленную прогулку с таймингом и навигацией от Катюши.
+              </p>
+</div>
+<!-- Primary Actions -->
+<div class="space-y-space-xs">
+<button class="w-full py-3.5 px-6 rounded-full bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg transition-all shadow-[0_4px_16px_rgba(30,58,47,0.2)] hover:shadow-[0_6px_20px_rgba(30,58,47,0.28)] flex items-center justify-center gap-space-xs" id="add-walk-btn" onclick="handleAddToWalk()">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span id="add-walk-label">Добавить в прогулку</span>
+</button>
+<button class="w-full py-3 px-6 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg transition-colors flex items-center justify-center gap-space-xs" onclick="buildWalkRoute()">
+<span class="material-symbols-outlined text-secondary text-[20px]">directions_walk</span>
+<span>Построить пешеходный маршрут</span>
+</button>
+</div>
+<!-- Practical Details List -->
+<div class="pt-space-sm space-y-space-sm border-t-0">
+<!-- Address -->
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">location_on</span>
+<div class="space-y-0.5">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Адрес</span>
+<p class="font-body-sm text-body-sm text-on-surface font-medium">
+                    Большая Морская ул., 52
+                  </p>
+<p class="font-body-sm text-body-sm text-outline">
+                    м. Адмиралтейская · 8 мин пешком
+                  </p>
+</div>
+</div>
+<!-- Opening Hours -->
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-tertiary-container text-[20px] mt-0.5">schedule</span>
+<div class="space-y-0.5">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Режим работы</span>
+<p class="font-body-sm text-body-sm text-on-surface font-medium">
+                    Пн–Вс: 10:00 — 21:00
+                  </p>
+<p class="font-body-sm text-body-sm text-secondary">
+                    Кухня и выпечка до 20:30
+                  </p>
+</div>
+</div>
+<!-- Phone & Booking -->
+<div class="flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary-container text-[20px] mt-0.5">call</span>
+<div class="space-y-0.5">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Телефон Дома</span>
+<a class="font-body-sm text-body-sm text-on-surface font-medium hover:text-primary transition-colors block" href="tel:+78123148829">
+                    +7 (812) 314-88-29
+                  </a>
+</div>
+</div>
+</div>
+<!-- Place Amenities / Tags -->
+<div class="pt-space-xs space-y-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Особенности и удобства</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-[12px] font-body-sm">
+<span class="material-symbols-outlined text-[14px]">wifi</span>
+                  Тихий Wi-Fi
+                </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-[12px] font-body-sm">
+<span class="material-symbols-outlined text-[14px]">pets</span>
+                  Дог-френдли
+                </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-[12px] font-body-sm">
+<span class="material-symbols-outlined text-[14px]">credit_card</span>
+                  Оплата картой
+                </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-[12px] font-body-sm">
+<span class="material-symbols-outlined text-[14px]">auto_stories</span>
+                  Книжная полка
+                </span>
+</div>
+</div>
+</div>
+<!-- Interactive Static Map Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps uppercase text-secondary">Геопозиция</span>
+<span class="font-body-sm text-body-sm text-outline">Центральный район</span>
+</div>
+<!-- Static Map Container with data-location -->
+<div class="w-full h-44 rounded-xl bg-surface-container relative overflow-hidden bg-cover bg-center shadow-inner group cursor-pointer" data-location="Saint Petersburg, Bolshaya Morskaya 52" onclick="openFullMap()" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB3wPPBco4dbVbcWjYyS9rA9SOmJzuwi7xmFw9pT2oQdVi0xo4k3n6TNQ1YBu3ZovpSLrOJ4asRAY2ily5wNty-HBs9jIyadiMlSIxSPELxE5Yjh62GDZTHQRavqu9EgD7GUipdsA6mUPDxm0PmosdY4YJnUiiN8nHM5IymqRadKY4ztBytQ-Tz_G5YFTlElCU9BNYY0e_yGjAEBDTA-hErcPdd8zSRlgI_SlH8hVY')">
+<div class="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors"></div>
+<!-- Custom Marker Pin -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="w-9 h-9 rounded-full bg-secondary text-on-secondary shadow-lg flex items-center justify-center animate-bounce">
+<span class="material-symbols-outlined text-[20px]">coffee</span>
+</div>
+<div class="w-2.5 h-1 bg-primary/30 rounded-full blur-[1px] mt-0.5"></div>
+</div>
+<div class="absolute bottom-2 left-2 bg-surface-bright/90 backdrop-blur-sm px-2 py-0.5 rounded text-[11px] font-label-caps text-primary">
+                Б. Морская, 52
+              </div>
+</div>
+<button class="w-full py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg transition-colors flex items-center justify-center gap-space-xs" onclick="openFullMap()">
+<span class="material-symbols-outlined text-[18px]">map</span>
+<span>Открыть на большой карте</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+</section>
+<!-- Nearby Exploration Block: "Что посмотреть рядом" (Within 10 min walk) -->
+<section class="max-w-[1360px] w-full mx-auto px-gutter mb-space-xl">
+<div class="bg-surface-container-low rounded-2xl p-space-lg md:p-space-xl space-y-space-lg shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+<div class="space-y-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-secondary tracking-wider">Пешая доступность</span>
+<h2 class="font-headline-md text-headline-md text-primary font-medium">
+            Что посмотреть рядом (в радиусе 10 минут)
+          </h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+            Кофейня в Доме Архитектора находится в самом сердце тихого аристократического Петербурга. Вот три точки для гармоничного продолжения неспешной прогулки:
+          </p>
+</div>
+<a class="inline-flex items-center gap-1 font-label-lg text-label-lg text-secondary hover:text-primary transition-colors whitespace-nowrap" data-path="interaktivnaya-karta" href="#">
+<span>Все места района на карте</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Nearby Card 1: Исаакиевский собор и сквер -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between">
+<div>
+<div class="h-44 bg-surface-container overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Majestic view of Saint Isaac's Cathedral golden dome peeking through blooming lilac bushes and centenary oak trees in the quiet public garden square, soft afternoon northern sunlight, cinematic flâneur atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM0bbp9-UL_coaL_xDMLPRFE7KZwr0D9xq6VIM5yCVE-dp569FGTwpGuQwAEBYF0iL4lsWGCq8F7QVXT2H2KXzk96zx-7piZKwmVZckx5Y8u9Cmkn3V3xeen1ljCCPFu6NWmuSKBmy8_e47cLSLdn2Op5xdm_kvbGRlZi8l6k8DmDDrJ6gV89hxsTgyj1DPSvAdOd2PGygXqBWzBmTyaMEQ2ARN6YvF1C2Kr2FxRA"/>
+<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-surface-bright/90 backdrop-blur-sm text-primary font-label-caps text-label-caps">
+                4 мин пешком · 320 м
+              </span>
+</div>
+<div class="p-space-md space-y-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-secondary">Архитектура &amp; Сад</span>
+<h4 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">
+                Исаакиевский сквер
+              </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                Тихие скамейки под старыми кронами дубов с безупречным видом на монументальные гранитные колонны Монферрана.
+              </p>
+</div>
+</div>
+<div class="p-space-md pt-0 flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-outline">Культурная классика</span>
+<button class="inline-flex items-center text-primary font-label-lg text-label-lg group-hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Nearby Card 2: Секретный книжный угол -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between">
+<div>
+<div class="h-44 bg-surface-container overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Intimate cozy independent bookstore hidden inside Saint Petersburg historical courtyard passage, floor-to-ceiling wooden bookshelves filled with art monographs and poetry, warm lamp light, atmospheric editorial photo." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGACqCQQm942bBZ6ZmPEhNS7yXAGfHn4GVid8kKZfT8Dw9bhMai5lHq0r4U9oE3cHtH78VhnhVdcrsYlqsmSWON5IyI5tzxRm2ET0_lmlCx_zkesbUo__TBA2Eej35IaW-psm_DtXUWKb_Oqb18jOwIFzTLEX3--7a1UQKpU5p67afWMeV5YWdmB9CCQr_2OnZKT3p7ewQPD0Dp614OEvpWCcyxHxTWzJheKuE4jc"/>
+<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-surface-bright/90 backdrop-blur-sm text-primary font-label-caps text-label-caps">
+                6 мин пешком · 480 м
+              </span>
+</div>
+<div class="p-space-md space-y-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-secondary">Букинистика</span>
+<h4 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">
+                Секретный книжный угол
+              </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                Независимый книжный лабиринт с редкими иллюстрированными изданиями об искусстве, открытками и винтажными закладками.
+              </p>
+</div>
+</div>
+<div class="p-space-md pt-0 flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-outline">Редкие книги</span>
+<button class="inline-flex items-center text-primary font-label-lg text-label-lg group-hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Nearby Card 3: Набережная реки Мойки у Синего моста -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between">
+<div>
+<div class="h-44 bg-surface-container overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Picturesque reflection on the gentle water ripples of the Moika River in Saint Petersburg near the wide Blue Bridge, historical pastel palaces lining the granite embankment, dramatic soft northern sky." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzqv_qg1mHpRWHHlgRTkkT-Y-jJKTbLa0XVQBo5KSDEn0-r2DwboGG4O7TLf9xU5njU7AFX0rNWenbFhq6DlcCkTm9RXw4jW0ITMY4LcMXOA-VtOm61T_w0Ad7ptVaByHPHpD01dRmX7stAsFKMkAqLua-roL_N5Pnwoa9jSc_-5jRNkKnsmcHc_1dSyd3NecRJH1jbbOnetDDksKNXUA_C89F4R8Wx86zS-mr4No"/>
+<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-surface-bright/90 backdrop-blur-sm text-primary font-label-caps text-label-caps">
+                5 мин пешком · 410 м
+              </span>
+</div>
+<div class="p-space-md space-y-space-xs">
+<span class="font-label-caps text-label-caps uppercase text-secondary">Водная гладь</span>
+<h4 class="font-headline-sm text-headline-sm text-primary group-hover:text-secondary transition-colors">
+                Набережная у Синего моста
+              </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                Самый широкий мост города, гранитные спуски к воде и чугунный водомерный столб-обелиск с отметками наводнений.
+              </p>
+</div>
+</div>
+<div class="p-space-md pt-0 flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-outline">Прогулка вдоль воды</span>
+<button class="inline-flex items-center text-primary font-label-lg text-label-lg group-hover:translate-x-1 transition-transform">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Notification Toast (Feedback for Actions) -->
+<div class="fixed bottom-6 right-6 z-50 bg-primary-container text-on-primary px-5 py-3 rounded-xl shadow-xl flex items-center gap-space-xs translate-y-24 opacity-0 transition-all duration-300 pointer-events-none" id="toast-notification">
+<span class="material-symbols-outlined text-tertiary-fixed text-[20px]" id="toast-icon">check_circle</span>
+<span class="font-label-lg text-label-lg" id="toast-msg">Место добавлено в ваш маршрут</span>
+</div>
+</div>
+<script>
+  let isSaved = false;
+  let isInWalk = false;
+
+  function showToast(message, icon = 'check_circle') {
+    const toast = document.getElementById('toast-notification');
+    const msgEl = document.getElementById('toast-msg');
+    const iconEl = document.getElementById('toast-icon');
+    if (!toast) return;
+
+    msgEl.textContent = message;
+    iconEl.textContent = icon;
+    toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+    toast.classList.add('translate-y-0', 'opacity-100');
+
+    setTimeout(() => {
+      toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+    }, 3200);
+  }
+
+  function toggleSave() {
+    isSaved = !isSaved;
+    const icon = document.getElementById('save-icon');
+    const text = document.getElementById('save-text');
+    if (isSaved) {
+      icon.textContent = 'favorite';
+      icon.style.fontVariationSettings = "'FILL' 1";
+      text.textContent = 'В сохраненных';
+      showToast('Добавлено в ваше избранное', 'favorite');
+    } else {
+      icon.textContent = 'favorite_border';
+      icon.style.fontVariationSettings = "'FILL' 0";
+      text.textContent = 'В сохраненное';
+      showToast('Удалено из избранного', 'delete_outline');
+    }
+  }
+
+  function handleAddToWalk() {
+    isInWalk = !isInWalk;
+    const label = document.getElementById('add-walk-label');
+    const btn = document.getElementById('add-walk-btn');
+
+    if (isInWalk) {
+      label.textContent = 'В маршруте прогулки ✓';
+      btn.classList.add('bg-tertiary-container');
+      showToast('Кофейня добавлена в вашу текущую прогулку!');
+    } else {
+      label.textContent = 'Добавить в прогулку';
+      btn.classList.remove('bg-tertiary-container');
+      showToast('Удалено из маршрута');
+    }
+  }
+
+  function buildWalkRoute() {
+    showToast('Строим пешеходный трек от вашего текущего местоположения...', 'directions_walk');
+  }
+
+  function openGalleryModal() {
+    showToast('Открываем полноэкранную фотогалерею Дома Архитектора...', 'photo_library');
+  }
+
+  function openFullMap() {
+    showToast('Переход к интерактивной карте Петербурга...', 'map');
+  }
+
+  function toggleReviewModal() {
+    showToast('Форма рецензии резидента откроется через секунду...', 'edit_note');
+  }
+
+  function shareLink() {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+      showToast('Ссылка скопирована в буфер обмена', 'link');
+    } else {
+      showToast('Поделитесь местом: Большая Морская, 52', 'share');
+    }
+  }
+</script></main><footer class="w-full bg-surface-container-low text-on-surface mt-space-xl"><div class="max-w-[1360px] mx-auto px-gutter py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-lg mb-space-xl"><div class="lg:col-span-5 flex flex-col justify-between"><div class="space-y-space-sm"><span class="font-label-caps text-label-caps uppercase text-secondary tracking-widest">Городской альманах &amp; путеводитель</span><h3 class="font-headline-md text-headline-md text-primary font-medium tracking-tight">Прогулки с Катюшей</h3><p class="font-body-md text-body-md text-on-surface-variant max-w-md">Культурная геометрия, скрытые дворы, тихие кофейни и живые истории улиц. Мы исследуем города не как туристы, а как внимательные читатели открытой книги жизни.</p></div><div class="pt-space-md"><span class="font-label-caps text-label-caps text-on-surface-variant block mb-space-xs">Мобильные приложения</span><div class="flex items-center gap-space-sm"><button class="inline-flex items-center gap-space-xs px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)]" type="button"><span class="material-symbols-outlined text-[18px]">phone_iphone</span><span>App Store</span></button><button class="inline-flex items-center gap-space-xs px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)]" type="button"><span class="material-symbols-outlined text-[18px]">android</span><span>Google Play</span></button></div></div></div><div class="lg:col-span-4 bg-surface-container-lowest p-space-lg rounded-xl shadow-[0_2px_12px_rgba(27,28,26,0.04)] flex flex-col justify-between"><div class="space-y-space-xs"><span class="font-label-caps text-label-caps uppercase text-secondary">Еженедельная редакторская рассылка</span><h4 class="font-headline-sm text-headline-sm text-primary">Секретные маршруты в почте</h4><p class="font-body-sm text-body-sm text-on-surface-variant">Каждую пятницу — одна неочевидная улочка, свежая кофейня недели и вдохновляющий пеший маршрут от Катюши.</p></div><form class="pt-space-md space-y-space-xs" onsubmit="event.preventDefault();"><div class="flex items-center gap-space-xs bg-surface rounded-lg p-1"><input class="w-full bg-transparent px-3 py-2 text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="Ваш e-mail" type="email"/><button class="px-4 py-2 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg transition-colors whitespace-nowrap" type="submit">Подписаться</button></div><p class="font-body-sm text-body-sm text-outline-variant text-[11px]">Бережно относимся к письмам. Никакого спама, только городские находки.</p></form></div><div class="lg:col-span-3 flex flex-col justify-between space-y-space-md"><div class="space-y-space-xs"><span class="font-label-caps text-label-caps uppercase text-secondary">Навигация альманаха</span><ul class="space-y-space-xs font-body-md text-body-md"><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="mesta" href="#">Каталог мест</a></li><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="interaktivnaya-karta" href="#">Интерактивная карта</a></li><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="splanirovat-progulku" href="#">Конструктор прогулок</a></li><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="manifest" href="#">Манифест медленных прогулок</a></li><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="kontakty" href="#">Контакты редакции</a></li></ul></div><div><span class="font-label-caps text-label-caps uppercase text-on-surface-variant block mb-space-xs">Сообщество</span><div class="flex items-center gap-space-sm"><a class="w-9 h-9 rounded-full bg-surface-container-lowest hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">send</span></a><a class="w-9 h-9 rounded-full bg-surface-container-lowest hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">photo_camera</span></a><a class="w-9 h-9 rounded-full bg-surface-container-lowest hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">podcasts</span></a></div></div></div></div><div class="pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm text-body-sm font-body-sm text-on-surface-variant"><p>© 2025 «Прогулки с Катюшей». Все права защищены. Независимый исследовательский медиапроект.</p><div class="flex items-center gap-space-md"><a class="hover:text-primary transition-colors" data-path="privacy" href="#">Политика конфиденциальности</a><a class="hover:text-primary transition-colors" data-path="terms" href="#">Правила использования</a></div></div></div></footer></body></html>

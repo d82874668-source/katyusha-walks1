@@ -33,9 +33,9 @@ const ensureMap = () => {
 /* ---------- Тема ---------- */
 const themeBtn = $("#themeBtn");
 const THEMES = {
-  light:  { name: "Светлая", note: "Чистый светлый фон", bg: "#F5F6FA", s: "#FFFFFF", i: "#0F1522", l: "rgba(15,21,34,.14)", a: "#D8365C", ai: "#FFFFFF", meta: "#F5F6FA" },
-  dark:   { name: "Тёмная", note: "Комфортно вечером", bg: "#0A0E17", s: "#121826", i: "#EEF1F8", l: "rgba(238,241,248,.18)", a: "#FF5C80", ai: "#1A0A10", meta: "#0A0E17" },
-  hearts: { name: "Сердечки", note: "Нежный розовый фон", bg: "#FFF7FA", s: "#FFFFFF", i: "#3A1725", l: "rgba(120,48,72,.18)", a: "#C2305F", ai: "#FFFFFF", meta: "#FFF7FA" },
+  light:  { name: "Светлая", note: "Тёплая бумажная палитра", bg: "#FBF9F5", s: "#FFFFFF", i: "#1B1C1A", l: "rgba(27,28,26,.12)", a: "#1E3A2F", ai: "#FFFFFF", meta: "#FBF9F5" },
+  dark:   { name: "Тёмная", note: "Глубокие природные оттенки", bg: "#111813", s: "#18221B", i: "#F0F1E9", l: "rgba(233,237,226,.14)", a: "#A8C5AE", ai: "#142018", meta: "#111813" },
+  hearts: { name: "Садовая", note: "Мягкая зелёная палитра", bg: "#F4F5ED", s: "#FFFFFF", i: "#1B2B22", l: "rgba(27,43,34,.14)", a: "#315B46", ai: "#FFFFFF", meta: "#F4F5ED" },
 };
 const applyTheme = (t) => {
   if (!THEMES[t]) t = "light";
@@ -123,7 +123,7 @@ const visible = () => {
     const priceMax = p.price_max == null ? null : Number(p.price_max);
     const hasPrice = priceMin != null && priceMax != null && Number.isFinite(priceMin) && Number.isFinite(priceMax);
     return (state.filter === "all" || p.category === state.filter) &&
-      (state.region === "all" || (p.region || "Азербайджан") === state.region) &&
+      (state.region === "all" || (p.city || p.region || "Баку") === state.region) &&
       (!q || haystack.includes(q)) &&
       (!state.minRating || (rating != null && rating >= state.minRating)) &&
       ((state.minPrice == null && state.maxPrice == null) || (hasPrice &&
@@ -156,7 +156,7 @@ function renderList() {
     const c = cat(p);
     return `<li><div class="row ${state.active === p.id ? "is-active" : ""}" data-place="${p.id}" role="button" tabindex="0">
       <span class="badge" style="--h:${c.hue}">${icon(c.icon)}</span>
-      <span class="row__t"><strong>${esc(p.title)}</strong><small>${esc(c.title)}</small></span>
+      <span class="row__t"><strong>${esc(p.title)}</strong><small>${esc(c.title)}</small><small>${p.address ? esc(p.address) : "Адрес уточняется"}${p.is_approx ? " · точка ориентировочная" : ""}</small></span>
       ${favBtn(p)}</div></li>`;
   }).join("") : `<li class="empty">Ничего не найдено. Сбросьте фильтр или измените запрос.</li>`;
 }
@@ -183,7 +183,7 @@ function openPlace(id, { scroll = false } = {}) {
   route([origin, p]).then((r) => {
     if (state.active !== id) return;
     const el = $("#eta");
-    if (el) el.innerHTML = `${icon("route")}<span><strong>${fmtDist(r.km)}</strong> · <strong>${fmtDur(r.min)}</strong> на машине от ${state.user ? "вас" : esc(origin.label || p.city || CENTER.label)}</span>`;
+    if (el) el.innerHTML = `${icon("route")}<span>${p.is_approx ? "Ориентировочно · " : ""}<strong>${fmtDist(r.km)}</strong> · <strong>${fmtDur(r.min)}</strong> на машине от ${state.user ? "вас" : esc(origin.label || p.city || CENTER.label)}${p.is_approx ? " до примерной точки" : ""}</span>`;
   }).catch(() => { const el = $("#eta"); if (el) el.textContent = "Расстояние сейчас недоступно"; });
 }
 function closeSheet() { state.active = null; sheet.hidden = true; renderList(); mapView?.clearRoute(); }
@@ -201,7 +201,7 @@ function renderSheet() {
     ${p.image ? `<img class="sheet__img" src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy">` : ""}
     ${p.photos?.length ? `<div class="sheet__gallery">${p.photos.map((photo) => `<img class="sheet__img" src="${esc(photo.url)}" alt="${esc(p.title)}" loading="lazy">`).join("")}</div>` : ""}
     <p class="sheet__desc">${esc(p.description)}</p>
-    ${p.address ? `<p class="muted">${esc(p.address)}${p.city ? ` · ${esc(p.city)}` : ""}${p.country ? ` · ${esc(p.country)}` : ""}</p>` : ""}
+    <p class="muted">${p.address ? `${esc(p.address)}${p.city ? ` · ${esc(p.city)}` : ""}${p.country ? ` · ${esc(p.country)}` : ""}` : `Адрес для этого места пока не подтверждён${p.city ? ` · ${esc(p.city)}` : ""}. Проверьте расположение перед поездкой.`}</p>
     ${p.website ? `<p class="muted"><a href="${safeWebHref(p.website)}" target="_blank" rel="noopener">Официальный сайт</a></p>` : ""}
     ${p.social_links && Object.keys(p.social_links).length ? `<p class="muted">${Object.entries(p.social_links).filter(([,url]) => typeof url === "string" && /^https?:\/\//i.test(url)).map(([name,url]) => `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(name)}</a>`).join(" · ")}</p>` : ""}
     ${p.opening_hours ? `<p class="muted">Часы работы: ${esc(p.opening_hours)}</p>` : ""}
@@ -213,12 +213,13 @@ function renderSheet() {
     ${Array.isArray(p.additional_services) && p.additional_services.length ? `<p class="muted">Услуги: ${p.additional_services.map(esc).join(", ")}</p>` : ""}
     ${p.source_urls?.[0] ? `<p class="muted"><a href="${safeWebHref(p.source_urls[0])}" target="_blank" rel="noopener">Источник информации</a></p>` : ""}
     ${p.photo_sources?.[0] ? `<p class="muted">Фото: ${esc(p.photo_sources[0].attribution || "автор не указан")} · ${esc(p.photo_sources[0].license || "лицензия указана на странице источника")} · <a href="${safeWebHref(p.photo_sources[0].source_url)}" target="_blank" rel="noopener">условия использования</a></p>` : ""}
-    ${p.is_approx ? `<p class="note">Положение на карте приблизительное. Google Maps найдёт место по названию.</p>` : ""}
+    ${p.is_approx ? `<p class="note">Метка показывает ориентировочную область, а не подтверждённый вход. Уточните точный адрес перед поездкой.</p>` : ""}
     <p class="eta" id="eta">${icon("route")}<span>Считаем маршрут…</span></p>
     <div class="sheet__actions">
       <button class="btn btn--primary" data-visit-place="${p.id}">Были здесь${getVisits(p.id).length ? ` · ${getVisits(p.id).length}` : ""}</button>
       <a class="btn btn--primary" target="_blank" rel="noopener" href="${googleUrl(p, state.user)}">${icon("nav")}Построить маршрут</a>
-      <a class="btn" target="_blank" rel="noopener" href="${osmUrl([state.user || cityOrigin(p), p])}">OpenStreetMap</a>
+      <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([p.title, p.address, p.city, p.region].filter(Boolean).join(", "))}">Проверить адрес</a>
+      ${!p.is_approx ? `<a class="btn" target="_blank" rel="noopener" href="${osmUrl([state.user || cityOrigin(p), p])}">OpenStreetMap</a>` : ""}
       ${p.map_url ? `<a class="btn" target="_blank" rel="noopener" href="${safeWebHref(p.map_url)}">Открыть карточку на карте</a>` : ""}
       <button class="btn" data-plan-add="${p.id}">${icon("plus")}В маршрут</button>
       ${favBtn(p, "icon-btn--lg")}
@@ -288,7 +289,7 @@ async function showRoute(id) {
   const r = state.routes.find((x) => x.id === id);
   const stops = r.places.map(byId).filter(Boolean);
   if (stops.length < 2) return;
-  state.region = stops[0].region || "Азербайджан";
+  state.region = stops[0].city || stops[0].region || "Баку";
   $("#regionFilter").value = state.region;
   state.filter = "all"; state.q = ""; $("#search").value = "";
   closeSheet(); applyFilter(false);
@@ -325,8 +326,7 @@ function renderFavs() {
 }
 
 function renderHero() {
-  // Карточка «Маршрут на вечер» удалена из первого экрана.
-  // Счётчики каталога остаются актуальными.
+  // Счётчики каталога остаются актуальными; фотографии показываются в карточках мест.
   $("#cPlaces").textContent = state.places.length;
   $("#cRoutes").textContent = state.routes.length;
   $("#cCats").textContent = new Set(state.places.map((p) => p.category)).size;
@@ -350,7 +350,7 @@ document.addEventListener("click", (e) => {
   if (t.dataset.place) return openPlace(+t.dataset.place);
   if (t.dataset.placeOpen) {
     const place = byId(+t.dataset.placeOpen);
-    if (place?.region) { state.region = place.region; $("#regionFilter").value = state.region; }
+    if (place?.city || place?.region) { state.region = place.city || place.region; $("#regionFilter").value = state.region; }
     state.filter = "all"; state.q = ""; $("#search").value = ""; applyFilter(false);
     return openPlace(+t.dataset.placeOpen, { scroll: true });
   }

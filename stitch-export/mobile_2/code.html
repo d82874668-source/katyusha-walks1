@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#486458", "on-surface": "#1b1c1a", "secondary-fixed-dim": "#ffb5a0", "tertiary-fixed-dim": "#b0cfad", "secondary-container": "#fd8c6d", "primary-fixed": "#caeada", "error-container": "#ffdad6", "primary": "#07241a", "on-secondary-fixed-variant": "#7e2b14", "secondary-fixed": "#ffdbd1", "on-tertiary-container": "#88a485", "on-surface-variant": "#424844", "on-tertiary": "#ffffff", "background": "#fbf9f5", "secondary": "#9d4229", "on-primary-fixed-variant": "#304c41", "on-secondary-container": "#74240d", "error": "#ba1a1a", "tertiary": "#0b240e", "surface-container-highest": "#e4e2de", "surface-bright": "#fbf9f5", "tertiary-container": "#213a22", "on-error-container": "#93000a", "on-primary-fixed": "#032017", "on-error": "#ffffff", "surface-container-low": "#f5f3ef", "primary-fixed-dim": "#aecebe", "surface-container": "#efeeea", "inverse-primary": "#aecebe", "on-secondary-fixed": "#3b0900", "tertiary-fixed": "#ccebc7", "on-tertiary-fixed": "#07200b", "surface-dim": "#dbdad6", "inverse-on-surface": "#f2f0ed", "on-tertiary-fixed-variant": "#334d33", "outline": "#727974", "surface-variant": "#e4e2de", "primary-container": "#1e3a2f", "on-secondary": "#ffffff", "surface-container-high": "#eae8e4", "on-primary": "#ffffff", "on-background": "#1b1c1a", "surface": "#fbf9f5", "on-primary-container": "#86a496", "outline-variant": "#c1c8c3", "surface-container-lowest": "#ffffff", "inverse-surface": "#30312e" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-md": "1rem", "gutter": "1.5rem", "space-xl": "2.5rem", "space-sm": "0.5rem", "margin": "3rem", "gutter-mobile": "1rem", "space-xs": "0.25rem", "margin-mobile": "1.25rem", "space-lg": "1.5rem" }, "fontFamily": { "display-lg-mobile": ["Playfair Display"], "headline-sm": ["Playfair Display"], "headline-xl": ["Playfair Display"], "display-lg": ["Playfair Display"], "label-caps": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Playfair Display"], "headline-md": ["Playfair Display"], "body-xl": ["Plus Jakarta Sans"] }, "fontSize": { "display-lg-mobile": ["36px", { "lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.015em", "fontWeight": "500" }], "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }], "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-xl-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "500" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500" }], "body-xl": ["18px", { "lineHeight": "30px", "fontWeight": "400" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe"><div class="h-16 px-margin-mobile flex items-center justify-between gap-space-sm"><div class="flex flex-col min-w-0 flex-1"><span class="font-headline-sm text-headline-sm text-primary leading-none tracking-tight truncate">Прогулки с Катюшей</span><div class="flex items-center gap-space-xs mt-0.5"><button class="flex items-center gap-0.5 text-secondary hover:text-on-secondary-container transition-colors py-0.5 text-left"><span class="material-symbols-outlined text-[14px]">near_me</span><span class="font-label-caps text-label-caps uppercase">Санкт-Петербург</span><span class="material-symbols-outlined text-[14px]">expand_more</span></button></div></div><div class="flex items-center gap-space-xs flex-shrink-0"><button aria-label="Поиск" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-[22px]">search</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface"><div class="flex flex-col w-full pb-10">
+<!-- Top Curatorial Banner -->
+<div class="px-margin-mobile pt-2 pb-4">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/10 text-secondary mb-2">
+<span class="material-symbols-outlined text-[13px]">auto_fix_high</span>
+<span class="font-label-caps text-label-caps uppercase">Интеллектуальный конструктор</span>
+</div>
+<h1 class="font-headline-xl-mobile text-headline-xl-mobile text-primary tracking-tight">
+      Соберите идеальный день
+    </h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+      Создайте собственный чувственный ритм города. Меняйте локации местами, управляйте временем и созерцайте.
+    </p>
+</div>
+<!-- Walk Parameters: Horizontal Pills -->
+<div class="w-full overflow-x-auto no-scrollbar px-margin-mobile flex items-center gap-2 pb-2">
+<!-- City Pill -->
+<div class="relative flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-container-lowest shadow-sm flex-shrink-0 text-on-surface transition-all active:scale-95"><span class="material-symbols-outlined text-[16px] text-secondary pointer-events-none">location_on</span><select id="mobile-city-select" class="bg-transparent font-label-lg text-label-lg text-on-surface focus:outline-none cursor-pointer pr-4 appearance-none"><option value="spb" selected="">Санкт-Петербург</option><option value="msk">Москва</option><option value="ekb">Екатеринбург</option><option value="tagil">Нижний Тагил</option><option value="ayat">Аять</option><option value="sochi">Сочи</option><option value="aze">Азербайджан</option><option value="geo">Грузия</option></select><span class="material-symbols-outlined text-[14px] text-on-surface-variant pointer-events-none -ml-4">expand_more</span></div>
+<!-- Mood Pill -->
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-container-lowest shadow-sm flex-shrink-0 text-on-surface transition-all active:scale-95">
+<span class="material-symbols-outlined text-[16px] text-surface-tint">local_cafe</span>
+<span class="font-label-lg text-label-lg">Медленный выходной с кофе</span>
+</button>
+<!-- Duration Pill -->
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-container-lowest shadow-sm flex-shrink-0 text-on-surface transition-all active:scale-95">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">schedule</span>
+<span class="font-label-lg text-label-lg">3.5 часа</span>
+</button>
+<!-- Pace Pill -->
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-surface-container-lowest shadow-sm flex-shrink-0 text-on-surface transition-all active:scale-95">
+<span class="material-symbols-outlined text-[16px] text-secondary">directions_walk</span>
+<span class="font-label-lg text-label-lg">Фланирующий (~2.8 км/ч)</span>
+</button>
+</div>
+<!-- Route Summary Card -->
+<div class="px-margin-mobile mt-3">
+<div class="bg-primary text-on-primary rounded-xl p-4 shadow-md relative overflow-hidden">
+<!-- Ambient Graphic Glow -->
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-primary-fixed/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex items-start justify-between gap-3 relative z-10">
+<div>
+<span class="font-label-caps text-label-caps uppercase text-on-primary-container tracking-wider block mb-1">
+            Текущий сценарий
+          </span>
+<div class="flex items-center gap-2 text-on-primary font-headline-sm text-headline-sm">
+<span>4 остановки</span>
+<span class="text-on-primary-container text-[12px]">•</span>
+<span>3.2 км</span>
+<span class="text-on-primary-container text-[12px]">•</span>
+<span>~2 ч 15 мин</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-primary-container mt-1">
+            Маршрут сбалансирован: 1 ч 40 мин на локации, 35 мин созерцательной ходьбы
+          </p>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between border-t border-on-primary-container/20 relative z-10">
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-secondary text-on-secondary font-label-lg text-label-lg shadow-sm active:scale-95 transition-transform" id="optimizeBtn">
+<span class="material-symbols-outlined text-[16px]">magic_button</span>
+<span>Оптимизировать</span>
+</button>
+<span class="font-body-sm text-body-sm text-on-primary-container flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-tertiary-fixed">eco</span>
+          Без повторных петель
+        </span>
+</div>
+</div>
+</div>
+<!-- Route Visualizer Map & Elevation -->
+<div class="px-margin-mobile mt-4">
+<div class="bg-surface-container-lowest rounded-xl p-3 shadow-sm flex flex-col gap-3">
+<!-- Static Visual Map Preview -->
+<div class="w-full h-44 rounded-lg relative overflow-hidden bg-cover bg-center shadow-inner" data-location="Большая Морская улица 52, Санкт-Петербург" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAJqxv769dyHpe94fKd1uuowWjRWqmI7r_UOP0cBivxeuz_u4gt1HN564xWhANuvg2XeVN8dmxsOogGgkTQJYb6DGJFUWnz3ur38YVCIvMQQDGiUsDkG7V4OwmzUXuX2UxaUxSh66MPFN8NWiq_Da0jcgXRnuR9UojdKmKh3ZRcloLk97BcG2d2EVAQGxHy8Aa2coZJ0wg7Aisq73BZH5mQ5Eu3vbf1fA0Q9PN6_rw')">
+<!-- Overlay Badges on Map -->
+<div class="absolute inset-0 bg-primary/10 backdrop-blur-[0.5px]"></div>
+<!-- Curated Walk Nodes Marker Simulation -->
+<div class="absolute top-6 left-12 flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary font-label-caps text-label-caps flex items-center justify-center shadow-md ring-2 ring-surface">1</span>
+<span class="px-1.5 py-0.5 rounded bg-surface/90 text-on-surface font-label-caps text-[9px] mt-1 shadow-sm whitespace-nowrap">Дом Архитектора</span>
+</div>
+<div class="absolute top-12 left-1/2 -translate-x-1/2 flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary font-label-caps text-label-caps flex items-center justify-center shadow-md ring-2 ring-surface">2</span>
+<span class="px-1.5 py-0.5 rounded bg-surface/90 text-on-surface font-label-caps text-[9px] mt-1 shadow-sm whitespace-nowrap">Подписные</span>
+</div>
+<div class="absolute bottom-6 right-16 flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary font-label-caps text-label-caps flex items-center justify-center shadow-md ring-2 ring-surface">3</span>
+<span class="px-1.5 py-0.5 rounded bg-surface/90 text-on-surface font-label-caps text-[9px] mt-1 shadow-sm whitespace-nowrap">Сен-Жермен</span>
+</div>
+<div class="absolute bottom-10 left-8 flex flex-col items-center">
+<span class="w-6 h-6 rounded-full bg-secondary text-on-secondary font-label-caps text-label-caps flex items-center justify-center shadow-md ring-2 ring-surface">4</span>
+<span class="px-1.5 py-0.5 rounded bg-surface/90 text-on-surface font-label-caps text-[9px] mt-1 shadow-sm whitespace-nowrap">Новая Голландия</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-surface/90 backdrop-blur-md rounded-md px-2 py-1 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[13px] text-surface-tint">visibility</span>
+<span class="font-label-caps text-[10px] text-on-surface">Интерактивный вид</span>
+</div>
+</div>
+<!-- Elevation sparkline -->
+<div class="bg-surface-container-low rounded-lg p-2.5 flex items-center justify-between gap-3">
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0 text-surface-tint">
+<span class="material-symbols-outlined text-[16px]">landscape</span>
+</div>
+<div class="min-w-0">
+<div class="font-label-lg text-label-lg text-on-surface truncate">Профиль высот</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant truncate">Перепад всего 4 м (плоский комфортный рельеф)</div>
+</div>
+</div>
+<!-- Micro Elevation Sparkline SVG -->
+<div class="w-20 h-7 flex-shrink-0">
+<svg class="w-full h-full stroke-surface-tint fill-surface-tint/10" preserveAspectRatio="none" viewBox="0 0 80 28">
+<path d="M0,20 Q20,16 40,18 T80,15 L80,28 L0,28 Z"></path>
+<path d="M0,20 Q20,16 40,18 T80,15" fill="none" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<!-- Section Header: Itinerary -->
+<div class="px-margin-mobile mt-6 mb-2 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-primary">Маршрутный лист</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-caps text-[10px]">Порядок точек</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Перетащите за ручку</span>
+</div>
+<!-- Vertical Interactive Stop List (Timeline) -->
+<div class="px-margin-mobile flex flex-col" id="timelineList">
+<!-- STOP 1 -->
+<div class="relative bg-surface-container-lowest rounded-xl p-3.5 shadow-sm transition-all duration-200">
+<div class="flex items-start gap-3">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-caps text-label-caps flex-shrink-0 mt-0.5 shadow-xs">
+          1
+        </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-caps text-[11px] text-secondary font-semibold uppercase">10:30 • 45 мин</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<button aria-label="Удалить остановку" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+<button aria-label="Переместить" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-surface-container cursor-grab active:cursor-grabbing text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">drag_indicator</span>
+</button>
+</div>
+</div>
+<h2 class="font-headline-sm text-[17px] text-on-surface leading-tight mt-0.5 truncate">
+            Тайная кофейня в Доме Архитектора
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">
+            Большая Морская ул., 52
+          </p>
+<div class="flex items-center gap-2 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed/50 text-on-secondary-fixed font-label-caps text-[10px]">
+              Завтрак и фильтр
+            </span>
+<span class="font-body-sm text-[12px] text-on-surface-variant flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px] text-surface-tint">star</span> 4.9
+            </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Walk Transition 1 -->
+<div class="my-1.5 ml-3.5 pl-6 border-l-2 border-dashed border-outline-variant/60 flex items-center py-1">
+<div class="flex items-center gap-2 py-1 px-2.5 rounded-lg bg-surface-container-low text-on-surface-variant font-body-sm text-[12px]">
+<span class="material-symbols-outlined text-[14px] text-secondary">directions_walk</span>
+<span class="font-medium text-on-surface">12 мин пешком</span>
+<span>•</span>
+<span class="truncate">Набережная Мойки, видовой отрезок</span>
+</div>
+</div>
+<!-- STOP 2 -->
+<div class="relative bg-surface-container-lowest rounded-xl p-3.5 shadow-sm transition-all duration-200">
+<div class="flex items-start gap-3">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-caps text-label-caps flex-shrink-0 mt-0.5 shadow-xs">
+          2
+        </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-caps text-[11px] text-secondary font-semibold uppercase">11:30 • 40 мин</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<button aria-label="Удалить остановку" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+<button aria-label="Переместить" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-surface-container cursor-grab active:cursor-grabbing text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">drag_indicator</span>
+</button>
+</div>
+</div>
+<h2 class="font-headline-sm text-[17px] text-on-surface leading-tight mt-0.5 truncate">
+            Книжный магазин «Подписные издания»
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">
+            Литейный просп., 57
+          </p>
+<div class="flex items-center gap-2 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed/60 text-on-primary-fixed font-label-caps text-[10px]">
+              Книжные находки
+            </span>
+<span class="font-body-sm text-[12px] text-on-surface-variant flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px] text-surface-tint">menu_book</span> 2 этажа
+            </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Walk Transition 2 -->
+<div class="my-1.5 ml-3.5 pl-6 border-l-2 border-dashed border-outline-variant/60 flex items-center py-1">
+<div class="flex items-center gap-2 py-1 px-2.5 rounded-lg bg-surface-container-low text-on-surface-variant font-body-sm text-[12px]">
+<span class="material-symbols-outlined text-[14px] text-secondary">directions_walk</span>
+<span class="font-medium text-on-surface">8 мин пешком</span>
+<span>•</span>
+<span class="truncate">Сквер Чайковского и тихий двор</span>
+</div>
+</div>
+<!-- STOP 3 -->
+<div class="relative bg-surface-container-lowest rounded-xl p-3.5 shadow-sm transition-all duration-200">
+<div class="flex items-start gap-3">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-caps text-label-caps flex-shrink-0 mt-0.5 shadow-xs">
+          3
+        </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-caps text-[11px] text-secondary font-semibold uppercase">12:20 • 25 мин</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<button aria-label="Удалить остановку" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+<button aria-label="Переместить" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-surface-container cursor-grab active:cursor-grabbing text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">drag_indicator</span>
+</button>
+</div>
+</div>
+<h2 class="font-headline-sm text-[17px] text-on-surface leading-tight mt-0.5 truncate">
+            Секретный сад Сен-Жермен
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">
+            Литейный просп., 46
+          </p>
+<div class="flex items-center gap-2 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed/60 text-on-tertiary-fixed font-label-caps text-[10px]">
+              Тишина и фонтан
+            </span>
+<span class="font-body-sm text-[12px] text-on-surface-variant flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px] text-surface-tint">key</span> Вход через арку
+            </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Walk Transition 3 -->
+<div class="my-1.5 ml-3.5 pl-6 border-l-2 border-dashed border-outline-variant/60 flex items-center py-1">
+<div class="flex items-center gap-2 py-1 px-2.5 rounded-lg bg-surface-container-low text-on-surface-variant font-body-sm text-[12px]">
+<span class="material-symbols-outlined text-[14px] text-secondary">directions_walk</span>
+<span class="font-medium text-on-surface">15 мин пешком</span>
+<span>•</span>
+<span class="truncate">Вдоль Адмиралтейского канала</span>
+</div>
+</div>
+<!-- STOP 4 -->
+<div class="relative bg-surface-container-lowest rounded-xl p-3.5 shadow-sm transition-all duration-200">
+<div class="flex items-start gap-3">
+<div class="w-7 h-7 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-label-caps text-label-caps flex-shrink-0 mt-0.5 shadow-xs">
+          4
+        </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-label-caps text-[11px] text-secondary font-semibold uppercase">12:55 • 45 мин</span>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<button aria-label="Удалить остановку" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+<button aria-label="Переместить" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-surface-container cursor-grab active:cursor-grabbing text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">drag_indicator</span>
+</button>
+</div>
+</div>
+<h2 class="font-headline-sm text-[17px] text-on-surface leading-tight mt-0.5 truncate">
+            Остров Новая Голландия
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">
+            Набережная Адмиралтейского канала, 2
+          </p>
+<div class="flex items-center gap-2 mt-2">
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed/50 text-on-secondary-fixed font-label-caps text-[10px]">
+              Финал на воде
+            </span>
+<span class="font-body-sm text-[12px] text-on-surface-variant flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px] text-surface-tint">deck</span> Шеpriorityнг и костер
+            </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Add Stop Action Button -->
+<div class="px-margin-mobile mt-3">
+<button class="w-full py-3.5 px-4 rounded-xl bg-surface-container text-primary font-label-lg text-label-lg flex items-center justify-center gap-2 hover:bg-surface-container-high active:scale-[0.99] transition-all shadow-xs">
+<span class="material-symbols-outlined text-[20px] text-secondary">add_circle</span>
+<span>Добавить остановку из каталога или карты</span>
+</button>
+</div>
+<!-- Editorial Pre-made Scenarios Carousel -->
+<div class="mt-8 flex flex-col">
+<div class="px-margin-mobile flex items-center justify-between mb-3">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary">Готовые сценарии в один клик</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Проверенные редакторские маршруты Катюши</p>
+</div>
+</div>
+<!-- Horizontal Scrollable Cards -->
+<div class="w-full overflow-x-auto no-scrollbar px-margin-mobile flex gap-3.5 pb-2"><!-- Card 1: Санкт-Петербург --><div class="w-64 flex-shrink-0 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col"><div class="h-32 w-full relative bg-cover bg-center" data-alt="Atmospheric sunset over Petrogradskaya side Saint Petersburg with pastel art nouveau facades" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB66XDFDhNBHdywW8VPBL8suA7rwwVIm0WIu6h_kCnFrHCgikX6ulJ99pSVqxOBL2lGtWE86mE72TpnEDjhxwb8eCnF-gC77TziTwfHqSjsiW3qIlS_cQZfWyFLd2T-wqAYJtrd0waXUBbSseK3T6dMdBRQWjkaHBsMtESygyG2k4lWrcI-nrtppkJNciWR6p62UZZUOeHt6Yz46qoK_X4RIMEKkEsb0iTeK5gpJBs')"><div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-surface/90 backdrop-blur-sm text-primary font-label-caps text-[10px]">3.4 км • 5 точек</div></div><div class="p-3.5 flex flex-col flex-1 justify-between"><div><span class="font-label-caps text-[10px] text-secondary uppercase font-semibold">Санкт-Петербург</span><h3 class="font-headline-sm text-[16px] text-on-surface leading-snug mt-1">Романтический вечер на Петроградке</h3><p class="font-body-sm text-[13px] text-on-surface-variant mt-1 line-clamp-2">Австрийская площадь, винный бар в парадной и закат на набережной Карповки.</p></div><button class="mt-3.5 w-full py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-primary font-label-lg text-[13px] flex items-center justify-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[16px]">file_download</span><span>Загрузить</span></button></div></div><!-- Card 2: Москва --><div class="w-64 flex-shrink-0 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col"><div class="h-32 w-full relative bg-cover bg-center" data-alt="Charming quiet alley in vintage artistic district with ivy walls and cozy cobblestone pavement" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCfByvl1i5br6BiXqqiHvnUR7j4EtBRc9NP3lSyH6fpvDrqQdJGA4ZFeNGFV7czmoK_ChcdsmG4XswVnTyGGWRbIrFF6j2waydbIdauxETaYggx4pkgJ2ghjla38A1j3EV8n-WPdT8iWfchTHCPeLZQbj5CpvX9N9d0DnMzQULeKzT-a4Pr_uwuCBU-bmTbfvYPQAydtsQiYplf57ANSbiTMnBNcPmt7bMa88JlWDQ')"><div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-surface/90 backdrop-blur-sm text-primary font-label-caps text-[10px]">4.1 км • 6 точек</div></div><div class="p-3.5 flex flex-col flex-1 justify-between"><div><span class="font-label-caps text-[10px] text-surface-tint uppercase font-semibold">Москва</span><h3 class="font-headline-sm text-[16px] text-on-surface leading-snug mt-1">Арт-прогулка по Замоскворечью</h3><p class="font-body-sm text-[13px] text-on-surface-variant mt-1 line-clamp-2">Тихие дворики купеческих усадеб, мастерские скульпторов и крафтовые лавки.</p></div><button class="mt-3.5 w-full py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-primary font-label-lg text-[13px] flex items-center justify-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[16px]">file_download</span><span>Загрузить</span></button></div></div><!-- Card 3: Екатеринбург --><div class="w-64 flex-shrink-0 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col"><div class="h-32 w-full relative bg-cover bg-center" data-alt="Constructivist landmark architecture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDLTMvzu6lMosuYh6pTeBlr8_zpLN7rK1Igtdy2yGbjUW1ix2Z5JFBoCRst3rVjfp7Xf7Ef8CZc0a-16bq-eUqFV-Qp5KzzjZkrsBgSamkr8HY1lgrRJSaVCqhh0i1FB_K-puZqs3KA44nSSdLzJ7Usq-XeRUdFGP3285m8C1LcHM7iArGclVTReraXRzGaPGf5GYTXcHfsICU95XRwhRAmS4BkfoqHwgRBcI0pdaU')"><div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-surface/90 backdrop-blur-sm text-primary font-label-caps text-[10px]">5.0 км • 7 точек</div></div><div class="p-3.5 flex flex-col flex-1 justify-between"><div><span class="font-label-caps text-[10px] text-secondary uppercase font-semibold">Екатеринбург</span><h3 class="font-headline-sm text-[16px] text-on-surface leading-snug mt-1">Конструктивистский городок чекистов</h3><p class="font-body-sm text-[13px] text-on-surface-variant mt-1 line-clamp-2">Гостиница «Исеть», закрытые дворы-парки и тайны советского авангарда.</p></div><button class="mt-3.5 w-full py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-primary font-label-lg text-[13px] flex items-center justify-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[16px]">file_download</span><span>Загрузить</span></button></div></div><!-- Card 4: Нижний Тагил & Аять --><div class="w-64 flex-shrink-0 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col"><div class="h-32 w-full relative bg-cover bg-center bg-surface-container-high" data-alt="Old industrial factory landscape and forest rocks"><div class="absolute inset-0 bg-primary/20 backdrop-blur-[0.5px]"></div><div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-surface/90 backdrop-blur-sm text-primary font-label-caps text-[10px]">4.6 км • 5 точек</div></div><div class="p-3.5 flex flex-col flex-1 justify-between"><div><span class="font-label-caps text-[10px] text-surface-tint uppercase font-semibold">Нижний Тагил &amp; Аять</span><h3 class="font-headline-sm text-[16px] text-on-surface leading-snug mt-1">Старый завод и тропа Аяти</h3><p class="font-body-sm text-[13px] text-on-surface-variant mt-1 line-clamp-2">Индустриальное наследие Демидовых, скалы Кырман и вековая сосновая тайга.</p></div><button class="mt-3.5 w-full py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-primary font-label-lg text-[13px] flex items-center justify-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[16px]">file_download</span><span>Загрузить</span></button></div></div><!-- Card 5: Сочи --><div class="w-64 flex-shrink-0 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col"><div class="h-32 w-full relative bg-cover bg-center bg-surface-container-high" data-alt="Subtropical vegetation and seaside modernist sanatorium"><div class="absolute inset-0 bg-primary/20 backdrop-blur-[0.5px]"></div><div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-surface/90 backdrop-blur-sm text-primary font-label-caps text-[10px]">3.8 км • 6 точек</div></div><div class="p-3.5 flex flex-col flex-1 justify-between"><div><span class="font-label-caps text-[10px] text-secondary uppercase font-semibold">Сочи</span><h3 class="font-headline-sm text-[16px] text-on-surface leading-snug mt-1">Субтропический модерн</h3><p class="font-body-sm text-[13px] text-on-surface-variant mt-1 line-clamp-2">Пальмовые аллеи, старинные санатории с колоннадами и шум прибоя Черного моря.</p></div><button class="mt-3.5 w-full py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-primary font-label-lg text-[13px] flex items-center justify-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[16px]">file_download</span><span>Загрузить</span></button></div></div><!-- Card 6: Азербайджан & Грузия --><div class="w-64 flex-shrink-0 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col"><div class="h-32 w-full relative bg-cover bg-center bg-surface-container-high" data-alt="Carved wooden balconies and historic cobblestone fortress quarters"><div class="absolute inset-0 bg-primary/20 backdrop-blur-[0.5px]"></div><div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-surface/90 backdrop-blur-sm text-primary font-label-caps text-[10px]">3.5 км • 6 точек</div></div><div class="p-3.5 flex flex-col flex-1 justify-between"><div><span class="font-label-caps text-[10px] text-surface-tint uppercase font-semibold">Азербайджан &amp; Грузия</span><h3 class="font-headline-sm text-[16px] text-on-surface leading-snug mt-1">Тайны Ичери-шехер и Сололаки</h3><p class="font-body-sm text-[13px] text-on-surface-variant mt-1 line-clamp-2">Резные деревянные балконы, пряные дворики Старого Тбилиси и Девичья башня Баку.</p></div><button class="mt-3.5 w-full py-2 rounded-full bg-surface-container hover:bg-surface-container-high text-primary font-label-lg text-[13px] flex items-center justify-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[16px]">file_download</span><span>Загрузить</span></button></div></div></div>
+</div>
+<!-- Primary Floating Action Controls (Above Tabbar) -->
+<div class="sticky bottom-0 z-40 bg-surface/90 backdrop-blur-md pt-3 pb-3 px-margin-mobile shadow-[0_-8px_20px_rgba(27,28,26,0.05)] mt-6">
+<div class="flex items-center gap-2.5">
+<!-- Main Action: Start Walk -->
+<button class="flex-1 py-3 px-5 rounded-full bg-primary text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span>Начать прогулку</span>
+</button>
+<!-- Secondary Action: Export -->
+<button aria-label="Экспорт в календарь или PDF" class="w-12 h-12 rounded-full bg-surface-container-lowest text-primary flex items-center justify-center shadow-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">ios_share</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const optimizeBtn = document.getElementById('optimizeBtn');
+    if (optimizeBtn) {
+      optimizeBtn.addEventListener('click', function() {
+        const originalHtml = optimizeBtn.innerHTML;
+        optimizeBtn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span><span>Маршрут идеален!</span>';
+        optimizeBtn.classList.remove('bg-secondary');
+        optimizeBtn.classList.add('bg-tertiary-container', 'text-on-tertiary');
+        
+        setTimeout(() => {
+          optimizeBtn.innerHTML = originalHtml;
+          optimizeBtn.classList.remove('bg-tertiary-container', 'text-on-tertiary');
+          optimizeBtn.classList.add('bg-secondary');
+        }, 2200);
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_20px_rgba(36,51,44,0.05)]" data-active-classes="text-primary font-semibold"><div class="flex items-center justify-around h-16 px-space-xs"><a class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant transition-colors" data-path="explore" href="#"><span class="material-symbols-outlined text-[22px]">auto_stories</span><span class="font-label-caps text-[10px] mt-0.5">Главная</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant transition-colors" data-path="places" href="#"><span class="material-symbols-outlined text-[22px]">holiday_village</span><span class="font-label-caps text-[10px] mt-0.5">Места</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant transition-colors" data-path="map" href="#"><span class="material-symbols-outlined text-[22px]">map</span><span class="font-label-caps text-[10px] mt-0.5">Карта</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] h-12 transition-colors text-primary font-semibold" data-path="builder" href="#"><span class="material-symbols-outlined text-[22px]">route</span><span class="font-label-caps text-[10px] mt-0.5">Маршруты</span></a><a class="flex flex-col items-center justify-center min-w-[56px] h-12 text-on-surface-variant transition-colors" data-path="favorites" href="#"><span class="material-symbols-outlined text-[22px]">bookmark</span><span class="font-label-caps text-[10px] mt-0.5">Избранное</span></a></div></nav>
+
+</body></html>
