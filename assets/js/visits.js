@@ -1,12 +1,15 @@
 import { CONFIG } from "./config.js";
 
 const KEY = "katyusha:visits:v1";
+const DELETED_KEY = "katyusha:visits-deleted:v1";
 const SDK = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 let clientPromise;
 
 const read = () => {
   try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch { return []; }
 };
+const readDeleted = () => { try { return JSON.parse(localStorage.getItem(DELETED_KEY) || "[]"); } catch { return []; } };
+const writeDeleted = (ids) => { try { localStorage.setItem(DELETED_KEY, JSON.stringify([...new Set(ids)])); } catch {} };
 const write = (items) => {
   try { localStorage.setItem(KEY, JSON.stringify(items)); } catch { /* storage quota/private mode */ }
 };
@@ -121,6 +124,7 @@ export async function deleteVisit(id) {
   const items = read();
   const visit = items.find((v) => v.id === id);
   write(items.filter((v) => v.id !== id));
+  writeDeleted([...readDeleted(), id]);
   if (!visit || !navigator.onLine) return true;
   const sb = await client();
   if (!sb) return true;
@@ -143,8 +147,10 @@ export async function hydrateVisits() {
     if (error) throw error;
     const local = read();
     const localById = new Map(local.map((v) => [v.id, v]));
+    const deleted = new Set(readDeleted());
     const remote = [];
     for (const row of data || []) {
+      if (deleted.has(row.id)) continue;
       const cached = localById.get(row.id);
       let photoUrl = cached?.photo_url || null;
       if (row.photo_path && !cached?.photo_data) {
@@ -172,6 +178,19 @@ export async function hydrateVisits() {
 
 export async function syncPendingVisits() {
   if (!navigator.onLine) return;
+  const sb = await client();
+  if (sb) {
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        const deleted = readDeleted();
+        for (const id of deleted) {
+          await sb.from("place_visits").delete().eq("id", id).eq("user_id", session.user.id);
+        }
+        writeDeleted([]);
+      }
+    } catch (error) { console.warn("Не удалось синхронизировать удаления посещений:", error); }
+  }
   for (const visit of read().filter((v) => !v.synced)) await syncVisit(visit);
 }
 
