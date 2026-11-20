@@ -579,6 +579,33 @@ body{background:var(--bg);letter-spacing:-.012em}
 .hero__in{grid-template-columns:minmax(0,1fr)!important}
 .hero__copy{max-width:760px}
 
+
+/* Нижняя панель навигации на телефонах */
+.spott-tabbar { display:none; }
+.spott-tab {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:4px; min-height:52px; color:var(--muted); text-decoration:none;
+  font-size:10px; font-weight:650; transition:color .18s ease;
+}
+.spott-tab svg {
+  width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+.spott-tab.is-active,.spott-tab:hover,.spott-tab:focus-visible { color:var(--accent); }
+@media(max-width:700px) {
+  body { padding-bottom:calc(70px + env(safe-area-inset-bottom)); }
+  .spott-tabbar {
+    position:fixed; z-index:1500; inset:auto 0 0; display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr)); gap:0;
+    padding:7px 7px max(7px,env(safe-area-inset-bottom));
+    background:color-mix(in srgb,var(--surface) 94%,transparent);
+    border-top:1px solid var(--line); box-shadow:0 -7px 26px rgba(20,30,20,.07);
+    backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+  }
+  .spott-tab { min-width:0; }
+  .spott-tab span { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+}
+
 /* ===== Доступность, адаптивность и стабильность ===== */
 html { scroll-padding-top: calc(var(--nav-h) + 16px); }
 section[id] { scroll-margin-top: calc(var(--nav-h) + 16px); }
