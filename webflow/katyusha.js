@@ -61,7 +61,7 @@ function drawMap(id,items,isRoute,options){
      marker.bindPopup('<div class="k-map-popup"><b>'+esc(placeName(p))+'</b><span>'+esc(cityName(p))+(approx?' · примерное расположение':'')+'</span><button type="button" data-open="'+esc(p.id)+'">Подробнее</button></div>');
      marker.on('click',function(){});
     }else{
-     marker.bindPopup('<div class="k-map-popup"><b>'+esc(cityName(g.items[0]))+'</b><span>'+(approx?'Примерные метки · ':'')+count+' мест</span><div class="k-map-popup-list">'+g.items.slice(0,8).map(function(p){return '<button type="button" data-open="'+esc(p.id)+'">'+esc(placeName(p))+'</button>'}).join('')+'</div></div>');
+     marker.bindPopup('<div class="k-map-popup"><b>'+esc(cityName(g.items[0]))+'</b><span>'+(approx?'Примерные метки · ':'')+count+' '+placesWord(count)+'</span><div class="k-map-popup-list">'+g.items.slice(0,8).map(function(p){return '<button type="button" data-open="'+esc(p.id)+'">'+esc(placeName(p))+'</button>'}).join('')+'</div></div>');
     }
     marker.bindTooltip(esc(placeName(g.items[0]))+(count>1?' · '+count+' '+placesWord(count):''),{direction:'top',offset:[0,-12]});
     bounds.push([g.lat,g.lon]);
@@ -124,7 +124,7 @@ function renderDiscover(){
   var result=places.filter(function(p){return (!city||cityName(p)===city)&&(!catv||p.category===catv)&&(!q||[placeName(p),p.description,p.city,p.address,p.category].join(' ').toLowerCase().indexOf(q)>-1)});
   $('#k-count').textContent='Найдено мест: '+result.length;
   $('#k-discover-grid').innerHTML=result.length?result.map(card).join(''):'<div class="k-empty"><b>Пока ничего не найдено</b><p style="margin-top:7px">Попробуй изменить запрос или сбросить фильтры.</p></div>';
-  $('#k-map-caption').textContent=city?'Город: '+city+' · '+result.length+' мест':'Обзор '+new Set(result.map(cityName)).size+' городов';
+  $('#k-map-caption').textContent=city?'Город: '+city+' · '+result.length+' '+placesWord(result.length):'Обзор '+new Set(result.map(cityName)).size+' городов';
   drawMap('k-discover-map',result,false,{city:city,onCitySelect:function(name){$('#k-filter-city').value=name;draw()}});
  }
  ['k-filter-q','k-filter-city','k-filter-cat'].forEach(function(id){$('#'+id).addEventListener(id==='k-filter-q'?'input':'change',draw)});
