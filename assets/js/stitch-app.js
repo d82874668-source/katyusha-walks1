@@ -99,8 +99,6 @@ function renderHome() {
   if(cityCount)cityCount.textContent=activeCity;
   const citySummary=[...$("#open-cities").querySelectorAll("span")].find(el=>/резиденц|локац/i.test(el.textContent));
   if(citySummary)citySummary.textContent=allCities().length+" городов · "+state.places.length+" мест";
-  $("#hero-city-select")?.addEventListener("change",e=>{activeCity=e.target.value;renderHome();});
-  $("#map-filter-group")?.addEventListener("click",e=>{const b=e.target.closest("[data-home-category]");if(!b)return;const category=b.dataset.homeCategory;const points=state.places.filter(p=>cityOf(p)===activeCity&&(category==="all"||p.category===category)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));homeMapView?.setPlaces(points,true);});
   if(homeMapView){homeMapView.map.remove();homeMapView=null;}
   const mapEl=$("#homeMapCanvas");
   if(mapEl&&window.L){homeMapView=new MapView(mapEl,id=>location.href="place.html?id="+encodeURIComponent(id));homeMapView.setPlaces(state.places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)&&cityOf(p)===activeCity),true);}
@@ -145,6 +143,8 @@ function initMapPage(home=false) {
   instance.setPlaces(filtered(),true);
   if(home)homeMapView=instance;else mapView=instance;
   if(!home){
+    const citySelect=$("#map-city-select");
+    if(citySelect){fillSelect(citySelect,allCities(),"Все города");citySelect.value=activeCity;citySelect.addEventListener("change",()=>{activeCity=citySelect.value;instance.setPlaces(filtered(),true);renderList();});}
     const renderList=()=>{
       const q=mapQuery.toLocaleLowerCase("ru");
       const list=filtered().filter(p=>!q||[p.title,p.address,cityOf(p)].join(" ").toLocaleLowerCase("ru").includes(q));
@@ -259,7 +259,11 @@ async function init() {
   const cities=allCities();if(!cities.includes(activeCity))activeCity=cities.includes("Баку")?"Баку":cities[0]||"all";
   const params=new URLSearchParams(location.search);if(params.has("city"))activeCity=params.get("city");
   bindCommon();
-  if(page==="home"){renderHome();initMapPage(true);}
+  if(page==="home"){
+    renderHome();initMapPage(true);
+    $("#hero-city-select")?.addEventListener("change",e=>{activeCity=e.target.value;syncHeader();renderHome();});
+    $("#map-filter-group")?.addEventListener("click",e=>{const b=e.target.closest("[data-home-category]");if(!b)return;const category=b.dataset.homeCategory;const points=state.places.filter(p=>cityOf(p)===activeCity&&(category==="all"||p.category===category)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));homeMapView?.setPlaces(points,true);});
+  }
   if(page==="catalog")initCatalog();
   if(page==="map")initMapPage(false);
   if(page==="favorites")renderFavorites();
