@@ -7,6 +7,8 @@ import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast } from "./ui
 import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js";
 import { initPlanner, addToPlan } from "./planner.js";
 import { initIdeal, refreshIdeal } from "./ideal.js";
+import { initPWA } from "./pwa.js";
+import { visitDialog, visitHistoryHtml, getVisits, deleteVisit, syncPendingVisits } from "./visits.js";
 
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
 const cityOrigin = (place) => {
@@ -206,12 +208,14 @@ function renderSheet() {
     ${p.is_approx ? `<p class="note">Положение на карте приблизительное. Google Maps найдёт место по названию.</p>` : ""}
     <p class="eta" id="eta">${icon("route")}<span>Считаем маршрут…</span></p>
     <div class="sheet__actions">
+      <button class="btn btn--primary" data-visit-place="${p.id}">Были здесь${getVisits(p.id).length ? ` · ${getVisits(p.id).length}` : ""}</button>
       <a class="btn btn--primary" target="_blank" rel="noopener" href="${googleUrl(p, state.user)}">${icon("nav")}Построить маршрут</a>
       <a class="btn" target="_blank" rel="noopener" href="${osmUrl([state.user || cityOrigin(p), p])}">OpenStreetMap</a>
       ${p.map_url ? `<a class="btn" target="_blank" rel="noopener" href="${esc(p.map_url)}">Открыть карточку на карте</a>` : ""}
       <button class="btn" data-plan-add="${p.id}">${icon("plus")}В маршрут</button>
       ${favBtn(p, "icon-btn--lg")}
-    </div>`;
+    </div>
+    ${visitHistoryHtml(p.id)}`;
 }
 
 /* ---------- Направления: «Открой город» и «Куда сходить» ---------- */
@@ -326,8 +330,11 @@ function renderHero() {
 
 /* ---------- Делегирование событий ---------- */
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-fav],[data-close],[data-city],[data-vgroup],[data-cat],[data-place],[data-place-open],[data-collection],[data-show-route]");
+  const t = e.target.closest("[data-fav],[data-close],[data-city],[data-vgroup],[data-cat],[data-place],[data-place-open],[data-collection],[data-show-route],[data-visit-place],[data-visit-edit],[data-visit-delete]");
   if (!t) return;
+  if (t.dataset.visitPlace) { const place = byId(Number(t.dataset.visitPlace)); if (place) visitDialog(place); return; }
+  if (t.dataset.visitEdit) { const place = byId(Number(t.dataset.visitPlace)); const visit = getVisits(place?.id).find((v) => v.id === t.dataset.visitEdit); if (place && visit) visitDialog(place, visit); return; }
+  if (t.dataset.visitDelete) { deleteVisit(t.dataset.visitDelete).then(() => { if (state.active) renderSheet(); toast("Запись о посещении удалена"); }); return; }
   if (t.dataset.fav) { e.stopPropagation(); return toggleFav(+t.dataset.fav); }
   if (t.hasAttribute("data-close")) return closeSheet();
   if (t.dataset.city) {
@@ -377,6 +384,11 @@ async function init() {
   renderHero(); renderDirections(); renderDiscover(); renderVenues(); renderChips(); renderList(); renderRoutes(); renderCollections(); renderFavs();
   initPlanner(); initIdeal({ favBtn });
   subscribeFavorites((favs) => { state.favs = favs; renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); refreshIdeal(); });
+  initPWA();
+  syncPendingVisits();
+  window.addEventListener("online", syncPendingVisits);
+  document.addEventListener("katyusha:visits-changed", () => { if (state.active) renderSheet(); renderDiscover(); renderVenues(); });
+  window.addEventListener("katyusha:toast", (e) => toast(e.detail));
 
   // Карта инициализируется, когда секция приближается к экрану: быстрее первая загрузка.
   const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); ensureMap(); } }, { rootMargin: "500px" });
