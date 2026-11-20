@@ -717,7 +717,7 @@ export const PLACES = [
   "category": "garden",
   "latitude": 40.348,
   "longitude": 49.812,
-  "image": "https://caliber.az/media/photos/original/555476378861f52a07bb26165e4cc1dc.webp",
+  "image": "https://azerbaijan.travel/resize3000/center/pages/10939/2d98e655-aed5-4d6b-84e3-590e95695da5.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -731,7 +731,8 @@ export const PLACES = [
   "phone": null,
   "map_url": null,
   "source_urls": [
-   "https://caliber.az/en/post/a-green-oasis-in-the-heart-of-baku-president-aliyev-inaugurates-reimagined-central-botanical-garden"
+   "https://azerbaijan.travel/central-botanical-garden",
+   "https://azerbaijan.travel/resize3000/center/pages/10939/2d98e655-aed5-4d6b-84e3-590e95695da5.jpg"
   ]
  },
  {
@@ -1916,7 +1917,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 40.366,
   "longitude": 49.837,
-  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Old%20Town%20Street%20Scene%20-%20Baku%20-%20Azerbaijan%20-%2006%20(17713729450).jpg?width=1400",
+  "image": "https://worldheritagesites.net/wp-content/uploads/2025/06/Walled_City_Baku_2.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -1930,7 +1931,8 @@ export const PLACES = [
   "phone": null,
   "map_url": null,
   "source_urls": [
-   "https://commons.wikimedia.org/wiki/File:Old_Town_Street_Scene_-_Baku_-_Azerbaijan_-_06_(17713729450).jpg"
+   "https://worldheritagesites.net/walled-city-of-baku/",
+   "https://worldheritagesites.net/wp-content/uploads/2025/06/Walled_City_Baku_2.jpg"
   ]
  },
  {
@@ -1940,7 +1942,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 40.3664,
   "longitude": 49.8369,
-  "image": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Palacio_de_los_Shirvanshah%2C_Baku%2C_Azerbaiy%C3%A1n%2C_2016-09-28%2C_DD_19-21_HDR.jpg",
+  "image": "https://infonews.az/wp-content/uploads/2021/10/Sirvansahlar_sarayi_2016-scaled.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -1954,7 +1956,8 @@ export const PLACES = [
   "phone": null,
   "map_url": null,
   "source_urls": [
-   "https://commons.wikimedia.org/wiki/File:Palacio_de_los_Shirvanshah,_Baku,_Azerbaiy%C3%A1n,_2016-09-28,_DD_19-21_HDR.jpg"
+   "https://infonews.az/?p=13785",
+   "https://infonews.az/wp-content/uploads/2021/10/Sirvansahlar_sarayi_2016-scaled.jpg"
   ]
  },
  {
@@ -1964,7 +1967,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 40.3598,
   "longitude": 49.8263,
-  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flmtwrs.jpg?width=1600",
+  "image": "https://spectra.mhi.com/sites/g/files/jwhtju2216/files/styles/crop_freeform/public/Baku%2C-Azerbaijan-at-night.jpeg?itok=LK1awdF4",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -1978,7 +1981,8 @@ export const PLACES = [
   "phone": null,
   "map_url": null,
   "source_urls": [
-   "https://commons.wikimedia.org/wiki/File:Flmtwrs.jpg"
+   "https://spectra.mhi.com/energy-transition/cop29-3-areas-of-focus-for-the-finance-cop",
+   "https://spectra.mhi.com/sites/g/files/jwhtju2216/files/styles/crop_freeform/public/Baku%2C-Azerbaijan-at-night.jpeg?itok=LK1awdF4"
   ]
  },
  {
@@ -1988,7 +1992,7 @@ export const PLACES = [
   "category": "embankment",
   "latitude": 40.368,
   "longitude": 49.8455,
-  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flame_towers_from_Baku_boulevard.JPG?width=1400",
+  "image": "https://hblimg.mmtcdn.com/content/hubble/img/additionalttdimages/mmt/activities/m_Baku_Boulevard_1_l_667_1000.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -2002,7 +2006,8 @@ export const PLACES = [
   "phone": null,
   "map_url": null,
   "source_urls": [
-   "https://commons.wikimedia.org/wiki/File:Flame_towers_from_Baku_boulevard.JPG"
+   "https://www.makemytrip.com/tripideas/attractions/baku-boulevard",
+   "https://hblimg.mmtcdn.com/content/hubble/img/additionalttdimages/mmt/activities/m_Baku_Boulevard_1_l_667_1000.jpg"
   ]
  },
  {
@@ -2012,7 +2017,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 40.359,
   "longitude": 49.84,
-  "image": "https://visitsilkroad.org/wp-content/uploads/2021/08/Little-Venice-Azerbaijan1.jpg",
+  "image": "https://www.advantour.com/img/azarbaijan/baku/little-venice-baku.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -2026,7 +2031,8 @@ export const PLACES = [
   "phone": null,
   "map_url": null,
   "source_urls": [
-   "https://visitsilkroad.org/destination/little-venice/"
+   "https://www.advantour.com/azerbaijan/baku/things-to-do.htm",
+   "https://www.advantour.com/img/azarbaijan/baku/little-venice-baku.jpg"
   ]
  },
  {
@@ -2036,7 +2042,7 @@ export const PLACES = [
   "category": "square",
   "latitude": 40.3725,
   "longitude": 49.8355,
-  "image": "https://testour.az/uploads/Fountains-Square-Azerbaijan.webp",
+  "image": "https://tourister.az/public/uploads/images/2026/06/20260616_1908_NizamiStreetWalkingTour.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -2050,7 +2056,8 @@ export const PLACES = [
   "phone": null,
   "map_url": null,
   "source_urls": [
-   "https://testour.az/az/tour/baku-old-and-modern-city-tour-top-30-highlights-in-4-hours"
+   "https://tourister.az/tours/nizami-street-walking-tour/",
+   "https://tourister.az/public/uploads/images/2026/06/20260616_1908_NizamiStreetWalkingTour.jpg"
   ]
  },
  {
@@ -2212,6 +2219,313 @@ export const PLACES = [
    "https://yandex.com/maps/org/yashil_bazar/190853151361/",
    "https://www.google.com/maps/search/?api=1&query=Yashil+Bazaar+Baku",
    "https://azerbaijan.travel/fit752x624/center/pages/461/4bd0bcf6-8cd4-4fb3-90ba-c13e5f260a73.JPG"
+  ]
+ },
+ {
+  "id": 990102,
+  "title": "Сумгаитский приморский бульвар",
+  "description": "Просторная прогулочная зона вдоль Каспийского моря: набережная, велосипедная дорожка, зелёные участки, кафе и детские площадки. Хорошее место для вечерней прогулки и отдыха всей семьёй.",
+  "category": "embankment",
+  "latitude": 40.59098389,
+  "longitude": 49.68687611,
+  "image": "https://azertag.az/files/galleryphoto/2024/3/1200x630/17322838971761657107_1200x630.jpg",
+  "rating": null,
+  "is_approx": true,
+  "region": "Азербайджан",
+  "city": "Сумгаит",
+  "address": "Sumqayit Seaside Boulevard, Sumqayit, Azerbaijan",
+  "price_min": 0,
+  "price_max": 0,
+  "price_unit": "вход свободный",
+  "review_count": null,
+  "opening_hours": "Круглосуточно; отдельные объекты работают по своему расписанию",
+  "phone": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.59098389,49.68687611",
+  "source_urls": [
+   "https://azertag.az/xeber/sumqayit_seherinin_75_yasi_tamam_olur___fotoreportaj-3298304",
+   "https://president.az/en/articles/view/21182",
+   "https://en.wikipedia.org/wiki/Sumgait_Boulevard",
+   "https://azertag.az/xeber/sumqayit_seherinin_75_yasi_tamam_olur___fotoreportaj-3298304",
+   "https://azertag.az/files/galleryphoto/2024/3/1200x630/17322838971761657107_1200x630.jpg"
+  ]
+ },
+ {
+  "id": 990103,
+  "title": "Парк имени Низами Гянджеви (Насими)",
+  "description": "Большая зелёная зона для прогулок среди деревьев и тенистых дорожек. В парке есть пешеходные мостики и места для спокойного отдыха.",
+  "category": "park",
+  "latitude": 40.59932,
+  "longitude": 49.67479,
+  "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Sevgilil%C9%99r_k%C3%B6rp%C3%BCs%C3%BC_%28Sumqay%C4%B1t%29.jpg/1280px-Sevgilil%C9%99r_k%C3%B6rp%C3%BCs%C3%BC_%28Sumqay%C4%B1t%29.jpg",
+  "rating": null,
+  "is_approx": true,
+  "region": "Азербайджан",
+  "city": "Сумгаит",
+  "address": "Samad Vurgun Street, Sumqayit, Azerbaijan",
+  "price_min": 0,
+  "price_max": 0,
+  "price_unit": "вход свободный",
+  "review_count": null,
+  "opening_hours": "Круглосуточно",
+  "phone": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.59932,49.67479",
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/Category:Nasimi_park_(Sumqay%C4%B1t)",
+   "https://mapcarta.com/W234544084",
+   "https://en.wikipedia.org/wiki/Nasimi_Park",
+   "https://commons.wikimedia.org/wiki/Category:Nasimi_park_(Sumqay%C4%B1t)",
+   "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Sevgilil%C9%99r_k%C3%B6rp%C3%BCs%C3%BC_%28Sumqay%C4%B1t%29.jpg/1280px-Sevgilil%C9%99r_k%C3%B6rp%C3%BCs%C3%BC_%28Sumqay%C4%B1t%29.jpg"
+  ]
+ },
+ {
+  "id": 990104,
+  "title": "Памятник «Голубь мира»",
+  "description": "Один из узнаваемых символов Сумгаита — белая скульптура голубя, посвящённая миру. Рядом можно прогуляться по приморской части города и сделать фотографии.",
+  "category": "monument",
+  "latitude": 40.59244,
+  "longitude": 49.68333,
+  "image": "https://525.az/img/pics/large/153414_gseec99wew.jpeg",
+  "rating": null,
+  "is_approx": true,
+  "region": "Азербайджан",
+  "city": "Сумгаит",
+  "address": "Seaside Park, Samad Vurgun Street, Sumqayit, Azerbaijan",
+  "price_min": 0,
+  "price_max": 0,
+  "price_unit": "осмотр бесплатный",
+  "review_count": null,
+  "opening_hours": "Круглосуточно",
+  "phone": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.59244,49.68333",
+  "source_urls": [
+   "https://525.az/news/136651-sumqayitdaki-sulh-goyercini-abidesinin-muellifi-vefat-edib",
+   "https://525.az/news/136651-sumqayitdaki-sulh-goyercini-abidesinin-muellifi-vefat-edib",
+   "https://dergipark.org.tr/en/download/issue-full-file/100179",
+   "https://525.az/img/pics/large/153414_gseec99wew.jpeg"
+  ]
+ },
+ {
+  "id": 990105,
+  "title": "Исторический музей Сумгаита",
+  "description": "Городской музей, основанный в 1967 году. В коллекции около 15 тысяч экспонатов, рассказывающих об истории Сумгаита, археологии, культуре и развитии города.",
+  "category": "museum",
+  "latitude": 40.58056,
+  "longitude": 49.67806,
+  "image": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Sumqay%C4%B1t%C4%B1n_Tarixi_Muzeyi_-_2.jpg",
+  "rating": null,
+  "is_approx": false,
+  "region": "Азербайджан",
+  "city": "Сумгаит",
+  "address": "Heydar Aliyev Avenue, Sumqayit 5005, Azerbaijan",
+  "price_min": null,
+  "price_max": null,
+  "price_unit": null,
+  "review_count": null,
+  "opening_hours": "Уточняйте перед посещением",
+  "phone": "+994 18 644 24 00",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.58056,49.67806",
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/File:Sumqay%C4%B1t%C4%B1n_Tarixi_Muzeyi_-_2.jpg",
+   "https://sumgait.mct.az/az/preview/360/26/print/Sumqayit_seher_Dostluq_medeniyyet_evi",
+   "https://en.wikipedia.org/wiki/Sumgait_History_Museum",
+   "https://commons.wikimedia.org/wiki/File:Sumqay%C4%B1t%C4%B1n_Tarixi_Muzeyi_-_2.jpg",
+   "https://upload.wikimedia.org/wikipedia/commons/4/4f/Sumqay%C4%B1t%C4%B1n_Tarixi_Muzeyi_-_2.jpg"
+  ]
+ },
+ {
+  "id": 990106,
+  "title": "Государственный историко-этнографический заповедник Гала",
+  "description": "Музей под открытым небом на Апшероне: древние поселения, наскальные рисунки, средневековая крепость, ремесленные мастерские и небольшая ферма с животными. Интересно взрослым и детям.",
+  "category": "museum",
+  "latitude": 40.439812,
+  "longitude": 50.169284,
+  "image": "https://visitsilkroad.org/wp-content/uploads/2021/06/Qala-Archaeological-and-Ethnographic-Museum-featured_image.jpg",
+  "rating": null,
+  "is_approx": true,
+  "region": "Азербайджан",
+  "city": "Гала",
+  "address": "Qala settlement, Khazar district, Baku, Azerbaijan",
+  "price_min": 15,
+  "price_max": 15,
+  "price_unit": "AZN за взрослый билет; условия для детей отличаются",
+  "review_count": null,
+  "opening_hours": "Проверяйте расписание и доступность мастер-классов перед поездкой",
+  "phone": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.439812,50.169284",
+  "source_urls": [
+   "https://visitsilkroad.org/destination/gala-state-historical-and-ethnographic-reserve/",
+   "https://azerbaijan.travel/gala-state-historical-and-ethnographic-reserve",
+   "https://icherisheher.gov.az/en/activity/gala",
+   "https://visitsilkroad.org/destination/gala-state-historical-and-ethnographic-reserve/",
+   "https://visitsilkroad.org/wp-content/uploads/2021/06/Qala-Archaeological-and-Ethnographic-Museum-featured_image.jpg"
+  ]
+ },
+ {
+  "id": 990107,
+  "title": "Круглая крепость Мардакяна",
+  "description": "Каменная оборонительная башня XIII века, построенная в 1232 году. Один из самых выразительных исторических памятников Апшерона; доступ внутрь стоит уточнить заранее.",
+  "category": "historic",
+  "latitude": 40.49213,
+  "longitude": 50.14078,
+  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Mardakan%20Castle%2C%20Baku%2C%20Azerbaijan.jpg?width=1200",
+  "rating": null,
+  "is_approx": true,
+  "region": "Азербайджан",
+  "city": "Мардакян",
+  "address": "Mardakan settlement, Baku, Azerbaijan",
+  "price_min": null,
+  "price_max": null,
+  "price_unit": null,
+  "review_count": null,
+  "opening_hours": "Уточняйте доступ внутрь на месте",
+  "phone": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.49213,50.14078",
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/File:Mardakan_Castle,_Baku,_Azerbaijan.jpg",
+   "https://mapcarta.com/N10705337409",
+   "https://en.wikipedia.org/wiki/Round_Mardakan_Fortress",
+   "https://commons.wikimedia.org/wiki/File:Mardakan_Castle,_Baku,_Azerbaijan.jpg",
+   "https://commons.wikimedia.org/wiki/Special:FilePath/Mardakan%20Castle%2C%20Baku%2C%20Azerbaijan.jpg?width=1200"
+  ]
+ },
+ {
+  "id": 990108,
+  "title": "Крепость Рамана",
+  "description": "Средневековая каменная башня на скальном основании. С крепостью связана история обороны поселений Апшерона; внутренний доступ может быть ограничен.",
+  "category": "historic",
+  "latitude": 40.456159,
+  "longitude": 49.979904,
+  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ramana%20Castle.jpg?width=1200",
+  "rating": null,
+  "is_approx": true,
+  "region": "Азербайджан",
+  "city": "Рамана",
+  "address": "Ramana settlement, Baku, Azerbaijan",
+  "price_min": null,
+  "price_max": null,
+  "price_unit": null,
+  "review_count": null,
+  "opening_hours": "Уточняйте доступ внутрь на месте",
+  "phone": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.456159,49.979904",
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/File:Ramana_Castle.jpg",
+   "https://mapcarta.com/N10119666141",
+   "https://azerbaijan-guide.app/orte/ramana-castle?lang=ru",
+   "https://commons.wikimedia.org/wiki/File:Ramana_Castle.jpg",
+   "https://commons.wikimedia.org/wiki/Special:FilePath/Ramana%20Castle.jpg?width=1200"
+  ]
+ },
+ {
+  "id": 990109,
+  "title": "Крепость Нардаран",
+  "description": "Крепость XIV века, построенная в 1301 году. Исторический памятник с массивными каменными стенами и башней; можно совместить с поездкой к побережью Апшерона.",
+  "category": "historic",
+  "latitude": 40.56145,
+  "longitude": 50.00479,
+  "image": "https://upload.wikimedia.org/wikipedia/commons/3/38/Nrdaran_qalas%C4%B1%2C_1301-ci_il.jpg",
+  "rating": null,
+  "is_approx": true,
+  "region": "Азербайджан",
+  "city": "Нардаран",
+  "address": "Nardaran settlement, Baku, Azerbaijan",
+  "price_min": null,
+  "price_max": null,
+  "price_unit": null,
+  "review_count": null,
+  "opening_hours": "Внешний осмотр; режим доступа внутрь уточняйте",
+  "phone": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.56145,50.00479",
+  "source_urls": [
+   "https://en.wikipedia.org/wiki/Nardaran_Fortress",
+   "https://mapcarta.com/W313087730",
+   "https://en.wikipedia.org/wiki/Nardaran_Fortress",
+   "https://upload.wikimedia.org/wikipedia/commons/3/38/Nrdaran_qalas%C4%B1%2C_1301-ci_il.jpg",
+   "https://upload.wikimedia.org/wikipedia/commons/3/38/Nrdaran_qalas%C4%B1%2C_1301-ci_il.jpg"
+  ]
+ },
+ {
+  "id": 990110,
+  "title": "Янардаг — горящая гора",
+  "description": "Природный склон, где выходящий из-под земли газ поддерживает постоянное пламя. Особенно впечатляет ближе к вечеру; оставайтесь на оборудованной смотровой площадке.",
+  "category": "nature",
+  "latitude": 40.501841,
+  "longitude": 49.890858,
+  "image": "https://cdn.getyourguide.com/image/format%3Dauto%2Cfit%3Dcrop%2Cgravity%3Dauto%2Cquality%3D60%2Cwidth%3D400%2Cheight%3D265%2Cdpr%3D2/tour_img/c72e8ad3724ceea6978bdebd6b2305c1ece854fadaf35e86a974e9d4329233ea.jpg",
+  "rating": null,
+  "is_approx": true,
+  "region": "Азербайджан",
+  "city": "Мамедли",
+  "address": "Mammadli village, Absheron District, Azerbaijan",
+  "price_min": 15,
+  "price_max": 15,
+  "price_unit": "AZN за взрослый билет для иностранного посетителя",
+  "review_count": null,
+  "opening_hours": "Ежедневно 10:00–19:00; расписание стоит перепроверить",
+  "phone": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.501841,49.890858",
+  "source_urls": [
+   "https://www.getyourguide.com/yanar-dag-l109247/",
+   "https://azerbaijan-guide.app/orte/yanardag?lang=ru",
+   "https://en.wikipedia.org/wiki/Yanar_Dagh",
+   "https://www.getyourguide.com/yanar-dag-l109247/",
+   "https://cdn.getyourguide.com/image/format%3Dauto%2Cfit%3Dcrop%2Cgravity%3Dauto%2Cquality%3D60%2Cwidth%3D400%2Cheight%3D265%2Cdpr%3D2/tour_img/c72e8ad3724ceea6978bdebd6b2305c1ece854fadaf35e86a974e9d4329233ea.jpg"
+  ]
+ },
+ {
+  "id": 990111,
+  "title": "Храм огня Атешгях",
+  "description": "Исторический храмовый комплекс XVII–XVIII веков, связанный с культом огня и историей зороастрийцев и индийских торговцев. Сейчас работает как музей.",
+  "category": "historic",
+  "latitude": 40.415434,
+  "longitude": 50.008597,
+  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ateshgah%20Fire%20Temple.jpg?width=1200",
+  "rating": null,
+  "is_approx": true,
+  "region": "Азербайджан",
+  "city": "Сураханы",
+  "address": "C285+9J4, Surakhani, Baku, Azerbaijan",
+  "price_min": 15,
+  "price_max": 15,
+  "price_unit": "AZN за взрослый билет для иностранного посетителя",
+  "review_count": null,
+  "opening_hours": "Ежедневно 10:00–19:00; перед визитом проверьте расписание",
+  "phone": "+994 12 452 44 07",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.415434,50.008597",
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/File:Ateshgah_Fire_Temple.jpg",
+   "https://mapcarta.com/W218848941",
+   "https://azerbaijan-guide.app/orte/ateshgah-fire-temple?lang=en",
+   "https://commons.wikimedia.org/wiki/File:Ateshgah_Fire_Temple.jpg",
+   "https://commons.wikimedia.org/wiki/Special:FilePath/Ateshgah%20Fire%20Temple.jpg?width=1200"
+  ]
+ },
+ {
+  "id": 990112,
+  "title": "Масазырское солёное озеро",
+  "description": "Солёное озеро на Апшеронском полуострове, которое при определённом освещении и условиях может приобретать розовый оттенок. Это природный объект, а не оборудованный пляж: доступ к берегу и безопасную точку остановки нужно проверять заранее.",
+  "category": "nature",
+  "latitude": 40.507,
+  "longitude": 49.77356,
+  "image": "https://cdn.zerkalo.az/2022/08/OZERO-masazyr-929x600.jpg",
+  "rating": null,
+  "is_approx": true,
+  "region": "Азербайджан",
+  "city": "Масазыр",
+  "address": "Lake Masazir, Absheron District, Azerbaijan",
+  "price_min": null,
+  "price_max": null,
+  "price_unit": null,
+  "review_count": null,
+  "opening_hours": "Нет подтверждённого туристического расписания",
+  "phone": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.507,49.77356",
+  "source_urls": [
+   "https://m.zerkalo.az/ne-rozovoe-ozero-a-ambre-stalo-vizitnoj-kartoj-masazyra/",
+   "https://mapcarta.com/13516798",
+   "https://en.wikipedia.org/wiki/Lake_Masazir",
+   "https://m.zerkalo.az/ne-rozovoe-ozero-a-ambre-stalo-vizitnoj-kartoj-masazyra/",
+   "https://cdn.zerkalo.az/2022/08/OZERO-masazyr-929x600.jpg"
   ]
  }
 ];
