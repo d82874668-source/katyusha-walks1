@@ -319,3 +319,5 @@ body{background:var(--k-paper);color:var(--k-ink);font-family:var(--k-sans);back
 #katyusha-app .leaflet-control-zoom a{width:40px;height:40px;line-height:40px;font-size:20px}
 .k-place-marker-host{width:44px!important;height:44px!important;margin-left:-22px!important;margin-top:-22px!important}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+.k-map-pending-note{background:rgba(255,250,241,.96);color:#594b3d;border:1px solid rgba(89,75,61,.16);border-radius:12px;padding:9px 12px;font:600 12px/1.35 'Manrope',sans-serif;box-shadow:0 4px 16px rgba(31,35,29,.12);max-width:220px;margin:10px;}
