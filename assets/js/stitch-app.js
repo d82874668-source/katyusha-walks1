@@ -180,8 +180,8 @@ function renderFavorites() {
   if(favoritesGrouped)favs.sort((a,b)=>cityOf(a).localeCompare(cityOf(b),"ru")||a.title.localeCompare(b.title,"ru"));
   grid.innerHTML=favs.length?favs.map(stitchCard).join(""):'<div class="col-span-full text-center py-16 bg-surface-container-low rounded-xl"><span class="material-symbols-outlined text-4xl text-secondary">favorite_border</span><p class="font-headline-md text-primary mt-3">Коллекция пока пуста</p><p class="font-body-md text-on-surface-variant mt-2">Нажимайте на сердечко в карточках мест, чтобы сохранять интересное.</p><a href="catalog.html" class="inline-flex mt-5 px-5 py-2.5 rounded-full bg-primary-container text-on-primary">Открыть каталог</a></div>';
   const headings=$("main h1,main h2");const title=headings.find(h=>/персональн|коллекц/i.test(h.textContent));if(title)title.textContent="Ваша персональная коллекция";
-  const savedText=$("main h1,main h2,main p,main span").find(el=>/18 сохранённых мест/.test(el.textContent));if(savedText)savedText.textContent=favs.length+" сохранённых мест";
-  const callout=$("main a").find(a=>/Собрать в Конструкторе прогулок/.test(a.textContent));if(callout)callout.href="planner.html";
+  const savedText=$$("main h1,main h2,main p,main span").find(el=>/18 сохранённых мест/.test(el.textContent));if(savedText)savedText.textContent=favs.length+" сохранённых мест";
+  const callout=$$("main a").find(a=>/Собрать в Конструкторе прогулок/.test(a.textContent));if(callout)callout.href="planner.html";
   syncHeader();
 }
 function initFavoritesPage() {
@@ -210,7 +210,7 @@ function renderPlanPage() {
   let km=0;for(let i=1;i<places.length;i++)km+=haversineKm(places[i-1],places[i]);
   $("#route-dist").textContent=places.length>1?fmtDist(km):"—";
   const name=$("#config-city");if(name){fillSelect(name,allCities());if(!allCities().includes(name.value))name.value=activeCity;}
-  const durationText=$("main div,main p").find(el=>el.childElementCount===0&&/суммарно \(включая неспешный кофе/.test(el.textContent));
+  const durationText=$$("main div,main p").find(el=>el.childElementCount===0&&/суммарно \(включая неспешный кофе/.test(el.textContent));
   if(durationText){const hours=(km/2.8)+(places.length*0.25);durationText.textContent="Около "+(Math.floor(hours))+" ч "+Math.round((hours%1)*60)+" мин · ориентировочная оценка";}
   const telemetry=$('main svg[viewBox="0 0 400 40"]')?.parentElement?.parentElement;
   if(telemetry)telemetry.innerHTML='<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Точность расчёта</span><p class="text-sm text-on-surface-variant mt-2">Расстояние рассчитано приблизительно по координатам. Фактический путь зависит от улиц, переходов и доступности входов.</p>';
@@ -283,10 +283,10 @@ function renderSuggestedRoutes() {
 function renderRoutesPage() {
   const grid=$("#routes-grid");if(grid)grid.innerHTML=state.routes.map(routeCard).join("");
   const r=state.routes[0],stops=(r?.places||[]).map(placeById).filter(Boolean);
-  const featureTitle=$("main h2").find(h=>/Скрытый Петербург|Редакторские маршруты/i.test(h.textContent));
+  const featureTitle=$$("main h2").find(h=>/Скрытый Петербург|Редакторские маршруты/i.test(h.textContent));
   if(featureTitle&&r)featureTitle.textContent=r.title;
   const featureImage=$("main img");if(featureImage&&stops.find(imageOf)){featureImage.src=imageOf(stops.find(imageOf));featureImage.alt=r.title;}
-  const featureText=$("main p").find(p=>p.textContent.includes("Здесь пахнет старой типографской"));
+  const featureText=$$("main p").find(p=>p.textContent.includes("Здесь пахнет старой типографской"));
   if(featureText&&r)featureText.textContent=r.description||"Авторский маршрут из реальных мест каталога.";
 }
 function renderPlacePage() {
