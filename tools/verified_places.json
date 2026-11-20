@@ -902,7 +902,7 @@
     "price_max": 5445,
     "price_min": 4700,
     "price_unit": "RUB за ночь; опубликовано от 4 700 ₽, на карточке показан тариф 5 445 ₽",
-    "rating": 5.0,
+    "rating": 5,
     "review_count": 2,
     "sources": [
       "https://ekaterinburg.sutochno.ru/1848684",
@@ -914,5 +914,28 @@
     "title": "Дом в лесу с баней и чаном",
     "region": "Посёлок Аять, Свердловская область",
     "image_path": "assets/images/places/62.jpg"
+  },
+  {
+    "title": "Парк «Зарядье»",
+    "category": "Парки",
+    "region": "Москва",
+    "city": "Москва",
+    "description": "Городской парк рядом с Красной площадью: прогулочные пространства, природные зоны и культурные павильоны. Территория парка открыта круглосуточно; отдельные павильоны и активности могут иметь собственный режим и стоимость.",
+    "address": "ул. Варварка, 6с1, Москва",
+    "latitude": 55.751287,
+    "longitude": 37.628505,
+    "image_url": "https://static-pano.maps.yandex.ru/v1/?panoid=1298205456_673250403_23_1766092522&size=500%2C240&azimuth=-110.4&tilt=10&api_key=maps&signature=HwDK-L5UXsTKDgyOVDP2ACiGfoNef-TxNBpbWicc6xA=",
+    "rating": 4.6,
+    "review_count": 56397,
+    "price_min": 0,
+    "price_max": 0,
+    "price_unit": "RUB, свободный вход; павильоны и аттракционы платные",
+    "opening_hours": "Территория круглосуточно",
+    "phone": "+7 (495) 531-05-00",
+    "map_url": "https://yandex.ru/maps/org/zaryadye_park/205689235916/?ll=37.628505%2C55.751287&z=16",
+    "sources": [
+      "https://www.zaryadyepark.ru/questions/",
+      "https://yandex.ru/maps/org/zaryadye_park/205689235916/"
+    ]
   }
 ]
