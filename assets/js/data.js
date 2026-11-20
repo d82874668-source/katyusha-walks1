@@ -1930,7 +1930,7 @@ export const PLACES = [
   "phone": null,
   "map_url": null,
   "source_urls": [
-   "https://commons.wikimedia.org/wiki/Category:Flame_Towers"
+   "https://commons.wikimedia.org/wiki/File:Old_Town_Street_Scene_-_Baku_-_Azerbaijan_-_06_(17713729450).jpg"
   ]
  },
  {
@@ -1964,7 +1964,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 40.3598,
   "longitude": 49.8263,
-  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flmtwrs.jpg?width=1400",
+  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flmtwrs.jpg?width=1600",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",

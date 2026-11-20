@@ -814,3 +814,38 @@ body{background:var(--bg);letter-spacing:-.012em}
 .cover{position:relative}
 .cover__credit{position:absolute;right:10px;bottom:10px;padding:6px 9px;border-radius:999px;background:rgba(14,20,16,.72);color:#fff!important;text-decoration:none;font:600 10px/1.2 var(--font);backdrop-filter:blur(8px)}
 .cover__credit:hover{background:rgba(14,20,16,.92)}
+
+
+/* ===== Корректировки по обратной связи ===== */
+/* Башни Пламени должны быть фотографией карточки места, а не фоном первого экрана. */
+.hero{
+  background:var(--sky)!important;
+  color:var(--ink)!important;
+}
+.hero::after{display:none!important}
+.hero .lead{color:var(--muted)!important}
+.spott-quicklinks a{color:var(--ink);border-color:var(--line);background:var(--glass)}
+.btn--glass{color:var(--ink);background:var(--surface);border-color:var(--line)}
+/* Четыре направления должны выглядеть как единый набор карточек. */
+.dir--hero,[data-theme="dark"] .dir--hero{
+  background:var(--surface)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+.dir--hero .muted{color:var(--muted)!important}
+.dir--hero .badge{background:var(--accent-soft)!important;color:var(--accent)!important}
+/* Возвращаем живой огонёк под заголовком «Маршрут на вечер». */
+#heroRoute{position:relative;overflow:hidden}
+#heroRoute::after{
+  content:"";position:absolute;left:27px;top:68px;width:9px;height:9px;
+  border-radius:50%;background:#ff9a45;
+  box-shadow:0 0 8px 3px rgba(255,154,69,.42),0 0 22px 7px rgba(255,112,54,.22);
+  animation:routeEmber 2.4s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes routeEmber{
+  0%,100%{transform:translate(0,0) scale(.82);opacity:.62}
+  45%{transform:translate(8px,-5px) scale(1.2);opacity:1}
+  70%{transform:translate(13px,1px) scale(.9);opacity:.78}
+}
+@media(prefers-reduced-motion:reduce){#heroRoute::after{animation:none}}
