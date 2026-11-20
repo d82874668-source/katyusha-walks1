@@ -125,6 +125,21 @@ legacy_places = [dict(id=i+1,title=t,description=d,category=c,latitude=la,longit
                       region="Азербайджан",city=LEGACY_CITY[i+1],address=None,price_min=None,price_max=None,price_unit=None,
                       review_count=None,opening_hours=None,phone=None,map_url=None,source_urls=[])
                  for i,(t,c,d,la,lo,a) in enumerate(P)]
+LEGACY_MEDIA = {
+ 5: ("https://shimal.news/storage/thumbs/aspect/2025/12/15/pHnlj69hWnSFTgnMaUSFta2fRAr2JVMUrF40shKB.png", "https://shimal.news/cemiyyet/samaxida-kapibaralar-meskunlasib"),
+ 18: ("https://ak-d.tripcdn.com/images/0102i12000o5vtw1m7297.jpg", "https://www.trip.com/travel-guide/attraction/shamakhi/juma-mosque-of-shamakhi-58323282/"),
+ 19: ("https://static.wixstatic.com/media/ce4a22_fcdfd9ab682942fbbf4c2c032e5418a8~mv2.jpg/v1/fill/w_925%2Ch_520%2Cal_c%2Cq_85%2Cenc_avif%2Cquality_auto/ce4a22_fcdfd9ab682942fbbf4c2c032e5418a8~mv2.jpg", "https://www.tripoly.co.in/post/best-places-to-visit-in-azerbaijan"),
+ 20: ("https://azertag.az/files/2022/2/1200x630/16564242895013132936_1200x630.jpg", "https://azertag.az/ru/xeber/osnovnye_turisticheskie_marshruty_i_dostoprimechatelnosti_guby-2196239"),
+ 21: ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Caucasus_Mountains._Qusar%2C_Azerbaijan.jpg/960px-Caucasus_Mountains._Qusar%2C_Azerbaijan.jpg", "https://commons.wikimedia.org/wiki/File:Caucasus_Mountains._Qusar,_Azerbaijan.jpg"),
+ 22: ("https://thefinetravel.com/images/shahdag.jpg", "https://thefinetravel.com/destination/shahdag-mountain-resort"),
+ 24: ("https://content.r9cdn.net/rimg/dimg/45/6f/c34de687-city-81304-170e64291f5.jpg?crop=true&height=630&watermarkposition=lowerright&width=1200", "https://www.hotelscombined.com/Place/Bilgah.htm"),
+ 26: ("https://upload.wikimedia.org/wikipedia/commons/f/f3/Sea_Breeze_resort.jpg", "https://commons.wikimedia.org/wiki/File:Sea_Breeze_resort.jpg")
+}
+for place in legacy_places:
+  if place["id"] in LEGACY_MEDIA:
+    place["image"], photo_source = LEGACY_MEDIA[place["id"]]
+    place["source_urls"] = [photo_source, place["image"]]
+
 ID = {p["title"]:p["id"] for p in legacy_places}
 places = list(legacy_places)
 
