@@ -69,10 +69,14 @@ function fillPlaceEditor(place) {
   selectedPlaceId = place?.id ?? null;
   editor.hidden = !place;
   if (!place) { $("#placePhotos").textContent = "Выберите объект."; return; }
-  for (const name of ["title","official_name","city","region","country","category","subcategory","address","description","latitude","longitude","image","rating","review_count","rating_source","price_min","price_max","price_unit","opening_hours","phone","website","map_url","verification_status"]) {
+  for (const name of ["title","official_name","city","region","country","category","subcategory","address","description","latitude","longitude","image","rating","review_count","rating_source","price_min","price_max","price_unit","opening_hours","phone","website","map_url","verification_status","avg_check","price_source"]) {
     editorField(name).value = place[name] ?? "";
   }
   editorField("source_urls").value = (place.source_urls || []).join("\n");
+  editorField("is_approx").checked = !!place.is_approx;
+  editorField("last_verified_at").value = place.last_verified_at ? String(place.last_verified_at).slice(0,10) : "";
+  editorField("social_links").value = JSON.stringify(place.social_links || {}, null, 2);
+  editorField("features").value = JSON.stringify(place.features || {}, null, 2);
   $("#placeSaveMsg").textContent = "";
   loadPlacePhotos();
 }
@@ -120,14 +124,27 @@ editor.addEventListener("submit", async (event) => {
     website: nullableText(editorField("website").value),
     map_url: nullableText(editorField("map_url").value),
     verification_status: editorField("verification_status").value.trim() || "unverified",
+    is_approx: editorField("is_approx").checked,
+    avg_check: nullableNumber(editorField("avg_check").value),
+    price_source: nullableText(editorField("price_source").value),
+    last_verified_at: editorField("last_verified_at").value ? new Date(editorField("last_verified_at").value + "T12:00:00Z").toISOString() : null,
+    social_links: {},
+    features: {},
     source_urls: editorField("source_urls").value.split("\n").map((x) => x.trim()).filter(Boolean),
     updated_at: new Date().toISOString()
   };
+  try {
+    payload.social_links = JSON.parse(editorField("social_links").value || "{}");
+    payload.features = JSON.parse(editorField("features").value || "{}");
+    if (!payload.social_links || Array.isArray(payload.social_links) || typeof payload.social_links !== "object") throw new Error("Соцсети должны быть JSON-объектом.");
+    if (!payload.features || Array.isArray(payload.features) || typeof payload.features !== "object") throw new Error("Характеристики должны быть JSON-объектом.");
+  } catch (error) { $("#placeSaveMsg").textContent = "Проверьте JSON: " + error.message; return; }
   if (!payload.title || !payload.category) { $("#placeSaveMsg").textContent = "Название и категория обязательны."; return; }
   if ((payload.latitude == null) !== (payload.longitude == null) ||
       (payload.latitude != null && (payload.latitude < -90 || payload.latitude > 90 || payload.longitude < -180 || payload.longitude > 180))) {
     $("#placeSaveMsg").textContent = "Проверьте координаты: широта −90…90, долгота −180…180."; return;
   }
+  if (payload.avg_check != null && payload.avg_check < 0) { $("#placeSaveMsg").textContent = "Средний чек не может быть отрицательным."; return; }
   if (payload.rating != null && (payload.rating < 0 || payload.rating > 5)) { $("#placeSaveMsg").textContent = "Рейтинг должен быть от 0 до 5."; return; }
   if (payload.price_min != null && payload.price_max != null && payload.price_min > payload.price_max) { $("#placeSaveMsg").textContent = "Цена «от» не может быть больше цены «до»."; return; }
   save.disabled = true; $("#placeSaveMsg").textContent = "Сохраняем…";
