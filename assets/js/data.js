@@ -693,7 +693,7 @@ export const PLACES = [
   "category": "city",
   "latitude": 40.377,
   "longitude": 49.901,
-  "image": null,
+  "image": "https://bakuwhitecity.com/storage/constructions/ZpLCtGk68ntaiI7z7phfodhgSmP5QIpiTPKPMbyF.webp",
   "rating": null,
   "is_approx": false,
   "region": "Азербайджан",
@@ -706,7 +706,9 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://bakuwhitecity.com/en/constructions/sahil-14-130"
+  ]
  },
  {
   "id": 17,
@@ -715,7 +717,7 @@ export const PLACES = [
   "category": "garden",
   "latitude": 40.348,
   "longitude": 49.812,
-  "image": null,
+  "image": "https://caliber.az/media/photos/original/555476378861f52a07bb26165e4cc1dc.webp",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -728,7 +730,9 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://caliber.az/en/post/a-green-oasis-in-the-heart-of-baku-president-aliyev-inaugurates-reimagined-central-botanical-garden"
+  ]
  },
  {
   "id": 18,
@@ -1912,7 +1916,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 40.366,
   "longitude": 49.837,
-  "image": null,
+  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Old%20Town%20Street%20Scene%20-%20Baku%20-%20Azerbaijan%20-%2006%20(17713729450).jpg?width=1400",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -1925,7 +1929,9 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/Category:Flame_Towers"
+  ]
  },
  {
   "id": 64,
@@ -1934,7 +1940,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 40.3664,
   "longitude": 49.8369,
-  "image": null,
+  "image": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Palacio_de_los_Shirvanshah%2C_Baku%2C_Azerbaiy%C3%A1n%2C_2016-09-28%2C_DD_19-21_HDR.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -1947,7 +1953,9 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/File:Palacio_de_los_Shirvanshah,_Baku,_Azerbaiy%C3%A1n,_2016-09-28,_DD_19-21_HDR.jpg"
+  ]
  },
  {
   "id": 65,
@@ -1956,7 +1964,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 40.3598,
   "longitude": 49.8263,
-  "image": null,
+  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flmtwrs.jpg?width=1400",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -1969,7 +1977,9 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/File:Flmtwrs.jpg"
+  ]
  },
  {
   "id": 66,
@@ -1978,7 +1988,7 @@ export const PLACES = [
   "category": "embankment",
   "latitude": 40.368,
   "longitude": 49.8455,
-  "image": null,
+  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Flame_towers_from_Baku_boulevard.JPG?width=1400",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -1991,7 +2001,9 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/File:Flame_towers_from_Baku_boulevard.JPG"
+  ]
  },
  {
   "id": 67,
@@ -2000,7 +2012,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 40.359,
   "longitude": 49.84,
-  "image": null,
+  "image": "https://visitsilkroad.org/wp-content/uploads/2021/08/Little-Venice-Azerbaijan1.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -2013,7 +2025,9 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://visitsilkroad.org/destination/little-venice/"
+  ]
  },
  {
   "id": 68,
@@ -2022,7 +2036,7 @@ export const PLACES = [
   "category": "square",
   "latitude": 40.3725,
   "longitude": 49.8355,
-  "image": null,
+  "image": "https://testour.az/uploads/Fountains-Square-Azerbaijan.webp",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -2035,7 +2049,9 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://testour.az/az/tour/baku-old-and-modern-city-tour-top-30-highlights-in-4-hours"
+  ]
  },
  {
   "id": 990001,
