@@ -28,8 +28,13 @@ export const fmtMin = (m) => (m < 60 ? `${Math.round(m)} мин` : `${Math.floor
 export const cover = (p, cls = "cover") => {
   const c = cat(p);
   const photo = p.image || p.photos?.[0]?.url || p.photos?.[0]?.image_url;
+  const photoSource = p.photo_sources?.[0];
+  const creditUrl = photoSource?.source_url || p.source_urls?.[0];
+  const creditLabel = photoSource
+    ? `Фото: ${photoSource.attribution || "автор"} · ${photoSource.license || "лицензия"}`
+    : "Источник фото";
   return photo
-    ? `<div class="${cls}"><img src="${esc(photo)}" alt="${esc(p.title)}" loading="lazy" decoding="async">${p.source_urls?.[0] ? `<a class="cover__credit" href="${esc(p.source_urls[0])}" target="_blank" rel="noopener noreferrer" aria-label="Источник фотографии">Источник фото ↗</a>` : ""}</div>`
+    ? `<div class="${cls}"><img src="${esc(photo)}" alt="${esc(p.title)}" loading="lazy" decoding="async">${creditUrl ? `<a class="cover__credit" href="${esc(creditUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(creditLabel)}" title="${esc(creditLabel)}">${esc(creditLabel)} ↗</a>` : ""}</div>`
     : `<div class="${cls} cover--art" style="--h:${c.hue}" aria-hidden="true">${icon(c.icon)}</div>`;
 };
 
