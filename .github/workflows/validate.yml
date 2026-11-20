@@ -1,0 +1,39 @@
+name: Validate site
+on:
+  push:
+    branches: ["main", "feature/visits-pwa-place-editor"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r file; do
+            echo "Checking $file"
+            node --input-type=module --check < "$file"
+          done < <(find assets/js -type f -name '*.js' -print | sort)
+      - name: Validate JSON data files
+        run: |
+          python -m json.tool manifest.webmanifest > /dev/null
+          python -m json.tool tools/verified_places.json > /dev/null
+      - name: Compile Python catalogue builder
+        run: python -m py_compile tools/build_data.py
+      - name: Ensure existing CSS was not changed
+        run: git diff --exit-code origin/main...HEAD -- assets/css/styles.css

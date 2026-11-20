@@ -62,16 +62,21 @@ alter table public.places    enable row level security;
 alter table public.routes    enable row level security;
 alter table public.favorites enable row level security;
 
--- Читать всё может любой посетитель сайта
-create policy "places read"    on public.places    for select to anon, authenticated using (true);
-create policy "routes read"    on public.routes    for select to anon, authenticated using (true);
-create policy "favorites read" on public.favorites for select to anon, authenticated using (true);
+-- Читать каталог и маршруты может любой посетитель сайта.
+create policy "places read" on public.places for select to anon, authenticated using (true);
+create policy "routes read" on public.routes for select to anon, authenticated using (true);
 
--- Избранное могут менять все, у кого есть ссылка (для двоих удобно, для публичного сайта нет, см. README)
-create policy "favorites insert" on public.favorites for insert to anon, authenticated with check (true);
-create policy "favorites delete" on public.favorites for delete to anon, authenticated using (true);
+-- Избранное хранится локально в браузере. Таблица favorites закрыта от публичного API.
+create policy "favorites deny public access" on public.favorites as restrictive
+  for all to anon, authenticated using (false) with check (false);
+-- Для будущей синхронизации между устройствами потребуется авторизованный профиль и user_id.
+
+-- Доступ к Data API выдаётся явно. RLS выше определяет, какие строки доступны.
+grant usage on schema public to anon, authenticated, service_role;
+grant select on table public.places, public.routes to anon, authenticated;
+grant all privileges on all tables in schema public to service_role;
+grant usage, select on all sequences in schema public to service_role;
 
 -- Места и маршруты редактируются только в панели Supabase (Table Editor / SQL Editor).
 
--- Мгновенная синхронизация избранного между вашими устройствами
-alter publication supabase_realtime add table public.favorites;
+-- Избранное не публикуется в Realtime: таблица закрыта от anon/authenticated.

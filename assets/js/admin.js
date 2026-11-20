@@ -31,6 +31,7 @@ async function show() {
   const { data: q } = await sb.from("place_review_queue").select("id,reason,candidate,state").eq("state", "pending").limit(30);
   $("#queue").innerHTML = table((q ?? []).map((r) => [r.id, r.reason, r.candidate?.title ?? "", r.state]), ["ID", "Причина", "Название", "Статус"]);
   window.__logs = logs ?? [];
+  await loadPlaceOptions();
 }
 $("#go").onclick = async () => {
   const { error } = await sb.auth.signInWithPassword({ email: $("#em").value, password: $("#pw").value });
@@ -44,4 +45,163 @@ document.querySelectorAll("[data-act]").forEach((b) => b.onclick = async () => {
   const { data, error } = await sb.functions.invoke("sync-osm", { body: { action } });
   $("#msg").textContent = error ? "Ошибка: " + error.message : `Готово: ${JSON.stringify(data)}`; b.disabled = false; show();
 });
+
+let editorPlaces = [];
+let selectedPlaceId = null;
+const editor = $("#placeEditor");
+const editorField = (name) => editor.elements.namedItem(name);
+const nullableText = (value) => value.trim() || null;
+const nullableNumber = (value) => value === "" ? null : Number(value);
+const safeImageRef = (value) => {
+  const text = String(value || "").trim();
+  if (!text) return null;
+  if (/^https?:\/\//i.test(text)) return safeHttpUrl(text);
+  if (/^(?:\.\/|\/)?assets\/[a-z0-9_./-]+$/i.test(text) && !text.split("/").includes("..")) return text;
+  return null;
+};
+const safeHttpUrl = (value) => {
+  const text = String(value || "").trim();
+  if (!text) return null;
+  try { const parsed = new URL(text); return ["http:", "https:"].includes(parsed.protocol) ? parsed.href : null; }
+  catch { return null; }
+};
+
+async function loadPlaceOptions() {
+  const { data, error } = await sb.from("places").select("*").order("city").order("title").limit(10000);
+  if (error) { $("#placeSaveMsg").textContent = "Не удалось загрузить каталог: " + error.message; return; }
+  editorPlaces = data || [];
+  const query = ($("#placeSearch").value || "").trim().toLocaleLowerCase("ru");
+  const filtered = editorPlaces.filter((p) => !query || [p.title,p.city,p.region,p.address].filter(Boolean).join(" ").toLocaleLowerCase("ru").includes(query));
+  $("#placeSelect").innerHTML = '<option value="">Выберите объект</option>' + filtered.map((p) =>
+    `<option value="${p.id}">${esc(p.title)} — ${esc(p.city || p.region || "город не указан")}</option>`
+  ).join("");
+  if (selectedPlaceId && filtered.some((p) => String(p.id) === String(selectedPlaceId))) $("#placeSelect").value = String(selectedPlaceId);
+}
+
+function fillPlaceEditor(place) {
+  selectedPlaceId = place?.id ?? null;
+  editor.hidden = !place;
+  if (!place) { $("#placePhotos").textContent = "Выберите объект."; return; }
+  for (const name of ["title","official_name","city","region","country","category","subcategory","address","description","latitude","longitude","image","rating","review_count","rating_source","price_min","price_max","price_unit","opening_hours","phone","website","map_url","verification_status","avg_check","price_source"]) {
+    editorField(name).value = place[name] ?? "";
+  }
+  editorField("source_urls").value = (place.source_urls || []).join("\n");
+  editorField("is_approx").checked = !!place.is_approx;
+  editorField("last_verified_at").value = place.last_verified_at ? String(place.last_verified_at).slice(0,10) : "";
+  editorField("social_links").value = JSON.stringify(place.social_links || {}, null, 2);
+  editorField("features").value = JSON.stringify(place.features || {}, null, 2);
+  $("#placeSaveMsg").textContent = "";
+  loadPlacePhotos();
+}
+
+async function loadPlacePhotos() {
+  if (!selectedPlaceId) return;
+  const { data, error } = await sb.from("place_photos").select("id,url,license,attribution,sort_order").eq("place_id", selectedPlaceId).order("sort_order").order("id");
+  $("#placePhotos").innerHTML = error ? esc(error.message) : (data?.length ? data.map((p) => {
+    const href = safeHttpUrl(p.url);
+    return `<div class="row2" style="align-items:center">${href ? `<a href="${href}" target="_blank" rel="noopener">${esc(p.url.slice(0,90))}</a>` : esc(p.url.slice(0,90))}<small class="muted">${esc(p.license)} · ${esc(p.attribution || "автор не указан")}</small><button class="btn" type="button" data-photo-move="up" data-photo-id="${p.id}">↑</button><button class="btn" type="button" data-photo-move="down" data-photo-id="${p.id}">↓</button><button class="btn" type="button" data-delete-photo="${p.id}">Удалить</button></div>`;
+  }).join("") : "Дополнительные фотографии не добавлены.");
+}
+
+$("#placeSearch").addEventListener("input", loadPlaceOptions);
+$("#placeSelect").addEventListener("change", () => {
+  const place = editorPlaces.find((p) => String(p.id) === $("#placeSelect").value);
+  fillPlaceEditor(place);
+});
+
+editor.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!selectedPlaceId) return;
+  const form = event.currentTarget;
+  const save = form.querySelector('[type="submit"]');
+  const payload = {
+    title: editorField("title").value.trim(),
+    official_name: nullableText(editorField("official_name").value),
+    city: nullableText(editorField("city").value),
+    region: nullableText(editorField("region").value),
+    country: nullableText(editorField("country").value),
+    category: editorField("category").value.trim(),
+    subcategory: nullableText(editorField("subcategory").value),
+    address: nullableText(editorField("address").value),
+    description: nullableText(editorField("description").value),
+    latitude: nullableNumber(editorField("latitude").value),
+    longitude: nullableNumber(editorField("longitude").value),
+    image: safeImageRef(editorField("image").value),
+    rating: nullableNumber(editorField("rating").value),
+    review_count: nullableNumber(editorField("review_count").value),
+    rating_source: nullableText(editorField("rating_source").value),
+    price_min: nullableNumber(editorField("price_min").value),
+    price_max: nullableNumber(editorField("price_max").value),
+    price_unit: nullableText(editorField("price_unit").value),
+    opening_hours: nullableText(editorField("opening_hours").value),
+    phone: nullableText(editorField("phone").value),
+    website: safeHttpUrl(editorField("website").value),
+    map_url: safeHttpUrl(editorField("map_url").value),
+    verification_status: editorField("verification_status").value.trim() || "unverified",
+    is_approx: editorField("is_approx").checked,
+    avg_check: nullableNumber(editorField("avg_check").value),
+    price_source: nullableText(editorField("price_source").value),
+    last_verified_at: editorField("last_verified_at").value ? new Date(editorField("last_verified_at").value + "T12:00:00Z").toISOString() : null,
+    social_links: {},
+    features: {},
+    source_urls: editorField("source_urls").value.split("\n").map((x) => safeHttpUrl(x)).filter(Boolean),
+    updated_at: new Date().toISOString()
+  };
+  try {
+    payload.social_links = JSON.parse(editorField("social_links").value || "{}");
+    payload.features = JSON.parse(editorField("features").value || "{}");
+    if (!payload.social_links || Array.isArray(payload.social_links) || typeof payload.social_links !== "object") throw new Error("Соцсети должны быть JSON-объектом.");
+    if (!payload.features || Array.isArray(payload.features) || typeof payload.features !== "object") throw new Error("Характеристики должны быть JSON-объектом.");
+  } catch (error) { $("#placeSaveMsg").textContent = "Проверьте JSON: " + error.message; return; }
+  if (!payload.title || !payload.category) { $("#placeSaveMsg").textContent = "Название и категория обязательны."; return; }
+  if ((payload.latitude == null) !== (payload.longitude == null) ||
+      (payload.latitude != null && (payload.latitude < -90 || payload.latitude > 90 || payload.longitude < -180 || payload.longitude > 180))) {
+    $("#placeSaveMsg").textContent = "Проверьте координаты: широта −90…90, долгота −180…180."; return;
+  }
+  if (payload.avg_check != null && payload.avg_check < 0) { $("#placeSaveMsg").textContent = "Средний чек не может быть отрицательным."; return; }
+  if (payload.rating != null && (payload.rating < 0 || payload.rating > 5)) { $("#placeSaveMsg").textContent = "Рейтинг должен быть от 0 до 5."; return; }
+  if (payload.price_min != null && payload.price_max != null && payload.price_min > payload.price_max) { $("#placeSaveMsg").textContent = "Цена «от» не может быть больше цены «до»."; return; }
+  save.disabled = true; $("#placeSaveMsg").textContent = "Сохраняем…";
+  const { error } = await sb.from("places").update(payload).eq("id", selectedPlaceId);
+  save.disabled = false;
+  $("#placeSaveMsg").textContent = error ? "Ошибка: " + error.message : "Карточка сохранена.";
+  if (!error) { await loadPlaceOptions(); fillPlaceEditor(editorPlaces.find((p) => p.id === selectedPlaceId)); }
+});
+
+$("#addPlacePhoto").addEventListener("click", async () => {
+  if (!selectedPlaceId) { $("#placeSaveMsg").textContent = "Сначала выберите объект."; return; }
+  const url = $("#photoUrl").value.trim(), license = $("#photoLicense").value.trim(), attribution = $("#photoAttribution").value.trim();
+  if (!safeHttpUrl(url)) { $("#placeSaveMsg").textContent = "Укажите корректную ссылку на фото (http/https)."; return; }
+  if (!license) { $("#placeSaveMsg").textContent = "Укажите лицензию или условия использования фотографии."; return; }
+  const { data: last } = await sb.from("place_photos").select("sort_order").eq("place_id", selectedPlaceId).order("sort_order", { ascending: false }).limit(1).maybeSingle();
+  const { error } = await sb.from("place_photos").insert({ place_id: selectedPlaceId, url, license, attribution: attribution || null, sort_order: (last?.sort_order ?? -1) + 1 });
+  $("#placeSaveMsg").textContent = error ? "Ошибка: " + error.message : "Фотография добавлена.";
+  if (!error) { $("#photoUrl").value = ""; await loadPlacePhotos(); }
+});
+
+$("#placePhotos").addEventListener("click", async (event) => {
+  const move = event.target.closest("[data-photo-move]");
+  if (move) {
+    const { data } = await sb.from("place_photos").select("id,sort_order").eq("place_id", selectedPlaceId).order("sort_order").order("id");
+    const index = (data || []).findIndex((p) => String(p.id) === move.dataset.photoId);
+    const target = index + (move.dataset.photoMove === "up" ? -1 : 1);
+    if (index < 0 || target < 0 || target >= data.length) return;
+    const first = data[index], second = data[target];
+    const updates = await Promise.all([
+      sb.from("place_photos").update({ sort_order: second.sort_order }).eq("id", first.id),
+      sb.from("place_photos").update({ sort_order: first.sort_order }).eq("id", second.id)
+    ]);
+    const error = updates.find((x) => x.error)?.error;
+    $("#placeSaveMsg").textContent = error ? "Ошибка: " + error.message : "Порядок фото обновлён.";
+    if (!error) loadPlacePhotos();
+    return;
+  }
+  const button = event.target.closest("[data-delete-photo]");
+  if (!button) return;
+  if (!confirm("Удалить эту фотографию из карточки?")) return;
+  const { error } = await sb.from("place_photos").delete().eq("id", Number(button.dataset.deletePhoto));
+  $("#placeSaveMsg").textContent = error ? "Ошибка: " + error.message : "Фотография удалена.";
+  if (!error) loadPlacePhotos();
+});
+
 show();

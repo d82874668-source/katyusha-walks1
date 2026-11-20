@@ -25,12 +25,16 @@ export async function loadData() {
     // SDK подгружается только когда Supabase настроен: так сайт грузится быстрее.
     const { createClient } = await import(SUPABASE_ESM);
     sb = createClient(projectUrl(), CONFIG.SUPABASE_ANON_KEY);
-    const [p, r, f] = await Promise.all([
+    const [p, r] = await Promise.all([
       sb.from("places").select("*").order("id"),
       sb.from("routes").select("*").order("id"),
-      sb.from("favorites").select("place_id"),
     ]);
-    const err = p.error || r.error || f.error;
+    const photoResult = await sb.from("place_photos").select("place_id,url,license,attribution,sort_order").order("sort_order").order("id");
+    const photosByPlace = new Map();
+    if (!photoResult.error) for (const photo of photoResult.data || []) {
+      const list = photosByPlace.get(photo.place_id) || []; list.push(photo); photosByPlace.set(photo.place_id, list);
+    }
+    const err = p.error || r.error;
     if (err) throw err;
     if (!p.data.length) return local; // база пустая: показываем встроенные данные
     // Не теряем новые встроенные записи, пока их не добавили в подключённую Supabase.
@@ -39,9 +43,9 @@ export async function loadData() {
     const remoteIds = new Set(p.data.map((place) => String(place.id)));
     const mergedPlaces = p.data.map((remote) => {
       const local = localById.get(String(remote.id));
-      if (!local) return remote;
-      const merged = { ...local, ...remote };
-      ["description", "image", "rating", "region", "city", "address", "price_min", "price_max", "price_unit", "review_count", "opening_hours", "phone", "map_url", "source_urls"].forEach((key) => {
+      if (!local) return { ...remote, photos: photosByPlace.get(remote.id) || [] };
+      const merged = { ...local, ...remote, photos: photosByPlace.get(remote.id) || [] };
+      ["description", "image", "rating", "region", "city", "country", "address", "price_min", "price_max", "price_unit", "review_count", "opening_hours", "phone", "map_url", "website", "source_urls"].forEach((key) => {
         if (remote[key] == null || (Array.isArray(remote[key]) && !remote[key].length)) merged[key] = local[key];
       });
       return merged;
@@ -49,7 +53,7 @@ export async function loadData() {
     return {
       places: [...mergedPlaces, ...PLACES.filter((place) => !remoteIds.has(String(place.id)))],
       routes: r.data,
-      favs: new Set(f.data.map((x) => x.place_id)),
+      favs: new Set(readLocal()),
       mode: "supabase",
     };
   } catch (e) {
@@ -59,24 +63,14 @@ export async function loadData() {
   }
 }
 
-/** Добавляет/убирает место из избранного. Возвращает true при успехе. */
+/** Избранное хранится локально: публичный глобальный список больше не используется. */
 export async function setFavorite(placeId, on, favs) {
   on ? favs.add(placeId) : favs.delete(placeId);
   writeLocal(favs);
-  if (!sb) return true;
-  const { error } = on
-    ? await sb.from("favorites").upsert({ place_id: placeId }, { onConflict: "place_id" })
-    : await sb.from("favorites").delete().eq("place_id", placeId);
-  return !error;
+  return true;
 }
 
-/** Подписка на изменения избранного с другого устройства (Supabase Realtime). */
-export function subscribeFavorites(onChange) {
-  if (!sb) return;
-  sb.channel("favorites-sync")
-    .on("postgres_changes", { event: "*", schema: "public", table: "favorites" }, async () => {
-      const { data } = await sb.from("favorites").select("place_id");
-      if (data) onChange(new Set(data.map((x) => x.place_id)));
-    })
-    .subscribe();
+/** Синхронизация отключена до появления авторизованного пользовательского профиля. */
+export function subscribeFavorites() {
+  // Intentionally local-only: never expose one visitor's favourites to another.
 }
