@@ -324,12 +324,8 @@ function renderFavs() {
 }
 
 function renderHero() {
-  const r = state.routes[1] || state.routes[0];
-  if (!r) return;
-  const stops = r.places.map(byId).filter(Boolean);
-  $("#heroRoute").innerHTML = `<p class="muted">Маршрут на вечер</p><h3>${esc(r.title)}</h3>
-    <ol class="stops stops--sm">${stops.map((s) => `<li><span>${esc(s.title)}</span></li>`).join("")}</ol>
-    <button class="btn btn--primary btn--sm" data-show-route="${r.id}">Показать на карте</button>`;
+  // Карточка «Маршрут на вечер» удалена из первого экрана.
+  // Счётчики каталога остаются актуальными.
   $("#cPlaces").textContent = state.places.length;
   $("#cRoutes").textContent = state.routes.length;
   $("#cCats").textContent = new Set(state.places.map((p) => p.category)).size;
