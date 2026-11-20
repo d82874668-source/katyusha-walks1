@@ -363,7 +363,7 @@ export const PLACES = [
   "category": "spa",
   "latitude": 40.3796,
   "longitude": 49.8467,
-  "image": null,
+  "image": "https://azerbaijan.travel/fit752x624/center/pages/3452/0dd97745-ecc1-415a-b18e-26b1b27a7dc0.JPG",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -376,7 +376,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://azerbaijan.travel/relax-your-body-and-mind-at-the-hamambath-wellness-and-spa-complex",
+   "https://azerbaijan.travel/fit752x624/center/pages/3452/0dd97745-ecc1-415a-b18e-26b1b27a7dc0.JPG"
+  ]
  },
  {
   "id": 2,
@@ -385,7 +388,7 @@ export const PLACES = [
   "category": "spa",
   "latitude": 40.3598,
   "longitude": 49.8264,
-  "image": null,
+  "image": "https://m.ahstatic.com/is/image/accorhotels/met_p_a150-30%3A3by2?dpr=on%2C1.5&fmt=jpg&hei=223&icc=sRGB&iccEmbed=true&op_usm=1.75%2C0.3%2C2%2C0&qlt=80&resMode=sharp2&wid=335",
   "rating": null,
   "is_approx": false,
   "region": "Азербайджан",
@@ -398,7 +401,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://www.fairmont.com/en/hotels/baku/fairmont-baku-flame-towers/wellness/spa.html",
+   "https://m.ahstatic.com/is/image/accorhotels/met_p_a150-30%3A3by2?dpr=on%2C1.5&fmt=jpg&hei=223&icc=sRGB&iccEmbed=true&op_usm=1.75%2C0.3%2C2%2C0&qlt=80&resMode=sharp2&wid=335"
+  ]
  },
  {
   "id": 3,
@@ -429,7 +435,7 @@ export const PLACES = [
   "category": "spa",
   "latitude": 40.3662,
   "longitude": 49.8365,
-  "image": null,
+  "image": "https://sia.az/storage/2022/01/17/40cf51d919a2475d2d2b61e5c0d19cd5.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -442,7 +448,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://sia.az/az/news/culture/923551.html",
+   "https://sia.az/storage/2022/01/17/40cf51d919a2475d2d2b61e5c0d19cd5.jpg"
+  ]
  },
  {
   "id": 5,
@@ -696,7 +705,7 @@ export const PLACES = [
   "category": "city",
   "latitude": 40.377,
   "longitude": 49.901,
-  "image": "https://bakuwhitecity.com/storage/constructions/ZpLCtGk68ntaiI7z7phfodhgSmP5QIpiTPKPMbyF.webp",
+  "image": "https://az.trend.az/media/2021/10/28/trend_ag_sheher_bulvar_281021_10.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Азербайджан",
@@ -710,7 +719,8 @@ export const PLACES = [
   "phone": null,
   "map_url": null,
   "source_urls": [
-   "https://bakuwhitecity.com/en/constructions/sahil-14-130"
+   "https://az.trend.az/azerbaijan/society/3504484.html",
+   "https://az.trend.az/media/2021/10/28/trend_ag_sheher_bulvar_281021_10.jpg"
   ]
  },
  {
@@ -917,7 +927,7 @@ export const PLACES = [
   "category": "sea",
   "latitude": 40.364,
   "longitude": 49.848,
-  "image": null,
+  "image": "https://cdn.getyourguide.com/image/format%3Dauto%2Cfit%3Dcrop%2Cgravity%3Dauto%2Cquality%3D60%2Cwidth%3D400%2Cheight%3D265%2Cdpr%3D2/tour_img/15550fbdef43071950ff16e82962a104e09080b4ae349bbf143cb35e1063d798.png",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -930,7 +940,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://www.getyourguide.com/baku-boulevard-l160836/",
+   "https://cdn.getyourguide.com/image/format%3Dauto%2Cfit%3Dcrop%2Cgravity%3Dauto%2Cquality%3D60%2Cwidth%3D400%2Cheight%3D265%2Cdpr%3D2/tour_img/15550fbdef43071950ff16e82962a104e09080b4ae349bbf143cb35e1063d798.png"
+  ]
  },
  {
   "id": 26,
