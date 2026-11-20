@@ -189,7 +189,7 @@ function initFavoritesPage() {
   const buttons=$("main button");
   buttons.find(b=>/Поделиться коллекцией/.test(b.textContent))?.addEventListener("click",async()=>{
     const list=state.places.filter(p=>state.favs.has(p.id)||state.favs.has(String(p.id)));
-    const textValue="Мои места из «Прогулок с Катюшей»:\\n"+list.map(p=>"• "+p.title+" — "+cityOf(p)).join("\\n");
+    const textValue="Мои места из «Прогулок с Катюшей»:\n"+list.map(p=>"• "+p.title+" — "+cityOf(p)).join("\n");
     try{await navigator.clipboard.writeText(textValue);toast("Список избранного скопирован.");}catch{toast("Не удалось скопировать список.");}
   });
   buttons.find(b=>/Экспорт в PDF/.test(b.textContent))?.addEventListener("click",()=>window.print());
