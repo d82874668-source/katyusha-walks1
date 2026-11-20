@@ -125,6 +125,7 @@ function renderCatalog() {
   const total=$("[data-results-count]");if(total)total.textContent=list.length+" мест";
   const stat=[...document.querySelectorAll("main span,main strong")].find(el=>/248 локаций|\d+ локаций/.test(el.textContent));if(stat)stat.textContent=state.places.length+" мест";
   const verified=[...document.querySelectorAll("main span,main strong")].find(el=>/100% мест/.test(el.textContent));if(verified)verified.textContent="Адреса уточняются";
+  const verifiedLabel=[...document.querySelectorAll("main span,main strong")].find(el=>/Проверено лично/.test(el.textContent));if(verifiedLabel)verifiedLabel.textContent="Сведения каталога";
 }
 function initCatalog() {
   const search=$("#place-search");if(search)search.addEventListener("input",e=>{query=e.target.value;renderCatalog();});
