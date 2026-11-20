@@ -115,7 +115,8 @@ export class MapView {
     });
 
     buckets.forEach((group) => {
-      if (group.length > 1 && zoom < 16 && !this.numbered) {
+      const samePoint = group.length > 1 && group.every((p) => Number(p.latitude) === Number(group[0].latitude) && Number(p.longitude) === Number(group[0].longitude));
+      if (group.length > 1 && (zoom < 16 || samePoint) && !this.numbered) {
         const lat = group.reduce((sum, p) => sum + Number(p.latitude), 0) / group.length;
         const lng = group.reduce((sum, p) => sum + Number(p.longitude), 0) / group.length;
         const cluster = L.marker([lat, lng], {
@@ -127,7 +128,22 @@ export class MapView {
           }),
           title: group.length + " мест рядом",
         }).addTo(this.map);
-        cluster.on("click", () => this.map.fitBounds(L.latLngBounds(group.map((p) => [p.latitude, p.longitude])), { padding: [70, 70], maxZoom: Math.min(17, zoom + 3) }));
+        cluster.on("click", () => {
+          if (samePoint) {
+            const list = document.createElement("div");
+            list.className = "pin-cluster-popup";
+            group.forEach((place) => {
+              const button = document.createElement("button");
+              button.type = "button";
+              button.dataset.place = place.id;
+              button.textContent = place.title;
+              list.append(button);
+            });
+            L.popup().setLatLng([lat, lng]).setContent(list).openOn(this.map);
+            return;
+          }
+          this.map.fitBounds(L.latLngBounds(group.map((p) => [p.latitude, p.longitude])), { padding: [70, 70], maxZoom: Math.min(17, zoom + 3) });
+        });
         return;
       }
 
