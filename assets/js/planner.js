@@ -173,7 +173,7 @@ function savePlan() {
 }
 export const planUrl = (ids, mode, name) => {
   const u = new URL(location.href);
-  u.search = ""; u.hash = "planner";
+  u.search = ""; u.hash = "";
   u.searchParams.set("plan", ids.join(","));
   u.searchParams.set("mode", mode);
   if (name) u.searchParams.set("name", name);

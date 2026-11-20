@@ -387,6 +387,18 @@ $("#locateBtn").addEventListener("click", async () => {
   } catch (err) { toast(err.message); }
 });
 
+/* ---------- Начальная позиция страницы ---------- */
+// Не позволяем браузеру восстанавливать прокрутку на секции планировщика
+// при обычном открытии сайта или обновлении страницы.
+// Ссылки с готовым маршрутом (?plan=...) по-прежнему откроют сам маршрут.
+if (!new URLSearchParams(location.search).has("plan")) {
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  if (location.hash === "#planner") {
+    history.replaceState(null, "", location.pathname + location.search);
+    window.scrollTo(0, 0);
+  }
+}
+
 /* ---------- Запуск ---------- */
 async function init() {
   Object.assign(state, await loadData());
