@@ -183,7 +183,7 @@ function openPlace(id, { scroll = false } = {}) {
   route([origin, p]).then((r) => {
     if (state.active !== id) return;
     const el = $("#eta");
-    if (el) el.innerHTML = `${icon("route")}<span><strong>${fmtDist(r.km)}</strong> · <strong>${fmtDur(r.min)}</strong> на машине от ${state.user ? "вас" : esc(origin.label || p.city || CENTER.label)}</span>`;
+    if (el) el.innerHTML = `${icon("route")}<span>${p.is_approx ? "Ориентировочно · " : ""}<strong>${fmtDist(r.km)}</strong> · <strong>${fmtDur(r.min)}</strong> на машине от ${state.user ? "вас" : esc(origin.label || p.city || CENTER.label)}${p.is_approx ? " до примерной точки" : ""}</span>`;
   }).catch(() => { const el = $("#eta"); if (el) el.textContent = "Расстояние сейчас недоступно"; });
 }
 function closeSheet() { state.active = null; sheet.hidden = true; renderList(); mapView?.clearRoute(); }
@@ -219,7 +219,7 @@ function renderSheet() {
       <button class="btn btn--primary" data-visit-place="${p.id}">Были здесь${getVisits(p.id).length ? ` · ${getVisits(p.id).length}` : ""}</button>
       <a class="btn btn--primary" target="_blank" rel="noopener" href="${googleUrl(p, state.user)}">${icon("nav")}Построить маршрут</a>
       <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([p.title, p.address, p.city, p.region].filter(Boolean).join(", "))}">Проверить адрес</a>
-      <a class="btn" target="_blank" rel="noopener" href="${osmUrl([state.user || cityOrigin(p), p])}">OpenStreetMap</a>
+      ${!p.is_approx ? `<a class="btn" target="_blank" rel="noopener" href="${osmUrl([state.user || cityOrigin(p), p])}">OpenStreetMap</a>` : ""}
       ${p.map_url ? `<a class="btn" target="_blank" rel="noopener" href="${safeWebHref(p.map_url)}">Открыть карточку на карте</a>` : ""}
       <button class="btn" data-plan-add="${p.id}">${icon("plus")}В маршрут</button>
       ${favBtn(p, "icon-btn--lg")}
