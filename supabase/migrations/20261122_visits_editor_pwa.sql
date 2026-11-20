@@ -24,6 +24,8 @@ exception when duplicate_object then null; end $$;
 create index if not exists places_city_category_idx on public.places(city, category);
 create index if not exists places_verification_status_idx on public.places(verification_status);
 
+alter table public.place_photos add column if not exists sort_order integer not null default 0;
+
 -- Несколько посещений одного места одним пользователем разрешены.
 create table if not exists public.place_visits (
   id uuid primary key default gen_random_uuid(),
