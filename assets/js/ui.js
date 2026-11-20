@@ -47,7 +47,8 @@ export function placeCard(p, favBtn, { large = false } = {}) {
       <p class="pcard__meta"><span>${esc(groupOf(p)?.title || c.title)}</span>${p.rating ? `<span class="rate">${icon("star")}${p.rating}</span>` : ""}</p>
       <h3>${esc(p.title)}</h3>
       <p class="pcard__desc">${esc(p.description)}</p>
-      ${p.address ? `<p class="pcard__addr">${icon("pin")}${esc(p.address)}</p>` : ""}
+      <p class="pcard__addr ${p.address ? "" : "pcard__addr--pending"}">${icon("pin")}${p.address ? esc(p.address) : "Адрес уточняется"}</p>
+      ${p.is_approx ? `<p class="pcard__location-note">Точка на карте ориентировочная</p>` : ""}
       <p class="pcard__facts">${icon("clock")}≈ ${fmtMin(visitMinutes(p))}${price ? `<span>${icon("wallet")}${esc(price)}</span>` : ""}</p>
       <div class="pcard__actions">
         <button class="btn btn--sm btn--primary" data-plan-add="${p.id}">${icon("plus")}В маршрут</button>
