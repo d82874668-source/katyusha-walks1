@@ -834,18 +834,6 @@ body{background:var(--bg);letter-spacing:-.012em}
 }
 .dir--hero .muted{color:var(--muted)!important}
 .dir--hero .badge{background:var(--accent-soft)!important;color:var(--accent)!important}
-/* Возвращаем живой огонёк под заголовком «Маршрут на вечер». */
-#heroRoute{position:relative;overflow:hidden}
-#heroRoute::after{
-  content:"";position:absolute;left:27px;top:68px;width:9px;height:9px;
-  border-radius:50%;background:#ff9a45;
-  box-shadow:0 0 8px 3px rgba(255,154,69,.42),0 0 22px 7px rgba(255,112,54,.22);
-  animation:routeEmber 2.4s ease-in-out infinite;
-  pointer-events:none;
-}
-@keyframes routeEmber{
-  0%,100%{transform:translate(0,0) scale(.82);opacity:.62}
-  45%{transform:translate(8px,-5px) scale(1.2);opacity:1}
-  70%{transform:translate(13px,1px) scale(.9);opacity:.78}
-}
-@media(prefers-reduced-motion:reduce){#heroRoute::after{animation:none}}
+/* Первый экран теперь без карточки маршрута: контент занимает одну колонку. */
+.hero__in{grid-template-columns:minmax(0,1fr)!important}
+.hero__copy{max-width:760px}
