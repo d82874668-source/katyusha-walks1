@@ -163,7 +163,7 @@ function initMapPage(home=false) {
     $("#sidebar-toggle-btn")?.addEventListener("click",()=>$("#map-sidebar")?.classList.toggle("is-collapsed"));
     $("#tab-route")?.addEventListener("click",()=>location.href="planner.html");
     $("#tab-locations")?.addEventListener("click",renderList);
-    $("#places-container")?.addEventListener("click",e=>{const b=e.target.closest("[data-map-place]");if(!b)return;const p=placeById(b.dataset.mapPlace);if(p){instance.focus(p);}});
+    $("#places-container")?.addEventListener("click",e=>{const b=e.target.closest("[data-map-place]");if(!b)return;const p=placeById(b.dataset.mapPlace);if(p){instance.focus(p);location.href="place.html?id="+encodeURIComponent(p.id);}});
   }
 }
 function renderFavorites() {
@@ -208,10 +208,31 @@ function initPlannerPage() {
   });
   $("#btn-add-stop")?.addEventListener("click",()=>location.href="catalog.html");
   $("#btn-recalculate")?.addEventListener("click",()=>{
-    const pts=plan.ids.map(placeById).filter(p=>p&&!p.is_approx&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
-    if(pts.length<2)return toast("Для точного маршрута нужны минимум две точные точки.");
-    const mode=$("#config-pace")?.value==="drive"?"drive":"walk";
-    window.open(googleUrl(pts[pts.length-1],pts[0],pts.slice(1,-1),mode),"_blank");
+    if(!plan.ids.length){
+      const city=$("#config-city")?.value||activeCity,mood=$("#config-mood")?.value||"coffee",duration=$("#config-duration")?.value||"medium";
+      const count=duration==="short"?3:duration==="long"?6:4;
+      const groups={
+        romantic:["restaurant","cafe","coffee","viewpoint","sea","spa","park","garden"],
+        architecture:["historic","monument","museum","attraction","city","viewpoint","square"],
+        coffee:["coffee","cafe","bakery","restaurant"],
+        rain:["museum","cafe","coffee","historic","gallery","mall"]
+      };
+      const preferred=new Set(groups[mood]||groups.coffee);
+      const candidates=state.places.filter(p=>(city==="all"||cityOf(p)===city)&&preferred.has(p.category)).sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));
+      const fallback=state.places.filter(p=>city==="all"||cityOf(p)===city).sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));
+      plan.ids=(candidates.length?candidates:fallback).slice(0,count).map(p=>p.id);
+      plan.name=(($("#config-mood option:checked")?.textContent||"Прогулка").trim())+" · "+city;
+      writePlan();renderPlanPage();toast("Собрали сценарий из мест вашего каталога.");return;
+    }
+    const items=plan.ids.map(placeById).filter(Boolean);
+    const exact=items.filter(p=>!p.is_approx&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
+    if(exact.length>2){
+      const ordered=[exact.shift()];
+      while(exact.length){let best=0,dist=Infinity;exact.forEach((p,i)=>{const d=haversineKm(ordered[ordered.length-1],p);if(d<dist){dist=d;best=i;}});ordered.push(exact.splice(best,1)[0]);}
+      const ids=new Set(ordered.map(p=>String(p.id)));
+      plan.ids=[...ordered.map(p=>p.id),...items.filter(p=>!ids.has(String(p.id))).map(p=>p.id)];
+      writePlan();renderPlanPage();toast("Порядок остановок оптимизирован.");
+    } else toast("Добавьте больше точных точек для оптимизации маршрута.");
   });
   $("#btn-save-fav")?.addEventListener("click",()=>{
     const saved=JSON.parse(localStorage.getItem("katyusha:saved-routes")||"[]");
@@ -223,6 +244,8 @@ function initPlannerPage() {
     try{await navigator.clipboard.writeText(url.toString());toast("Ссылка на маршрут скопирована.");}catch{toast(url.toString());}
   });
   $("#btn-export-guide")?.addEventListener("click",()=>window.print());
+  const actions=$("#btn-export-guide")?.parentElement;
+  if(actions&&!$("#btn-open-navigation")){const nav=document.createElement("button");nav.id="btn-open-navigation";nav.type="button";nav.className="px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg";nav.textContent="Открыть в Google Maps";actions.append(nav);nav.addEventListener("click",()=>{const pts=plan.ids.map(placeById).filter(p=>p&&!p.is_approx&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));if(pts.length<2)return toast("Для точной навигации нужны минимум две точные точки.");window.open(googleUrl(pts[pts.length-1],pts[0],pts.slice(1,-1),"walk"),"_blank");});}
   const city=$("#config-city");if(city){fillSelect(city,allCities());city.value=allCities().includes(activeCity)?activeCity:allCities()[0];city.addEventListener("change",()=>{activeCity=city.value;renderSuggestedRoutes();});}
   $("#btn-recalculate")?.setAttribute("type","button");
   renderSuggestedRoutes();
