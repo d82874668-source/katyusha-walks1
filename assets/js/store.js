@@ -51,7 +51,7 @@ export async function loadData() {
       // Если локальная запись проверена позже, используем более свежий адрес и объединяем источники.
       if (local.last_verified_at && (!remote.last_verified_at || String(local.last_verified_at) > String(remote.last_verified_at))) {
         if (local.address) merged.address = local.address;
-        merged.source_urls = [...new Set([...(remote.source_urls || []), ...(local.source_urls || [])])];
+        merged.source_urls = [...new Set([...(Array.isArray(remote.source_urls) ? remote.source_urls : []), ...(Array.isArray(local.source_urls) ? local.source_urls : [])])];
         merged.last_verified_at = local.last_verified_at;
       }
       return merged;
