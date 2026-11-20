@@ -46,6 +46,7 @@ export function placeCard(p, favBtn, { large = false } = {}) {
       <div class="pcard__actions">
         <button class="btn btn--sm btn--primary" data-plan-add="${p.id}">${icon("plus")}В маршрут</button>
         <button class="btn btn--sm" data-place-open="${p.id}">На карте</button>
+        <button class="btn btn--sm" data-visit-place="${p.id}">Были здесь</button>
         ${favBtn(p)}
       </div>
     </div></article>`;
