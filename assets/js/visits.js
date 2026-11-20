@@ -74,10 +74,11 @@ async function syncVisit(visit) {
     let photoPath = visit.photo_path || null;
     const uploadBlob = visit.photo_blob || dataUrlToBlob(visit.photo_data);
     if (uploadBlob) {
-      const ext = "jpg";
+      const mime = uploadBlob.type || "image/jpeg";
+      const ext = mime === "image/png" ? "png" : mime === "image/webp" ? "webp" : "jpg";
       photoPath = `${session.user.id}/${visit.id}.${ext}`;
       const { error: uploadError } = await sb.storage.from("visit-photos").upload(photoPath, uploadBlob, {
-        contentType: "image/jpeg", upsert: true
+        contentType: mime, upsert: true
       });
       if (uploadError) throw uploadError;
     }
@@ -142,7 +143,8 @@ export async function hydrateVisits() {
   const sb = await client();
   if (!sb) return;
   try {
-    const session = await ensureSession(sb);
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
     const { data, error } = await sb.from("place_visits").select("*").eq("user_id", session.user.id).order("visit_date", { ascending: false });
     if (error) throw error;
     const local = read();
@@ -197,7 +199,8 @@ export async function syncPendingVisits() {
 export function visitDialog(place, existing = null) {
   const dialog = document.createElement("dialog");
   dialog.style.cssText = "max-width:min(520px,calc(100vw - 24px));width:100%;border:1px solid var(--line);border-radius:20px;padding:22px;background:var(--surface);color:var(--ink);box-shadow:0 24px 80px rgba(0,0,0,.25)";
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
   dialog.innerHTML = `
     <form method="dialog" class="visit-form">
       <h2 style="margin:0 0 6px">${existing ? "Изменить посещение" : "Были здесь"}</h2>
