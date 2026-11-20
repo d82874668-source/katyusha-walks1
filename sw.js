@@ -1,4 +1,4 @@
-const VERSION = "katyusha-pwa-v1";
+const VERSION = "katyusha-pwa-v2";
 const STATIC_CACHE = VERSION + "-static";
 const DATA_CACHE = VERSION + "-data";
 const IMAGE_CACHE = VERSION + "-images";
