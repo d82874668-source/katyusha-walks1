@@ -191,7 +191,7 @@ function renderPlanPage() {
   $("#route-dist").textContent=places.length>1?fmtDist(km):"—";
   const name=$("#config-city");if(name){fillSelect(name,allCities());if(!allCities().includes(name.value))name.value=activeCity;}
   const points=places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
-  if(plannerMapView){plannerMapView.setPlaces(points,true,true);if(points.length>1)plannerMapView.drawRoute(points,"walk");}
+  if(plannerMapView){plannerMapView.setPlaces(points,true,true);const exact=points.filter(p=>!p.is_approx);if(exact.length>1)plannerMapView.drawRoute(exact,"walk");}
 }
 function initPlannerPage() {
   readPlan();
@@ -287,8 +287,10 @@ async function init() {
   if(page==="routes")renderRoutesPage();
   if(page==="place")renderPlacePage();
   if(page==="about"){
-    const curatorHeading=$$("main h1,main h2,main h3").find(h=>/редакция и кураторы/i.test(h.textContent));
+    const curatorHeading=$("main h1,main h2,main h3").find(h=>/редакция и кураторы/i.test(h.textContent));
     curatorHeading?.closest("section")?.remove();
+    const form=$("#suggest-place-form");
+    form?.addEventListener("submit",e=>{e.preventDefault();const data=Object.fromEntries(new FormData(form));const items=JSON.parse(localStorage.getItem("katyusha:place-suggestions")||"[]");items.push({...data,created_at:new Date().toISOString()});localStorage.setItem("katyusha:place-suggestions",JSON.stringify(items));toast("Предложение сохранено на этом устройстве. Спасибо!");form.reset();});
   }
   syncHeader();
   document.body.classList.add("stitch-ready");
