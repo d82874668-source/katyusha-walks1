@@ -8,7 +8,7 @@ import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js";
 import { initPlanner, addToPlan } from "./planner.js";
 import { initIdeal, refreshIdeal } from "./ideal.js";
 import { initPWA } from "./pwa.js";
-import { visitDialog, visitHistoryHtml, getVisits, deleteVisit, syncPendingVisits } from "./visits.js";
+import { visitDialog, visitHistoryHtml, getVisits, deleteVisit, syncPendingVisits, hydrateVisits } from "./visits.js";
 
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
 const cityOrigin = (place) => {
@@ -385,8 +385,9 @@ async function init() {
   initPlanner(); initIdeal({ favBtn });
   subscribeFavorites((favs) => { state.favs = favs; renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); refreshIdeal(); });
   initPWA();
+  hydrateVisits();
   syncPendingVisits();
-  window.addEventListener("online", syncPendingVisits);
+  window.addEventListener("online", () => { hydrateVisits(); syncPendingVisits(); });
   document.addEventListener("katyusha:visits-changed", () => { if (state.active) renderSheet(); renderDiscover(); renderVenues(); });
   window.addEventListener("katyusha:toast", (e) => toast(e.detail));
 
