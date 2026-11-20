@@ -8,6 +8,8 @@ const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const page = document.body.dataset.page || "home";
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+window.addEventListener("pageshow",()=>{if(!location.hash){window.scrollTo(0,0);requestAnimationFrame(()=>window.scrollTo(0,0));}});
 const cityOf = p => p.city || p.region || "Другой город";
 const imageOf = p => p.image || (Array.isArray(p.photos) ? p.photos[0]?.url : "") || "";
 const categoryOf = p => CATEGORIES[p.category]?.title || "Место";
@@ -149,6 +151,8 @@ function initMapPage(home=false) {
       const q=mapQuery.toLocaleLowerCase("ru");
       const list=filtered().filter(p=>!q||[p.title,p.address,cityOf(p)].join(" ").toLocaleLowerCase("ru").includes(q));
       const target=$("#places-container");
+      const countLabel=[...document.querySelectorAll("#map-sidebar span")].find(el=>/Список мест/.test(el.textContent));
+      if(countLabel)countLabel.textContent="Список мест ("+list.length+")";
       if(target)target.innerHTML=list.slice(0,100).map(p=>`<button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-container-low text-left" data-map-place="${esc(p.id)}"><span class="w-2.5 h-2.5 rounded-full ${p.is_approx?"bg-secondary":"bg-primary"}"></span><span class="min-w-0"><strong class="block truncate text-primary text-sm">${esc(p.title)}</strong><small class="block truncate text-on-surface-variant">${esc(p.address||"Адрес уточняется")}</small></span></button>`).join("");
     };
     if(citySelect){fillSelect(citySelect,allCities(),"Все города");citySelect.value=activeCity;citySelect.addEventListener("change",()=>{activeCity=citySelect.value;instance.setPlaces(filtered(),true);renderList();});}
