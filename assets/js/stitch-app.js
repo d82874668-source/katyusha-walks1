@@ -84,6 +84,10 @@ function renderHome() {
   if(cityGrid)cityGrid.innerHTML=allCities().map(cityCard).join("");
   const routeGrid=$("#routes-grid");
   if(routeGrid)routeGrid.innerHTML=state.routes.slice(0,3).map(routeCard).join("");
+  const allRoutesLink=[...($("#planner-builder")?.querySelectorAll("a")||[])].find(a=>/Смотреть все/.test(a.textContent));
+  if(allRoutesLink){allRoutesLink.href="routes.html";allRoutesLink.textContent="Все маршруты ("+state.routes.length+") →";}
+  const heroPlannerLink=[...($("#top")?.querySelectorAll("a")||[])].find(a=>/Создать маршрут/.test(a.textContent));
+  if(heroPlannerLink)heroPlannerLink.href="planner.html";
   const heroCity=$("#hero-city-select");
   fillSelect(heroCity,allCities());
   if(heroCity){if(allCities().includes(heroCity.value))activeCity=heroCity.value;else{heroCity.value=allCities().includes("Баку")?"Баку":allCities()[0]||"";activeCity=heroCity.value;}}
@@ -302,6 +306,8 @@ async function init() {
   const cities=allCities();if(!cities.includes(activeCity))activeCity=cities.includes("Баку")?"Баку":cities[0]||"all";
   const params=new URLSearchParams(location.search);if(params.has("city"))activeCity=params.get("city");
   bindCommon();
+  const headerSearch=[...document.querySelectorAll("header button")].find(b=>/Найти место|Найти место, улицу/i.test(b.textContent));
+  headerSearch?.addEventListener("click",()=>location.href="catalog.html");
   if(page==="home"){
     renderHome();initMapPage(true);
     $("#hero-city-select")?.addEventListener("change",e=>{activeCity=e.target.value;syncHeader();renderHome();homeMapView?.setPlaces(state.places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)&&cityOf(p)===activeCity),true);});
