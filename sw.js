@@ -87,6 +87,12 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // Кэшируем используемые CDN-скрипты и стили (в частности Leaflet), чтобы оболочка открывалась офлайн.
+  if (url.origin !== self.location.origin && ["script", "style", "font"].includes(request.destination)) {
+    event.respondWith(cacheFirst(request, STATIC_CACHE).catch(() => caches.match(request)));
+    return;
+  }
+
   // Фотографии карточек могут приходить с внешних публичных фотохостингов.
   if (request.destination === "image" && url.protocol.startsWith("http")) {
     event.respondWith(cacheFirst(request, IMAGE_CACHE).catch(() => caches.match(request)));
