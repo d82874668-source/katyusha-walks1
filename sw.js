@@ -75,7 +75,7 @@ self.addEventListener("fetch", (event) => {
       ));
       return;
     }
-    if (/.(?:css|js|svg|webmanifest|woff2?)$/i.test(url.pathname) || /\/assets\/images\//.test(url.pathname)) {
+    if (/\.(?:css|js|svg|webmanifest|woff2?)$/i.test(url.pathname) || /\/assets\/images\//.test(url.pathname)) {
       event.respondWith(cacheFirst(request, STATIC_CACHE).catch(() => caches.match(request)));
       return;
     }
