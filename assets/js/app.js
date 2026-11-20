@@ -364,6 +364,8 @@ $("#placeList").addEventListener("keydown", (e) => {
   if ((e.key === "Enter" || e.key === " ") && e.target.dataset.place) { e.preventDefault(); openPlace(+e.target.dataset.place); }
 });
 $("#search").addEventListener("input", (e) => { state.q = e.target.value; applyFilter(); });
+$("#heroSearchForm")?.addEventListener("submit", (e) => { e.preventDefault(); const q=$("#heroSearch").value.trim(); $("#search").value=q; state.q=q; applyFilter(); $("#map").scrollIntoView({behavior:"smooth",block:"start"}); });
+$("#heroSearch")?.addEventListener("input", (e) => { const q=e.target.value; if(q.length>=2){ $("#search").value=q; state.q=q; applyFilter(); } });
 $("#resetFilters").addEventListener("click", () => {
   Object.assign(state, { filter: "all", region: "all", q: "", minRating: 0, minPrice: null, maxPrice: null, sort: "popularity" });
   $("#search").value = ""; $("#regionFilter").value = "all"; $("#priceMin").value = ""; $("#priceMax").value = "";
