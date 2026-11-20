@@ -66,7 +66,9 @@ alter table public.favorites enable row level security;
 create policy "places read" on public.places for select to anon, authenticated using (true);
 create policy "routes read" on public.routes for select to anon, authenticated using (true);
 
--- Избранное хранится локально в браузере. Не выдаём публичный доступ к таблице favorites.
+-- Избранное хранится локально в браузере. Таблица favorites закрыта от публичного API.
+create policy "favorites deny public access" on public.favorites as restrictive
+  for all to anon, authenticated using (false) with check (false);
 -- Для будущей синхронизации между устройствами потребуется авторизованный профиль и user_id.
 
 -- Доступ к Data API выдаётся явно. RLS выше определяет, какие строки доступны.
