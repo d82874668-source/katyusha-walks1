@@ -33,9 +33,9 @@ const ensureMap = () => {
 /* ---------- Тема ---------- */
 const themeBtn = $("#themeBtn");
 const THEMES = {
-  light:  { name: "Светлая", note: "Чистый светлый фон", bg: "#F5F6FA", s: "#FFFFFF", i: "#0F1522", l: "rgba(15,21,34,.14)", a: "#D8365C", ai: "#FFFFFF", meta: "#F5F6FA" },
-  dark:   { name: "Тёмная", note: "Комфортно вечером", bg: "#0A0E17", s: "#121826", i: "#EEF1F8", l: "rgba(238,241,248,.18)", a: "#FF5C80", ai: "#1A0A10", meta: "#0A0E17" },
-  hearts: { name: "Сердечки", note: "Нежный розовый фон", bg: "#FFF7FA", s: "#FFFFFF", i: "#3A1725", l: "rgba(120,48,72,.18)", a: "#C2305F", ai: "#FFFFFF", meta: "#FFF7FA" },
+  light:  { name: "Светлая", note: "Тёплая бумажная палитра", bg: "#FBF9F5", s: "#FFFFFF", i: "#1B1C1A", l: "rgba(27,28,26,.12)", a: "#1E3A2F", ai: "#FFFFFF", meta: "#FBF9F5" },
+  dark:   { name: "Тёмная", note: "Глубокие природные оттенки", bg: "#111813", s: "#18221B", i: "#F0F1E9", l: "rgba(233,237,226,.14)", a: "#A8C5AE", ai: "#142018", meta: "#111813" },
+  hearts: { name: "Садовая", note: "Мягкая зелёная палитра", bg: "#F4F5ED", s: "#FFFFFF", i: "#1B2B22", l: "rgba(27,43,34,.14)", a: "#315B46", ai: "#FFFFFF", meta: "#F4F5ED" },
 };
 const applyTheme = (t) => {
   if (!THEMES[t]) t = "light";
