@@ -46,7 +46,7 @@ export async function loadData() {
       if (!local) return { ...remote, photos: photosByPlace.get(remote.id) || [] };
       const merged = { ...local, ...remote, photos: photosByPlace.get(remote.id) || [] };
       ["description", "image", "rating", "region", "city", "country", "address", "price_min", "price_max", "price_unit", "review_count", "opening_hours", "phone", "map_url", "website", "source_urls"].forEach((key) => {
-        if (remote[key] == null || (Array.isArray(remote[key]) && !remote[key].length)) merged[key] = local[key];
+        if (remote[key] == null || (typeof remote[key] === "string" && !remote[key].trim()) || (Array.isArray(remote[key]) && !remote[key].length)) merged[key] = local[key];
       });
       return merged;
     });
