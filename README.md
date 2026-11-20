@@ -82,7 +82,7 @@ python3 -m http.server 8000   # затем откройте http://localhost:800
 1. **Создайте проект.** На supabase.com: **New project**, задайте имя, пароль базы и регион.
 2. **Создайте таблицы.** **SQL Editor → New query**, вставьте весь `supabase/schema.sql` и нажмите **Run**.
 3. **Заполните данными.** Новый запрос, вставьте `supabase/seed.sql`, **Run**.
-   Для уже существующей базы сначала выполните `supabase/migrations/20261120_expand_places.sql`, затем `supabase/seed.sql`, после чего примените миграции `20261121_automation.sql`, `20261122_visits_editor_pwa.sql`, `20261123_security_hardening.sql` и `20261124_data_api_grants.sql`. Миграция только добавляет поля и индексы. Seed добавляет отсутствующие ID через `on conflict do nothing`: прежние места и маршруты не удаляются и не заменяются.
+   Для уже существующей базы сначала выполните `supabase/migrations/20261120_expand_places.sql`, затем `supabase/seed.sql`, после чего примените миграции `20261121_automation.sql`, `20261122_visits_editor_pwa.sql`, `20261123_security_hardening.sql`, `20261124_data_api_grants.sql` и `20261125_favorites_deny_policy.sql`. Миграция только добавляет поля и индексы. Seed добавляет отсутствующие ID через `on conflict do nothing`: прежние места и маршруты не удаляются и не заменяются.
 4. **Получите URL и ключ.** **Project Settings → API**: скопируйте **Project URL** и ключ **anon public**.
 5. **Подключите к сайту.** Откройте `assets/js/config.js` и впишите значения:
    ```js
