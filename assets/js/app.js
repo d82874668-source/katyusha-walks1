@@ -326,15 +326,7 @@ function renderFavs() {
 }
 
 function renderHero() {
-  // Коллаж собирается только из реальных фотографий каталога.
-  const visual = $("#heroVisual");
-  if (visual) {
-    const cityPlaces = state.places.filter((p) => p.city === state.city && p.image && /^https?:\\/\\//i.test(p.image));
-    const sights = cityPlaces.filter((p) => kindOf(p) === "sight");
-    const featured = [...sights, ...cityPlaces.filter((p) => kindOf(p) !== "sight")].slice(0, 3);
-    visual.innerHTML = featured.map((p, i) => "<figure class=\"hero__tile hero__tile--" + (i + 1) + "\"><img src=\"" + esc(p.image) + "\" alt=\"" + esc(p.title) + "\" " + (i === 0 ? "fetchpriority=\"high\"" : "loading=\"lazy\"") + "><figcaption><small>" + esc(p.city || "Место для прогулки") + "</small><strong>" + esc(p.title) + "</strong></figcaption></figure>").join("");
-    visual.hidden = !featured.length;
-  }
+  // Счётчики каталога остаются актуальными; фотографии показываются в карточках мест.
   $("#cPlaces").textContent = state.places.length;
   $("#cRoutes").textContent = state.routes.length;
   $("#cCats").textContent = new Set(state.places.map((p) => p.category)).size;
