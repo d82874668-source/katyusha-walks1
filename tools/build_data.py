@@ -132,6 +132,8 @@ LEGACY_MEDIA = {
  4: ("https://sia.az/storage/2022/01/17/40cf51d919a2475d2d2b61e5c0d19cd5.jpg", "https://sia.az/az/news/culture/923551.html"),
  5: ("https://shimal.news/storage/thumbs/aspect/2025/12/15/pHnlj69hWnSFTgnMaUSFta2fRAr2JVMUrF40shKB.png", "https://shimal.news/cemiyyet/samaxida-kapibaralar-meskunlasib"),
  7: ("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/9f/a6/3a/caption.jpg?h=1200&s=1&w=1200", "https://www.tripadvisor.com/Restaurant_Review-g293934-d25314499-Reviews-Myata_Platinum-Baku_Absheron_Region.html"),
+ 8: ("https://images.qfoodbeverage.com.tr/webp/22-1748604042-bdTGjXqUzu.webp", "https://huqqabaz.com/en/branch/huqqabaz-garden-baku/"),
+ 9: ("https://cdn-media.choiceqr.com/prod-eat-zen-cafe/template-gallery/thumbnail_TzCvQHg-MUIGbjp-ZTkzVGS_F-F-b.jpeg", "https://zen-cafe.choiceqr.com/menu"),
  10: ("https://monyo.az/v4/uploads2/uploads2023-06/a_1805_20230602161450233980715.jpg", "https://monyo.az/?r=terrace145"),
  12: ("https://langame.ru/storage/clubs/2023/Jun/12/1686582489648734d9e0ea9.webp", "https://langame.ru/azerbaijan/799452695_computerniy_club_cyber-arena_baku"),
  13: ("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/7f/62/6f/caption.jpg?h=1000&s=1&w=1000", "https://www.tripadvisor.com/Attraction_Review-g293934-d33262286-Reviews-Kenza_Gaming_Lounge-Baku_Absheron_Region.html"),
