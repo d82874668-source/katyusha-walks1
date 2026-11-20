@@ -69,6 +69,12 @@ create policy "routes read" on public.routes for select to anon, authenticated u
 -- Избранное хранится локально в браузере. Не выдаём публичный доступ к таблице favorites.
 -- Для будущей синхронизации между устройствами потребуется авторизованный профиль и user_id.
 
+-- Доступ к Data API выдаётся явно. RLS выше определяет, какие строки доступны.
+grant usage on schema public to anon, authenticated, service_role;
+grant select on table public.places, public.routes to anon, authenticated;
+grant all privileges on all tables in schema public to service_role;
+grant usage, select on all sequences in schema public to service_role;
+
 -- Места и маршруты редактируются только в панели Supabase (Table Editor / SQL Editor).
 
 -- Избранное не публикуется в Realtime: таблица закрыта от anon/authenticated.
