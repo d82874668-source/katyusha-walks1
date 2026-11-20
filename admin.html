@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>Панель автоматизации</title>
+<script>(function(){var t;try{t=localStorage.getItem("katyusha:theme")}catch(e){}document.documentElement.dataset.theme=t||"light"})();</script>
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>.wrap{max-width:1000px;margin:0 auto;padding:20px}.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.kpi{padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}.kpi b{display:block;font-size:24px}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}table{width:100%;border-collapse:collapse;font-size:13px;display:block;overflow-x:auto}
+td,th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}input{height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font:inherit}
+.btn{cursor:pointer}pre{white-space:pre-wrap;font-size:12px}</style></head>
+<body><div class="wrap">
+<h1>Панель автоматизации</h1><p class="muted"><a href="./">← на сайт</a></p>
+<section id="login"><p>Вход только для администратора (пользователь Supabase Auth из таблицы admin_users).</p>
+<div class="row2"><input id="em" type="email" placeholder="Email" autocomplete="username"><input id="pw" type="password" placeholder="Пароль" autocomplete="current-password"><button class="btn" id="go">Войти</button></div><p id="lerr" class="muted"></p></section>
+<section id="app" hidden>
+<div class="row2"><button class="btn" id="out">Выйти</button><span id="who" class="muted"></span></div>
+<h2>Статистика (реальные данные из базы)</h2><div class="kpis" id="kpis"></div>
+<h3>По направлениям</h3><div class="kpis" id="byRegion"></div><h3>По категориям</h3><div class="kpis" id="byCat"></div>
+<h2>Источники</h2><div id="sources"></div>
+<h2>Управление</h2><div class="row2">
+<button class="btn" data-act="discover">Найти новые объекты</button>
+<button class="btn" data-act="check_coordinates">Проверить координаты</button>
+<button class="btn" data-act="retry">Повторить ошибочные синхронизации</button>
+<button class="btn" id="reload">Обновить панель</button></div>
+<p id="msg" class="muted" role="status"></p>
+<h2>Журнал синхронизаций</h2><div id="logs"></div>
+<h2>Объекты на проверке</h2><div id="queue"></div>
+<p class="muted">Кнопки «Обновить рейтинги» и «Обновить фотографии» не добавлены: OpenStreetMap не отдаёт рейтингов, а фото нужны отдельного источника с подходящей лицензией. Источники Google/Foursquare/Geoapify отключены, пока вы не подключите ключи.</p>
+</section></div>
+<script type="module" src="assets/js/admin.js"></script></body></html>
