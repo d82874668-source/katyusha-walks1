@@ -21,7 +21,7 @@ function ensureLeaflet(done){if(window.L){done();return}if(!leafletPromise){leaf
 function drawMap(id,items,isRoute,options){
  options=options||{};
  var el=document.getElementById(id);if(!el)return;
- var allItems=items||[];var pendingCount=allItems.filter(function(p){return p.coord_source==='pending_exact_geocoding'&&(!options.city||cityName(p)===options.city)}).length;var valid=allItems.filter(function(p){return p.coord_source!=='pending_exact_geocoding'&&p.latitude!=null&&p.longitude!=null&&isFinite(Number(p.latitude))&&isFinite(Number(p.longitude))});
+ var allItems=items||[];var pendingCount=allItems.filter(function(p){return (!!p.is_approx||p.coord_source==='pending_exact_geocoding')&&(!options.city||cityName(p)===options.city)}).length;var valid=allItems.filter(function(p){return !p.is_approx&&p.coord_source!=='pending_exact_geocoding'&&p.latitude!=null&&p.longitude!=null&&isFinite(Number(p.latitude))&&isFinite(Number(p.longitude))});
  var city=options.city||'';
  if(city)valid=valid.filter(function(p){return cityName(p)===city});
  if(!valid.length){el.innerHTML='<div class="k-map-empty"><span class="k-map-empty-mark">К</span><b>Для этого выбора пока нет точек</b><small>Попробуй другой город или сбрось фильтры.</small></div>';return}
