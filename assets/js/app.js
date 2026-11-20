@@ -212,6 +212,7 @@ function renderSheet() {
     ${p.features && Object.keys(p.features).length ? `<p class="muted">${Object.entries(p.features).map(([key,value]) => `${esc(key)}: ${esc(typeof value === "object" ? JSON.stringify(value) : value)}`).join(" · ")}</p>` : ""}
     ${Array.isArray(p.additional_services) && p.additional_services.length ? `<p class="muted">Услуги: ${p.additional_services.map(esc).join(", ")}</p>` : ""}
     ${p.source_urls?.[0] ? `<p class="muted"><a href="${safeWebHref(p.source_urls[0])}" target="_blank" rel="noopener">Источник информации</a></p>` : ""}
+    ${p.photo_sources?.[0] ? `<p class="muted">Фото: ${esc(p.photo_sources[0].attribution || "автор не указан")} · ${esc(p.photo_sources[0].license || "лицензия указана на странице источника")} · <a href="${safeWebHref(p.photo_sources[0].source_url)}" target="_blank" rel="noopener">условия использования</a></p>` : ""}
     ${p.is_approx ? `<p class="note">Положение на карте приблизительное. Google Maps найдёт место по названию.</p>` : ""}
     <p class="eta" id="eta">${icon("route")}<span>Считаем маршрут…</span></p>
     <div class="sheet__actions">
