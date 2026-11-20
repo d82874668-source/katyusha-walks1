@@ -206,3 +206,32 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 .pcard__addr--pending,.pcard__location-note{color:var(--caspian);font-size:11px}
 .pcard__location-note{margin-top:-5px;font-weight:600}
+
+
+/* Editorial rhythm for routes, saved places and the itinerary builder */
+.route,.fav,.saved{border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:none}
+.route{padding:22px;transition:transform .22s,border-color .22s,box-shadow .22s}
+.route:hover{transform:translateY(-3px);border-color:rgba(49,91,70,.25);box-shadow:var(--shadow)}
+.route h3,.saved__t h3,.fav__t h3{font:500 23px/1.2 var(--display)}
+.route .muted,.fav__t p,.saved__t p{font-size:12px;line-height:1.65}
+.stops li::before{background:var(--accent-soft);color:var(--accent);font-family:var(--display);font-size:14px}
+.stops li:not(:last-child)::after{background:var(--line)}
+.route__actions{padding-top:14px;border-top:1px solid var(--line)}
+.saved,.fav{padding:16px 18px;gap:14px}
+.saved__ctl .icon-btn,.fav .icon-btn{border:1px solid var(--line);background:var(--surface)}
+.plan__map{border-radius:18px;border-color:var(--line);box-shadow:var(--shadow)}
+#planMapCanvas{background:#eeeae2}
+.day__item{padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.day__time strong{color:var(--caspian)}
+.ideal__result .note{border-radius:12px}
+.foot{background:var(--surface-2);border-top:1px solid var(--line)}
+.foot__in{font-size:12px;line-height:1.7}
+.spott-tabbar{background:var(--glass)!important;border-top:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.spott-tab{color:var(--muted)}
+.spott-tab[aria-current="page"]{color:var(--accent)}
+@media(max-width:700px){
+  .route{padding:17px}
+  .saved,.fav{padding:13px}
+  .day__item{padding:14px}
+  .foot{padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+}
