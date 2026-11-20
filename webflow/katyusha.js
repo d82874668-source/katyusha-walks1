@@ -17,17 +17,18 @@ function credit(p){var a=Array.isArray(p.photo_sources)?p.photo_sources[0]:p.pho
 function money(p){if(p.price_min==null&&p.price_max==null)return 'Стоимость уточняйте';var n=p.price_min!=null&&p.price_max!=null&&p.price_min!==p.price_max?Number(p.price_min).toLocaleString('ru-RU')+'–'+Number(p.price_max).toLocaleString('ru-RU'):Number(p.price_min!=null?p.price_min:p.price_max).toLocaleString('ru-RU');return n+' '+(p.price_unit||'₽')}
 function mapUrl(p){if(p.map_url&&/^https?:/i.test(p.map_url))return p.map_url;if(p.latitude&&p.longitude)return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.latitude+','+p.longitude);return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(placeName(p)+' '+(p.city||''))}
 var mapInstances={},leafletPromise=null;
-function ensureLeaflet(done){if(window.L){done();return}if(!leafletPromise){leafletPromise=new Promise(function(resolve,reject){var css=document.createElement('link');css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(css);var script=document.createElement('script');script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';script.onload=resolve;script.onerror=reject;document.head.appendChild(script)})}leafletPromise.then(done).catch(function(){var el=document.querySelector('.k-map');if(el)el.innerHTML='<div class="k-map-error">Не удалось загрузить карту. Проверь подключение к интернету.</div>'})}
+function ensureLeaflet(done){if(window.L&&window.L.markerClusterGroup){done();return}if(!leafletPromise){leafletPromise=new Promise(function(resolve,reject){function loadCluster(){var clusterCss=document.createElement('link');clusterCss.rel='stylesheet';clusterCss.href='https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css';document.head.appendChild(clusterCss);var defaultCss=document.createElement('link');defaultCss.rel='stylesheet';defaultCss.href='https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css';document.head.appendChild(defaultCss);var clusterScript=document.createElement('script');clusterScript.src='https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js';clusterScript.onload=resolve;clusterScript.onerror=reject;document.head.appendChild(clusterScript)}if(window.L){loadCluster();return}var css=document.createElement('link');css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(css);var script=document.createElement('script');script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';script.onload=loadCluster;script.onerror=reject;document.head.appendChild(script)})}leafletPromise.then(done).catch(function(){var el=document.querySelector('.k-map');if(el)el.innerHTML='<div class="k-map-error">Не удалось загрузить карту. Проверь подключение к интернету.</div>'})}
 function drawMap(id,items,isRoute,options){
  options=options||{};
  var el=document.getElementById(id);if(!el)return;
- var allItems=items||[];var pendingCount=allItems.filter(function(p){return (!!p.is_approx||p.coord_source==='pending_exact_geocoding')&&(!options.city||cityName(p)===options.city)}).length;var valid=allItems.filter(function(p){return !p.is_approx&&p.coord_source!=='pending_exact_geocoding'&&p.latitude!=null&&p.longitude!=null&&isFinite(Number(p.latitude))&&isFinite(Number(p.longitude))});
+ var allItems=items||[];var pendingCount=allItems.filter(function(p){return (!!p.is_approx||p.coord_source==='pending_exact_geocoding')&&(!options.city||cityName(p)===options.city)}).length;var valid=allItems.filter(function(p){return p.latitude!=null&&p.longitude!=null&&isFinite(Number(p.latitude))&&isFinite(Number(p.longitude))&&Math.abs(Number(p.latitude))<=90&&Math.abs(Number(p.longitude))<=180});
  var city=options.city||'';
  if(city)valid=valid.filter(function(p){return cityName(p)===city});
  if(!valid.length){el.innerHTML='<div class="k-map-empty"><span class="k-map-empty-mark">К</span><b>Для этого выбора пока нет точек</b><small>Попробуй другой город или сбрось фильтры.</small></div>';return}
+ function median(values){values=values.slice().sort(function(a,b){return a-b});var mid=Math.floor(values.length/2);return values.length%2?values[mid]:(values[mid-1]+values[mid])/2}
  function groupByCity(rows){
   var groups={};rows.forEach(function(p){var key=cityName(p);if(!groups[key])groups[key]=[];groups[key].push(p)});
-  return Object.keys(groups).map(function(key){var arr=groups[key],lat=arr.reduce(function(s,p){return s+Number(p.latitude)},0)/arr.length,lon=arr.reduce(function(s,p){return s+Number(p.longitude)},0)/arr.length;return {name:key,items:arr,lat:lat,lon:lon}});
+  return Object.keys(groups).map(function(key){var arr=groups[key],anchors=arr.filter(function(p){return !p.is_approx&&p.coord_source!=='pending_exact_geocoding'});if(!anchors.length)anchors=arr;var lat=median(anchors.map(function(p){return Number(p.latitude)})),lon=median(anchors.map(function(p){return Number(p.longitude)}));return {name:key,items:arr,lat:lat,lon:lon}});
  }
  function groupPlaces(rows){
   var groups={};rows.forEach(function(p){var key=p.is_approx?'approx|'+cityName(p)+'|'+Number(p.latitude).toFixed(3)+'|'+Number(p.longitude).toFixed(3):'exact|'+p.id;if(!groups[key])groups[key]=[];groups[key].push(p)});
@@ -42,12 +43,13 @@ function drawMap(id,items,isRoute,options){
   var map=L.map(el,{scrollWheelZoom:false,zoomControl:false,preferCanvas:false,keyboard:true});
   mapInstances[id]=map;
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',crossOrigin:true}).addTo(map);
+  var markerLayer=L.markerClusterGroup({maxClusterRadius:cityOverview?58:38,showCoverageOnHover:false,spiderfyOnMaxZoom:true,zoomToBoundsOnClick:true,chunkedLoading:true});map.addLayer(markerLayer);
   L.control.zoom({position:'bottomright'}).addTo(map);if(pendingCount){var pendingControl=L.control({position:'topleft'});pendingControl.onAdd=function(){var note=L.DomUtil.create('div','k-map-pending-note');note.textContent=pendingCount+' мест: уточняем точное расположение';return note};pendingControl.addTo(map);}
   var bounds=[];
   if(cityOverview){
    plotted.forEach(function(g){
     var icon=L.divIcon({className:'k-city-marker-host',html:'<div class="k-city-marker"><b>'+esc(g.name)+'</b><span>'+g.items.length+' '+placesWord(g.items.length)+'</span></div>',iconSize:[118,50],iconAnchor:[59,25]});
-    var marker=L.marker([g.lat,g.lon],{icon:icon,keyboard:true,title:g.name,alt:'Открыть город '+g.name}).addTo(map);
+    var marker=L.marker([g.lat,g.lon],{icon:icon,keyboard:true,title:g.name,alt:'Открыть город '+g.name}).addTo(markerLayer);
     marker.on('click',function(){if(typeof options.onCitySelect==='function')options.onCitySelect(g.name);else document.dispatchEvent(new CustomEvent('katyusha:city-select',{detail:{city:g.name}}))});
     bounds.push([g.lat,g.lon]);
    });
@@ -55,7 +57,7 @@ function drawMap(id,items,isRoute,options){
    plotted.forEach(function(g){
     var count=g.items.length,approx=!!g.approx;
     var icon=L.divIcon({className:'k-place-marker-host',html:'<span class="k-place-marker '+(approx?'is-approx':'')+(count>1?' has-count':'')+'">'+(count>1?count:'')+'</span>',iconSize:[44,44],iconAnchor:[22,22]});
-    var marker=L.marker([g.lat,g.lon],{icon:icon,keyboard:true,title:placeName(g.items[0])}).addTo(map);
+    var marker=L.marker([g.lat,g.lon],{icon:icon,keyboard:true,title:placeName(g.items[0])}).addTo(markerLayer);
     if(count===1){
      var p=g.items[0];
      marker.bindPopup('<div class="k-map-popup"><b>'+esc(placeName(p))+'</b><span>'+esc(cityName(p))+(approx?' · примерное расположение':'')+'</span><button type="button" data-open="'+esc(p.id)+'">Подробнее</button></div>');
