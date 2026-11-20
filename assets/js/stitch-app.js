@@ -177,11 +177,23 @@ function initMapPage(home=false) {
 function renderFavorites() {
   const grid=$("#favorites-grid");if(!grid)return;
   const favs=state.places.filter(p=>state.favs.has(p.id)||state.favs.has(String(p.id)));
+  if(favoritesGrouped)favs.sort((a,b)=>cityOf(a).localeCompare(cityOf(b),"ru")||a.title.localeCompare(b.title,"ru"));
   grid.innerHTML=favs.length?favs.map(stitchCard).join(""):'<div class="col-span-full text-center py-16 bg-surface-container-low rounded-xl"><span class="material-symbols-outlined text-4xl text-secondary">favorite_border</span><p class="font-headline-md text-primary mt-3">Коллекция пока пуста</p><p class="font-body-md text-on-surface-variant mt-2">Нажимайте на сердечко в карточках мест, чтобы сохранять интересное.</p><a href="catalog.html" class="inline-flex mt-5 px-5 py-2.5 rounded-full bg-primary-container text-on-primary">Открыть каталог</a></div>';
   const headings=$("main h1,main h2");const title=headings.find(h=>/персональн|коллекц/i.test(h.textContent));if(title)title.textContent="Ваша персональная коллекция";
   const savedText=$("main h1,main h2,main p,main span").find(el=>/18 сохранённых мест/.test(el.textContent));if(savedText)savedText.textContent=favs.length+" сохранённых мест";
   const callout=$("main a").find(a=>/Собрать в Конструкторе прогулок/.test(a.textContent));if(callout)callout.href="planner.html";
   syncHeader();
+}
+function initFavoritesPage() {
+  renderFavorites();
+  const buttons=$("main button");
+  buttons.find(b=>/Поделиться коллекцией/.test(b.textContent))?.addEventListener("click",async()=>{
+    const list=state.places.filter(p=>state.favs.has(p.id)||state.favs.has(String(p.id)));
+    const textValue="Мои места из «Прогулок с Катюшей»:\\n"+list.map(p=>"• "+p.title+" — "+cityOf(p)).join("\\n");
+    try{await navigator.clipboard.writeText(textValue);toast("Список избранного скопирован.");}catch{toast("Не удалось скопировать список.");}
+  });
+  buttons.find(b=>/Экспорт в PDF/.test(b.textContent))?.addEventListener("click",()=>window.print());
+  buttons.find(b=>/Автогруппировка по районам/.test(b.textContent))?.addEventListener("click",()=>{favoritesGrouped=!favoritesGrouped;renderFavorites();toast(favoritesGrouped?"Места сгруппированы по городам.":"Показан исходный порядок.");});
 }
 function readPlan() {
   try{const saved=JSON.parse(localStorage.getItem("rfn:plan")||"null");if(saved&&Array.isArray(saved.ids))plan={...plan,...saved};}catch{}
@@ -198,6 +210,10 @@ function renderPlanPage() {
   let km=0;for(let i=1;i<places.length;i++)km+=haversineKm(places[i-1],places[i]);
   $("#route-dist").textContent=places.length>1?fmtDist(km):"—";
   const name=$("#config-city");if(name){fillSelect(name,allCities());if(!allCities().includes(name.value))name.value=activeCity;}
+  const durationText=$("main div,main p").find(el=>el.childElementCount===0&&/суммарно \(включая неспешный кофе/.test(el.textContent));
+  if(durationText){const hours=(km/2.8)+(places.length*0.25);durationText.textContent="Около "+(Math.floor(hours))+" ч "+Math.round((hours%1)*60)+" мин · ориентировочная оценка";}
+  const telemetry=$('main svg[viewBox="0 0 400 40"]')?.parentElement?.parentElement;
+  if(telemetry)telemetry.innerHTML='<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Точность расчёта</span><p class="text-sm text-on-surface-variant mt-2">Расстояние рассчитано приблизительно по координатам. Фактический путь зависит от улиц, переходов и доступности входов.</p>';
   const points=places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
   if(plannerMapView){plannerMapView.setPlaces(points,true,true);const exact=points.filter(p=>!p.is_approx);if(exact.length>1)plannerMapView.drawRoute(exact,"walk");}
 }
@@ -317,7 +333,7 @@ async function init() {
   }
   if(page==="catalog")initCatalog();
   if(page==="map")initMapPage(false);
-  if(page==="favorites")renderFavorites();
+  if(page==="favorites")initFavoritesPage();
   if(page==="planner")initPlannerPage();
   if(page==="routes")renderRoutesPage();
   if(page==="place")renderPlacePage();
