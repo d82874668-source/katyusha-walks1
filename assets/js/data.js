@@ -468,14 +468,14 @@ export const PLACES = [
   "title": "Capybara Land",
   "description": "Nasimi Gardens, Шамахы. Знакомство с капибарами, кафе и сувенирный магазин.",
   "category": "capybara",
-  "latitude": 40.6314,
-  "longitude": 48.6364,
+  "latitude": 40.63644487827378,
+  "longitude": 48.61395865656243,
   "image": "https://shimal.news/storage/thumbs/aspect/2025/12/15/pHnlj69hWnSFTgnMaUSFta2fRAr2JVMUrF40shKB.png",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Шамахы",
-  "address": null,
+  "address": "JJM7+W98, Nasimi Gardens Complex, Shamakhi, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -485,8 +485,11 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://shimal.news/cemiyyet/samaxida-kapibaralar-meskunlasib",
-   "https://shimal.news/storage/thumbs/aspect/2025/12/15/pHnlj69hWnSFTgnMaUSFta2fRAr2JVMUrF40shKB.png"
-  ]
+   "https://shimal.news/storage/thumbs/aspect/2025/12/15/pHnlj69hWnSFTgnMaUSFta2fRAr2JVMUrF40shKB.png",
+   "https://president.az/en/articles/view/73522",
+   "https://openchargemap.org/poi/details/513732"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 6,
@@ -644,14 +647,14 @@ export const PLACES = [
   "title": "Cyber Arena Baku",
   "description": "Компьютерный клуб: игровой вечер вдвоём.",
   "category": "gaming",
-  "latitude": 40.395,
-  "longitude": 49.835,
+  "latitude": 40.370872,
+  "longitude": 49.841523,
   "image": "https://langame.ru/storage/clubs/2023/Jun/12/1686582489648734d9e0ea9.webp",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "18H Uzeyir Hajibeyli Street, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -661,8 +664,12 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://langame.ru/azerbaijan/799452695_computerniy_club_cyber-arena_baku",
-   "https://langame.ru/storage/clubs/2023/Jun/12/1686582489648734d9e0ea9.webp"
-  ]
+   "https://langame.ru/storage/clubs/2023/Jun/12/1686582489648734d9e0ea9.webp",
+   "https://yandex.az/maps/org/75291433400/",
+   "https://gameyer.az/klub/cyber-arena-baku",
+   "https://mayak.app/%40kiber-klub-cyber-arena-baku-v-baku-sport"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 13,
@@ -998,14 +1005,14 @@ export const PLACES = [
   "title": "Sea Breeze (Сибриз)",
   "description": "Территория курорта, пляж и набережная. The Grand Wellness Club, бассейны и SPA, рестораны и кафе, Bahçe Beach Club.",
   "category": "resort",
-  "latitude": 40.5917,
-  "longitude": 49.9867,
+  "latitude": 40.591292,
+  "longitude": 49.985065,
   "image": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Sea_Breeze_resort.jpg",
   "rating": null,
-  "is_approx": false,
+  "is_approx": true,
   "region": "Азербайджан",
   "city": "Нардаран",
-  "address": null,
+  "address": "1/1 Rza Afganly Street, Nardaran, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
@@ -1015,8 +1022,11 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://commons.wikimedia.org/wiki/File:Sea_Breeze_resort.jpg",
-   "https://upload.wikimedia.org/wikipedia/commons/f/f3/Sea_Breeze_resort.jpg"
-  ]
+   "https://upload.wikimedia.org/wikipedia/commons/f/f3/Sea_Breeze_resort.jpg",
+   "https://seabreeze.az/ru/contacts",
+   "https://sea-breeze-hotel.sealife.az/en/kontakty/"
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 27,
