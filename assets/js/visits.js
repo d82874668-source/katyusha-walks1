@@ -133,6 +133,43 @@ export async function deleteVisit(id) {
   } catch { return false; }
 }
 
+export async function hydrateVisits() {
+  if (!navigator.onLine) return;
+  const sb = await client();
+  if (!sb) return;
+  try {
+    const session = await ensureSession(sb);
+    const { data, error } = await sb.from("place_visits").select("*").eq("user_id", session.user.id).order("visit_date", { ascending: false });
+    if (error) throw error;
+    const local = read();
+    const localById = new Map(local.map((v) => [v.id, v]));
+    const remote = [];
+    for (const row of data || []) {
+      const cached = localById.get(row.id);
+      let photoUrl = cached?.photo_url || null;
+      if (row.photo_path && !cached?.photo_data) {
+        const { data: signed } = await sb.storage.from("visit-photos").createSignedUrl(row.photo_path, 3600);
+        photoUrl = signed?.signedUrl || photoUrl;
+      }
+      remote.push({
+        id: row.id, place_id: row.place_id, visit_date: row.visit_date,
+        impression: row.impression || "", rating: row.rating, mood_tags: row.mood_tags || [],
+        photo_path: row.photo_path, photo_url: photoUrl, photo_data: cached?.photo_data || null,
+        synced: true, created_at: row.created_at, updated_at: row.updated_at
+      });
+    }
+    const remoteIds = new Set(remote.map((v) => v.id));
+    const merged = [...remote.map((v) => {
+      const cached = localById.get(v.id);
+      return cached && !cached.synced ? cached : { ...v, ...(cached?.photo_data ? { photo_data: cached.photo_data, photo_url: cached.photo_data } : {}) };
+    }), ...local.filter((v) => !remoteIds.has(v.id))];
+    write(merged);
+    document.dispatchEvent(new CustomEvent("katyusha:visits-changed"));
+  } catch (error) {
+    console.warn("Не удалось загрузить историю посещений из Supabase:", error);
+  }
+}
+
 export async function syncPendingVisits() {
   if (!navigator.onLine) return;
   for (const visit of read().filter((v) => !v.synced)) await syncVisit(visit);
