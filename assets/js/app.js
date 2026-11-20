@@ -198,6 +198,7 @@ function renderSheet() {
       <div><h3>${esc(p.title)}</h3><p class="muted">${esc(c.title)}${p.rating ? ` · ${icon("star")} ${p.rating}` : ""}</p></div>
       <button class="icon-btn" data-close aria-label="Закрыть">${icon("x")}</button></div>
     ${p.image ? `<img class="sheet__img" src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy">` : ""}
+    ${p.photos?.length ? `<div class="sheet__gallery">${p.photos.map((photo) => `<img class="sheet__img" src="${esc(photo.url)}" alt="${esc(p.title)}" loading="lazy">`).join("")}</div>` : ""}
     <p class="sheet__desc">${esc(p.description)}</p>
     ${p.address ? `<p class="muted">${esc(p.address)}${p.city ? ` · ${esc(p.city)}` : ""}</p>` : ""}
     ${p.opening_hours ? `<p class="muted">Часы работы: ${esc(p.opening_hours)}</p>` : ""}
@@ -332,9 +333,9 @@ function renderHero() {
 document.addEventListener("click", (e) => {
   const t = e.target.closest("[data-fav],[data-close],[data-city],[data-vgroup],[data-cat],[data-place],[data-place-open],[data-collection],[data-show-route],[data-visit-place],[data-visit-edit],[data-visit-delete]");
   if (!t) return;
-  if (t.dataset.visitPlace) { const place = byId(Number(t.dataset.visitPlace)); if (place) visitDialog(place); return; }
-  if (t.dataset.visitEdit) { const place = byId(Number(t.dataset.visitPlace)); const visit = getVisits(place?.id).find((v) => v.id === t.dataset.visitEdit); if (place && visit) visitDialog(place, visit); return; }
   if (t.dataset.visitDelete) { deleteVisit(t.dataset.visitDelete).then(() => { if (state.active) renderSheet(); toast("Запись о посещении удалена"); }); return; }
+  if (t.dataset.visitEdit) { const place = byId(Number(t.dataset.visitPlace)); const visit = getVisits(place?.id).find((v) => v.id === t.dataset.visitEdit); if (place && visit) visitDialog(place, visit); return; }
+  if (t.dataset.visitPlace) { const place = byId(Number(t.dataset.visitPlace)); if (place) visitDialog(place); return; }
   if (t.dataset.fav) { e.stopPropagation(); return toggleFav(+t.dataset.fav); }
   if (t.hasAttribute("data-close")) return closeSheet();
   if (t.dataset.city) {
