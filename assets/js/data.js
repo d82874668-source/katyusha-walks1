@@ -451,7 +451,7 @@ export const PLACES = [
   "category": "capybara",
   "latitude": 40.6314,
   "longitude": 48.6364,
-  "image": null,
+  "image": "https://shimal.news/storage/thumbs/aspect/2025/12/15/pHnlj69hWnSFTgnMaUSFta2fRAr2JVMUrF40shKB.png",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -464,7 +464,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://shimal.news/cemiyyet/samaxida-kapibaralar-meskunlasib",
+   "https://shimal.news/storage/thumbs/aspect/2025/12/15/pHnlj69hWnSFTgnMaUSFta2fRAr2JVMUrF40shKB.png"
+  ]
  },
  {
   "id": 6,
@@ -742,7 +745,7 @@ export const PLACES = [
   "category": "trips",
   "latitude": 40.6314,
   "longitude": 48.6364,
-  "image": null,
+  "image": "https://ak-d.tripcdn.com/images/0102i12000o5vtw1m7297.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Азербайджан",
@@ -755,7 +758,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://www.trip.com/travel-guide/attraction/shamakhi/juma-mosque-of-shamakhi-58323282/",
+   "https://ak-d.tripcdn.com/images/0102i12000o5vtw1m7297.jpg"
+  ]
  },
  {
   "id": 19,
@@ -764,7 +770,7 @@ export const PLACES = [
   "category": "trips",
   "latitude": 41.0011,
   "longitude": 47.8458,
-  "image": null,
+  "image": "https://static.wixstatic.com/media/ce4a22_fcdfd9ab682942fbbf4c2c032e5418a8~mv2.jpg/v1/fill/w_925%2Ch_520%2Cal_c%2Cq_85%2Cenc_avif%2Cquality_auto/ce4a22_fcdfd9ab682942fbbf4c2c032e5418a8~mv2.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Азербайджан",
@@ -777,7 +783,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://www.tripoly.co.in/post/best-places-to-visit-in-azerbaijan",
+   "https://static.wixstatic.com/media/ce4a22_fcdfd9ab682942fbbf4c2c032e5418a8~mv2.jpg/v1/fill/w_925%2Ch_520%2Cal_c%2Cq_85%2Cenc_avif%2Cquality_auto/ce4a22_fcdfd9ab682942fbbf4c2c032e5418a8~mv2.jpg"
+  ]
  },
  {
   "id": 20,
@@ -786,7 +795,7 @@ export const PLACES = [
   "category": "trips",
   "latitude": 41.3611,
   "longitude": 48.5126,
-  "image": null,
+  "image": "https://azertag.az/files/2022/2/1200x630/16564242895013132936_1200x630.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Азербайджан",
@@ -799,7 +808,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://azertag.az/ru/xeber/osnovnye_turisticheskie_marshruty_i_dostoprimechatelnosti_guby-2196239",
+   "https://azertag.az/files/2022/2/1200x630/16564242895013132936_1200x630.jpg"
+  ]
  },
  {
   "id": 21,
@@ -808,7 +820,7 @@ export const PLACES = [
   "category": "trips",
   "latitude": 41.4272,
   "longitude": 48.4297,
-  "image": null,
+  "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Caucasus_Mountains._Qusar%2C_Azerbaijan.jpg/960px-Caucasus_Mountains._Qusar%2C_Azerbaijan.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Азербайджан",
@@ -821,7 +833,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/File:Caucasus_Mountains._Qusar,_Azerbaijan.jpg",
+   "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Caucasus_Mountains._Qusar%2C_Azerbaijan.jpg/960px-Caucasus_Mountains._Qusar%2C_Azerbaijan.jpg"
+  ]
  },
  {
   "id": 22,
@@ -830,7 +845,7 @@ export const PLACES = [
   "category": "trips",
   "latitude": 41.32,
   "longitude": 48.15,
-  "image": null,
+  "image": "https://thefinetravel.com/images/shahdag.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -843,7 +858,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://thefinetravel.com/destination/shahdag-mountain-resort",
+   "https://thefinetravel.com/images/shahdag.jpg"
+  ]
  },
  {
   "id": 23,
@@ -874,7 +892,7 @@ export const PLACES = [
   "category": "trips",
   "latitude": 40.5694,
   "longitude": 50.0589,
-  "image": null,
+  "image": "https://content.r9cdn.net/rimg/dimg/45/6f/c34de687-city-81304-170e64291f5.jpg?crop=true&height=630&watermarkposition=lowerright&width=1200",
   "rating": null,
   "is_approx": true,
   "region": "Азербайджан",
@@ -887,7 +905,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://www.hotelscombined.com/Place/Bilgah.htm",
+   "https://content.r9cdn.net/rimg/dimg/45/6f/c34de687-city-81304-170e64291f5.jpg?crop=true&height=630&watermarkposition=lowerright&width=1200"
+  ]
  },
  {
   "id": 25,
@@ -918,7 +939,7 @@ export const PLACES = [
   "category": "resort",
   "latitude": 40.5917,
   "longitude": 49.9867,
-  "image": null,
+  "image": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Sea_Breeze_resort.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Азербайджан",
@@ -931,7 +952,10 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": null,
-  "source_urls": []
+  "source_urls": [
+   "https://commons.wikimedia.org/wiki/File:Sea_Breeze_resort.jpg",
+   "https://upload.wikimedia.org/wikipedia/commons/f/f3/Sea_Breeze_resort.jpg"
+  ]
  },
  {
   "id": 27,
