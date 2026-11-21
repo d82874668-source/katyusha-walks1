@@ -407,6 +407,40 @@ legend{padding:0;margin-bottom:12px;font-weight:600}
 .chip.is-empty{opacity:.5}
 .chip.is-empty[aria-selected="true"]{opacity:1}
 
+/* Исправление контраста блока «Мой идеальный день» во всех темах */
+[data-theme="light"] #ideal .ideal__form,
+[data-theme="hearts"] #ideal .ideal__form,
+[data-theme="light"] #ideal .ideal__result .card,
+[data-theme="hearts"] #ideal .ideal__result .card {
+  background:#fff !important;
+  color:#0F1522 !important;
+}
+[data-theme="dark"] #ideal .ideal__form,
+[data-theme="dark"] #ideal .ideal__result .card {
+  background:#121826 !important;
+  color:#EEF1F8 !important;
+}
+#ideal .ideal__form legend,
+#ideal .ideal__form label,
+#ideal .ideal__form .mood strong,
+#ideal .ideal__form .mood small {
+  color:inherit;
+}
+[data-theme="light"] #ideal .field input,
+[data-theme="light"] #ideal .field select,
+[data-theme="hearts"] #ideal .field input,
+[data-theme="hearts"] #ideal .field select {
+  background:#fff;
+  color:#0F1522;
+  border-color:rgba(15,21,34,.18);
+}
+[data-theme="dark"] #ideal .field input,
+[data-theme="dark"] #ideal .field select {
+  background:#1A2233;
+  color:#EEF1F8;
+  border-color:rgba(238,241,248,.18);
+}
+
 /* контролы и модальные элементы следуют активной теме */
 input,select,textarea,button{color-scheme:inherit}
 .ideal__form,.ideal__result .card,.day .card,.mood span{background:var(--surface);color:var(--ink)}
