@@ -166,7 +166,7 @@ check("#places-container [data-map-place]" in css, "Map place cards must have re
 check("#map-workspace" in css and "flex-direction:column" in css, "Responsive map workspace layout missing")
 check("#places-container [data-map-place]" in css and "line-height:1.35" in css, "Map place cards must have readable typography")
 sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-check("katyusha-pwa-v20" in sw, "PWA cache version not bumped")
+check("katyusha-pwa-v21" in sw, "PWA cache version not bumped")
 check("visits.js" not in sw, "PWA still precaches retired visits module")
 
 seed = committed_seed
