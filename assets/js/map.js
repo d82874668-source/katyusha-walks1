@@ -1,5 +1,5 @@
 // Карта (Leaflet + OpenStreetMap), расчёт маршрута (OSRM) и ссылки на навигацию.
-import { CATEGORIES } from "./data.js?v=4";
+import { CATEGORIES } from "./data.js?v=5";
 
 // Точка отсчёта по умолчанию: площадь Фонтанов, Баку.
 export const CENTER = { latitude: 40.3725, longitude: 49.8355, label: "площади Фонтанов" };
