@@ -11,10 +11,29 @@ const page = document.body.dataset.page || "home";
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 window.addEventListener("pageshow",()=>{if(!location.hash){window.scrollTo(0,0);requestAnimationFrame(()=>window.scrollTo(0,0));}});
 const cityOf = p => p.city || p.region || "Другой город";
+const CITY_OPTIONS = ["Азербайджан","Екатеринбург","Аять","Москва","Санкт-Петербург","Нижний Тагил","Грузия"];
+const CITY_STORAGE_KEY = "katyusha:selected-city";
+const cityGroupOf = p => {
+  const region=String(p.region||"").toLocaleLowerCase("ru");
+  const city=String(p.city||"").toLocaleLowerCase("ru");
+  if(region==="азербайджан" || ["баку","шамахы","габала","губа","гусар","шахдаг","мардакян","бильгя","нардаран","сумгаит","гала","рамана","мамедли","сураханы","масазыр"].includes(city))return "Азербайджан";
+  if(region==="грузия" || city==="тбилиси" || city==="батуми")return "Грузия";
+  if(region==="казахстан" || city==="алматы")return "Казахстан";
+  if(city==="аять" || region.includes("аять"))return "Аять";
+  return ["Екатеринбург","Москва","Санкт-Петербург","Нижний Тагил"].find(x=>x.toLocaleLowerCase("ru")===city)||null;
+};
+const matchesCity = (p, city=activeCity) => city==="all" || cityGroupOf(p)===city;
+const cityFromParam = value => {
+  if(!value)return null;
+  if(CITY_OPTIONS.includes(value)||value==="Казахстан")return value;
+  const place=state.places.find(p=>String(p.city||"").toLocaleLowerCase("ru")===String(value).toLocaleLowerCase("ru"));
+  return place?cityGroupOf(place):null;
+};
 const imageOf = p => p.image || (Array.isArray(p.photos) ? p.photos[0]?.url : "") || "";
 const categoryOf = p => CATEGORIES[p.category]?.title || "Место";
 const priceOf = p => p.price_min == null ? "Стоимость не указана" : Number(p.price_min) === 0 ? "Бесплатно" : (Number(p.price_min) === Number(p.price_max) ? Number(p.price_min).toLocaleString("ru-RU") : "от " + Number(p.price_min).toLocaleString("ru-RU")) + " " + (p.price_unit || "");
-let mapView = null, homeMapView = null, activeCity = "Баку", activeCategory = "all", query = "", mapQuery = "", sortMode = "rating", viewMode = "grid", plan = {ids:[],mode:"walk",name:"Моя прогулка"};
+let mapView = null, homeMapView = null, activeCity = "Азербайджан", activeCategory = "all", query = "", mapQuery = "", sortMode = "rating", viewMode = "grid", plan = {ids:[],mode:"walk",name:"Моя прогулка"};
+let activePriceBand=null, activeFeatures=new Set(), userLocation=null, mapCategory="all", mapListRefresh=null;
 
 function toast(message) {
   let el = $("#stitch-toast");
@@ -22,13 +41,64 @@ function toast(message) {
   el.textContent=message; el.classList.add("is-visible");
   clearTimeout(toast.timer); toast.timer=setTimeout(()=>el.classList.remove("is-visible"),2600);
 }
-function allCities() { return [...new Set(state.places.map(cityOf).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ru")); }
+function allCities() {
+  const fixed=CITY_OPTIONS.filter(city=>state.places.some(p=>cityGroupOf(p)===city));
+  if(state.places.some(p=>cityGroupOf(p)==="Казахстан"))fixed.push("Казахстан");
+  return fixed;
+}
+function priceCurrency(p) {
+  const unit=String(p.price_unit||"").toUpperCase();
+  if(unit.includes("AZN"))return "AZN";
+  if(unit.includes("RUB")||unit.includes("₽"))return "RUB";
+  if(unit.includes("GEL"))return "GEL";
+  if(unit.includes("KZT")||unit.includes("ТЕНГЕ"))return "KZT";
+  return cityGroupOf(p)||"other";
+}
+function getPriceBandMap() {
+  const groups=new Map();
+  for(const p of state.places){
+    if(p.price_min==null || !Number.isFinite(Number(p.price_min)))continue;
+    if(activeCity!=="all"&&!matchesCity(p))continue;
+    const key=priceCurrency(p);
+    if(!groups.has(key))groups.set(key,[]);
+    groups.get(key).push(p);
+  }
+  const result=new Map();
+  for(const items of groups.values()){
+    items.sort((a,b)=>Number(a.price_min)-Number(b.price_min));
+    const n=items.length;
+    items.forEach((p,i)=>{
+      const ratio=n<=1?0:i/(n-1);
+      result.set(String(p.id),ratio<=0.34?"low":ratio<=0.67?"mid":"high");
+    });
+  }
+  return result;
+}
+function featureMatches(p,feature) {
+  const text=[p.title,p.description,p.address,p.category,categoryOf(p)].filter(Boolean).join(" ").toLocaleLowerCase("ru");
+  const tags=[...(Array.isArray(p.tags)?p.tags:[]),...(Array.isArray(p.features)?p.features:[]),...(Array.isArray(p.amenities)?p.amenities:[])].join(" ").toLocaleLowerCase("ru");
+  if(feature==="water")return ["sea","boat","embankment","beach","resort"].includes(p.category)||/(набережн|вид.{0,20}(мор|вод|залив|касп)|берег|озер|водохранилищ|морская прогул|панорам.{0,25}мор|waterfront|sea view)/i.test(text+" "+tags);
+  if(feature==="terrace")return /(веранд|террас|балкон|летн.{0,10}площадк|roof.?top|terrace)/i.test(text+" "+tags);
+  if(feature==="dog")return p.dog_friendly===true||p.pet_friendly===true||/(dog.?friendly|pet.?friendly|дог.?френдли|с собак|с животн|с питомц)/i.test(text+" "+tags);
+  if(feature==="work")return /(коворкинг|для работы|тихо работать|рабочее место|wi.?fi|ноутбук|laptop.?friendly)/i.test(text+" "+tags);
+  if(feature==="historic")return ["historic","museum","monument"].includes(p.category)||/(историческ.{0,25}интерьер|особняк|старинн.{0,20}(зал|интерьер)|историческ.{0,20}здани)/i.test(text+" "+tags);
+  return true;
+}
 function placeById(id) { return state.places.find(p=>String(p.id)===String(id)); }
 function visiblePlaces() {
-  let list=state.places.filter(p=>(activeCity==="all" || cityOf(p)===activeCity) && (activeCategory==="all" || p.category===activeCategory));
-  if(query.trim()) { const q=query.toLocaleLowerCase("ru"); list=list.filter(p=>[p.title,p.description,p.address,cityOf(p),categoryOf(p)].join(" ").toLocaleLowerCase("ru").includes(q)); }
+  let list=state.places.filter(p=>matchesCity(p)&&(activeCategory==="all"||p.category===activeCategory));
+  if(query.trim()) { const q=query.toLocaleLowerCase("ru"); list=list.filter(p=>[p.title,p.description,p.address,cityGroupOf(p),cityOf(p),categoryOf(p)].join(" ").toLocaleLowerCase("ru").includes(q)); }
+  if(activeFeatures.size)list=list.filter(p=>[...activeFeatures].every(feature=>featureMatches(p,feature)));
+  if(activePriceBand){const bands=getPriceBandMap();list=list.filter(p=>bands.get(String(p.id))===activePriceBand);}
   if(sortMode==="name") list.sort((a,b)=>a.title.localeCompare(b.title,"ru"));
   else if(sortMode==="price") list.sort((a,b)=>(a.price_min??Infinity)-(b.price_min??Infinity));
+  else if(sortMode==="popular")list.sort((a,b)=>(Number(b.review_count)||0)-(Number(a.review_count)||0)||(Number(b.rating)||0)-(Number(a.rating)||0));
+  else if(sortMode==="new")list.sort((a,b)=>String(b.last_verified_at||"").localeCompare(String(a.last_verified_at||"")));
+  else if(sortMode==="distance"&&userLocation)list.sort((a,b)=>{
+    const da=Number.isFinite(+a.latitude)&&Number.isFinite(+a.longitude)?haversineKm(userLocation,a):Infinity;
+    const db=Number.isFinite(+b.latitude)&&Number.isFinite(+b.longitude)?haversineKm(userLocation,b):Infinity;
+    return da-db;
+  });
   else list.sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));
   return list;
 }
@@ -57,7 +127,7 @@ function routeCard(r) {
   </article>`;
 }
 function cityCard(city) {
-  const places=state.places.filter(p=>cityOf(p)===city), sample=places.find(imageOf);
+  const places=state.places.filter(p=>cityGroupOf(p)===city), sample=places.find(imageOf);
   return `<article class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-[0_12px_32px_-4px_rgba(36,51,44,0.1)] transition-all flex flex-col">
     <button type="button" class="relative h-64 overflow-hidden text-left" data-city-pick="${esc(city)}">
       ${sample&&imageOf(sample)?`<img class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" src="${esc(imageOf(sample))}" alt="${esc(city)}" loading="lazy">`:'<div class="w-full h-full bg-surface-container-low flex items-center justify-center"><span class="material-symbols-outlined text-5xl text-primary/40">location_city</span></div>'}
