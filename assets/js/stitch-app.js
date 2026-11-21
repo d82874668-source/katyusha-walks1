@@ -1,7 +1,7 @@
 import { loadData } from "./store.js?v=2";
 import { state } from "./state.js";
 import { PLACES, ROUTES, CATEGORIES } from "./data.js?v=5";
-import { MapView, googleUrl, osmUrl, haversineKm, fmtDist } from "./map.js?v=8";
+import { MapView, googleUrl, osmUrl, haversineKm, fmtDist } from "./map.js?v=9";
 
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
@@ -331,15 +331,16 @@ function initMapPage(home=false) {
   if(!home){
     const container=$("#map-canvas-container");
     if(container){
-      container.style.position="relative";container.style.height="640px";container.style.minHeight="640px";container.style.width="100%";
-      container.innerHTML='<div id="mapCanvas" style="position:absolute;inset:0;width:100%;height:100%;min-height:640px"></div>';
+      container.style.position="relative";container.style.width="auto";container.style.height="100%";container.style.minHeight="0";
+      container.innerHTML='<div id="mapCanvas" style="position:absolute;inset:0;width:100%;height:100%;min-height:0"></div>';
     }
   }
   const el=home?$("#homeMapCanvas"):$("#mapCanvas");
   if(!el)return;
   const instance=new MapView(el,id=>location.href="place.html?id="+encodeURIComponent(id));
   const filtered=()=>state.places.filter(p=>matchesCity(p)&&!p.is_approx&&mapCategoryMatches(p,mapCategory)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
-  instance.setPlaces(filtered(),true);requestAnimationFrame(()=>instance.refresh());
+  instance.setPlaces(filtered(),true);requestAnimationFrame(()=>requestAnimationFrame(()=>instance.refresh()));
+  window.addEventListener("resize",()=>requestAnimationFrame(()=>instance.refresh()),{passive:true});
   if(home){
     homeMapView=instance;
     $('button[aria-label="Zoom in"]')?.addEventListener("click",()=>instance.map.zoomIn());
