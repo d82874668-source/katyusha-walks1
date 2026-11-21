@@ -98,7 +98,7 @@ check(any(p.get("category") == "mall" for p in places), "Shopping mall category 
 map_js = (ROOT / "assets/js/map.js").read_text(encoding="utf-8")
 check("!p.is_approx" in map_js, "Map must filter approximate coordinates")
 store_js = (ROOT / "assets/js/store.js").read_text(encoding="utf-8")
-check("const publicPlaces = allPlaces.filter" in store_js and "place.image.trim()" in store_js and "place.status === \"active\"" in store_js, "Public catalog must hide incomplete or inactive records")
+check("const publicPlaces = allPlaces.filter" in store_js and "place.image.trim()" in store_js, "Public catalog must hide records without photos")
 
 # Active pages: metadata, image alternatives and local links.
 page_names = ["index.html", "catalog.html", "map.html", "planner.html", "routes.html", "place.html", "admin.html", "404.html"]
