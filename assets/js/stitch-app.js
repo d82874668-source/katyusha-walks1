@@ -337,7 +337,7 @@ function initMapPage(home=false) {
   const el=home?$("#homeMapCanvas"):$("#mapCanvas");
   if(!el)return;
   const instance=new MapView(el,id=>location.href="place.html?id="+encodeURIComponent(id));
-  const filtered=()=>state.places.filter(p=>matchesCity(p)&&mapCategoryMatches(p,mapCategory)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
+  const filtered=()=>state.places.filter(p=>matchesCity(p)&&!p.is_approx&&mapCategoryMatches(p,mapCategory)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
   instance.setPlaces(filtered(),true);requestAnimationFrame(()=>instance.refresh());
   if(home){
     homeMapView=instance;
