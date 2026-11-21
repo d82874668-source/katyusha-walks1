@@ -1,11 +1,11 @@
-const VERSION = "katyusha-pwa-v20";
+const VERSION = "katyusha-pwa-v21";
 const STATIC_CACHE = VERSION + "-static";
 const DATA_CACHE = VERSION + "-data";
 const IMAGE_CACHE = VERSION + "-images";
 const ROOT = new URL("./", self.location.href);
 const PRECACHE = [
   "./","./index.html","./catalog.html","./map.html","./planner.html","./routes.html","./place.html","./admin.html","./404.html",
-  "./manifest.webmanifest","./assets/css/stitch-app.css?v=11","./assets/css/styles.css?v=7","./assets/favicon.svg","./assets/icons/pwa-icon.svg",
+  "./manifest.webmanifest","./assets/css/stitch-app.css?v=12","./assets/css/styles.css?v=7","./assets/favicon.svg","./assets/icons/pwa-icon.svg",
   "./assets/js/stitch-app.js?v=14","./assets/js/admin.js","./assets/js/config.js","./assets/js/data.js?v=5","./assets/js/map.js?v=9",
   "./assets/js/state.js","./assets/js/store.js?v=2","./assets/js/pwa.js"
 ].map((path) => new URL(path, ROOT).href);
