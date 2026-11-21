@@ -1,28 +1,13 @@
-const VERSION = "katyusha-pwa-v10";
+const VERSION = "katyusha-pwa-v11";
 const STATIC_CACHE = VERSION + "-static";
 const DATA_CACHE = VERSION + "-data";
 const IMAGE_CACHE = VERSION + "-images";
 const ROOT = new URL("./", self.location.href);
 const PRECACHE = [
-  "./",
-  "./index.html",
-  "./404.html",
-  "./manifest.webmanifest",
-  "./assets/css/styles.css",
-  "./assets/favicon.svg",
-  "./assets/icons/pwa-icon.svg",
-  "./assets/js/app.js",
-  "./assets/js/config.js",
-  "./assets/js/data.js",
-  "./assets/js/ideal.js",
-  "./assets/js/map.js",
-  "./assets/js/planner.js",
-  "./assets/js/pwa.js",
-  "./assets/js/state.js",
-  "./assets/js/store.js",
-  "./assets/js/taxonomy.js",
-  "./assets/js/ui.js",
-  "./assets/js/visits.js"
+  "./","./index.html","./catalog.html","./map.html","./planner.html","./routes.html","./place.html","./admin.html","./404.html",
+  "./manifest.webmanifest","./assets/css/stitch-app.css?v=6","./assets/css/styles.css?v=6","./assets/favicon.svg","./assets/icons/pwa-icon.svg",
+  "./assets/js/stitch-app.js?v=10","./assets/js/admin.js","./assets/js/config.js","./assets/js/data.js?v=4","./assets/js/map.js?v=7",
+  "./assets/js/state.js","./assets/js/store.js","./assets/js/visits.js","./assets/js/pwa.js"
 ].map((path) => new URL(path, ROOT).href);
 
 self.addEventListener("install", (event) => {
@@ -80,8 +65,6 @@ self.addEventListener("fetch", (event) => {
       return;
     }
   }
-
-  // Только публичный каталог и маршруты: пользовательские данные/избранное не кэшируем.
   if (/\.supabase\.co$/.test(url.hostname) && /\/rest\/v1\/(places|routes|place_photos)(?:\?|$)/.test(url.pathname + url.search)) {
     event.respondWith(networkFirst(request, DATA_CACHE).catch(() => caches.match(request)));
     return;
