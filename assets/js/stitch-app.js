@@ -339,8 +339,11 @@ async function init() {
   const headerSearch=[...document.querySelectorAll("header button")].find(b=>/Найти место|Найти место, улицу/i.test(b.textContent));
   headerSearch?.addEventListener("click",()=>location.href="catalog.html");
   if(page==="home"){
-    renderHome();initMapPage(true);
-    $("#hero-city-select")?.addEventListener("change",e=>{activeCity=e.target.value;syncHeader();renderHome();homeMapView?.setPlaces(state.places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)&&cityOf(p)===activeCity),true);});
+    // Keep the interactive map independent from optional editorial widgets:
+    // a missing homepage content selector must never prevent Leaflet from mounting.
+    try { renderHome(); } catch(error) { console.error("Homepage content:",error); }
+    try { initMapPage(true); } catch(error) { console.error("Homepage map:",error); toast("Не удалось открыть карту. Обновите страницу."); }
+    $("#hero-city-select")?.addEventListener("change",e=>{activeCity=e.target.value;syncHeader();try{renderHome();}catch(error){console.error("Homepage content:",error);}homeMapView?.setPlaces(state.places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)&&cityOf(p)===activeCity),true);});
     $("#map-filter-group")?.addEventListener("click",e=>{const b=e.target.closest("[data-home-category]");if(!b)return;const category=b.dataset.homeCategory;const points=state.places.filter(p=>cityOf(p)===activeCity&&(category==="all"||p.category===category)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));homeMapView?.setPlaces(points,true);});
   }
   if(page==="catalog")initCatalog();
