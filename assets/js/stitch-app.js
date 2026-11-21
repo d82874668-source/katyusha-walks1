@@ -93,10 +93,6 @@ function renderHome() {
   if(heroCity){if(allCities().includes(heroCity.value))activeCity=heroCity.value;else{heroCity.value=allCities().includes("Баку")?"Баку":allCities()[0]||"";activeCity=heroCity.value;}}
   const mapWrap=$("#home-map-wrap");
   if(mapWrap&&!$("#homeMapCanvas")){mapWrap.innerHTML='<div id="homeMapCanvas" class="w-full h-full min-h-[420px]"></div><a href="map.html" class="absolute bottom-4 right-4 z-[500] px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg shadow-lg">Открыть полную карту ↗</a>';}
-  const heroRoute=state.routes[0];
-  const heroStops=(heroRoute?.places||[]).map(placeById).filter(Boolean);
-  const heroStory=[...$("#top").querySelectorAll("div")].find(el=>el.classList.contains("lg:col-span-7")&&el.classList.contains("relative")&&el.querySelector("img"));
-  if(heroStory&&heroRoute){const cover=heroStops.find(imageOf);heroStory.innerHTML=`<div class="absolute inset-0">${cover&&imageOf(cover)?`<img src="${esc(imageOf(cover))}" alt="${esc(heroRoute.title)}" class="w-full h-full object-cover">`:""}</div><div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/35 to-transparent"></div><div class="relative z-10 flex flex-col justify-between h-full min-h-[360px] p-space-lg"><div><span class="px-3 py-1.5 rounded-full bg-surface-bright/90 text-primary font-label-caps">Маршрут из каталога</span></div><div class="text-on-primary"><span class="font-label-caps uppercase tracking-widest text-secondary-container">Авторский сценарий</span><h3 class="font-headline-xl mt-2">${esc(heroRoute.title)}</h3><p class="font-body-md mt-2 text-surface-container-low/90">${esc(heroRoute.description||"")}</p><p class="font-body-sm mt-3">${heroStops.length} остановок · ${heroStops.map(p=>esc(p.title)).slice(0,3).join(" · ")}</p><a href="routes.html" class="inline-flex mt-4 px-4 py-2 rounded-full bg-surface-bright text-primary font-label-lg">Все маршруты →</a></div></div>`;}
   const featured=state.places.find(p=>cityOf(p)===activeCity&&imageOf(p))||state.places.find(imageOf);
   if(featured){
     const heroSection=$("main section");
