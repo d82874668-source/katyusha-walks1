@@ -79,3 +79,31 @@ button,a{ -webkit-tap-highlight-color:transparent}
   main,main *{touch-action:pan-y pinch-zoom;}
   main button,main a,main input,main select,main textarea,[data-leaflet-interactive="true"]{touch-action:manipulation;}
 }
+
+/* ===== Accessible interaction system (WCAG 2.2 AA baseline) ===== */
+:root{
+  --ui-hit-min:44px;
+  --ui-focus:#9d4229;
+  --ui-focus-ring:rgba(157,66,41,.28);
+  --ui-motion-fast:140ms;
+  --ui-motion-normal:220ms;
+}
+:where(button,a,input,select,textarea,[role="button"],[tabindex]):focus-visible{
+  outline:3px solid var(--ui-focus)!important;
+  outline-offset:3px!important;
+  box-shadow:0 0 0 5px var(--ui-focus-ring)!important;
+}
+:where(button,a,[role="button"]){-webkit-tap-highlight-color:transparent}
+button:disabled,[aria-disabled="true"]{cursor:not-allowed;opacity:.58}
+::selection{background:#ffdbd1;color:#3b0900}
+@media(max-width:767px){
+  :where(button,a,[role="button"],summary,input,select,textarea){min-height:max(var(--ui-hit-min),1em)}
+  header.fixed nav a{min-height:48px!important}
+  .leaflet-control a{min-width:40px!important;min-height:40px!important;line-height:40px!important}
+  .leaflet-control-zoom{touch-action:manipulation}
+  .leaflet-container{touch-action:pan-x pan-y}
+}
+@media(prefers-reduced-motion:reduce){
+  html:focus-within{scroll-behavior:auto!important}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
