@@ -1,7 +1,7 @@
 name: Validate site
 on:
   push:
-    branches: ["main", "feature/visits-pwa-place-editor"]
+    branches: ["main"]
   pull_request:
     branches: ["main"]
 
@@ -38,6 +38,10 @@ jobs:
       - name: Rebuild and verify catalogue
         run: |
           python tools/build_data.py
+      - name: Verify generated catalogue files are committed
+        run: git diff --exit-code -- assets/js/data.js supabase/seed.sql
+      - name: Run site QA audit
+        run: python tools/qa_audit.py
           node --input-type=module -e '
             import fs from "node:fs";
             const source = fs.readFileSync("assets/js/data.js", "utf8");
