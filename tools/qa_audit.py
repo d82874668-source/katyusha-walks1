@@ -97,6 +97,8 @@ check(any(p.get("category") == "mall" for p in places), "Shopping mall category 
 # Check that the public map does not display approximate pins.
 map_js = (ROOT / "assets/js/map.js").read_text(encoding="utf-8")
 check("!p.is_approx" in map_js, "Map must filter approximate coordinates")
+store_js = (ROOT / "assets/js/store.js").read_text(encoding="utf-8")
+check("const publicPlaces = allPlaces.filter" in store_js and "place.image.trim()" in store_js, "Public catalog must hide records without photos")
 
 # Active pages: metadata, image alternatives and local links.
 page_names = ["index.html", "catalog.html", "map.html", "planner.html", "routes.html", "place.html", "admin.html", "404.html"]
@@ -138,7 +140,7 @@ check("@media(max-width:767px)" in css, "Mobile breakpoint missing")
 check("overflow-x:clip" in css or "overflow-x:hidden" in css, "Horizontal overflow safeguard missing")
 check("44px" in css, "Minimum mobile touch target rule missing")
 sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-check("katyusha-pwa-v14" in sw, "PWA cache version not bumped")
+check("katyusha-pwa-v15" in sw, "PWA cache version not bumped")
 check("visits.js" not in sw, "PWA still precaches retired visits module")
 
 seed = committed_seed
