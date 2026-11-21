@@ -636,7 +636,7 @@ export const PLACES = [
   "is_approx": false,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": "28 May metro, S. Rahimov Street, near Nikola Tesla Park, Baku, Azerbaijan",
+  "address": "Süleyman Rəhimov Street, 201, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
