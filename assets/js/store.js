@@ -47,8 +47,11 @@ export async function loadData() {
       }
       return merged;
     });
+    const allPlaces = [...mergedPlaces, ...PLACES.filter((place) => !remoteIds.has(String(place.id)))];
+    const publicPlaces = allPlaces.filter((place) => typeof place.image === "string" && place.image.trim());
     return {
-      places: [...mergedPlaces, ...PLACES.filter((place) => !remoteIds.has(String(place.id)))],
+      places: publicPlaces,
+      hiddenIncompleteCount: allPlaces.length - publicPlaces.length,
       routes: Array.isArray(routesResult.data) && routesResult.data.length ? routesResult.data : ROUTES,
       mode: "supabase",
     };
