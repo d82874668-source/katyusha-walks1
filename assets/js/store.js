@@ -1,6 +1,6 @@
 // Слой данных: Supabase, если он настроен, иначе встроенные данные + localStorage.
 import { CONFIG } from "./config.js";
-import { PLACES, ROUTES } from "./data.js";
+import { PLACES, ROUTES } from "./data.js?v=2";
 
 const LS_KEY = "katyusha:favorites";
 const SUPABASE_ESM = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
