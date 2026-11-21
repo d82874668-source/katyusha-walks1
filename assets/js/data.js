@@ -2363,7 +2363,7 @@ export const PLACES = [
   "last_verified_at": "2026-11-21",
   "source_urls": [
    "https://galleria.ge/",
-   "https://mapcarta.com/W123456789",
+   "https://www.openstreetmap.org/?mlat=41.69452&mlon=44.79987#map=17/41.69452/44.79987",
    "https://georgia24.ge/images/uploads/171455021299835.webp"
   ]
  },
@@ -2390,7 +2390,7 @@ export const PLACES = [
   "last_verified_at": "2026-11-21",
   "source_urls": [
    "https://eastpoint.ge/",
-   "https://mapcarta.com/W123456789",
+   "https://www.openstreetmap.org/?mlat=41.6899&mlon=44.89825#map=17/41.6899/44.89825",
    "https://dmo.ge/photos/company/3900270066.jpg"
   ]
  },
@@ -2500,7 +2500,7 @@ export const PLACES = [
   "last_verified_at": "2026-11-21",
   "source_urls": [
    "https://tagil.kit-trc.ru/",
-   "https://mapcarta.com/",
+   "https://www.openstreetmap.org/?mlat=57.869587&mlon=59.94262#map=17/57.869587/59.94262",
    "https://tagil.kit-trc.ru/local/templates/main/images/index-preview/1.png"
   ]
  },
