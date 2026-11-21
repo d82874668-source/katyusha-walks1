@@ -825,7 +825,7 @@
     "category": "Парки",
     "city": "Нижний Тагил",
     "description": "Городской парк у Тагильского пруда, территория открыта для прогулок ежедневно; официальный прайс перечисляет семейные и детские аттракционы.",
-    "image_url": "https://kartin.papik.pro/uploads/posts/2023-07/1689224828_kartin-papik-pro-p-kartinki-park-bondina-2.jpg",
+    "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Nizhny_Tagil_%2816%29.JPG/960px-Nizhny_Tagil_%2816%29.JPG",
     "latitude": 57.905537,
     "longitude": 59.959615,
     "map_url": "https://2gis.ru/ntagil/firm/6333715256967712",
@@ -837,11 +837,9 @@
     "rating": 5,
     "review_count": 123,
     "sources": [
-      "https://2gis.ru/ntagil/firm/6333715256967712",
+      "https://commons.wikimedia.org/wiki/File:Nizhny_Tagil_(16).JPG",
       "https://park-bondina.ru/park/grafik/",
-      "https://park-bondina.ru/rest/price/",
-      "https://ntagil.org/kultura/mesta/park/142329/",
-      "https://kartin.papik.pro/uploads/posts/2023-07/1689224828_kartin-papik-pro-p-kartinki-park-bondina-2.jpg"
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Nizhny_Tagil_%2816%29.JPG/960px-Nizhny_Tagil_%2816%29.JPG"
     ],
     "title": "Нижнетагильский парк культуры и отдыха им. А.П. Бондина",
     "region": "Нижний Тагил",
@@ -854,7 +852,7 @@
     "category": "Музеи",
     "city": "Нижний Тагил",
     "description": "Экспозиция посвящена истории Нижнего Тагила и края до 1917 года; во вторник открыта только постоянная экспозиция первого этажа.",
-    "image_url": "https://museum-nt.ru/upload/iblock/0ce/0ced896887845380f08441a55d962e3d.jpg",
+    "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Collections_of_the_Nizhny_Tagil_Local_History_Museum_-_58.jpg/960px-Collections_of_the_Nizhny_Tagil_Local_History_Museum_-_58.jpg",
     "latitude": 57.905605,
     "longitude": 59.95148,
     "map_url": "https://2gis.ru/ntagil/firm/6333715256967305",
@@ -866,10 +864,9 @@
     "rating": 4.9,
     "review_count": 40,
     "sources": [
-      "https://2gis.ru/ntagil/firm/6333715256967305",
+      "https://commons.wikimedia.org/wiki/File:Collections_of_the_Nizhny_Tagil_Local_History_Museum_-_58.jpg",
       "https://museum-nt.ru/content/visit/museum/museum.php?ELEMENT_ID=121",
-      "https://museum-nt.ru/upload/iblock/0ce/0ced896887845380f08441a55d962e3d.jpg",
-      "https://ntagil.org/kultura/mesta/muzei/260682/"
+      "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Collections_of_the_Nizhny_Tagil_Local_History_Museum_-_58.jpg/960px-Collections_of_the_Nizhny_Tagil_Local_History_Museum_-_58.jpg"
     ],
     "title": "Нижнетагильский историко-краеведческий музей",
     "region": "Нижний Тагил",
