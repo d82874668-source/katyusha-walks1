@@ -206,7 +206,7 @@ def make_extra(item, fallback_id):
     raise ValueError(f"Unknown region for {item.get('title')}: {region}")
   return dict(
     id=int(item.get("id", fallback_id)), title=item["title"], description=item["description"], category=category,
-    latitude=float(item["latitude"]), longitude=float(item["longitude"]), image=item.get("image_path") or item.get("image_url") or None,
+    latitude=float(item["latitude"]), longitude=float(item["longitude"]), image=item.get("image_url") or item.get("image_path") or None,
     rating=round(float(item["rating"]), 1) if item.get("rating") is not None else None, is_approx=bool(item.get("is_approx", False)), region=region, city=item["city"],
     address=item["address"], price_min=item.get("price_min"), price_max=item.get("price_max"),
     price_unit=item.get("price_unit") or None, review_count=int(item["review_count"]) if item.get("review_count") is not None else None,
