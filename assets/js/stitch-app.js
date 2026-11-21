@@ -1,6 +1,6 @@
 import { loadData, setFavorite } from "./store.js";
 import { state } from "./state.js";
-import { PLACES, ROUTES, CATEGORIES } from "./data.js?v=2";
+import { PLACES, ROUTES, CATEGORIES } from "./data.js?v=3";
 import { MapView, googleUrl, osmUrl, haversineKm, fmtDist } from "./map.js?v=6";
 import { visitDialog, hydrateVisits } from "./visits.js";
 
