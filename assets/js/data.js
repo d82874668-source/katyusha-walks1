@@ -168,6 +168,12 @@ export const CATEGORIES = {
   "hue": 15,
   "blurb": "Рестораны и места для особенного ужина"
  },
+ "cultural_space": {
+  "title": "Культурные пространства",
+  "icon": "building",
+  "hue": 315,
+  "blurb": "Арт-кластеры, творческие площадки и культурные пространства"
+ },
  "cafe": {
   "title": "Кафе",
   "icon": "building",
