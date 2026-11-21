@@ -166,7 +166,7 @@ function initHeaderCitySwitcher() {
   let wrapper=$("header .relative.inline-flex.items-center");
   let button=wrapper?.querySelector("button");
   if(!button){
-    button=$("header button").find(b=>b.querySelector(".material-symbols-outlined")?.textContent.trim()==="location_on");
+    button=$$("header button").find(b=>b.querySelector(".material-symbols-outlined")?.textContent.trim()==="location_on");
     wrapper=button?.parentElement;
   }
   if(!wrapper||!button)return;
