@@ -215,7 +215,7 @@ h3{font-size:18px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
 .grid--cols{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
 .grid--fav{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .route{display:flex;flex-direction:column;gap:14px}
-.route:hover,.collection:hover{box-shadow:var(--shadow)}
+.route:hover{box-shadow:var(--shadow)}
 .stops{counter-reset:s;display:grid;gap:0;margin:4px 0}
 .stops li{counter-increment:s;position:relative;display:flex;justify-content:space-between;gap:12px;padding:8px 0 8px 36px}
 .stops li::before{content:counter(s);position:absolute;left:0;top:7px;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:13px;font-weight:600;z-index:1}
@@ -226,11 +226,6 @@ h3{font-size:18px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
 .route__actions .btn--primary{flex:1 1 auto}
 
 /* ===== Подборки ===== */
-.collection{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;cursor:pointer}
-.collection .badge{margin-bottom:8px}
-.collection:hover{border-color:hsl(var(--h) 60% 60%)}
-.collection small{margin-top:auto;padding-top:8px;font-size:13px}
-
 /* ===== Галерея (асимметричная сетка) ===== */
 .tile{position:relative;overflow:hidden;border-radius:22px;text-align:left;color:#fff;background:linear-gradient(145deg,hsl(var(--h) 70% 52%),hsl(calc(var(--h) + 50) 65% 28%));isolation:isolate}
 .tile:nth-child(1){grid-column:span 2;grid-row:span 2}
@@ -244,12 +239,6 @@ h3{font-size:18px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
 .tile__cap{position:absolute;inset:auto 0 0 0;display:flex;flex-direction:column;padding:48px 18px 16px;background:linear-gradient(to top,rgba(0,0,0,.5),transparent)}
 .tile__cap strong{font-weight:600}
 .tile__cap small{opacity:.85}
-
-/* ===== Избранное ===== */
-.fav{display:flex;align-items:center;gap:14px;padding:16px}
-.fav__t{flex:1;min-width:0}
-.fav__t h3{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:16px}
-.fav__t p{font-size:14px}
 
 /* ===== Планы (последовательность) ===== */
 .road{counter-reset:r;max-width:720px;display:grid;gap:0}
@@ -503,7 +492,7 @@ body{background:var(--bg);letter-spacing:-.012em}
 .plan__side,.ideal__form{border-radius:22px;border:1px solid var(--line);box-shadow:var(--shadow)}
 .card{border-radius:22px;border:1px solid var(--line);box-shadow:0 4px 18px rgba(20,30,20,.035)}
 .grid{gap:16px}
-.route,.fav,.collection{padding:22px}
+.route{padding:22px}
 .sheet{border-radius:20px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
 .about{border-radius:26px;background:#e9f0e9;padding:clamp(24px,4vw,52px)}
 [data-theme="dark"] .about{background:#203128}
