@@ -34,7 +34,7 @@ const categoryOf = p => CATEGORIES[p.category]?.title || "Место";
 const priceOf = p => p.price_min == null ? "Стоимость не указана" : Number(p.price_min) === 0 ? "Бесплатно" : (Number(p.price_min) === Number(p.price_max) ? Number(p.price_min).toLocaleString("ru-RU") : "от " + Number(p.price_min).toLocaleString("ru-RU")) + " " + (p.price_unit || "");
 let mapView = null, homeMapView = null, activeCity = "Азербайджан", activeCategory = "all", query = "", mapQuery = "", sortMode = "rating", viewMode = "grid", plan = {ids:[],mode:"walk",name:"Моя прогулка"};
 let activePriceBand=null, activeFeatures=new Set(), userLocation=null, mapCategory="all", mapListRefresh=null;
-let routeTopic="all", routePace="all", favoriteCategory="all", favoriteSort="new";
+let routeTopic="all", routePace="all";
 
 function toast(message) {
   let el = $("#stitch-toast");
