@@ -3,3 +3,70 @@ body:not(.stitch-ready) main{opacity:0}body.stitch-ready main{opacity:1;transiti
 .visit-form{color:#1b1c1a;font-family:"Plus Jakarta Sans",sans-serif}.visit-form h2{font-family:"Playfair Display",serif;color:#1e3a2f}.visit-form .muted{color:#66736b}.visit-form .btn{border:1px solid #d7ddd7;border-radius:999px;padding:9px 15px;background:#f0eee8;color:#1e3a2f;cursor:pointer}.visit-form .btn--primary{background:#1e3a2f;color:#fff;border-color:#1e3a2f}.visit-form button:disabled{opacity:.6;cursor:wait}
 /* Ensure Leaflet gets a measurable viewport on desktop and mobile. */
 #map-canvas-container{position:relative!important;width:100%;height:640px!important;min-height:640px!important;flex:1 1 auto;overflow:hidden}#map-canvas-container #mapCanvas{position:absolute!important;inset:0;width:100%!important;height:100%!important;min-height:640px!important;z-index:1}@media(max-width:767px){#map-canvas-container{height:560px!important;min-height:560px!important}#map-canvas-container #mapCanvas{min-height:560px!important}}
+
+
+/* ===== Mobile-first responsive layer: all pages ===== */
+html{width:100%;max-width:100%;overflow-x:hidden;scroll-padding-top:76px}
+body{width:100%;max-width:100%;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+img,svg,video,canvas,iframe{max-width:100%}
+button,a,select,input,textarea{touch-action:manipulation}
+button,a{ -webkit-tap-highlight-color:transparent}
+:where(button,a,[role="button"],select,input){scroll-margin-top:84px}
+@media(max-width:767px){
+  header.fixed{height:64px!important;min-height:64px!important}
+  header.fixed>div{height:64px!important;min-height:64px!important;padding-left:12px!important;padding-right:12px!important;gap:8px!important}
+  header.fixed a[data-path="glavnaya"]{min-width:0;gap:7px!important}
+  header.fixed a[data-path="glavnaya"]>span:last-child{font-size:14px!important;white-space:nowrap}
+  header.fixed a[data-path="glavnaya"]>span:first-child{width:30px!important;height:30px!important;flex:none}
+  header.fixed>div>div:first-child{min-width:0;gap:7px!important}
+  header.fixed>div>div:first-child>div{min-width:0}
+  header.fixed>div>div:first-child>div button{max-width:112px!important;padding:6px 8px!important;font-size:11px!important;white-space:nowrap;overflow:hidden}
+  header.fixed>div>div:first-child>div button span:nth-child(2){overflow:hidden;text-overflow:ellipsis}
+  header.fixed nav.hidden.xl\:flex{display:flex!important;position:fixed!important;z-index:10000!important;left:8px!important;right:8px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;top:auto!important;height:64px!important;padding:5px!important;gap:2px!important;align-items:stretch!important;justify-content:space-around!important;border:1px solid rgba(7,36,26,.12)!important;border-radius:20px!important;background:rgba(251,249,245,.96)!important;backdrop-filter:blur(18px)!important;box-shadow:0 8px 28px rgba(7,36,26,.16)!important;overflow:visible!important}
+  header.fixed nav a{display:flex!important;flex:1 1 0!important;min-width:0!important;align-items:center!important;justify-content:center!important;text-align:center!important;padding:5px 2px!important;font-size:10px!important;line-height:1.15!important;white-space:normal!important;border-radius:13px!important}
+  header.fixed>div>div:last-child{gap:5px!important;flex:none!important}
+  header.fixed>div>div:last-child>a[data-path="splanirovat-progulku"]{display:none!important}
+  header.fixed>div>div:last-child>a[data-path="izbrannoe"]{padding:7px!important;min-width:36px!important}
+  header.fixed>div>div:last-child>a[data-path="izbrannoe"] span:last-child{font-size:12px!important}
+  main{padding-top:64px!important;min-width:0!important}
+  main .max-w-\[1360px\]{padding-left:16px!important;padding-right:16px!important}
+  main .px-gutter{padding-left:16px!important;padding-right:16px!important}
+  main .py-space-xl{padding-top:30px!important;padding-bottom:30px!important}
+  main h1{font-size:clamp(34px,9vw,48px)!important;line-height:1.06!important;letter-spacing:-.035em!important;overflow-wrap:anywhere}
+  main h2{font-size:clamp(27px,7vw,36px)!important;line-height:1.12!important}
+  main p{overflow-wrap:anywhere}
+  main .text-body-xl{font-size:16px!important;line-height:1.55!important}
+  main .rounded-2xl,main .rounded-xl{border-radius:17px!important}
+  main .p-space-lg,main .p-space-md{padding:14px!important}
+  main .gap-space-xl{gap:22px!important}
+  main .mb-space-xl{margin-bottom:24px!important}
+  main .grid{min-width:0}
+  main [class*="grid-cols-"]{grid-template-columns:minmax(0,1fr)!important}
+  main [class*="col-span-"]{grid-column:1/-1!important}
+  main input,main select,main textarea{width:100%;min-width:0;max-width:100%;min-height:46px;font-size:16px!important}
+  main button:not(.pin):not(.leaflet-control-zoom-in):not(.leaflet-control-zoom-out){min-height:42px}
+  main a[class*="px-5"]{padding-left:16px!important;padding-right:16px!important}
+  #homeMapCanvas{min-height:320px!important;height:320px!important}
+  #map-canvas-container{height:58svh!important;min-height:390px!important;max-height:620px!important;border-radius:16px!important}
+  #map-canvas-container #mapCanvas{height:100%!important;min-height:0!important}
+  .leaflet-control-zoom{margin:10px!important}
+  .leaflet-popup-content{max-width:min(250px,70vw)!important;margin:10px 12px!important}
+  .leaflet-popup-content-wrapper{border-radius:14px!important}
+  .stitch-toast{width:calc(100% - 28px);max-width:420px;text-align:center;bottom:calc(82px + env(safe-area-inset-bottom));border-radius:16px}
+  footer{padding-bottom:calc(92px + env(safe-area-inset-bottom))!important}
+  main{padding-bottom:24px}
+}
+@media(max-width:390px){
+  header.fixed a[data-path="glavnaya"]>span:last-child{font-size:12px!important}
+  header.fixed>div>div:first-child>div button{max-width:92px!important}
+  header.fixed nav a{font-size:9px!important}
+  main h1{font-size:33px!important}
+}
+@media(min-width:768px) and (max-width:1199px){
+  header.fixed nav.hidden.xl\:flex{display:flex!important;gap:2px!important}
+  header.fixed nav a{padding-left:7px!important;padding-right:7px!important;font-size:12px!important}
+  header.fixed>div{padding-left:18px!important;padding-right:18px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
