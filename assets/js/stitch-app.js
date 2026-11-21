@@ -198,6 +198,7 @@ function applySelectedCity(city) {
   if(page==="home"){
     const select=$("#hero-city-select");if(select)select.value=city;
     try{renderHome();}catch(error){console.error("Homepage content:",error);}
+    mapCategory="all";
     homeMapView?.setPlaces(state.places.filter(p=>matchesCity(p)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)),true);
   } else if(page==="catalog")renderCatalog();
   else if(page==="map"){const select=$("#map-city-select");if(select)select.value=city;mapListRefresh?.();}
@@ -239,7 +240,7 @@ function renderHome() {
     if(featurePanel){const media=imageOf(featured)?'<img src="'+esc(imageOf(featured))+'" alt="'+esc(featured.title)+'" class="w-full h-full object-cover">':'<div class="w-full h-full flex items-center justify-center bg-surface-container-low text-primary/40"><span class="material-symbols-outlined text-5xl">place</span></div>';featurePanel.innerHTML='<div class="relative h-56 overflow-hidden">'+media+'</div><div class="p-space-lg"><span class="font-label-caps text-label-caps uppercase text-secondary">Место из каталога выбранного региона</span><h3 class="font-headline-md text-primary mt-2">'+esc(featured.title)+'</h3><p class="font-body-md text-on-surface-variant mt-2">'+esc(featured.description||"") +'</p><p class="font-body-sm text-on-surface-variant mt-3">'+esc(cityOf(featured))+' · '+esc(featured.address||"Адрес уточняется")+'</p><a class="inline-flex mt-4 text-secondary font-label-lg" href="place.html?id='+encodeURIComponent(featured.id)+'">Открыть карточку →</a></div>';}
   }
   const mapFilters=$("#map-filter-group");
-  if(mapFilters){const cats=[...new Set(state.places.filter(p=>cityGroupOf(p)===activeCity).map(p=>p.category).filter(Boolean))].slice(0,6);mapFilters.innerHTML='<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg" type="button" data-home-category="all">Все места</button>'+cats.map(c=>`<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface font-label-lg" type="button" data-home-category="${esc(c)}">${esc(categoryOf({category:c}))}</button>`).join("");}
+  if(mapFilters){const cats=[...new Set(state.places.filter(p=>cityGroupOf(p)===activeCity).map(p=>p.category).filter(Boolean))].slice(0,6);const activeClass="px-4 py-2 rounded-full border-2 border-primary bg-primary-container text-on-primary font-label-lg shadow-sm transition-colors whitespace-nowrap";const idleClass="px-4 py-2 rounded-full border-2 border-transparent bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg transition-colors whitespace-nowrap";mapFilters.innerHTML='<button class="'+activeClass+'" aria-pressed="true" type="button" data-home-category="all">Все места</button>'+cats.map(c=>`<button class="${idleClass}" aria-pressed="false" type="button" data-home-category="${esc(c)}">${esc(categoryOf({category:c}))}</button>`).join("");}
   const citySummary=[...($("#open-cities")?.querySelectorAll("span")||[])].find(el=>/резиденц|локац/i.test(el.textContent));
   if(citySummary)citySummary.textContent=allCities().length+" городов · "+state.places.length+" мест";
 }
@@ -660,7 +661,7 @@ async function init() {
     try { renderHome(); } catch(error) { console.error("Homepage content:",error); }
     try { initMapPage(true); } catch(error) { console.error("Homepage map:",error); toast("Не удалось открыть карту. Обновите страницу."); }
     $("#hero-city-select")?.addEventListener("change",e=>applySelectedCity(e.target.value));
-    $("#map-filter-group")?.addEventListener("click",e=>{const b=e.target.closest("[data-home-category]");if(!b)return;const category=b.dataset.homeCategory;const points=state.places.filter(p=>matchesCity(p)&&(category==="all"||p.category===category)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));homeMapView?.setPlaces(points,true);});
+    $("#map-filter-group")?.addEventListener("click",e=>{const b=e.target.closest("[data-home-category]");if(!b)return;const category=b.dataset.homeCategory;$("#map-filter-group").querySelectorAll("[data-home-category]").forEach(x=>{const selected=x===b;x.setAttribute("aria-pressed",String(selected));x.className=selected?"px-4 py-2 rounded-full border-2 border-primary bg-primary-container text-on-primary font-label-lg shadow-sm transition-colors whitespace-nowrap":"px-4 py-2 rounded-full border-2 border-transparent bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg transition-colors whitespace-nowrap";});const points=state.places.filter(p=>matchesCity(p)&&(category==="all"||p.category===category)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));homeMapView?.setPlaces(points,true);});
   }
   if(page==="catalog")initCatalog();
   if(page==="map")initMapPage(false);
