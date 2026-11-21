@@ -82,7 +82,7 @@ function featureMatches(p,feature) {
   if(feature==="terrace")return /(веранд|террас|балкон|летн.{0,10}площадк|roof.?top|terrace)/i.test(text+" "+tags);
   if(feature==="dog")return p.dog_friendly===true||p.pet_friendly===true||/(dog.?friendly|pet.?friendly|дог.?френдли|с собак|с питомц|можно с животными)/i.test(text+" "+tags);
   if(feature==="work")return /(коворкинг|для работы|тихо работать|рабочее место|wi.?fi|ноутбук|laptop.?friendly)/i.test(text+" "+tags);
-  if(feature==="historic")return ["historic","museum","monument"].includes(p.category)||/(историческ.{0,25}интерьер|особняк|старинн.{0,20}(зал|интерьер)|историческ.{0,20}здани)/i.test(text+" "+tags);
+  if(feature==="historic")return (p.category==="museum"&&!/под открытым небом|open.?air/i.test(text))||p.category==="historic"||/(историческ.{0,25}интерьер|особняк|старинн.{0,20}(зал|интерьер)|историческ.{0,20}здани|парадн.{0,15}(лестниц|интерьер))/i.test(text+" "+tags);
   return true;
 }
 function placeById(id) { return state.places.find(p=>String(p.id)===String(id)); }
