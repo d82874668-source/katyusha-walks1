@@ -34,6 +34,7 @@ const categoryOf = p => CATEGORIES[p.category]?.title || "Место";
 const priceOf = p => p.price_min == null ? "Стоимость не указана" : Number(p.price_min) === 0 ? "Бесплатно" : (Number(p.price_min) === Number(p.price_max) ? Number(p.price_min).toLocaleString("ru-RU") : "от " + Number(p.price_min).toLocaleString("ru-RU")) + " " + (p.price_unit || "");
 let mapView = null, homeMapView = null, activeCity = "Азербайджан", activeCategory = "all", query = "", mapQuery = "", sortMode = "rating", viewMode = "grid", plan = {ids:[],mode:"walk",name:"Моя прогулка"};
 let activePriceBand=null, activeFeatures=new Set(), userLocation=null, mapCategory="all", mapListRefresh=null;
+let routeTopic="all", routePace="all";
 
 function toast(message) {
   let el = $("#stitch-toast");
@@ -483,16 +484,64 @@ function renderSuggestedRoutes() {
   const filtered=state.routes.filter(r=>(r.places||[]).some(id=>{const p=placeById(id);return p&&matchesCity(p,city);}));
   grid.innerHTML=filtered.length?filtered.map(routeCard).join(""):'<p class="col-span-full text-center text-on-surface-variant py-8">Для выбранного региона пока нет готовых маршрутов. Выберите другой регион или соберите прогулку самостоятельно.</p>';
 }
+function routePlaces(route){return (route.places||[]).map(placeById).filter(Boolean);}
+function routeMatches(route) {
+  const places=routePlaces(route), categories=places.map(p=>p.category);
+  const topicGroups={
+    romance:["restaurant","cafe","coffee","viewpoint","sea","spa","park","garden","boat"],
+    architecture:["historic","monument","museum","attraction","city","viewpoint","square"],
+    coffee:["coffee","cafe","bakery","restaurant"],
+    gardens:["park","garden","nature","square","embankment"],
+    gastro:["restaurant","cafe","bar","winebar","coffee","foodcourt"]
+  };
+  const paceGroups={
+    flaneur:["historic","monument","museum","attraction","city","viewpoint","square","coffee","cafe","park","garden"],
+    brisk:["trips","nature","boat","sea","karting","zoo","beach"],
+    kids:["zoo","park","nature","capybara","entertainment","garden","museum"]
+  };
+  if(routeTopic!=="all"&&!places.some(p=>(topicGroups[routeTopic]||[]).includes(p.category)))return false;
+  if(routePace!=="all"&&!places.some(p=>(paceGroups[routePace]||[]).includes(p.category)))return false;
+  return true;
+}
+function syncRouteFilterButtons() {
+  $$("[data-route-city]").forEach(b=>b.classList.toggle("bg-primary-container",b.dataset.routeCity===activeCity));
+  $$("[data-route-city]").forEach(b=>b.classList.toggle("text-on-primary",b.dataset.routeCity===activeCity));
+  $$("[data-route-topic]").forEach(b=>b.classList.toggle("bg-secondary-fixed",b.dataset.routeTopic===routeTopic));
+  $$("[data-route-pace]").forEach(b=>b.classList.toggle("bg-surface-container-lowest",b.dataset.routePace===routePace));
+}
 function renderRoutesPage() {
   const grid=$("#routes-grid");
-  const filtered=state.routes.filter(r=>(r.places||[]).some(id=>{const p=placeById(id);return p&&matchesCity(p);}));
-  if(grid)grid.innerHTML=filtered.length?filtered.map(routeCard).join(""):'<p class="col-span-full text-center text-on-surface-variant py-8">Для выбранного региона пока нет готовых маршрутов.</p>';
-  const r=filtered[0],stops=(r?.places||[]).map(placeById).filter(Boolean);
+  const filtered=state.routes.filter(r=>(r.places||[]).some(id=>{const p=placeById(id);return p&&matchesCity(p);})&&routeMatches(r));
+  if(grid)grid.innerHTML=filtered.length?filtered.map(routeCard).join(""):'<p class="col-span-full text-center text-on-surface-variant py-8">Для выбранного города и фильтров пока нет готовых маршрутов.</p>';
+  const r=filtered[0],stops=routePlaces(r||{});
   const featureTitle=$$("main h2").find(h=>/Скрытый Петербург|Редакторские маршруты/i.test(h.textContent));
   if(featureTitle&&r)featureTitle.textContent=r.title;
   const featureImage=$("main img");if(featureImage&&stops.find(imageOf)){featureImage.src=imageOf(stops.find(imageOf));featureImage.alt=r.title;}
   const featureText=$$("main p").find(p=>p.textContent.includes("Здесь пахнет старой типографской"));
   if(featureText&&r)featureText.textContent=r.description||"Авторский маршрут из реальных мест каталога.";
+  syncRouteFilterButtons();
+}
+function initRoutesPage() {
+  const cityWrap=$("#routes-city-filters");
+  if(cityWrap){
+    const label='<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider pr-space-xs">Город:</span>';
+    cityWrap.innerHTML=label+['all',...allCities()].map(city=>'<button type="button" data-route-city="'+esc(city)+'" class="filter-city-btn px-4 py-1.5 rounded-full font-label-lg text-label-lg transition-all '+((city==="all"&&activeCity==="all")||(city===activeCity)?"bg-primary-container text-on-primary":"bg-surface-container-low text-on-surface hover:bg-surface-container")+'">'+(city==="all"?"Все города":esc(city))+'</button>').join("");
+    cityWrap.addEventListener("click",e=>{const b=e.target.closest("[data-route-city]");if(!b)return;if(b.dataset.routeCity==="all"){activeCity="all";try{localStorage.setItem(CITY_STORAGE_KEY,"Азербайджан");}catch{}renderRoutesPage();}else applySelectedCity(b.dataset.routeCity);});
+  }
+  const topicWrap=$("#routes-topic-filters");
+  const topicKeys=["all","romance","architecture","coffee","gardens","gastro"];
+  if(topicWrap){
+    const buttons=$$("button",topicWrap).filter(b=>b.textContent.trim()!=="Темы:");
+    buttons.forEach((b,i)=>{b.dataset.routeTopic=topicKeys[i]||"all";});
+    topicWrap.addEventListener("click",e=>{const b=e.target.closest("[data-route-topic]");if(!b)return;routeTopic=b.dataset.routeTopic;renderRoutesPage();});
+  }
+  const paceWrap=$("#routes-filter-box");
+  if(paceWrap){
+    const paceButtons=$$("button",paceWrap).filter(b=>["Фланёрский","Бодрый","С детьми"].includes(b.textContent.trim()));
+    paceButtons.forEach((b,i)=>{b.dataset.routePace=["flaneur","brisk","kids"][i];});
+    paceWrap.addEventListener("click",e=>{const b=e.target.closest("[data-route-pace]");if(!b)return;routePace=b.dataset.routePace===routePace?"all":b.dataset.routePace;renderRoutesPage();});
+  }
+  renderRoutesPage();
 }
 function renderPlacePage() {
   const id=new URLSearchParams(location.search).get("id");
@@ -546,7 +595,7 @@ async function init() {
   if(page==="map")initMapPage(false);
   if(page==="favorites")initFavoritesPage();
   if(page==="planner")initPlannerPage();
-  if(page==="routes")renderRoutesPage();
+  if(page==="routes")initRoutesPage();
   if(page==="place")renderPlacePage();
   if(page==="about"){
     const curatorHeading=$$("main h1,main h2,main h3").find(h=>/редакция и кураторы/i.test(h.textContent));
