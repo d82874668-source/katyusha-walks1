@@ -2128,20 +2128,22 @@
     "id": 990151
   },
   {
-    "title": "Петропавловская крепость",
+    "title": "Казанский кафедральный собор",
     "category": "Достопримечательности",
     "city": "Санкт-Петербург",
     "region": "Санкт-Петербург",
-    "address": "Заячий остров, Санкт-Петербург, Россия",
-    "latitude": 59.95003,
-    "longitude": 30.31742,
-    "description": "Историческое ядро Санкт-Петербурга на Заячьем острове: крепостные бастионы, Петропавловский собор, музеи и набережная Невы.",
-    "image_url": "https://pixy.org/src/0/9693.jpg",
-    "map_url": "https://www.openstreetmap.org/?mlat=59.95003&mlon=30.31742#map=17/59.95003/30.31742",
+    "address": "Казанская площадь, 2, Санкт-Петербург, Россия",
+    "latitude": 59.93446385,
+    "longitude": 30.324639475,
+    "description": "Один из главных храмов Санкт-Петербурга на Невском проспекте, известный большой полукруглой колоннадой и зелёным куполом",
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kazan_cathedral_in_StPetersburg.JPG?width=1200",
+    "map_url": "https://www.google.com/maps/search/?api=1&query=59.93446385,30.324639475",
     "sources": [
-      "https://www.spbmuseum.ru/",
-      "https://www.getty.edu/vow/TGNFullDisplay?english=Y&find=rodi&nation=&place=island&subjectid=1100386",
-      "https://pixy.org/9693/"
+      "https://commons.wikimedia.org/wiki/File:Kazan_cathedral_in_StPetersburg.JPG",
+      "https://kazansky-spb.ru/texts/contacts",
+      "https://experience.tripster.ru/sights/9014-kazanskij-sobor/",
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Kazan_cathedral_in_StPetersburg.JPG?width=1200",
+      "https://creativecommons.org/publicdomain/zero/1.0/"
     ],
     "image_path": null,
     "opening_hours": null,
