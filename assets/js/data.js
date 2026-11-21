@@ -388,8 +388,8 @@ export const PLACES = [
   "title": "Carol Joy Spa (Fairmont)",
   "description": "SPA отеля Fairmont Baku у Flame Towers.",
   "category": "spa",
-  "latitude": 40.3598,
-  "longitude": 49.8264,
+  "latitude": 40.359608,
+  "longitude": 49.827179,
   "image": "https://m.ahstatic.com/is/image/accorhotels/met_p_a150-30%3A3by2?dpr=on%2C1.5&fmt=jpg&hei=223&icc=sRGB&iccEmbed=true&op_usm=1.75%2C0.3%2C2%2C0&qlt=80&resMode=sharp2&wid=335",
   "rating": null,
   "is_approx": false,
@@ -405,7 +405,8 @@ export const PLACES = [
   "map_url": null,
   "source_urls": [
    "https://www.fairmont.com/en/hotels/baku/fairmont-baku-flame-towers/wellness/spa.html",
-   "https://m.ahstatic.com/is/image/accorhotels/met_p_a150-30%3A3by2?dpr=on%2C1.5&fmt=jpg&hei=223&icc=sRGB&iccEmbed=true&op_usm=1.75%2C0.3%2C2%2C0&qlt=80&resMode=sharp2&wid=335"
+   "https://m.ahstatic.com/is/image/accorhotels/met_p_a150-30%3A3by2?dpr=on%2C1.5&fmt=jpg&hei=223&icc=sRGB&iccEmbed=true&op_usm=1.75%2C0.3%2C2%2C0&qlt=80&resMode=sharp2&wid=335",
+   "https://all.accor.com/hotel/A593/index.en.shtml"
   ],
   "last_verified_at": "2026-11-21"
  },
@@ -2066,11 +2067,11 @@ export const PLACES = [
   "title": "Башни Пламени (Flame Towers)",
   "description": "Три небоскрёба в форме языков пламени с вечерней подсветкой. Хорошо видны с набережной и из многих точек города.",
   "category": "attraction",
-  "latitude": 40.3598,
-  "longitude": 49.8263,
+  "latitude": 40.35998,
+  "longitude": 49.82625,
   "image": "https://spectra.mhi.com/sites/g/files/jwhtju2216/files/styles/crop_freeform/public/Baku%2C-Azerbaijan-at-night.jpeg?itok=LK1awdF4",
   "rating": null,
-  "is_approx": true,
+  "is_approx": false,
   "region": "Азербайджан",
   "city": "Баку",
   "address": "1A Mehdi Huseyn Street, Baku, Azerbaijan",
@@ -2084,7 +2085,8 @@ export const PLACES = [
   "source_urls": [
    "https://spectra.mhi.com/energy-transition/cop29-3-areas-of-focus-for-the-finance-cop",
    "https://spectra.mhi.com/sites/g/files/jwhtju2216/files/styles/crop_freeform/public/Baku%2C-Azerbaijan-at-night.jpeg?itok=LK1awdF4",
-   "https://www.fairmont.com/en/hotels/baku/fairmont-baku-flame-towers/wellness/spa.html"
+   "https://www.fairmont.com/en/hotels/baku/fairmont-baku-flame-towers/wellness/spa.html",
+   "https://mapcarta.com/W340060268"
   ],
   "last_verified_at": "2026-11-21"
  },
@@ -2198,11 +2200,11 @@ export const PLACES = [
   "title": "Национальный музей истории Азербайджана",
   "description": "Национальный музей истории Азербайджана расположен в бывшем дворце мецената Гаджи Зейналабдина Тагиева. Экспозиция рассказывает об истории страны от древности до современности.",
   "category": "museum",
-  "latitude": 40.3698,
-  "longitude": 49.8407,
+  "latitude": 40.3694979,
+  "longitude": 49.8401199,
   "image": "https://azerbaijan.travel/resize3000/center/pages/3275/9e37d259-6b58-4894-a6b2-b87ec389c2fb.jpeg",
   "rating": 4.5,
-  "is_approx": true,
+  "is_approx": false,
   "region": "Азербайджан",
   "city": "Баку",
   "address": "4 H. Z. Taghiyev Street, Baku AZ1005, Azerbaijan",
@@ -2218,7 +2220,8 @@ export const PLACES = [
    "https://azhistorymuseum.gov.az/en/visit_plan/",
    "https://www.google.com/maps/search/?api=1&query=National+Museum+of+History+of+Azerbaijan+Baku",
    "https://azerbaijan.travel/resize3000/center/pages/3275/9e37d259-6b58-4894-a6b2-b87ec389c2fb.jpeg"
-  ]
+  ],
+  "last_verified_at": "2026-11-21"
  },
  {
   "id": 990098,
