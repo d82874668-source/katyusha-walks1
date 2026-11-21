@@ -3836,7 +3836,7 @@ export const PLACES = [
   "review_count": null,
   "opening_hours": null,
   "phone": null,
-  "map_url": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.366,49.837",
   "source_urls": [
    "https://worldheritagesites.net/walled-city-of-baku/",
    "https://worldheritagesites.net/wp-content/uploads/2025/06/Walled_City_Baku_2.jpg",
@@ -3920,11 +3920,12 @@ export const PLACES = [
   "review_count": null,
   "opening_hours": null,
   "phone": null,
-  "map_url": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.368,49.8455",
   "source_urls": [
    "https://www.makemytrip.com/tripideas/attractions/baku-boulevard",
    "https://hblimg.mmtcdn.com/content/hubble/img/additionalttdimages/mmt/activities/m_Baku_Boulevard_1_l_667_1000.jpg"
-  ]
+  ],
+  "last_verified_at": null
  },
  {
   "id": 67,
@@ -3945,7 +3946,7 @@ export const PLACES = [
   "review_count": null,
   "opening_hours": null,
   "phone": null,
-  "map_url": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.359,49.84",
   "source_urls": [
    "https://www.advantour.com/azerbaijan/baku/things-to-do.htm",
    "https://www.advantour.com/img/azarbaijan/baku/little-venice-baku.jpg",
@@ -3972,7 +3973,7 @@ export const PLACES = [
   "review_count": null,
   "opening_hours": null,
   "phone": null,
-  "map_url": null,
+  "map_url": "https://www.google.com/maps/search/?api=1&query=40.37094,49.83681",
   "source_urls": [
    "https://tourister.az/tours/nizami-street-walking-tour/",
    "https://tourister.az/public/uploads/images/2026/06/20260616_1908_NizamiStreetWalkingTour.jpg",
