@@ -52,7 +52,7 @@ places = json.loads(data_js[places_start:routes_start]) if routes_start > places
 
 def parse_places(text: str):
     start = text.find("export const PLACES = ") + len("export const PLACES = ")
-    end = text.find(";\\nexport const ROUTES", start)
+    end = text.find(";\nexport const ROUTES", start)
     if start < len("export const PLACES = ") or end <= start:
         raise ValueError("Invalid committed data.js")
     return json.loads(text[start:end])
