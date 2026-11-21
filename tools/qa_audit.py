@@ -60,17 +60,27 @@ def parse_places(text: str):
 
 committed_data = subprocess.check_output(["git", "show", "HEAD:assets/js/data.js"], text=True, encoding="utf-8")
 committed_places = parse_places(committed_data)
-if committed_places != places:
+committed_by_id = {int(p["id"]): p for p in committed_places}
+generated_by_id = {int(p["id"]): p for p in places}
+if committed_by_id != generated_by_id:
     differences = 0
-    for index, (committed, generated) in enumerate(zip(committed_places, places)):
-        for key in sorted(set(committed) | set(generated)):
-            if committed.get(key) != generated.get(key):
-                print("CATALOG DIFF", index, committed.get("id"), key, repr(committed.get(key))[:180], "=>", repr(generated.get(key))[:180])
+    print("CATALOG COUNTS", len(committed_by_id), len(generated_by_id))
+    for place_id in sorted(set(committed_by_id) | set(generated_by_id)):
+        committed = committed_by_id.get(place_id)
+        generated = generated_by_id.get(place_id)
+        if committed != generated:
+            if committed is None or generated is None:
+                print("CATALOG ID DIFF", place_id, "committed" if committed is not None else "generated", "only")
                 differences += 1
-                if differences >= 40:
-                    break
-        if differences >= 40:
-            break
+            else:
+                for key in sorted(set(committed) | set(generated)):
+                    if committed.get(key) != generated.get(key):
+                        print("CATALOG DIFF", place_id, key, repr(committed.get(key))[:180], "=>", repr(generated.get(key))[:180])
+                        differences += 1
+                        if differences >= 40:
+                            break
+            if differences >= 40:
+                break
     check(False, "Committed data.js differs from canonical generator output")
 committed_seed = subprocess.check_output(["git", "show", "HEAD:supabase/seed.sql"], text=True, encoding="utf-8")
 
