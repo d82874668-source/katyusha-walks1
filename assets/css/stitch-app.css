@@ -449,3 +449,41 @@ main .bg-surface-container-lowest{color:#26342c}
  #map-workspace{height:620px!important;min-height:560px!important}
  #map-sidebar{flex-basis:330px!important;width:330px!important}
 }
+
+
+/* HOTFIX: readable cards and responsive map workspace */
+main article{color:#26342c}
+main article h2,main article h3,main article h4{color:#17382b!important;line-height:1.28!important;letter-spacing:-.02em!important;overflow-wrap:normal!important;word-break:normal!important;hyphens:manual!important}
+main article p,main article li,main article small{color:#46534b;line-height:1.6!important;overflow-wrap:break-word;word-break:normal}
+main :where(span,strong,em,a,button){word-break:normal}
+main :where(h1,h2,h3,h4,p,li){overflow-wrap:break-word;word-break:normal}
+main .bg-surface-container-lowest{color:#26342c}
+#map-workspace{display:flex!important;flex-direction:row!important;align-items:stretch!important;width:100%!important;height:min(720px,calc(100svh - 190px))!important;min-height:560px!important;overflow:hidden!important}
+#map-sidebar{flex:0 0 390px!important;width:390px!important;min-width:300px!important;max-width:42%!important;height:100%!important;min-height:0!important;overflow:hidden!important}
+#places-container{min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain}
+#places-container [data-map-place]{display:flex!important;align-items:flex-start!important;gap:12px!important;width:100%!important;min-height:76px!important;height:auto!important;padding:13px 12px!important;text-align:left!important;white-space:normal!important;background:#fffefa!important;border:1px solid rgba(29,41,34,.09)!important;border-radius:13px!important;color:#26342c!important}
+#places-container [data-map-place]>span:last-child{display:block!important;flex:1 1 auto!important;min-width:0!important;white-space:normal!important}
+#places-container [data-map-place] strong{display:block!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;font-size:14px!important;font-weight:700!important;line-height:1.35!important;color:#17382b!important}
+#places-container [data-map-place] small{display:block!important;margin-top:4px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;font-size:12px!important;line-height:1.45!important;color:#56645b!important}
+#map-canvas-container{position:relative!important;flex:1 1 0!important;width:auto!important;min-width:0!important;height:100%!important;min-height:0!important;max-height:none!important;overflow:hidden!important}
+#map-canvas-container #mapCanvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;z-index:1!important}
+#map-canvas-container .leaflet-container{width:100%!important;height:100%!important;background:#e9eee8!important;font-family:"Plus Jakarta Sans",system-ui,sans-serif!important}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fffefa!important;color:#1d2922!important}
+.leaflet-popup-content{font-size:13px!important;line-height:1.5!important;color:#26342c!important}
+.leaflet-popup-content strong{display:block!important;color:#17382b!important;font-size:15px!important;line-height:1.35!important}
+.leaflet-popup-content p{color:#46534b!important}
+@media(max-width:767px){
+ #map-workspace{height:auto!important;min-height:0!important;max-height:none!important;flex-direction:column!important;overflow:visible!important;gap:12px!important}
+ #map-sidebar{flex:0 0 auto!important;width:100%!important;max-width:none!important;min-width:0!important;height:390px!important;min-height:320px!important;border-radius:16px!important}
+ #map-sidebar>div:first-child{flex:none!important}
+ #map-sidebar>div:last-child{flex:none!important;flex-wrap:wrap!important;gap:8px!important}
+ #places-container{flex:1 1 auto!important;min-height:0!important;padding:10px 12px!important}
+ #map-canvas-container{flex:none!important;width:100%!important;height:62svh!important;min-height:390px!important;max-height:560px!important;border-radius:16px!important}
+ #map-canvas-container #mapCanvas{height:100%!important;min-height:0!important}
+ #map-sidebar.is-collapsed{display:none!important}
+ #sidebar-expand-btn{position:relative!important;left:auto!important;top:auto!important;align-self:flex-start!important}
+}
+@media(min-width:768px) and (max-width:1023px){
+ #map-workspace{height:620px!important;min-height:560px!important}
+ #map-sidebar{flex-basis:330px!important;width:330px!important}
+}
