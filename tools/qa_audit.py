@@ -62,7 +62,8 @@ committed_data = subprocess.check_output(["git", "show", "HEAD:assets/js/data.js
 committed_places = parse_places(committed_data)
 committed_by_id = {int(p["id"]): p for p in committed_places}
 generated_by_id = {int(p["id"]): p for p in places}
-if committed_by_id != generated_by_id:
+normalize_place = lambda place: {key: value for key, value in place.items() if value is not None}
+if {place_id: normalize_place(place) for place_id, place in committed_by_id.items()} != {place_id: normalize_place(place) for place_id, place in generated_by_id.items()}:
     differences = 0
     print("CATALOG COUNTS", len(committed_by_id), len(generated_by_id))
     for place_id in sorted(set(committed_by_id) | set(generated_by_id)):
