@@ -48,7 +48,7 @@ export async function loadData() {
       return merged;
     });
     const allPlaces = [...mergedPlaces, ...PLACES.filter((place) => !remoteIds.has(String(place.id)))];
-    const publicPlaces = allPlaces.filter((place) => typeof place.image === "string" && place.image.trim());
+    const publicPlaces = allPlaces.filter((place) => (place.status == null || place.status === "active") && typeof place.image === "string" && place.image.trim());
     return {
       places: publicPlaces,
       hiddenIncompleteCount: allPlaces.length - publicPlaces.length,
