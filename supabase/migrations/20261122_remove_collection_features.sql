@@ -19,7 +19,7 @@ drop policy if exists "visit photos read own" on storage.objects;
 drop policy if exists "visit photos upload own" on storage.objects;
 drop policy if exists "visit photos update own" on storage.objects;
 drop policy if exists "visit photos delete own" on storage.objects;
-delete from storage.objects where bucket_id = 'visit-photos';
-delete from storage.buckets where id = 'visit-photos';
+-- The empty private Storage bucket is retained: Supabase protects storage tables from direct SQL deletion.
+-- Its policies are removed above, so no client can access it. Delete it later via the Storage API if desired.
 
 commit;
