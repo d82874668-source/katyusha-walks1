@@ -483,10 +483,6 @@ function initPlannerPage() {
       writePlan();renderPlanPage();toast("Порядок остановок оптимизирован.");
     } else toast("Добавьте больше точных точек для оптимизации маршрута.");
   });
-    const saved=JSON.parse(localStorage.getItem("katyusha:saved-routes")||"[]");
-    saved.push({id:Date.now(),name:plan.name||"Моя прогулка",ids:[...plan.ids],mode:plan.mode});
-    localStorage.setItem("katyusha:saved-routes",JSON.stringify(saved));toast("Маршрут сохранён на устройстве.");
-  });
   $("#btn-share")?.addEventListener("click",async()=>{
     const url=new URL("planner.html",location.href);url.searchParams.set("plan",plan.ids.join(","));
     try{await navigator.clipboard.writeText(url.toString());toast("Ссылка на маршрут скопирована.");}catch{toast(url.toString());}
