@@ -161,8 +161,10 @@ check("header.fixed nav.hidden" in css and "bottom:calc(8px + env(safe-area-inse
 check("min-width:0" in css, "Grid/flex overflow containment missing")
 check("overflow-x:clip" in css or "overflow-x:hidden" in css, "Horizontal overflow safeguard missing")
 check("44px" in css, "Minimum mobile touch target rule missing")
+check("#map-workspace" in css and "flex-direction:column" in css, "Responsive map workspace layout missing")
+check("#places-container [data-map-place]" in css and "line-height:1.35" in css, "Map place cards must have readable typography")
 sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-check("katyusha-pwa-v19" in sw, "PWA cache version not bumped")
+check("katyusha-pwa-v20" in sw, "PWA cache version not bumped")
 check("visits.js" not in sw, "PWA still precaches retired visits module")
 
 seed = committed_seed
