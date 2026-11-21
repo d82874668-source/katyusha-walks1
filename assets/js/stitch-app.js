@@ -80,7 +80,7 @@ function featureMatches(p,feature) {
   const tags=[...(Array.isArray(p.tags)?p.tags:[]),...(Array.isArray(p.features)?p.features:[]),...(Array.isArray(p.amenities)?p.amenities:[])].join(" ").toLocaleLowerCase("ru");
   if(feature==="water")return ["sea","boat","embankment","beach","resort"].includes(p.category)||/(набережн|вид.{0,20}(мор|вод|залив|касп)|берег|озер|водохранилищ|морская прогул|панорам.{0,25}мор|waterfront|sea view)/i.test(text+" "+tags);
   if(feature==="terrace")return /(веранд|террас|балкон|летн.{0,10}площадк|roof.?top|terrace)/i.test(text+" "+tags);
-  if(feature==="dog")return p.dog_friendly===true||p.pet_friendly===true||/(dog.?friendly|pet.?friendly|дог.?френдли|с собак|с животн|с питомц)/i.test(text+" "+tags);
+  if(feature==="dog")return p.dog_friendly===true||p.pet_friendly===true||/(dog.?friendly|pet.?friendly|дог.?френдли|с собак|с питомц|можно с животными)/i.test(text+" "+tags);
   if(feature==="work")return /(коворкинг|для работы|тихо работать|рабочее место|wi.?fi|ноутбук|laptop.?friendly)/i.test(text+" "+tags);
   if(feature==="historic")return ["historic","museum","monument"].includes(p.category)||/(историческ.{0,25}интерьер|особняк|старинн.{0,20}(зал|интерьер)|историческ.{0,20}здани)/i.test(text+" "+tags);
   return true;
@@ -140,7 +140,7 @@ function cityCard(city) {
 function syncHeader() {
   const count=state.places.filter(p=>state.favs.has(p.id)||state.favs.has(String(p.id))).length;
   const cityLabel=$("header [data-current-city]");
-  if(cityLabel)cityLabel.textContent=activeCity;
+  if(cityLabel)cityLabel.textContent=activeCity==="all"?"Все города":activeCity;
   const switcher=$("header [data-city-switcher]");
   if(switcher)switcher.setAttribute("aria-label","Выбранный регион: "+activeCity);
   $$("[data-select-city]").forEach(button=>{
@@ -352,7 +352,16 @@ function initMapPage(home=false) {
       refresh();
     });
   }
-  $("#map-area-select")?.addEventListener("click",()=>{$("#map-city-select")?.scrollIntoView({behavior:"smooth",block:"center"});$("#map-city-select")?.focus();});
+  const areaButton=$("#map-area-select");
+  const areaWrapper=areaButton?.parentElement;
+  const areaMenu=areaWrapper?.querySelector("div.absolute");
+  if(areaButton&&areaMenu){
+    areaMenu.className="absolute left-0 top-full mt-1 min-w-[230px] max-h-[70vh] overflow-y-auto bg-surface-container-lowest rounded-xl shadow-lg p-2 hidden z-[1000] text-body-sm";
+    areaMenu.innerHTML=allCities().map(city=>'<button type="button" data-map-area-city="'+esc(city)+'" class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-container-low">'+esc(city)+'</button>').join("");
+    areaButton.addEventListener("click",e=>{e.stopPropagation();areaMenu.classList.toggle("hidden");});
+    areaMenu.addEventListener("click",e=>{const b=e.target.closest("[data-map-area-city]");if(!b)return;applySelectedCity(b.dataset.mapAreaCity);areaMenu.classList.add("hidden");});
+    document.addEventListener("click",e=>{if(!areaWrapper.contains(e.target))areaMenu.classList.add("hidden");});
+  }
   $("#map-search-input")?.addEventListener("input",e=>{mapQuery=e.target.value;renderList();});
   $("#btn-geolocate")?.addEventListener("click",async()=>{try{const pos=await instance.locate();instance.map.setView([pos.latitude,pos.longitude],15);}catch{toast("Не удалось определить местоположение.");}});
   $("#btn-zoom-in")?.addEventListener("click",()=>instance.map.zoomIn());
