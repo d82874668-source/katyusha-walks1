@@ -41,7 +41,6 @@ button,a{ -webkit-tap-highlight-color:transparent}
   main .gap-space-xl{gap:22px!important}
   main .mb-space-xl{margin-bottom:24px!important}
   main .grid{min-width:0}
-  main [class*="grid-cols-"]{grid-template-columns:minmax(0,1fr)!important}
   main [class*="col-span-"]{grid-column:1/-1!important}
   main input,main select,main textarea{width:100%;min-width:0;max-width:100%;min-height:46px;font-size:16px!important}
   main button:not(.pin):not(.leaflet-control-zoom-in):not(.leaflet-control-zoom-out){min-height:42px}
