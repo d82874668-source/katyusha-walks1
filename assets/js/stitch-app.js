@@ -100,7 +100,7 @@ function renderHome() {
   const featured=state.places.find(p=>cityOf(p)===activeCity&&imageOf(p))||state.places.find(imageOf);
   if(featured){
     const heroSection=$("main section");
-    const featurePanel=[...heroSection.querySelectorAll("div")].find(el=>el.classList.contains("lg:col-span-5")&&el.classList.contains("bg-surface-container-lowest"));
+    const featurePanel=[...heroSection.querySelectorAll("div")].find(el=>el.classList.contains("lg:col-span-12")&&el.classList.contains("bg-surface-container-lowest"));
     if(featurePanel)featurePanel.innerHTML=`<div class="relative h-56 overflow-hidden"><img src="${esc(imageOf(featured))}" alt="${esc(featured.title)}" class="w-full h-full object-cover"></div><div class="p-space-lg"><span class="font-label-caps text-label-caps uppercase text-secondary">Место из реального каталога</span><h3 class="font-headline-md text-primary mt-2">${esc(featured.title)}</h3><p class="font-body-md text-on-surface-variant mt-2">${esc(featured.description||"")}</p><p class="font-body-sm text-on-surface-variant mt-3">${esc(cityOf(featured))} · ${esc(featured.address||"Адрес уточняется")}</p><a class="inline-flex mt-4 text-secondary font-label-lg" href="place.html?id=${encodeURIComponent(featured.id)}">Открыть карточку →</a></div>`;
   }
   const mapFilters=$("#map-filter-group");
@@ -147,16 +147,23 @@ function initCatalog() {
   renderCatalog();
 }
 function initMapPage(home=false) {
-  if(!window.L)return;
+  if(!window.L){toast("Карта не загрузилась: библиотека Leaflet недоступна.");return;}
   if(!home){
     const container=$("#map-canvas-container");
-    if(container)container.innerHTML='<div id="mapCanvas" class="absolute inset-0 w-full h-full min-h-[620px]"></div>';
+    if(container){
+      container.style.position="relative";
+      container.style.height="640px";
+      container.style.minHeight="640px";
+      container.style.width="100%";
+      container.innerHTML='<div id="mapCanvas" style="position:absolute;inset:0;width:100%;height:100%;min-height:640px"></div>';
+    }
   }
   const el=home?$("#homeMapCanvas"):$("#mapCanvas");
-  if(!el)return;
+  if(!el){toast("Не найден контейнер карты.");return;}
   const instance=new MapView(el,id=>location.href="place.html?id="+encodeURIComponent(id));
   const filtered=()=>state.places.filter(p=>(activeCity==="all"||cityOf(p)===activeCity)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
   instance.setPlaces(filtered(),true);
+  requestAnimationFrame(()=>instance.refresh());
   if(home)homeMapView=instance;else mapView=instance;
   if(!home){
     const citySelect=$("#map-city-select");
