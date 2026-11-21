@@ -93,16 +93,16 @@ P = [
  ("LIANA Deluxe Spa","spa","SPA-процедуры и спокойный отдых вдвоём.",40.3880,49.8520,True),
  ("Taze Bey Hamam","spa","Традиционный хаммам в историческом центре.",40.3662,49.8365,True),
  ("Capybara Land","capybara","Nasimi Gardens, Шамахы. Знакомство с капибарами, кафе и сувенирный магазин.",40.6314,48.6364,True),
- ("MALACANNES 145","hookah","Кальянная: вечер за разговором.",40.3720,49.8720,True),
+ ("MALACANNES 145","hookah","Лаунж-ресторан в историческом здании у Молоканского сада.",40.3710075,49.8401042,False),
  ("Myata Platinum","hookah","Кальянная: вечер за разговором.",40.3745,49.8450,True),
  ("HuQQabaz Garden","hookah","Кальянная с садом.",40.3880,49.8700,True),
  ("ZEN Whitecity","hookah","Кальянная в районе Белого города.",40.3755,49.9000,True),
  ("Terrace 145","hookah","Кальянная: вечер за разговором.",40.3730,49.8730,True),
- ("Ibrazoro Cyber Zone","gaming","Компьютерный клуб: игровой вечер вдвоём.",40.3990,49.8560,True),
+ ("Ibrazoro Cyber Zone","gaming","Круглосуточный игровой клуб PC и PlayStation рядом с метро 28 May.",40.380901,49.847473,False),
  ("Cyber Arena Baku","gaming","Компьютерный клуб: игровой вечер вдвоём.",40.3950,49.8350,True),
  ("Kenza Gaming Lounge","gaming","Игровой лаунж: вечер на двоих.",40.3850,49.8650,True),
- ("PlayerCyberBar","gaming","Компьютерный клуб и бар.",40.4040,49.8700,True),
- ("Milli Gaming Arena","gaming","Компьютерный клуб: игровой вечер вдвоём.",40.3920,49.8480,True),
+ ("PlayerCyberBar","gaming","Круглосуточный PC- и PlayStation-клуб с отдельными игровыми комнатами.",40.396118,49.822398,False),
+ ("Milli Gaming Arena","gaming","Круглосуточная игровая арена с PC, PlayStation, Xbox и VIP-комнатами.",40.403509,49.871897,False),
  ("Белый город","city","Прогулка по современным улицам. Архитектура и красивые здания, кофейни и рестораны, вечерняя подсветка.",40.3770,49.9010,False),
  ("Центральный ботанический сад","garden","Оранжереи и зелёные аллеи. Фотографии и спокойная прогулка.",40.3480,49.8120,True),
  ("Шамахы","trips","Старинный город у подножия гор. Можно совместить с Capybara Land.",40.6314,48.6364,False),
@@ -131,6 +131,10 @@ LEGACY_MEDIA = {
  3: ("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/38/bc/14/caption.jpg?h=1100&s=1&w=1100", "https://www.tripadvisor.co.uk/Attraction_Review-g293934-d27737708-Reviews-Liana_Deluxe_Massage_Spa-Baku_Absheron_Region.html"),
  4: ("https://sia.az/storage/2022/01/17/40cf51d919a2475d2d2b61e5c0d19cd5.jpg", "https://sia.az/az/news/culture/923551.html"),
  5: ("https://shimal.news/storage/thumbs/aspect/2025/12/15/pHnlj69hWnSFTgnMaUSFta2fRAr2JVMUrF40shKB.png", "https://shimal.news/cemiyyet/samaxida-kapibaralar-meskunlasib"),
+  6: ("https://cdn.aitcomp.com/projects/3a6b82aa-d7d8-4873-abb4-bb80c9ea3810.webp", "https://www.145group.com/en/projects/malacannes"),
+  11: ("https://uxcedpbumulpheglhlvs.supabase.co/storage/v1/object/public/club-images/fe59a1dd-e8e7-411c-b8d3-ff046e78d5b6/profile/1787839395921-dc31a094-c337-4557-b6af-bd45f905d566.jpg", "https://gameyer.az/klub/ibrazoro-cyber-zone-28-may"),
+  14: ("https://playercyberbar.az/wp-content/uploads/2024/10/415227803_17906334491897744_3799340732837938160_n.jpg", "https://playercyberbar.az/"),
+  15: ("https://milligamingarena.az/storage/content-pages/s76LhuY3KUquLj1NHlLBInsOB01nmvycdBdE2fs0.jpg", "https://milligamingarena.az/"),
  7: ("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/9f/a6/3a/caption.jpg?h=1200&s=1&w=1200", "https://www.tripadvisor.com/Restaurant_Review-g293934-d25314499-Reviews-Myata_Platinum-Baku_Absheron_Region.html"),
  8: ("https://images.qfoodbeverage.com.tr/webp/22-1748604042-bdTGjXqUzu.webp", "https://huqqabaz.com/en/branch/huqqabaz-garden-baku/"),
  9: ("https://cdn-media.choiceqr.com/prod-eat-zen-cafe/template-gallery/thumbnail_TzCvQHg-MUIGbjp-ZTkzVGS_F-F-b.jpeg", "https://zen-cafe.choiceqr.com/menu"),
@@ -152,6 +156,17 @@ for place in legacy_places:
   if place["id"] in LEGACY_MEDIA:
     place["image"], photo_source = LEGACY_MEDIA[place["id"]]
     place["source_urls"] = [photo_source, place["image"]]
+
+LEGACY_META = {
+  6: {"latitude":40.3710075,"longitude":49.8401042,"is_approx":False,"address":"11 Rasul Rza Street, Baku, Azerbaijan","map_url":"https://www.openstreetmap.org/?mlat=40.3710075&mlon=49.8401042#map=18/40.3710075/49.8401042","phone":"+994 51 500 0145","opening_hours":"Ежедневно, круглосуточно","last_verified_at":"2026-11-22","source_urls":["https://www.145group.com/en/projects/malacannes","https://maps.app.goo.gl/8BpXawQc4uRgSfgE8"]},
+  11: {"latitude":40.380901,"longitude":49.847473,"is_approx":False,"address":"28 May metro, S. Rahimov Street, near Nikola Tesla Park, Baku, Azerbaijan","map_url":"https://www.openstreetmap.org/?mlat=40.380901&mlon=49.847473#map=18/40.380901/49.847473","phone":"+994 77 312 7577","opening_hours":"Ежедневно, круглосуточно","last_verified_at":"2026-11-22","source_urls":["https://gameyer.az/klub/ibrazoro-cyber-zone-28-may","https://gameyer.az/ibrazoro"]},
+  14: {"latitude":40.396118,"longitude":49.822398,"is_approx":False,"address":"Hasan Aliyev Passage, 176, Baku, Azerbaijan","map_url":"https://www.openstreetmap.org/?mlat=40.396118&mlon=49.822398#map=18/40.396118/49.822398","phone":"+994 50 999 95 96","opening_hours":"Ежедневно, круглосуточно","last_verified_at":"2026-11-22","source_urls":["https://playercyberbar.az/","https://gameyer.az/klub/playercyberbar"]},
+  15: {"latitude":40.403509,"longitude":49.871897,"is_approx":False,"address":"Tabriz Street, 97, Baku, Azerbaijan","map_url":"https://www.openstreetmap.org/?mlat=40.403509&mlon=49.871897#map=18/40.403509/49.871897","phone":"+994 77 616 00 11","opening_hours":"Ежедневно, круглосуточно","last_verified_at":"2026-11-22","source_urls":["https://milligamingarena.az/","https://gameyer.az/klub/milli-gaming-arena"]},
+}
+for place in legacy_places:
+  meta = LEGACY_META.get(place["id"])
+  if meta:
+    place.update(meta)
 
 ID = {p["title"]:p["id"] for p in legacy_places}
 places = list(legacy_places)
