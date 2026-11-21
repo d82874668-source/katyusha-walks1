@@ -290,3 +290,13 @@ footer{background:#1d352a!important;color:#f8f7f1!important}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}
 }
+
+
+/* Preserve compact mobile bottom navigation after the editorial header refresh. */
+@media(max-width:767px){
+  header.fixed nav{gap:2px!important}
+  header.fixed nav a{
+    padding:5px 2px!important;font-size:10px!important;line-height:1.15!important;
+    border-radius:13px!important;min-height:48px!important
+  }
+}
