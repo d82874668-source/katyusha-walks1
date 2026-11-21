@@ -1,756 +1,307 @@
 <!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Прогулки с Катюшей: открой город, спланируй день и найди, куда сходить</title>
+<meta name="description" content="Достопримечательности, заведения и готовые программы отдыха в разных городах: карта, конструктор прогулок и подбор идеального дня.">
+<meta name="theme-color" content="#F5F6FA">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>
+  // Тема выставляется до отрисовки, чтобы не было вспышки
+  (function(){var t;try{t=localStorage.getItem("katyusha:theme")}catch(e){}
+  document.documentElement.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script type="module" src="assets/js/app.js"></script>
+</head>
+<body>
 
-<html lang="ru"><head><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com" defer></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"tertiary-container":"#213a22","outline-variant":"#c1c8c3","tertiary":"#0b240e","on-tertiary-fixed":"#07200b","surface-bright":"#fbf9f5","on-surface-variant":"#424844","surface-container":"#efeeea","on-secondary-container":"#74240d","secondary-container":"#fd8c6d","on-background":"#1b1c1a","surface-variant":"#e4e2de","primary":"#07241a","inverse-primary":"#aecebe","on-secondary-fixed":"#3b0900","error":"#ba1a1a","primary-container":"#1e3a2f","tertiary-fixed-dim":"#b0cfad","secondary-fixed-dim":"#ffb5a0","surface-container-lowest":"#ffffff","secondary":"#9d4229","on-primary-fixed-variant":"#304c41","on-primary-fixed":"#032017","on-primary":"#ffffff","surface-dim":"#dbdad6","on-secondary":"#ffffff","primary-fixed-dim":"#aecebe","background":"#fbf9f5","surface-tint":"#486458","surface-container-highest":"#e4e2de","inverse-on-surface":"#f2f0ed","on-error-container":"#93000a","surface-container-high":"#eae8e4","error-container":"#ffdad6","surface-container-low":"#f5f3ef","outline":"#727974","secondary-fixed":"#ffdbd1","on-tertiary-fixed-variant":"#334d33","surface":"#fbf9f5","inverse-surface":"#30312e","on-surface":"#1b1c1a","tertiary-fixed":"#ccebc7","primary-fixed":"#caeada","on-primary-container":"#86a496","on-error":"#ffffff","on-tertiary-container":"#88a485","on-secondary-fixed-variant":"#7e2b14","on-tertiary":"#ffffff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","gutter-mobile":"1rem","gutter":"1.5rem","margin":"3rem","space-lg":"1.5rem","margin-mobile":"1.25rem","space-xs":"0.25rem","space-md":"1rem","space-xl":"2.5rem"},"fontFamily":{"headline-sm":["Playfair Display"],"display-lg":["Playfair Display"],"body-sm":["Plus Jakarta Sans"],"headline-md":["Playfair Display"],"label-caps":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"display-lg-mobile":["Playfair Display"],"label-lg":["Plus Jakarta Sans"],"body-xl":["Plus Jakarta Sans"],"headline-xl":["Playfair Display"],"headline-xl-mobile":["Playfair Display"]},"fontSize":{"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"20px","fontWeight":"400"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"500"}],"label-caps":["11px",{"lineHeight":"16px","letterSpacing":"0.08em","fontWeight":"700"}],"body-md":["15px",{"lineHeight":"24px","fontWeight":"400"}],"display-lg-mobile":["36px",{"lineHeight":"42px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"body-xl":["18px",{"lineHeight":"30px","fontWeight":"400"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.015em","fontWeight":"500"}],"headline-xl-mobile":["28px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"500"}]}}}}</script><title>Прогулки с Катюшей — городской гид</title><meta name="description" content="Планируйте прогулки по городам: реальные достопримечательности, кафе, парки, фотографии и маршруты с интерактивной картой."><link rel="canonical" href="https://d82874668-source.github.io/katyusha-walks1/"><meta name="theme-color" content="#fbf9f5"><link rel="stylesheet" href="assets/css/stitch-app.css?v=7"></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed" data-page="home"><header class="fixed top-0 left-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_12px_rgba(27,28,26,0.05)] transition-all"><div class="h-20 max-w-[1360px] mx-auto px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md"><a class="flex items-center gap-space-sm group" data-path="glavnaya" href="index.html"><span class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center"><span class="material-symbols-outlined">explore</span></span><span class="font-headline-sm text-headline-sm text-primary group-hover:text-primary-container transition-colors tracking-tight">Прогулки с Катюшей</span></a><div class="relative inline-flex items-center"><button class="flex items-center gap-space-xs px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface text-label-lg font-label-lg transition-colors" type="button"><span class="material-symbols-outlined text-secondary text-[18px]">location_on</span><span>Санкт-Петербург</span><span class="material-symbols-outlined text-on-surface-variant text-[16px]">expand_more</span></button></div></div><nav class="hidden xl:flex items-center gap-space-md" data-active-classes="text-primary font-label-lg bg-surface-container-low rounded-full px-3 py-1.5"><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1.5 px-3" data-path="otkroy-gorod" href="index.html#open-cities">Открой город</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1.5 px-3" data-path="mesta" href="catalog.html">Места</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1.5 px-3" data-path="interaktivnaya-karta" href="map.html">Интерактивная карта</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-1.5 px-3" data-path="marshruty" href="routes.html">Маршруты</a></nav><div class="flex items-center gap-space-sm"><button class="hidden md:flex items-center gap-space-xs px-3 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface transition-all text-body-sm font-body-sm shadow-[0_1px_4px_rgba(27,28,26,0.04)]" type="button"><span class="material-symbols-outlined text-[18px]">search</span><span class="pr-space-xs">Найти место, улицу...</span><kbd class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-label-caps font-label-caps">⌘K</kbd></button><a class="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg transition-all shadow-[0_4px_16px_rgba(30,58,47,0.18)] hover:shadow-[0_6px_20px_rgba(30,58,47,0.24)]" data-path="splanirovat-progulku" href="planner.html">Спланировать прогулку</a></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]"><div class="flex flex-col w-full">
-<!-- HERO SECTION -->
-<section class="relative w-full bg-surface-bright py-space-xl overflow-hidden">
-<div class="max-w-[1360px] mx-auto px-gutter">
-<!-- Main Headline Grid -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-end mb-space-xl">
-<div class="lg:col-span-8">
-<h1 class="font-display-lg text-display-lg text-primary tracking-tight">
-            Город начинается с <span class="italic font-normal text-secondary underline decoration-secondary-container decoration-4 underline-offset-8">прогулки</span>
-</h1>
-</div>
-<div class="lg:col-span-4 lg:pb-space-xs">
-<p class="font-body-xl text-body-xl text-on-surface-variant font-light leading-relaxed">
-            Находи интересные места, открывай новые уголки и создавай маршруты для особенных моментов.
-          </p>
-</div>
-</div>
-<!-- Interactive Filter Panel (Planner Strip) -->
-<div class="w-full bg-surface-container-lowest rounded-xl p-space-md md:p-space-lg shadow-[0_16px_40px_-12px_rgba(7,36,26,0.07)] mb-space-xl">
-<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md items-center">
-<!-- City Selector -->
-<div class="md:col-span-3">
-<label class="block font-label-caps text-label-caps uppercase text-on-surface-variant mb-space-xs">
-              01 / Выберите город
-            </label>
-<div class="relative">
-<select class="w-full appearance-none bg-surface-container-low text-on-surface font-label-lg text-label-lg px-4 py-3 rounded-lg focus:outline-none focus:bg-surface-container transition-colors cursor-pointer pr-10" id="hero-city-select" aria-label="Выберите город"><option value="Азербайджан">Азербайджан</option><option value="Екатеринбург">Екатеринбург</option><option value="Аять">Аять</option><option value="Москва">Москва</option><option value="Санкт-Петербург">Санкт-Петербург</option><option value="Нижний Тагил">Нижний Тагил</option><option value="Грузия">Грузия</option><option value="Казахстан">Казахстан</option></select>
-<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[20px]">
-                keyboard_arrow_down
-              </span>
-</div>
-</div>
-<!-- Walk Type -->
-<div class="md:col-span-4">
-<label class="block font-label-caps text-label-caps uppercase text-on-surface-variant mb-space-xs">
-              02 / Настроение маршрута
-            </label>
-<div class="relative">
-<select class="w-full appearance-none bg-surface-container-low text-on-surface font-label-lg text-label-lg px-4 py-3 rounded-lg focus:outline-none focus:bg-surface-container transition-colors cursor-pointer pr-10" id="hero-type-select" aria-label="Выберите тип прогулки">
-<option value="romantic">Романтическое свидание</option>
-<option value="coffee">Утренний кофе и тишина</option>
-<option value="architecture">Архитектурный фланёр</option>
-<option value="courtyards">Секретные дворики</option>
-</select>
-<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[20px]">
-                auto_awesome
-              </span>
-</div>
-</div>
-<!-- Duration -->
-<div class="md:col-span-2">
-<label class="block font-label-caps text-label-caps uppercase text-on-surface-variant mb-space-xs">
-              03 / Время в пути
-            </label>
-<div class="relative">
-<select class="w-full appearance-none bg-surface-container-low text-on-surface font-label-lg text-label-lg px-4 py-3 rounded-lg focus:outline-none focus:bg-surface-container transition-colors cursor-pointer pr-10" id="hero-duration-select" aria-label="Выберите продолжительность">
-<option value="2h">2 часа</option>
-<option value="half">Полдня</option>
-<option value="evening">Вечерний променад</option>
-</select>
-<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[20px]">
-                schedule
-              </span>
-</div>
-</div>
-<!-- Action Buttons -->
-<div class="md:col-span-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-space-xs pt-2 sm:pt-4 md:pt-0">
-<a class="flex-1 inline-flex items-center justify-center gap-space-xs px-5 py-3.5 rounded-full bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg transition-all shadow-[0_4px_16px_rgba(30,58,47,0.22)] text-center" href="#planner-builder">
-<span>Создать маршрут</span>
-<span class="material-symbols-outlined text-[18px]">north_east</span>
-</a>
-<a class="inline-flex items-center justify-center px-4 py-3.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors text-center whitespace-nowrap" href="#open-cities">
-              Открыть города
-            </a>
-</div>
-</div>
-</div>
-<!-- Split Editorial Showcase (Photo + Interactive Mini Route Widget) -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-stretch">
+<!-- Спрайт иконок (линейные, 24x24) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1L12 2Z"/></symbol>
+  <symbol id="i-nav" viewBox="0 0 24 24"><path d="m3 11 19-9-9 19-2-8-8-2Z"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5"/></symbol>
+  <symbol id="i-locate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></symbol>
+  <symbol id="i-fit" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.800 6.100C15.500 5 17 4.500 19 2c1 2 2 4.200 2 8 0 5.500-4.800 10-10 10Z"/><path d="M2 21c0-3 1.900-5.400 5.100-6C9.500 14.500 12 13 13 12"/></symbol>
+  <symbol id="i-paw" viewBox="0 0 24 24"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.500a3.500 3.500 0 0 1-6.800 1Q6.500 17.500 4.500 16.800A3.500 3.500 0 0 1 5.500 10Z"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.500 19H9a7 7 0 1 1 6.700-9h1.800a4.500 4.500 0 1 1 0 9Z"/></symbol>
+  <symbol id="i-gamepad" viewBox="0 0 24 24"><path d="M6 12h4M8 10v4M15 13h.01M18 11h.01"/><rect width="20" height="12" x="2" y="6" rx="3"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/></symbol>
+  <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M7 20h10M12 20v-9"/><path d="M12 11C12 7 9 5 4 5c0 4 2 6 8 6ZM12 13c0-4 3-6 8-6 0 4-2 6-8 6Z"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M5 17H3v-5l2-5h14l2 5v5h-2M5 12h14"/><circle cx="7.500" cy="17" r="2"/><circle cx="16.500" cy="17" r="2"/></symbol>
+  <symbol id="i-waves" viewBox="0 0 24 24"><path d="M2 7c2.500-2 4.500-2 7 0s4.500 2 7 0 4.500-2 6 0M2 13c2.500-2 4.500-2 7 0s4.500 2 7 0 4.500-2 6 0M2 19c2.500-2 4.500-2 7 0s4.500 2 7 0 4.500-2 6 0"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16Z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4" r="1.6"/><path d="m9 21 2-6-2-3 1-4 3 2 3 1M11 15l3 2v4M10 8l-3 3"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"/><path d="M16 13h.01"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14c2.200.6 3.500 2.600 3.500 6"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.500 8.500-2 5-5 2 2-5 5-2Z"/></symbol>
+  <symbol id="i-utensils" viewBox="0 0 24 24"><path d="M5 3v7a2 2 0 0 0 2 2v9M9 3v7M7 3v7M17 21V3c-2.500 1.500-4 4-4 8h4"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3 1.900 5.100L19 10l-5.100 1.900L12 17l-1.900-5.100L5 10l5.100-1.900L12 3ZM19 16l.7 1.800 1.800.7-1.800.7L19 21l-.7-1.800-1.800-.7 1.800-.7L19 16Z"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.500-4M4 4v4h4M4 13a8 8 0 0 0 14.500 4M20 20v-4h-4"/></symbol>
+</svg>
 
-<!-- Interactive Route Card Widget -->
-<div class="lg:col-span-12 bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
-<div>
-<div class="flex items-center justify-between pb-space-sm border-b border-surface-container">
-<div>
-<span class="font-label-caps text-label-caps uppercase text-secondary block">
-                  Активный маршрут №12
-                </span>
-<h2 class="sr-only">Подборки прогулок и интересных мест</h2><h3 class="font-headline-md text-headline-md text-primary">
-                  Тропа петроградских книжников
-                </h3>
-</div>
-<span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary font-label-caps text-label-caps">
-                Пешком 45 мин
-              </span>
-</div>
-<!-- Route Stats Ribbon -->
-<div class="grid grid-cols-3 gap-space-xs py-space-sm text-center my-space-xs bg-surface-container-low rounded-lg">
-<div>
-<span class="block font-headline-sm text-headline-sm text-primary">2.8</span>
-<span class="block font-label-caps text-label-caps text-on-surface-variant uppercase">километра</span>
-</div>
-<div>
-<span class="block font-headline-sm text-headline-sm text-primary">4</span>
-<span class="block font-label-caps text-label-caps text-on-surface-variant uppercase">локации</span>
-</div>
-<div>
-<span class="block font-headline-sm text-headline-sm text-secondary">4.96</span>
-<span class="block font-label-caps text-label-caps text-on-surface-variant uppercase">оценка гида</span>
-</div>
-</div>
-<!-- Stepper Points -->
-<div class="relative pl-7 pt-space-xs space-y-space-md mt-space-sm">
-<!-- Connective line -->
-<div class="absolute left-3 top-3 bottom-3 w-[1.5px] bg-outline-variant/40"></div>
-<!-- Step 1 -->
-<div class="relative flex items-start justify-between group cursor-pointer">
-<div class="absolute -left-7 top-0.5 w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-caps text-[11px] shadow-sm">
-                  1
-                </div>
-<div>
-<h4 class="font-label-lg text-label-lg text-on-surface group-hover:text-secondary transition-colors">
-                    Книжный магазин «Подписные издания»
-                  </h4>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                    Литейный, 57 • Эспрессо на балконе и редкие каталоги
-                  </p>
-</div>
-<span class="material-symbols-outlined text-[18px] text-on-surface-variant group-hover:text-primary transition-colors">
-                  chevron_right
-                </span>
-</div>
-<!-- Step 2 -->
-<div class="relative flex items-start justify-between group cursor-pointer">
-<div class="absolute -left-7 top-0.5 w-6 h-6 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-label-caps text-[11px]">
-                  2
-                </div>
-<div>
-<h4 class="font-label-lg text-label-lg text-on-surface group-hover:text-secondary transition-colors">
-                    Секретный сад «Сен-Жермен»
-                  </h4>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                    Литейный, 46 • Кованый фонтан и старинный плющ
-                  </p>
-</div>
-<span class="material-symbols-outlined text-[18px] text-on-surface-variant group-hover:text-primary transition-colors">
-                  chevron_right
-                </span>
-</div>
-<!-- Step 3 -->
-<div class="relative flex items-start justify-between group cursor-pointer">
-<div class="absolute -left-7 top-0.5 w-6 h-6 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-label-caps text-[11px]">
-                  3
-                </div>
-<div>
-<h4 class="font-label-lg text-label-lg text-on-surface group-hover:text-secondary transition-colors">
-                    Набережная Мойки у Поцелуева моста
-                  </h4>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                    Вид на купол Исаакия и гранитные спуски к воде
-                  </p>
-</div>
-<span class="material-symbols-outlined text-[18px] text-on-surface-variant group-hover:text-primary transition-colors">
-                  chevron_right
-                </span>
-</div>
-<!-- Step 4 -->
-<div class="relative flex items-start justify-between group cursor-pointer">
-<div class="absolute -left-7 top-0.5 w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-label-caps text-[11px]">
-                  4
-                </div>
-<div>
-<h4 class="font-label-lg text-label-lg text-on-surface group-hover:text-secondary transition-colors">
-                    Остров «Новая Голландия»
-                  </h4>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                    Комендантский дом • Вечерний чай и шезлонги на траве
-                  </p>
-</div>
-<span class="material-symbols-outlined text-[18px] text-on-surface-variant group-hover:text-primary transition-colors">
-                  check_circle
-                </span>
-</div>
-</div>
-</div>
-<!-- Bottom Action in Card -->
-<div class="pt-space-md mt-space-md border-t border-surface-container flex items-center justify-between">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-secondary text-[20px]">headphones</span>
-<span class="font-body-sm text-body-sm text-on-surface font-medium">Карточка места</span>
-</div>
-<button class="inline-flex items-center gap-1 font-label-lg text-label-lg text-primary hover:text-secondary transition-colors" type="button">
-<span>Открыть карточку</span>
-<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- SECTION: "ОТКРОЙ ГОРОД" (CITIES GRID) -->
-<section class="w-full bg-surface py-space-xl" id="open-cities">
-<div class="max-w-[1360px] mx-auto px-gutter">
-<!-- Section Header with Editorial Counter -->
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-xl">
-<div class="space-y-space-xs max-w-2xl">
-<span class="font-label-caps text-label-caps uppercase text-secondary tracking-widest block">
-            География альманаха
-          </span>
-<h2 class="font-headline-xl text-headline-xl text-primary font-medium tracking-tight">
-            Города, которые мы влюбляем в себя заново
-          </h2>
-<p class="font-body-md text-body-md text-on-surface-variant">
-            Авторские гиды, проверенные локации и маршруты местных жителей — без банального туристического шума.
-          </p>
-</div>
-<div class="flex items-center gap-space-xs">
-<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Всего в базе:</span>
-<span class="px-3 py-1 rounded-full bg-surface-container-high text-primary font-label-lg text-label-lg">
-            6 резиденций • 741 локация
-          </span>
-</div>
-</div>
-<!-- 6-City Bento/Editorial Grid -->
-<div id="city-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
-<!-- City 1: SPB -->
-<article class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-[0_12px_32px_-4px_rgba(36,51,44,0.1)] transition-all flex flex-col justify-between">
-<div class="relative h-64 overflow-hidden">
-<img alt="Atmospheric Saint Petersburg classic rooftop view and quiet arched courtyard with yellow ochre classical facades, vintage lanterns, and soft pastel Nordic sky." class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" data-alt="Atmospheric Saint Petersburg classic rooftop view and quiet arched courtyard with yellow ochre classical facades, vintage lanterns, and soft pastel Nordic sky." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2POIiyRxtkJoQHU9siGaxDrPKZtBqsP2VpuvQIHOuaCkwpAOD4EhOm7S9QVdC0yQiGOFAE5QY6eZOBNIfGMXwmjgX9myi8KoxpHIGHgW6YDKqq7S0fJnoN0zJMz8h1id-muQ_bjbiWYRWkkI_0UIHtVvhpfoG01HkPrkEYJp5TQ_CzLJJQNiaOWhLvOCd3XsA_qxqSaJ6LmEy8z5r677_PxtlPZDVpFpd6EF0MSM"/ loading="lazy" decoding="async">
-<div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent"></div>
-<div class="absolute top-4 left-4">
-<span class="px-3 py-1 rounded-full bg-surface-bright/90 backdrop-blur text-primary font-label-caps text-label-caps uppercase">
-                Резиденция №01
-              </span>
-</div>
-<div class="absolute bottom-4 left-4 right-4 text-on-primary">
-<h3 class="font-headline-md text-headline-md">Санкт-Петербург</h3>
-</div>
-</div>
-<div class="p-space-lg flex-1 flex flex-col justify-between space-y-space-md">
-<div>
-<p class="font-body-md text-body-md text-on-surface-variant mb-space-sm">
-                Дворы, парадные, спешелти-кофе и набережные, где время течёт чуть медленнее.
-              </p>
-<div class="flex flex-wrap items-center gap-space-xs">
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  184 места
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  28 маршрутов
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-[11px]">
-                  Топ выбор
-                </span>
-</div>
-</div>
-<div class="pt-space-sm border-t border-surface-container flex items-center justify-between">
-<a class="inline-flex items-center gap-1 font-label-lg text-label-lg text-secondary group-hover:text-primary transition-colors" href="#">
-<span>Исследовать город</span>
-<span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
-</a>
-<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors text-[20px]">
-                bookmark_border
-              </span>
-</div>
-</div>
-</article>
-<!-- City 2: Moscow -->
-<article class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-[0_12px_32px_-4px_rgba(36,51,44,0.1)] transition-all flex flex-col justify-between">
-<div class="relative h-64 overflow-hidden">
-<img alt="Warm editorial shot of a secret quiet Moscow lane in Zamoskvorechye district, restored 19th-century red brick mansion, ivy green terrace, stylish pedestrians enjoying artisan pastries in morning sunlight." class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" data-alt="Warm editorial shot of a secret quiet Moscow lane in Zamoskvorechye district, restored 19th-century red brick mansion, ivy green terrace, stylish pedestrians enjoying artisan pastries in morning sunlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr-xHRyMgTO5RHPxhKvZP0qaltPistMj4q5V_rCsCv0G0LQOjrFUROwCOJ5M8DbbDgXiSXDFkoLw-XG4ogUT2Okkym4qHNbUNlDCYXT9uc-CLqBjmqa3cpPgBs6hGwCPqGB5fBlFFPade4DGkxFdMWKMVMvxNEoh00SXbZ0Fw5hSZp8TbAuACoZ7Ybl3mYgY6E2e6CWcjNWmuD-Z1oUakwQMLhe9L2pmvu5vftxO4"/ loading="lazy" decoding="async">
-<div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent"></div>
-<div class="absolute top-4 left-4">
-<span class="px-3 py-1 rounded-full bg-surface-bright/90 backdrop-blur text-primary font-label-caps text-label-caps uppercase">
-                Резиденция №02
-              </span>
-</div>
-<div class="absolute bottom-4 left-4 right-4 text-on-primary">
-<h3 class="font-headline-md text-headline-md">Москва</h3>
-</div>
-</div>
-<div class="p-space-lg flex-1 flex flex-col justify-between space-y-space-md">
-<div>
-<p class="font-body-md text-body-md text-on-surface-variant mb-space-sm">
-                Скрытые особняки, арт-кластеры, тихие переулки Басманного и парковые галереи.
-              </p>
-<div class="flex flex-wrap items-center gap-space-xs">
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  240 мест
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  35 маршрутов
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  Арт-навигатор
-                </span>
-</div>
-</div>
-<div class="pt-space-sm border-t border-surface-container flex items-center justify-between">
-<a class="inline-flex items-center gap-1 font-label-lg text-label-lg text-secondary group-hover:text-primary transition-colors" href="#">
-<span>Исследовать город</span>
-<span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
-</a>
-<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors text-[20px]">
-                bookmark_border
-              </span>
-</div>
-</div>
-</article>
-<!-- City 3: Ekaterinburg -->
-<article class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-[0_12px_32px_-4px_rgba(36,51,44,0.1)] transition-all flex flex-col justify-between">
-<div class="relative h-64 overflow-hidden">
-<img alt="Editorial perspective of constructivist architecture in Ekaterinburg, clean geometric lines of iconic 1930s avant-garde building bathed in crisp northern light with modern promenade along Iset river." class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" data-alt="Editorial perspective of constructivist architecture in Ekaterinburg, clean geometric lines of iconic 1930s avant-garde building bathed in crisp northern light with modern promenade along Iset river." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHA7Ip-VGBneurYp0ejP_2j8mEEVU1QGP-BozaEpYHg68q9Vzxm3MgKzPsbQIAHL6K9J43oH_6Re616BA1Zjy7GYoouSqOQhSJ25dEJk9HaAs2ZlXXGSEaBVwZcjHQum6u9OotwMy8Pni_8XyeR3_aQRpXTM2J6Cd9m3eMkpc7y7Z2pxyZPoC7QRVFk1AenxhOiSDae-Hbsozd4GgaxD8tHmroqdjRkNtUrsLtIa8"/ loading="lazy" decoding="async">
-<div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent"></div>
-<div class="absolute top-4 left-4">
-<span class="px-3 py-1 rounded-full bg-surface-bright/90 backdrop-blur text-primary font-label-caps text-label-caps uppercase">
-                Резиденция №03
-              </span>
-</div>
-<div class="absolute bottom-4 left-4 right-4 text-on-primary">
-<h3 class="font-headline-md text-headline-md">Екатеринбург</h3>
-</div>
-</div>
-<div class="p-space-lg flex-1 flex flex-col justify-between space-y-space-md">
-<div>
-<p class="font-body-md text-body-md text-on-surface-variant mb-space-sm">
-                Конструктивизм, набережная Исети, уральская гастрономия и дерзкий уличный арт.
-              </p>
-<div class="flex flex-wrap items-center gap-space-xs">
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  96 мест
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  14 маршрутов
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  Архитектура
-                </span>
-</div>
-</div>
-<div class="pt-space-sm border-t border-surface-container flex items-center justify-between">
-<a class="inline-flex items-center gap-1 font-label-lg text-label-lg text-secondary group-hover:text-primary transition-colors" href="#">
-<span>Исследовать город</span>
-<span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
-</a>
-<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors text-[20px]">
-                bookmark_border
-              </span>
-</div>
-</div>
-</article>
-<!-- City 4: Kazan -->
+<header class="nav" id="nav" data-open="false">
+  <div class="nav__in">
+    <a class="brand" href="#top" aria-label="Прогулки с Катюшей, к началу">
+      <span class="brand__mark"><svg class="i"><use href="#i-heart"/></svg></span>
+      <span class="brand__name">Прогулки с Катюшей</span>
+    </a>
+    <nav id="menu" aria-label="Разделы сайта">
+      <a href="#discover">Открой город</a>
+      <a href="#venues">Куда сходить</a>
+      <a href="#planner">Прогулка</a>
+      <a href="#ideal">Идеальный день</a>
+      <a href="#map">Карта</a>
+      <a href="#favorites">Избранное</a>
+    </nav>
+    <div class="nav__tools">
+      <button class="icon-btn" id="themeBtn" aria-label="Сменить тему"></button>
+      <button class="icon-btn nav__burger" id="menuBtn" aria-expanded="false" aria-controls="menu" aria-label="Меню"><svg class="i"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
 
-<!-- City 5: Sochi -->
+<main id="top">
 
-<!-- City 6: Baku -->
-<article class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-[0_12px_32px_-4px_rgba(36,51,44,0.1)] transition-all flex flex-col justify-between">
-<div class="relative h-64 overflow-hidden">
-<img alt="Baku old city Icherisheher narrow stone street with vintage carved wooden balcony, Persian carpets hung on walls, warm afternoon breeze from the Caspian sea, atmospheric tea house tucked in shadows." class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" data-alt="Baku old city Icherisheher narrow stone street with vintage carved wooden balcony, Persian carpets hung on walls, warm afternoon breeze from the Caspian sea, atmospheric tea house tucked in shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChd7vsMZzE1ld75LhtLfmF_KEWEsW3tt_p1uFd0OuDLb_YchOTql1FpQxhNNVypwEhyXUH0-4peyVZaRbxLnfRyg8vt8Tksd3orfrDetNtnVMSDuOlyC5r-hy-VrmzTptXL1osUdALJuev0CxK6SdNnQtWIK1N9Gj_J3hd82BAI2eenqm4s-MhqTDLglja0QEud7mLEX6Owt1ayhX4jECUE1_tZuuorI7UogS_Eec"/ loading="lazy" decoding="async">
-<div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent"></div>
-<div class="absolute top-4 left-4">
-<span class="px-3 py-1 rounded-full bg-surface-bright/90 backdrop-blur text-primary font-label-caps text-label-caps uppercase">
-                Резиденция №06
-              </span>
-</div>
-<div class="absolute bottom-4 left-4 right-4 text-on-primary">
-<h3 class="font-headline-md text-headline-md">Баку</h3>
-</div>
-</div>
-<div class="p-space-lg flex-1 flex flex-col justify-between space-y-space-md">
-<div>
-<p class="font-body-md text-body-md text-on-surface-variant mb-space-sm">
-                Ичери-шехер, каспийский бриз, тайные чайные дворики и архитектурный модернизм.
-              </p>
-<div class="flex flex-wrap items-center gap-space-xs">
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  65 мест
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  9 маршрутов
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-caps text-[11px]">
-                  Восточный шёлк
-                </span>
-</div>
-</div>
-<div class="pt-space-sm border-t border-surface-container flex items-center justify-between">
-<a class="inline-flex items-center gap-1 font-label-lg text-label-lg text-secondary group-hover:text-primary transition-colors" href="#">
-<span>Исследовать город</span>
-<span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
-</a>
-<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors text-[20px]">
-                bookmark_border
-              </span>
-</div>
-</div>
-</article>
-</div>
-</div>
-</section>
-<!-- INTERACTIVE PROMO MAP BLOCK («ГОРОД НА ЛАДОНИ») -->
-<section class="w-full bg-surface-container-low py-space-xl">
-<div class="max-w-[1360px] mx-auto px-gutter">
-<!-- Top Title + Filter Chips -->
-<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mb-space-lg">
-<div>
-<span class="font-label-caps text-label-caps uppercase text-secondary tracking-widest block">
-            Интерактивная среда
-          </span>
-<h2 class="font-headline-xl text-headline-xl text-primary font-medium tracking-tight">
-            Город на ладони: умная карта локаций
-          </h2>
-<p class="font-body-md text-body-md text-on-surface-variant mt-1">
-            Выбирайте слой настроения, приближайте секретные точки и моментально добавляйте их в свой пеший день.
-          </p>
-</div>
-<!-- Filter Chips Carousel -->
-<div class="flex items-center gap-2 overflow-x-auto pb-1" id="map-filter-group">
-<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg text-label-lg transition-colors whitespace-nowrap shadow-sm" type="button">
-            Все места
-          </button>
-<button class="px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors whitespace-nowrap" type="button">
-            Кофейни (42)
-          </button>
-<button class="px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors whitespace-nowrap" type="button">
-            Архитектура (67)
-          </button>
-<button class="px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors whitespace-nowrap" type="button">
-            Парки и сады (19)
-          </button>
-<button class="px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors whitespace-nowrap" type="button">
-            Видовые точки (15)
-          </button>
-<button class="px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors whitespace-nowrap" type="button">
-            Для свиданий (28)
-          </button>
-</div>
-</div>
-<!-- Real Map Canvas with Clustered Markers and Floating Selected Location Card -->
-<div id="home-map-wrap" class="relative w-full h-[520px] rounded-xl overflow-hidden shadow-sm">
-<!-- Google Static Map Container with data-location -->
-<div class="w-full h-full bg-cover bg-center" data-location="Saint Petersburg, Moika River, New Holland" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDJINOm_tBXtVU0xWp_BZwxN3puHJn-vGziJjCikVs9kF3IcWd18RFLwv8sXSOcIGsZr3e3vSIEXaNg5picrnP6fSR_iS4zHN4C5Q5stP9-t-5ME3LpC3rgW7hzAinNisYC1EdpZw2iOh6bpaSg9NFl4bI0KrkjhqsO8lD3vutoxITYEjqdu_TqdwNXx-dZvoP_lmp4NdAIe0iMlRaCXoJ1FUPG9NPCVoW44QaLkaI')">
-</div>
-<!-- Stylized Map Tint Scrim -->
-<div class="absolute inset-0 bg-primary/10 pointer-events-none"></div>
-<!-- Simulated Visual Markers on Map -->
-<!-- Marker 1: Coffee Pin -->
-<div class="absolute top-[28%] left-[34%] -translate-x-1/2 -translate-y-1/2 z-20 group cursor-pointer">
-<div class="relative flex items-center justify-center">
-<span class="animate-ping absolute inline-flex h-8 w-8 rounded-full bg-secondary opacity-40"></span>
-<div class="relative w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-lg transform transition-transform group-hover:scale-110">
-<span class="material-symbols-outlined text-[20px]">local_cafe</span>
-</div>
-<!-- Marker Tag -->
-<span class="absolute top-11 whitespace-nowrap font-label-caps text-label-caps bg-surface-container-lowest text-primary px-2.5 py-1 rounded-full shadow-md font-semibold">
-              Baggins &amp; Books
-            </span>
-</div>
-</div>
-<!-- Marker 2: Architecture Pin (Active Selected) -->
-<div class="absolute top-[52%] left-[48%] -translate-x-1/2 -translate-y-1/2 z-30 group cursor-pointer">
-<div class="relative flex items-center justify-center">
-<span class="animate-pulse absolute inline-flex h-12 w-12 rounded-full bg-secondary-container opacity-60"></span>
-<div class="relative w-11 h-11 rounded-full bg-secondary text-on-secondary flex items-center justify-center shadow-xl ring-4 ring-surface-container-lowest">
-<span class="material-symbols-outlined text-[22px]">account_balance</span>
-</div>
-</div>
-</div>
-<!-- Marker 3: Viewpoint Pin -->
-<div class="absolute top-[38%] left-[64%] -translate-x-1/2 -translate-y-1/2 z-20 group cursor-pointer">
-<div class="relative flex items-center justify-center">
-<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-md hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-[18px]">visibility</span>
-</div>
-<span class="absolute top-10 whitespace-nowrap font-label-caps text-label-caps bg-surface-container-lowest text-primary px-2 py-0.5 rounded shadow">
-              Купол Анненкирхе
-            </span>
-</div>
-</div>
-<!-- Marker 4: Hidden Garden Pin -->
-<div class="absolute top-[70%] left-[26%] -translate-x-1/2 -translate-y-1/2 z-20 group cursor-pointer">
-<div class="w-9 h-9 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center shadow-md hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-[18px]">park</span>
-</div>
-</div>
-<!-- Marker 5: Date Spot Pin -->
-<div class="absolute top-[66%] left-[78%] -translate-x-1/2 -translate-y-1/2 z-20 group cursor-pointer">
-<div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-md hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-[18px]">place</span>
-</div>
-</div>
-<!-- Floating Selected Location Popup Card (bottom-left / responsive) -->
-<div class="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-md z-40 bg-surface-container-lowest/95 backdrop-blur-md rounded-xl p-space-md shadow-[0_20px_40px_rgba(7,36,26,0.18)]">
-<div class="flex gap-space-md">
-<!-- Place Thumbnail -->
-<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 relative">
-<img alt="Artisanal glass pavilion cafe interior with warm amber lights, exposed vintage masonry, green plants, and marble coffee counter." class="w-full h-full object-cover" data-alt="Artisanal glass pavilion cafe interior with warm amber lights, exposed vintage masonry, green plants, and marble coffee counter." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfPL2x1DXg3boFz5PYGmaGD5olpbkiImsbf93LJnyzb0iJe_FY1x0aT79y8G8NAfdyy9csBGnmg6M8n2-Rbi5jzsAbbUIfQQTLJaqdaK9EO5dYdyi7xignRMy9zkLmW8Y3lO2UEJJ1HnOcZ4Xpdb6UhtvC3KIftW0GUWDE5c8wX1qnoREUyPFjzRAnDxn6H_Bk3elKDul4j4iRNWl4qbPO9tktA_J6rl_dwBF-RsU"/ loading="lazy" decoding="async">
-<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-primary/80 text-on-primary font-label-caps text-[9px] uppercase">
-                Выбор Кати
-              </span>
-</div>
-<!-- Place Info -->
-<div class="flex-1 flex flex-col justify-between">
-<div>
-<div class="flex items-center justify-between">
-<span class="font-label-caps text-label-caps text-secondary uppercase font-semibold">
-                    Оранжерея &amp; Кофе
-                  </span>
-<div class="flex items-center gap-0.5 text-secondary">
-<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="font-label-caps text-label-caps font-bold">4.9</span>
-<span class="text-on-surface-variant font-label-caps text-[10px]">(112)</span>
-</div>
-</div>
-<h3 class="font-headline-sm text-headline-sm text-primary leading-tight mt-0.5">
-                  Тайная кофейня в Доме Архитектора
-                </h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-<span class="w-2 h-2 rounded-full bg-tertiary"></span>
-<span class="text-tertiary font-medium">Открыто до 23:00</span>
-<span class="text-outline-variant">•</span>
-<span>Большая Морская, 52</span>
-</p>
-</div>
-<!-- Card Action Buttons -->
-<div class="flex items-center gap-space-xs pt-space-xs">
-<button class="flex-1 inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full bg-primary-container hover:bg-primary text-on-primary font-label-lg text-[13px] transition-colors shadow-sm" type="button">
-<span class="material-symbols-outlined text-[16px]">add</span>
-<span>В маршрут</span>
-</button>
-<button class="px-3 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-[13px] transition-colors" type="button">
-                  Подробнее
-                </button>
-</div>
-</div>
-</div>
-</div>
-<!-- Floating Map Controls (Top Right) -->
-<div class="absolute top-4 right-4 z-30 flex flex-col gap-1.5 bg-surface-container-lowest/90 backdrop-blur rounded-lg p-1 shadow-md">
-<button aria-label="Zoom in" class="w-9 h-9 rounded flex items-center justify-center hover:bg-surface-container text-on-surface transition-colors" type="button">
-<span class="material-symbols-outlined text-[20px]">add</span>
-</button>
-<div class="w-full h-[1px] bg-surface-container"></div>
-<button aria-label="Zoom out" class="w-9 h-9 rounded flex items-center justify-center hover:bg-surface-container text-on-surface transition-colors" type="button">
-<span class="material-symbols-outlined text-[20px]">remove</span>
-</button>
-<div class="w-full h-[1px] bg-surface-container"></div>
-<button aria-label="Locate me" class="w-9 h-9 rounded flex items-center justify-center hover:bg-surface-container text-secondary transition-colors" type="button">
-<span class="material-symbols-outlined text-[20px]">my_location</span>
-</button>
-</div>
-</div>
-</div>
-</section>
-<!-- SECTION: АВТОРСКИЕ СЦЕНАРИИ ПРОГУЛОК -->
-<section class="w-full bg-surface py-space-xl" id="planner-builder">
-<div class="max-w-[1360px] mx-auto px-gutter">
-<!-- Section Intro -->
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-xl">
-<div class="space-y-space-xs max-w-xl">
-<span class="font-label-caps text-label-caps uppercase text-secondary tracking-widest block">
-            Готовые драматургии дня
-          </span>
-<h2 class="font-headline-xl text-headline-xl text-primary font-medium tracking-tight">
-            Авторские сценарии прогулок
-          </h2>
-<p class="font-body-md text-body-md text-on-surface-variant">
-            Продуманные до деталей маршруты с точным таймингом, точками для пауз и звуковыми эссе от Кати.
-          </p>
-</div>
-<a class="inline-flex items-center gap-2 font-label-lg text-label-lg text-primary hover:text-secondary transition-colors" href="#">
-<span>Смотреть все 118 сценариев</span>
-<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-<!-- Scenarios Grid (3 distinct curated storylines) -->
-<div id="routes-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg">
-<!-- Scenario 1: Petrogradka Romantic -->
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col justify-between group hover:shadow-[0_12px_28px_rgba(7,36,26,0.08)] transition-all">
-<div>
-<div class="relative h-60 overflow-hidden">
-<img alt="Charming romantic street on Petrogradsky island in Saint Petersburg during twilight, vintage street lamps casting warm golden glow on art nouveau balconies, calm cobblestone street." class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" data-alt="Charming romantic street on Petrogradsky island in Saint Petersburg during twilight, vintage street lamps casting warm golden glow on art nouveau balconies, calm cobblestone street." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLaZ7JyXiUO_uoBPSq3btF64Mx8oMdSDKwxa1vItDx_PnBSYSu7dqtxeAm4BBrNBdZpvX_6HOyT993CtsdUBan1Rkpx5IZDfbcP5W__nbjWUm52xuTTwwe2kBeGiDCpaQ5K7x8gWOEF9gUEtjkOv0NcLZHqgo7g3vEqOoDO2uWPX_eIJLxnZvlE-nV5foU3TOWcxjELK-gFY9WLPKX87uwQGSGQwKmmi-4EX9z-AU"/ loading="lazy" decoding="async">
-<div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent"></div>
-<div class="absolute top-3 left-3 flex items-center gap-1.5">
-<span class="px-2.5 py-1 rounded-full bg-secondary text-on-secondary font-label-caps text-[11px] uppercase">
-                  Романтика
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-surface-bright/90 backdrop-blur text-primary font-label-caps text-[11px]">
-                  3.4 км • 3 часа
-                </span>
-</div>
-<div class="absolute bottom-3 left-4 right-4">
-<span class="font-label-caps text-label-caps text-secondary-container uppercase block">
-                  Санкт-Петербург
-                </span>
-<h3 class="font-headline-md text-headline-md text-on-primary">
-                  Романтический вечер на Петроградке
-                </h3>
-</div>
-</div>
-<!-- Body Details -->
-<div class="p-space-lg space-y-space-md">
-<p class="font-body-md text-body-md text-on-surface-variant">
-                Маршрут для двоих: потайные дворы-колодцы с витражами северного модерна, согревающий фильтр-кофе и тихий мостик к закату над Малой Невой.
-              </p>
-<!-- Curated Stops Timeline Preview -->
-<div class="space-y-space-xs pt-space-xs">
-<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-<span class="font-medium">17:00</span>
-<span class="text-on-surface-variant">Аперитив в тайном баре под аркой</span>
-</div>
-<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-<span class="font-medium">18:30</span>
-<span class="text-on-surface-variant">Променад мимо особняка Кшесинской</span>
-</div>
-<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-<span class="font-medium">19:45</span>
-<span class="text-on-surface-variant">Вино при свечах на Большом проспекте</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Bottom Card Meta -->
-<div class="p-space-lg pt-0 flex items-center justify-between border-t border-surface-container pt-space-md">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-[20px]">volume_up</span>
-<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Аудиогид готовится</span>
-</div>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="h-hero">
+    <svg class="hero__towers" viewBox="0 0 420 460" aria-hidden="true" preserveAspectRatio="xMaxYMax meet">
+      <defs>
+        <linearGradient id="flame" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#1E4FA3"/><stop offset=".55" stop-color="#D8365C"/><stop offset="1" stop-color="#FF9A6B"/></linearGradient>
+      </defs>
+      <path d="M95 460C40 380 45 250 120 150c20 70 80 120 75 200-3 46-40 80-100 110Z" fill="url(#flame)" opacity=".85"/>
+      <path d="M215 460C150 360 160 190 262 40c30 100 110 170 100 290-5 60-55 110-147 130Z" fill="url(#flame)"/>
+      <path d="M335 460c-45-60-40-160 15-230 15 55 60 95 55 160-3 40-30 62-70 70Z" fill="url(#flame)" opacity=".8"/>
+    </svg>
+    <div class="wrap hero__in">
+      <div class="hero__copy">
+        <h1 id="h-hero">Откройте город за один день</h1>
+        <p class="lead">Достопримечательности, заведения и готовые программы отдыха. Выберите настроение, и мы соберём день: от первой прогулки до вечера.</p>
+        <div class="hero__cta">
+          <a class="btn btn--primary btn--lg" href="#ideal">Собрать идеальный день</a>
+          <a class="btn btn--glass btn--lg" href="#discover">Открыть город</a>
+        </div>
+      </div>
+      <aside class="glass hero__card" id="heroRoute" aria-label="Пример маршрута"></aside>
+    </div>
+  </section>
 
-</div>
-</div>
-<!-- Scenario 2: Zamoskvorechye Art -->
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col justify-between group hover:shadow-[0_12px_28px_rgba(7,36,26,0.08)] transition-all">
-<div>
-<div class="relative h-60 overflow-hidden">
-<img alt="Editorial visual of an art gallery courtyard in Zamoskvorechye Moscow, minimalist modern sculptures, old Moscow brick walls, gallery visitors conversing outdoors with cups of coffee." class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" data-alt="Editorial visual of an art gallery courtyard in Zamoskvorechye Moscow, minimalist modern sculptures, old Moscow brick walls, gallery visitors conversing outdoors with cups of coffee." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdlYkxdAjLreUyhLnXY6gK8tTCe2UZQDO1sxweiCeg_WSkCf20ucw5UBrbskrhuDj8MH_6FWNwB08t0B6U1u-7RI0JVjIpRNOpPyfxH_bOnkrwThwNh3kXtcOK7BlobsEa6VoPl3Y3u8d-LiakQG69Xli5fu9Qze15p_05bgo0r63G7KAy_Y7oF2wA1UmbgItTF4aDUtKbjbkiBweWt6niHpMiHyA_MDU6PNA7DR8"/ loading="lazy" decoding="async">
-<div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent"></div>
-<div class="absolute top-3 left-3 flex items-center gap-1.5">
-<span class="px-2.5 py-1 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] uppercase">
-                  Искусство &amp; Дизайн
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-surface-bright/90 backdrop-blur text-primary font-label-caps text-[11px]">
-                  4.1 км • 3.5 часа
-                </span>
-</div>
-<div class="absolute bottom-3 left-4 right-4">
-<span class="font-label-caps text-label-caps text-secondary-container uppercase block">
-                  Москва
-                </span>
-<h3 class="font-headline-md text-headline-md text-on-primary">
-                  Арт-прогулка по Замоскворечью
-                </h3>
-</div>
-</div>
-<!-- Body Details -->
-<div class="p-space-lg space-y-space-md">
-<p class="font-body-md text-body-md text-on-surface-variant">
-                Исследование тихих переулков купеческой Москвы: независимые галереи, скульптурные мастерские и дворики Третьяковки с ароматом цветущей липы.
-              </p>
-<!-- Curated Stops Timeline Preview -->
-<div class="space-y-space-xs pt-space-xs">
-<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface">
-<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-<span class="font-medium">11:00</span>
-<span class="text-on-surface-variant">Фильтр в микро-кофейне у Пятницкой</span>
-</div>
-<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface">
-<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-<span class="font-medium">12:30</span>
-<span class="text-on-surface-variant">Частная коллекция советского модернизма</span>
-</div>
-<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface">
-<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-<span class="font-medium">14:00</span>
-<span class="text-on-surface-variant">Ланч в скрытом саду при особняке</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Bottom Card Meta -->
-<div class="p-space-lg pt-0 flex items-center justify-between border-t border-surface-container pt-space-md">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[20px]">map</span>
-<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Карта + 6 закрытых дверей</span>
-</div>
+  <!-- Четыре направления -->
+  <section class="sec sec--tight" id="directions" aria-label="Направления платформы">
+    <div class="wrap dirs">
+      <a class="dir" href="#discover"><span class="badge badge--lg"><svg class="i"><use href="#i-compass"/></svg></span><h3>Открой город</h3><p class="muted">Достопримечательности, парки, набережные и места для фотографий.</p><small id="dirSights"></small></a>
+      <a class="dir" href="#venues"><span class="badge badge--lg"><svg class="i"><use href="#i-utensils"/></svg></span><h3>Куда сходить</h3><p class="muted">Рестораны, кафе, бани, клубы и другие заведения с ценами и рейтингом.</p><small id="dirVenues"></small></a>
+      <a class="dir" href="#planner"><span class="badge badge--lg"><svg class="i"><use href="#i-route"/></svg></span><h3>Спланируй прогулку</h3><p class="muted">Соберите маршрут из мест, поменяйте порядок и поделитесь ссылкой.</p><small>Пешком и на авто</small></a>
+      <a class="dir dir--hero" href="#ideal"><span class="badge badge--lg"><svg class="i"><use href="#i-sparkles"/></svg></span><h3>Мой идеальный день</h3><p class="muted">Выберите настроение, бюджет и время, а программа соберётся сама.</p><small>10 сценариев</small></a>
+    </div>
+  </section>
 
-</div>
-</div>
-<!-- Scenario 3: Constructivist Ekb -->
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col justify-between group hover:shadow-[0_12px_28px_rgba(7,36,26,0.08)] transition-all">
-<div>
-<div class="relative h-60 overflow-hidden">
-<img alt="Stunning architectural detail of constructivist Hotel Iset in Ekaterinburg, semicircular geometry, warm brick and grey concrete framing against vivid evening sky." class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" data-alt="Stunning architectural detail of constructivist Hotel Iset in Ekaterinburg, semicircular geometry, warm brick and grey concrete framing against vivid evening sky." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxejMGZK06sifwG_JbXz4H7bod4RSEgXukROoKaG4zQgRw-kTntsHZkXO1_hyBHW7PjbpNfvLjmq39jbjIpEypWabX3MRJJcXK8nURzGis4CtIC8DnrwC_zieD2Yx7YJyzNESRrWxBPdI8ZGDN-HrBHmUgTxKowCub9Au2p3WDh07VzMfDEkDKB82tFP88aD94TdzCjsSGwaIkttd6ao_ySpGH7oG4vL5pCCwSenE"/ loading="lazy" decoding="async">
-<div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent"></div>
-<div class="absolute top-3 left-3 flex items-center gap-1.5">
-<span class="px-2.5 py-1 rounded-full bg-tertiary-container text-on-tertiary font-label-caps text-[11px] uppercase">
-                  Авангард
-                </span>
-<span class="px-2.5 py-1 rounded-full bg-surface-bright/90 backdrop-blur text-primary font-label-caps text-[11px]">
-                  5.0 км • 4 часа
-                </span>
-</div>
-<div class="absolute bottom-3 left-4 right-4">
-<span class="font-label-caps text-label-caps text-secondary-container uppercase block">
-                  Екатеринбург
-                </span>
-<h3 class="font-headline-md text-headline-md text-on-primary">
-                  Конструктивистский Екатеринбург
-                </h3>
-</div>
-</div>
-<!-- Body Details -->
-<div class="p-space-lg space-y-space-md">
-<p class="font-body-md text-body-md text-on-surface-variant">
-                Погружение в мировую столицу авангарда: Городок чекистов, Дом печати, крыши с панорамой Исети и аутентичная уральская кухня нового поколения.
-              </p>
-<!-- Curated Stops Timeline Preview -->
-<div class="space-y-space-xs pt-space-xs">
-<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface">
-<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
-<span class="font-medium">10:30</span>
-<span class="text-on-surface-variant">Старт в Городке чекистов с проводником</span>
-</div>
-<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface">
-<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
-<span class="font-medium">12:45</span>
-<span class="text-on-surface-variant">Индустриальный кофе в бывшем цехе</span>
-</div>
-<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface">
-<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
-<span class="font-medium">14:15</span>
-<span class="text-on-surface-variant">Дегустация уральских пирогов и травяных чаев</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Bottom Card Meta -->
-<div class="p-space-lg pt-0 flex items-center justify-between border-t border-surface-container pt-space-md">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-tertiary text-[20px]">architecture</span>
-<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Архитектурный гид</span>
-</div>
+  <!-- Открой город -->
+  <section class="sec" id="discover" aria-labelledby="h-disc">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-disc">Открой город</h2><p class="muted">Главное, что стоит увидеть. Начните с этих мест.</p></div>
+      <div class="chips chips--wrap" id="discoverCities" role="tablist" aria-label="Город"></div>
+      <div class="pgrid" id="discoverGrid"></div>
+    </div>
+  </section>
 
-</div>
-</div>
-</div>
-</div>
-</section>
+  <!-- Куда сходить -->
+  <section class="sec" id="venues" aria-labelledby="h-ven">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-ven">Куда сходить</h2><p class="muted">Заведения и развлечения в выбранном городе.</p></div>
+      <div class="chips chips--wrap" id="venueCities" role="tablist" aria-label="Город"></div>
+      <div class="venue-bar">
+        <div class="chips chips--wrap" id="venueGroups" role="tablist" aria-label="Категория"></div>
+        <label class="select"><span class="sr">Сортировка</span><select id="venueSort"><option value="quality">Лучшие по рейтингу</option><option value="popular">Популярные</option><option value="price">Дешевле</option></select></label>
+      </div>
+      <div class="pgrid pgrid--venues" id="venueGrid"></div>
+    </div>
+  </section>
 
-</div>
-</main><script type="module" src="assets/js/stitch-app.js?v=14"></script></body></html>
+  <!-- Спланируй прогулку -->
+  <section class="sec" id="planner" aria-labelledby="h-plan">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-plan">Спланируй прогулку</h2><p class="muted">Добавляйте места, меняйте порядок и смотрите маршрут на карте.</p></div>
+      <div class="plan">
+        <div class="plan__side card">
+          <div class="plan__add">
+            <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="planSearch" type="search" placeholder="Добавить место в маршрут" autocomplete="off" aria-label="Найти место для маршрута"></label>
+            <ul class="results" id="planResults" hidden></ul>
+          </div>
+          <div class="seg" id="planModes" role="group" aria-label="Способ передвижения">
+            <button data-plan-mode="walk" aria-pressed="true"><svg class="i"><use href="#i-walk"/></svg>Пешком</button>
+            <button data-plan-mode="drive" aria-pressed="false">На авто</button>
+          </div>
+          <label class="field"><span class="sr">Название маршрута</span><input id="planName" type="text" maxlength="80" placeholder="Название маршрута"></label>
+          <ol class="stops-edit" id="planStops"></ol>
+          <div id="planTotals"></div>
+          <div class="plan__actions" id="planActions"></div>
+        </div>
+        <div class="plan__map" id="planMapWrap" hidden><div id="planMapCanvas" aria-label="Карта маршрута"></div></div>
+      </div>
+      <h3 class="sub">Сохранённые маршруты</h3>
+      <div class="grid grid--fav" id="savedPlans"></div>
+    </div>
+  </section>
+
+  <!-- Мой идеальный день -->
+  <section class="sec" id="ideal" aria-labelledby="h-ideal">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-ideal">Мой идеальный день</h2><p class="muted">Расскажите, как хотите провести время, и получите готовую программу.</p></div>
+      <form class="card ideal__form" id="idealForm">
+        <fieldset><legend>Настроение</legend><div class="moods" id="idealMoods"></div></fieldset>
+        <div class="ideal__fields">
+          <label class="field"><span>Город</span><select name="city" id="idealCity"></select></label>
+          <label class="field"><span>Продолжительность</span><select name="hours"><option value="3">2–3 часа</option><option value="5">Полдня</option><option value="8" selected>Целый день</option><option value="12">Максимум</option></select></label>
+          <label class="field"><span>Участники</span><input name="people" type="number" min="1" max="20" value="2" inputmode="numeric"></label>
+          <label class="field"><span>Бюджет на человека, <b id="budgetCur"></b></span><input name="budget" type="number" min="0" step="any" placeholder="Без ограничений" inputmode="decimal"></label>
+          <label class="field"><span>Атмосфера</span><select name="atmosphere" id="idealAtm"></select></label>
+          <div class="field"><span>Передвижение</span>
+            <div class="seg"><label><input type="radio" name="transport" value="walk" checked><span>Пешком</span></label><label><input type="radio" name="transport" value="drive"><span>На авто</span></label></div></div>
+        </div>
+        <fieldset><legend>Что интересно <small class="muted">(необязательно)</small></legend><div class="chips chips--wrap" id="idealInterests"></div></fieldset>
+        <button class="btn btn--primary btn--lg" type="submit"><svg class="i"><use href="#i-sparkles"/></svg>Составить программу</button>
+      </form>
+      <div class="ideal__result" id="idealResult" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- Карта -->
+  <section class="sec" id="map" aria-labelledby="h-map">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-map">Карта мест</h2><p class="muted">Фильтруйте по подборкам или ищите по названию.</p></div>
+      <div class="mapbox">
+        <div class="mapbox__side">
+          <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Найти место" autocomplete="off" aria-label="Поиск по названию, адресу, городу и описанию"></label>
+          <label class="search"><svg class="i"><use href="#i-pin"/></svg><select id="regionFilter" aria-label="Город или регион">
+            <option value="all">Все города и регионы</option>
+            <option value="Азербайджан" selected>Азербайджан</option>
+            <option value="Екатеринбург">Екатеринбург</option>
+            <option value="Москва">Москва</option>
+            <option value="Санкт-Петербург">Санкт-Петербург</option>
+            <option value="Нижний Тагил">Нижний Тагил</option>
+            <option value="Грузия">Грузия</option>
+            <option value="Посёлок Аять, Свердловская область">Посёлок Аять, Свердловская область</option>
+          </select></label>
+          <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="priceMin" type="number" min="0" step="any" placeholder="Мин. цена, местная валюта" aria-label="Минимальная цена в местной валюте"></label>
+          <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="priceMax" type="number" min="0" step="any" placeholder="Макс. цена, местная валюта" aria-label="Максимальная цена в местной валюте"></label>
+          <label class="search"><svg class="i"><use href="#i-star"/></svg><select id="minRating" aria-label="Минимальный рейтинг">
+            <option value="0">Любой рейтинг</option><option value="3">От 3.0</option><option value="4">От 4.0</option><option value="4.5">От 4.5</option>
+          </select></label>
+          <label class="search"><svg class="i"><use href="#i-fit"/></svg><select id="sortPlaces" aria-label="Сортировка мест">
+            <option value="popularity">Сначала популярные</option><option value="rating">По рейтингу</option><option value="price">По стоимости</option><option value="alphabetical">По алфавиту</option>
+          </select></label>
+          <button class="btn btn--ghost" id="resetFilters" type="button">Сбросить фильтры</button>
+          <div class="chips" id="chips" role="tablist" aria-label="Подборки"></div>
+          <ul class="list" id="placeList"></ul>
+        </div>
+        <div class="mapbox__stage">
+          <div id="mapCanvas" aria-label="Интерактивная карта"></div>
+          <div class="mapbox__tools">
+            <button class="icon-btn glass" id="locateBtn" aria-label="Моё местоположение" title="Моё местоположение"><svg class="i"><use href="#i-locate"/></svg></button>
+            <button class="icon-btn glass" id="fitBtn" aria-label="Показать все места" title="Показать все места"><svg class="i"><use href="#i-fit"/></svg></button>
+          </div>
+          <div class="sheet glass" id="sheet" hidden></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Маршруты -->
+  <section class="sec" id="routes" aria-labelledby="h-routes">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-routes">Маршруты</h2><p class="muted">Готовые сценарии на вечер, день и выходные.</p></div>
+      <div class="grid grid--routes" id="routeGrid"></div>
+    </div>
+  </section>
+
+  <!-- Подборки -->
+  <section class="sec" id="collections" aria-labelledby="h-col">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-col">Подборки мест</h2><p class="muted">Выберите настроение, и карта покажет подходящие места.</p></div>
+      <div class="grid grid--cols" id="collectionGrid"></div>
+    </div>
+  </section>
+
+  <!-- Избранное -->
+  <section class="sec" id="favorites" aria-labelledby="h-fav">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-fav">Избранное <span class="count" id="favCount">0</span></h2><p class="muted" id="favStatus"></p></div>
+      <div class="grid grid--fav" id="favGrid"></div>
+      <div id="favRoutes"></div>
+    </div>
+  </section>
+
+  <!-- О проекте -->
+  <section class="sec" id="about" aria-labelledby="h-about">
+    <div class="wrap about">
+      <div>
+        <h2 id="h-about">Как это работает</h2>
+        <p class="lead">Каталог мест с картой, ручной конструктор прогулок и автоматический подбор программы дня. Всё работает на одной странице.</p>
+      </div>
+      <ul class="feats">
+        <li><span class="badge badge--lg"><svg class="i"><use href="#i-pin"/></svg></span><div><h3>Места на карте</h3><p class="muted">Все идеи с отметками и карточками. Нажмите на метку, чтобы узнать подробности.</p></div></li>
+        <li><span class="badge badge--lg"><svg class="i"><use href="#i-route"/></svg></span><div><h3>Маршруты в один клик</h3><p class="muted">Расстояние и время в пути, переход в Google Maps или OpenStreetMap.</p></div></li>
+        <li><span class="badge badge--lg"><svg class="i"><use href="#i-heart"/></svg></span><div><h3>Общее избранное</h3><p class="muted">Отмечайте места сердечком. С Supabase список синхронизируется на ваших телефонах.</p></div></li>
+      </ul>
+      <dl class="counts">
+        <div><dd id="cPlaces">0</dd><dt>мест</dt></div>
+        <div><dd id="cRoutes">0</dd><dt>маршрутов</dt></div>
+        <div><dd id="cCats">0</dd><dt>подборок</dt></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Планы -->
+  <section class="sec" id="roadmap" aria-labelledby="h-road">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-road">Планы на будущее</h2><p class="muted">Что мы добавим дальше, по порядку.</p></div>
+      <ol class="road">
+        <li><strong>Отметка «Были здесь»</strong><p class="muted">Дата визита, фото и общие впечатления.</p></li>
+        <li><strong>Реальные фото и проверенные данные</strong><p class="muted">Фотографии, адреса и цены для всех достопримечательностей.</p></li>
+        <li><strong>Больше городов и категорий</strong><p class="muted">Рестораны, бары, кинотеатры и клубы в каждом городе каталога.</p></li>
+        <li><strong>Редактирование с сайта</strong><p class="muted">Вход по приглашению, чтобы добавлять места без панели Supabase.</p></li>
+        <li><strong>Установка на телефон</strong><p class="muted">Иконка на экране и работа без интернета.</p></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <div><strong>Прогулки с Катюшей</strong><p class="muted"><a href="#routes">Готовые маршруты</a> · <a href="#collections">Подборки</a> · <a href="#about">О проекте</a> · <a href="#roadmap">Планы</a></p></div>
+    <p class="muted">Карта © участники <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>. Маршруты: OSRM.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<dialog class="themeDlg" id="themeDlg" aria-labelledby="themeDlgT">
+  <div class="themeDlg__in">
+    <div class="themeDlg__head"><h2 id="themeDlgT">Тема оформления</h2><button class="icon-btn" id="themeClose" type="button" aria-label="Закрыть"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <div class="themeGrid" id="themeGrid" role="radiogroup" aria-label="Темы"></div>
+    <div class="themeDlg__foot"><button class="btn btn--ghost" id="themeCancel" type="button">Отмена</button><button class="btn" id="themeApply" type="button">Применить</button></div>
+  </div>
+</dialog>
+</body>
+</html>

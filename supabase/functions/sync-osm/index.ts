@@ -27,7 +27,7 @@ function categorize(t: Record<string, string>): string | null {
   if (a === "cafe") return t.cuisine === "coffee_shop" ? "coffee" : "cafe";
   if (s === "bakery" || s === "pastry") return "bakery"; if (a === "bar") return "bar"; if (a === "pub") return "pub";
   if (a === "nightclub") return "nightclub"; if (a === "karaoke_box") return "karaoke"; if (a === "cinema") return "cinema";
-  if (a === "arts_centre") return "cultural_space"; if (a === "theatre" || a === "concert_hall") return "theatre"; if (a === "marketplace") return "market";
+  if (a === "theatre" || a === "concert_hall" || a === "arts_centre") return "theatre"; if (a === "marketplace") return "market";
   if (a === "public_bath" || s === "massage" || l === "sauna") return l === "sauna" ? "bath" : "massage";
   if (l === "bowling_alley") return "bowling"; if (l === "adult_gaming_centre" || l === "amusement_arcade") return "gamecenter";
   if (s === "computer" && false) return null; if (l === "escape_game") return "quest";

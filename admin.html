@@ -2,15 +2,14 @@
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>Панель автоматизации</title>
 <script>(function(){var t;try{t=localStorage.getItem("katyusha:theme")}catch(e){}document.documentElement.dataset.theme=t||"light"})();</script>
-<link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="assets/css/styles.css?v=7">
+<link rel="stylesheet" href="assets/css/styles.css">
 <style>.wrap{max-width:1000px;margin:0 auto;padding:20px}.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
 .kpi{padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}.kpi b{display:block;font-size:24px}
 .row2{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}table{width:100%;border-collapse:collapse;font-size:13px;display:block;overflow-x:auto}
 td,th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}input{height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font:inherit}
 .btn{cursor:pointer}pre{white-space:pre-wrap;font-size:12px}</style></head>
 <body><div class="wrap">
-<h1>Панель автоматизации</h1>
-<p class="muted">Записи без фотографии скрыты из публичного каталога до добавления реального изображения. Здесь они остаются доступны для проверки и редактирования.</p><p class="muted"><a href="./">← на сайт</a></p>
+<h1>Панель автоматизации</h1><p class="muted"><a href="./">← на сайт</a></p>
 <section id="login"><p>Вход только для администратора (пользователь Supabase Auth из таблицы admin_users).</p>
 <div class="row2"><input id="em" type="email" placeholder="Email" autocomplete="username"><input id="pw" type="password" placeholder="Пароль" autocomplete="current-password"><button class="btn" id="go">Войти</button></div><p id="lerr" class="muted"></p></section>
 <section id="app" hidden>
@@ -24,29 +23,6 @@ td,th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-
 <button class="btn" data-act="retry">Повторить ошибочные синхронизации</button>
 <button class="btn" id="reload">Обновить панель</button></div>
 <p id="msg" class="muted" role="status"></p>
-
-<h2>Редактирование карточек мест</h2>
-<p class="muted">Изменения сохраняются в Supabase. Доступно только администраторам.</p>
-<div class="row2"><input id="placeSearch" type="search" placeholder="Найти место по названию или городу" style="min-width:260px;flex:1"><select id="placeSelect" style="min-width:260px;flex:1;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink)"><option value="">Выберите объект</option></select></div>
-<form id="placeEditor" hidden>
-<div class="row2"><input name="title" required placeholder="Название" style="flex:1"><input name="official_name" placeholder="Официальное название" style="flex:1"></div>
-<div class="row2"><input name="city" placeholder="Город" style="flex:1"><input name="region" placeholder="Регион / страна" style="flex:1"><input name="country" placeholder="Страна" style="flex:1"></div>
-<div class="row2"><input name="category" required placeholder="Категория (slug)" style="flex:1"><input name="subcategory" placeholder="Подкатегория" style="flex:1"></div>
-<input name="address" placeholder="Адрес" style="width:100%;box-sizing:border-box;margin:5px 0">
-<textarea name="description" rows="4" placeholder="Описание" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink);font:inherit;margin:5px 0"></textarea>
-<div class="row2"><input name="latitude" type="number" step="any" placeholder="Широта" style="flex:1"><input name="longitude" type="number" step="any" placeholder="Долгота" style="flex:1"><input name="image" type="text" placeholder="Путь или URL главного фото" style="flex:2"></div>
-<div class="row2"><input name="rating" type="number" min="0" max="5" step=".1" placeholder="Рейтинг" style="flex:1"><input name="review_count" type="number" min="0" step="1" placeholder="Количество отзывов" style="flex:1"><input name="rating_source" placeholder="Источник рейтинга" style="flex:2"></div>
-<div class="row2"><input name="price_min" type="number" min="0" step=".01" placeholder="Цена от" style="flex:1"><input name="price_max" type="number" min="0" step=".01" placeholder="Цена до" style="flex:1"><input name="price_unit" placeholder="Валюта / пояснение" style="flex:2"></div>
-<div class="row2"><input name="opening_hours" placeholder="Режим работы" style="flex:1"><input name="phone" placeholder="Телефон" style="flex:1"><input name="website" type="url" placeholder="Сайт" style="flex:1"></div>
-<div class="row2"><input name="map_url" type="url" placeholder="Ссылка на карту" style="flex:1"><input name="verification_status" placeholder="Статус: unverified / partially_verified / verified / needs_review" style="flex:2"><label><input name="is_approx" type="checkbox"> Координаты приблизительные</label></div>
-<div class="row2"><input name="avg_check" type="number" min="0" step=".01" placeholder="Средний чек" style="flex:1"><input name="price_source" placeholder="Источник цен" style="flex:1"><input name="last_verified_at" type="date" style="flex:1" title="Дата последней проверки"></div>
-<div class="row2"><textarea name="social_links" rows="2" placeholder='Соцсети JSON, например {"instagram":"https://..."}' style="flex:1;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink);font:inherit"></textarea><textarea name="features" rows="2" placeholder='Особенности JSON, например {"sauna":true,"cs2":true}' style="flex:1;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink);font:inherit"></textarea></div>
-<textarea name="source_urls" rows="3" placeholder="Источники (по одному URL на строку)" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--ink);font:inherit;margin:5px 0"></textarea>
-<div class="row2"><button class="btn btn--primary" type="submit">Сохранить карточку</button><span id="placeSaveMsg" class="muted" role="status"></span></div>
-</form>
-<h3>Дополнительные фотографии объекта</h3>
-<div class="row2"><input id="photoUrl" type="url" placeholder="Прямая ссылка на фото" style="flex:2"><input id="photoLicense" placeholder="Лицензия / условия" style="flex:1"><input id="photoAttribution" placeholder="Автор / источник" style="flex:1"><button class="btn" id="addPlacePhoto" type="button">Добавить фото</button></div>
-<div id="placePhotos" class="muted">Выберите объект.</div>
 <h2>Журнал синхронизаций</h2><div id="logs"></div>
 <h2>Объекты на проверке</h2><div id="queue"></div>
 <p class="muted">Кнопки «Обновить рейтинги» и «Обновить фотографии» не добавлены: OpenStreetMap не отдаёт рейтингов, а фото нужны отдельного источника с подходящей лицензией. Источники Google/Foursquare/Geoapify отключены, пока вы не подключите ключи.</p>
