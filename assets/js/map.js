@@ -74,7 +74,7 @@ export function estimateLeg(a, b, mode = "drive") {
 /* ---------- Карта ---------- */
 const validPoint = (p) => Number.isFinite(Number(p?.latitude)) && Number.isFinite(Number(p?.longitude)) && Math.abs(Number(p.latitude)) <= 90 && Math.abs(Number(p.longitude)) <= 180;
 
-export class MapView {
+const imageOfPlace = (p) => p?.image || (Array.isArray(p?.photos) ? p.photos[0]?.url : "") || "";\nexport class MapView {
   constructor(el, onSelect = () => {}) {
     this.onSelect = onSelect;
     this.markers = new Map();
@@ -103,37 +103,81 @@ export class MapView {
     if (fit) this.fit(this.places);
   }
 
-  // Лёгкая кластеризация: близкие точки объединяются до увеличения масштаба.
+  // Группируем маркеры по фактическому расстоянию на экране, а не по сеточным ячейкам:
+  // так близкие точки не оказываются нарисованы одна поверх другой на границе ячеек.
   renderMarkers() {
     this.markers.forEach((m) => m.remove());
     this.markers.clear();
     const zoom = this.map.getZoom();
-    const buckets = new Map();
-    this.places.forEach((p) => {
-      const point = this.map.project([Number(p.latitude), Number(p.longitude)], zoom);
-      const key = Math.floor(point.x / 58) + ":" + Math.floor(point.y / 58);
-      if (!buckets.has(key)) buckets.set(key, []);
-      buckets.get(key).push(p);
+    const screenPoints = this.places.map((place) => ({
+      place,
+      point: this.map.project([Number(place.latitude), Number(place.longitude)], zoom),
+    }));
+    const groups = [];
+    const clusterRadius = 44;
+
+    screenPoints.forEach((item) => {
+      let target = groups.find((group) => group.some((member) =>
+        Math.hypot(item.point.x - member.point.x, item.point.y - member.point.y) < clusterRadius
+      ));
+      if (!target) {
+        target = [];
+        groups.push(target);
+      }
+      target.push(item);
     });
 
-    buckets.forEach((group) => {
-      const samePoint = group.length > 1 && group.every((p) => Number(p.latitude) === Number(group[0].latitude) && Number(p.longitude) === Number(group[0].longitude));
-      if (group.length > 1 && (zoom < 16 || samePoint) && !this.numbered) {
-        // Не ставим кластер в геометрический центр группы: он может попасть
-        // в реку или на пустое место. Выбираем реальную точку, ближайшую к центру.
+    const showPreview = (place, latlng) => {
+      const content = document.createElement("div");
+      content.className = "pin-preview";
+      content.style.cssText = "width:100%;max-width:260px;font-family:inherit;color:#1b1c1a;";
+      const photo = imageOfPlace(place);
+      if (photo) {
+        const img = document.createElement("img");
+        img.src = photo;
+        img.alt = place.title || "Фотография места";
+        img.loading = "lazy";
+        img.style.cssText = "display:block;width:100%;height:112px;object-fit:cover;border-radius:10px;margin-bottom:10px;";
+        content.append(img);
+      }
+      const category = document.createElement("div");
+      category.textContent = CATEGORIES[place.category]?.title || "Место";
+      category.style.cssText = "font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9d4229;margin-bottom:4px;";
+      content.append(category);
+      const title = document.createElement("strong");
+      title.textContent = place.title || "Интересное место";
+      title.style.cssText = "display:block;font-size:15px;line-height:1.35;margin-bottom:6px;";
+      content.append(title);
+      if (place.address) {
+        const address = document.createElement("div");
+        address.textContent = place.address;
+        address.style.cssText = "font-size:12px;line-height:1.4;color:#59615c;margin-bottom:7px;";
+        content.append(address);
+      }
+      if (place.description) {
+        const description = document.createElement("p");
+        description.textContent = String(place.description).slice(0, 180) + (String(place.description).length > 180 ? "…" : "");
+        description.style.cssText = "font-size:12px;line-height:1.45;margin:0;color:#424844;";
+        content.append(description);
+      }
+      L.popup({ maxWidth: 300, minWidth: 210, closeButton: true, autoPan: true })
+        .setLatLng(latlng)
+        .setContent(content)
+        .openOn(this.map);
+    };
+
+    groups.forEach((group) => {
+      if (group.length > 1) {
         const center = {
-          latitude: group.reduce((sum, p) => sum + Number(p.latitude), 0) / group.length,
-          longitude: group.reduce((sum, p) => sum + Number(p.longitude), 0) / group.length,
+          x: group.reduce((sum, item) => sum + item.point.x, 0) / group.length,
+          y: group.reduce((sum, item) => sum + item.point.y, 0) / group.length,
         };
-        const anchor = group.reduce((best, p) => {
-          const distance = (Number(p.latitude) - center.latitude) ** 2
-            + ((Number(p.longitude) - center.longitude) * Math.cos(center.latitude * Math.PI / 180)) ** 2;
-          if (!best || distance < best.distance) return { place: p, distance };
-          return best;
-        }, null).place;
-        const lat = Number(anchor.latitude);
-        const lng = Number(anchor.longitude);
-        const cluster = L.marker([lat, lng], {
+        const anchor = group.reduce((best, item) => {
+          const distance = Math.hypot(item.point.x - center.x, item.point.y - center.y);
+          return !best || distance < best.distance ? { item, distance } : best;
+        }, null).item;
+        const latlng = [Number(anchor.place.latitude), Number(anchor.place.longitude)];
+        const cluster = L.marker(latlng, {
           icon: L.divIcon({
             className: "pin-cluster",
             html: '<span>' + group.length + '</span>',
@@ -143,49 +187,44 @@ export class MapView {
           title: group.length + " мест рядом",
         }).addTo(this.map);
         cluster.on("click", () => {
-          // Кластер всегда открывает список мест: пользователь сразу видит,
-          // что скрывается за числом, даже если точки имеют разные координаты.
           const list = document.createElement("div");
           list.className = "pin-cluster-popup";
           const heading = document.createElement("strong");
           heading.textContent = group.length + " мест рядом";
+          heading.style.cssText = "display:block;margin-bottom:8px;font-size:14px;";
           list.append(heading);
-          group.forEach((place) => {
+          group.forEach(({ place }) => {
             const button = document.createElement("button");
             button.type = "button";
-            button.dataset.place = place.id;
-            button.textContent = place.title || "Открыть место";
-            button.addEventListener("click", () => {
-              this.map.closePopup();
-              this.onSelect(place.id);
-            });
+            button.textContent = place.title || "Показать место";
+            button.style.cssText = "display:block;width:100%;padding:8px 10px;text-align:left;border:0;border-radius:8px;background:#f5f3ef;margin:4px 0;cursor:pointer;font:inherit;";
+            button.addEventListener("click", () => showPreview(place, latlng));
             list.append(button);
           });
-          L.popup({ maxWidth: 280, maxHeight: 300 })
-            .setLatLng([lat, lng])
+          L.popup({ maxWidth: 290, maxHeight: 320, closeButton: true })
+            .setLatLng(latlng)
             .setContent(list)
             .openOn(this.map);
         });
+        this.markers.set("cluster-" + group.map((item) => item.place.id).join("-"), cluster);
         return;
       }
 
-      group.forEach((p) => {
-        const c = CATEGORIES[p.category] || { icon: "pin", hue: 340 };
-        const marker = L.marker([p.latitude, p.longitude], {
-          title: p.title + (p.is_approx ? " — ориентировочная точка" : ""),
-          icon: L.divIcon({
-            className: "pin",
-            html: '<span class="pin__dot' + (p.is_approx ? ' is-approx' : '') + '" style="--h:' + c.hue + '">' + (this.numbered ? '<b>' + (this.places.indexOf(p) + 1) + '</b>' : icon(c.icon)) + '</span>',
-            iconSize: [38, 38],
-            iconAnchor: [19, 19],
-          }),
-        }).addTo(this.map);
-        marker.on("click", () => this.onSelect(p.id));
-        this.markers.set(p.id, marker);
-      });
+      const p = group[0].place;
+      const category = CATEGORIES[p.category] || { icon: "pin", hue: 340 };
+      const marker = L.marker([p.latitude, p.longitude], {
+        title: p.title || "Открыть предпросмотр",
+        icon: L.divIcon({
+          className: "pin",
+          html: '<span class="pin__dot" style="--h:' + category.hue + '">' + (this.numbered ? '<b>' + (this.places.indexOf(p) + 1) + '</b>' : icon(category.icon)) + '</span>',
+          iconSize: [38, 38],
+          iconAnchor: [19, 19],
+        }),
+      }).addTo(this.map);
+      marker.on("click", () => showPreview(p, [p.latitude, p.longitude]));
+      this.markers.set(p.id, marker);
     });
   }
-
   fit(places) {
     const valid = (places || []).filter(validPoint);
     if (!valid.length) return;
