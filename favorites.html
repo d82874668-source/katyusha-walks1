@@ -34,7 +34,7 @@
 </button>
 <button class="inline-flex items-center gap-space-xs px-4 py-2.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface text-label-lg font-label-lg transition-all shadow-sm" type="button">
 <span class="material-symbols-outlined text-[18px] text-on-surface-variant">file_download</span>
-<span>Экспорт в PDF / GPX</span>
+<span>Печать / PDF</span>
 </button>
 <a class="inline-flex items-center gap-space-xs px-5 py-2.5 rounded-full bg-primary-container hover:bg-primary text-on-primary text-label-lg font-label-lg transition-all shadow-md" href="#">
 <span class="material-symbols-outlined text-[18px]">alt_route</span>
@@ -99,7 +99,7 @@
 </div>
 <!-- Navigation Tabs -->
 <div class="w-full overflow-x-auto pb-space-xs mb-space-md">
-<div class="flex items-center gap-space-xs min-w-max p-1 bg-surface-container-low rounded-full">
+<div id="favorites-tabs" class="flex items-center gap-space-xs min-w-max p-1 bg-surface-container-low rounded-full">
 <button class="inline-flex items-center gap-space-xs px-5 py-2.5 rounded-full bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm transition-all" type="button">
 <span class="material-symbols-outlined text-[18px]">bookmark</span>
 <span>Сохранённые места</span>
@@ -115,11 +115,7 @@
 <span>Мои сценарии в конструкторе</span>
 <span class="px-1.5 py-0.2 rounded-full bg-surface-container text-on-surface-variant font-label-caps text-label-caps">2</span>
 </button>
-<button class="inline-flex items-center gap-space-xs px-5 py-2.5 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-lg text-label-lg transition-all" type="button">
-<span class="material-symbols-outlined text-[18px]">stylus_note</span>
-<span>Личные путевые заметки</span>
-<span class="px-1.5 py-0.2 rounded-full bg-surface-container text-on-surface-variant font-label-caps text-label-caps">5</span>
-</button>
+
 </div>
 </div>
 <!-- Filter Controls & View Toggle Row -->
@@ -127,7 +123,7 @@
 <!-- City and Categories Chips -->
 <div class="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-space-xs">
 <!-- City Selector Pill Group -->
-<div class="flex items-center gap-1 p-1 bg-surface-container-lowest rounded-full shadow-sm">
+<div class="flex items-center gap-1 p-1 bg-surface-container-lowest rounded-full shadow-sm" id="favorites-city-filters">
 <button class="px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary font-label-caps text-label-caps uppercase transition-all">
               Все города (18)
             </button>
@@ -144,7 +140,7 @@
 <!-- Vertical Separator Dot -->
 <span class="hidden sm:inline text-outline-variant font-label-caps">•</span>
 <!-- Categories Quick Filter -->
-<div class="flex items-center gap-1.5 overflow-x-auto max-w-full py-1">
+<div id="favorites-category-filters" class="flex items-center gap-1.5 overflow-x-auto max-w-full py-1">
 <button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-lowest text-on-surface hover:bg-surface-container text-body-sm font-body-sm shadow-sm transition-colors">
 <span class="material-symbols-outlined text-[15px] text-secondary">local_cafe</span>
 <span>Кофейни (6)</span>
@@ -553,4 +549,4 @@
 </div>
 </div>
 </section>
-</div></main><footer class="w-full bg-surface-container-low text-on-surface mt-space-xl"><div class="max-w-[1360px] mx-auto px-gutter py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-lg mb-space-xl"><div class="lg:col-span-5 flex flex-col justify-between"><div class="space-y-space-sm"><span class="font-label-caps text-label-caps uppercase text-secondary tracking-widest">Городской альманах &amp; путеводитель</span><h3 class="font-headline-md text-headline-md text-primary font-medium tracking-tight">Прогулки с Катюшей</h3><p class="font-body-md text-body-md text-on-surface-variant max-w-md">Культурная геометрия, скрытые дворы, тихие кофейни и живые истории улиц. Мы исследуем города не как туристы, а как внимательные читатели открытой книги жизни.</p></div><div class="pt-space-md"><span class="font-label-caps text-label-caps text-on-surface-variant block mb-space-xs">Мобильные приложения</span><div class="flex items-center gap-space-sm"><button class="inline-flex items-center gap-space-xs px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)]" type="button"><span class="material-symbols-outlined text-[18px]">phone_iphone</span><span>App Store</span></button><button class="inline-flex items-center gap-space-xs px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)]" type="button"><span class="material-symbols-outlined text-[18px]">android</span><span>Google Play</span></button></div></div></div><div class="lg:col-span-4 bg-surface-container-lowest p-space-lg rounded-xl shadow-[0_2px_12px_rgba(27,28,26,0.04)] flex flex-col justify-between"><div class="space-y-space-xs"><span class="font-label-caps text-label-caps uppercase text-secondary">Еженедельная редакторская рассылка</span><h4 class="font-headline-sm text-headline-sm text-primary">Секретные маршруты в почте</h4><p class="font-body-sm text-body-sm text-on-surface-variant">Каждую пятницу — одна неочевидная улочка, свежая кофейня недели и вдохновляющий пеший маршрут от Катюши.</p></div><form class="pt-space-md space-y-space-xs" onsubmit="event.preventDefault();"><div class="flex items-center gap-space-xs bg-surface rounded-lg p-1"><input class="w-full bg-transparent px-3 py-2 text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="Ваш e-mail" type="email"/><button class="px-4 py-2 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg transition-colors whitespace-nowrap" type="submit">Подписаться</button></div><p class="font-body-sm text-body-sm text-outline-variant text-[11px]">Бережно относимся к письмам. Никакого спама, только городские находки.</p></form></div><div class="lg:col-span-3 flex flex-col justify-between space-y-space-md"><div class="space-y-space-xs"><span class="font-label-caps text-label-caps uppercase text-secondary">Навигация альманаха</span><ul class="space-y-space-xs font-body-md text-body-md"><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="mesta" href="catalog.html">Каталог мест</a></li><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="interaktivnaya-karta" href="map.html">Интерактивная карта</a></li><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="splanirovat-progulku" href="planner.html">Конструктор прогулок</a></li><li class="py-1"></li><li class="py-1"></li></ul></div><div><span class="font-label-caps text-label-caps uppercase text-on-surface-variant block mb-space-xs">Сообщество</span><div class="flex items-center gap-space-sm"><a class="w-9 h-9 rounded-full bg-surface-container-lowest hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">send</span></a><a class="w-9 h-9 rounded-full bg-surface-container-lowest hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">photo_camera</span></a><a class="w-9 h-9 rounded-full bg-surface-container-lowest hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">podcasts</span></a></div></div></div></div><div class="pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm text-body-sm font-body-sm text-on-surface-variant"><p>© 2026 «Прогулки с Катюшей». Все права защищены. Независимый исследовательский медиапроект.</p><div class="flex items-center gap-space-md"></div></div></div></footer><script type="module" src="assets/js/stitch-app.js?v=3"></script></body></html>
+</div></main><script type="module" src="assets/js/stitch-app.js?v=5"></script></body></html>

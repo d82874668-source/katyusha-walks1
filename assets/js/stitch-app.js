@@ -1,6 +1,6 @@
 import { loadData, setFavorite } from "./store.js";
 import { state } from "./state.js";
-import { PLACES, ROUTES, CATEGORIES } from "./data.js";
+import { PLACES, ROUTES, CATEGORIES } from "./data.js?v=2";
 import { MapView, googleUrl, osmUrl, haversineKm, fmtDist } from "./map.js";
 import { visitDialog, hydrateVisits } from "./visits.js";
 
@@ -11,10 +11,30 @@ const page = document.body.dataset.page || "home";
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 window.addEventListener("pageshow",()=>{if(!location.hash){window.scrollTo(0,0);requestAnimationFrame(()=>window.scrollTo(0,0));}});
 const cityOf = p => p.city || p.region || "Другой город";
+const CITY_OPTIONS = ["Азербайджан","Екатеринбург","Аять","Москва","Санкт-Петербург","Нижний Тагил","Грузия"];
+const CITY_STORAGE_KEY = "katyusha:selected-city";
+const cityGroupOf = p => {
+  const region=String(p.region||"").toLocaleLowerCase("ru");
+  const city=String(p.city||"").toLocaleLowerCase("ru");
+  if(region==="азербайджан" || ["баку","шамахы","габала","губа","гусар","шахдаг","мардакян","бильгя","нардаран","сумгаит","гала","рамана","мамедли","сураханы","масазыр"].includes(city))return "Азербайджан";
+  if(region==="грузия" || city==="тбилиси" || city==="батуми")return "Грузия";
+  if(region==="казахстан" || city==="алматы")return "Казахстан";
+  if(city==="аять" || region.includes("аять"))return "Аять";
+  return ["Екатеринбург","Москва","Санкт-Петербург","Нижний Тагил"].find(x=>x.toLocaleLowerCase("ru")===city)||null;
+};
+const matchesCity = (p, city=activeCity) => city==="all" || cityGroupOf(p)===city;
+const cityFromParam = value => {
+  if(!value)return null;
+  if(CITY_OPTIONS.includes(value)||value==="Казахстан")return value;
+  const place=state.places.find(p=>String(p.city||"").toLocaleLowerCase("ru")===String(value).toLocaleLowerCase("ru"));
+  return place?cityGroupOf(place):null;
+};
 const imageOf = p => p.image || (Array.isArray(p.photos) ? p.photos[0]?.url : "") || "";
 const categoryOf = p => CATEGORIES[p.category]?.title || "Место";
 const priceOf = p => p.price_min == null ? "Стоимость не указана" : Number(p.price_min) === 0 ? "Бесплатно" : (Number(p.price_min) === Number(p.price_max) ? Number(p.price_min).toLocaleString("ru-RU") : "от " + Number(p.price_min).toLocaleString("ru-RU")) + " " + (p.price_unit || "");
-let mapView = null, homeMapView = null, activeCity = "Баку", activeCategory = "all", query = "", mapQuery = "", sortMode = "rating", viewMode = "grid", plan = {ids:[],mode:"walk",name:"Моя прогулка"};
+let mapView = null, homeMapView = null, activeCity = "Азербайджан", activeCategory = "all", query = "", mapQuery = "", sortMode = "rating", viewMode = "grid", plan = {ids:[],mode:"walk",name:"Моя прогулка"};
+let activePriceBand=null, activeFeatures=new Set(), userLocation=null, mapCategory="all", mapListRefresh=null;
+let routeTopic="all", routePace="all", favoriteCategory="all", favoriteSort="new";
 
 function toast(message) {
   let el = $("#stitch-toast");
@@ -22,13 +42,64 @@ function toast(message) {
   el.textContent=message; el.classList.add("is-visible");
   clearTimeout(toast.timer); toast.timer=setTimeout(()=>el.classList.remove("is-visible"),2600);
 }
-function allCities() { return [...new Set(state.places.map(cityOf).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ru")); }
+function allCities() {
+  const fixed=CITY_OPTIONS.filter(city=>state.places.some(p=>cityGroupOf(p)===city));
+  if(state.places.some(p=>cityGroupOf(p)==="Казахстан"))fixed.push("Казахстан");
+  return fixed;
+}
+function priceCurrency(p) {
+  const unit=String(p.price_unit||"").toUpperCase();
+  if(unit.includes("AZN"))return "AZN";
+  if(unit.includes("RUB")||unit.includes("₽"))return "RUB";
+  if(unit.includes("GEL"))return "GEL";
+  if(unit.includes("KZT")||unit.includes("ТЕНГЕ"))return "KZT";
+  return cityGroupOf(p)||"other";
+}
+function getPriceBandMap() {
+  const groups=new Map();
+  for(const p of state.places){
+    if(p.price_min==null || !Number.isFinite(Number(p.price_min)))continue;
+    if(activeCity!=="all"&&!matchesCity(p))continue;
+    const key=priceCurrency(p);
+    if(!groups.has(key))groups.set(key,[]);
+    groups.get(key).push(p);
+  }
+  const result=new Map();
+  for(const items of groups.values()){
+    items.sort((a,b)=>Number(a.price_min)-Number(b.price_min));
+    const n=items.length;
+    items.forEach((p,i)=>{
+      const ratio=n<=1?0:i/(n-1);
+      result.set(String(p.id),ratio<=0.34?"low":ratio<=0.67?"mid":"high");
+    });
+  }
+  return result;
+}
+function featureMatches(p,feature) {
+  const text=[p.title,p.description,p.address,p.category,categoryOf(p)].filter(Boolean).join(" ").toLocaleLowerCase("ru");
+  const tags=[...(Array.isArray(p.tags)?p.tags:[]),...(Array.isArray(p.features)?p.features:[]),...(Array.isArray(p.amenities)?p.amenities:[])].join(" ").toLocaleLowerCase("ru");
+  if(feature==="water")return ["sea","boat","embankment","beach","resort"].includes(p.category)||/(набережн|вид.{0,20}(мор|вод|залив|касп)|берег|озер|водохранилищ|морская прогул|панорам.{0,25}мор|waterfront|sea view)/i.test(text+" "+tags);
+  if(feature==="terrace")return /(веранд|террас|балкон|летн.{0,10}площадк|roof.?top|terrace)/i.test(text+" "+tags);
+  if(feature==="dog")return p.dog_friendly===true||p.pet_friendly===true||/(dog.?friendly|pet.?friendly|дог.?френдли|с собак|с питомц|можно с животными)/i.test(text+" "+tags);
+  if(feature==="work")return /(коворкинг|для работы|тихо работать|рабочее место|wi.?fi|ноутбук|laptop.?friendly)/i.test(text+" "+tags);
+  if(feature==="historic")return (p.category==="museum"&&!/под открытым небом|open.?air/i.test(text))||p.category==="historic"||/(историческ.{0,25}интерьер|особняк|старинн.{0,20}(зал|интерьер)|историческ.{0,20}здани|парадн.{0,15}(лестниц|интерьер))/i.test(text+" "+tags);
+  return true;
+}
 function placeById(id) { return state.places.find(p=>String(p.id)===String(id)); }
 function visiblePlaces() {
-  let list=state.places.filter(p=>(activeCity==="all" || cityOf(p)===activeCity) && (activeCategory==="all" || p.category===activeCategory));
-  if(query.trim()) { const q=query.toLocaleLowerCase("ru"); list=list.filter(p=>[p.title,p.description,p.address,cityOf(p),categoryOf(p)].join(" ").toLocaleLowerCase("ru").includes(q)); }
+  let list=state.places.filter(p=>matchesCity(p)&&(activeCategory==="all"||p.category===activeCategory));
+  if(query.trim()) { const q=query.toLocaleLowerCase("ru"); list=list.filter(p=>[p.title,p.description,p.address,cityGroupOf(p),cityOf(p),categoryOf(p)].join(" ").toLocaleLowerCase("ru").includes(q)); }
+  if(activeFeatures.size)list=list.filter(p=>[...activeFeatures].every(feature=>featureMatches(p,feature)));
+  if(activePriceBand){const bands=getPriceBandMap();list=list.filter(p=>bands.get(String(p.id))===activePriceBand);}
   if(sortMode==="name") list.sort((a,b)=>a.title.localeCompare(b.title,"ru"));
   else if(sortMode==="price") list.sort((a,b)=>(a.price_min??Infinity)-(b.price_min??Infinity));
+  else if(sortMode==="popular")list.sort((a,b)=>(Number(b.review_count)||0)-(Number(a.review_count)||0)||(Number(b.rating)||0)-(Number(a.rating)||0));
+  else if(sortMode==="new")list.sort((a,b)=>String(b.last_verified_at||"").localeCompare(String(a.last_verified_at||"")));
+  else if(sortMode==="distance"&&userLocation)list.sort((a,b)=>{
+    const da=Number.isFinite(+a.latitude)&&Number.isFinite(+a.longitude)?haversineKm(userLocation,a):Infinity;
+    const db=Number.isFinite(+b.latitude)&&Number.isFinite(+b.longitude)?haversineKm(userLocation,b):Infinity;
+    return da-db;
+  });
   else list.sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));
   return list;
 }
@@ -57,7 +128,7 @@ function routeCard(r) {
   </article>`;
 }
 function cityCard(city) {
-  const places=state.places.filter(p=>cityOf(p)===city), sample=places.find(imageOf);
+  const places=state.places.filter(p=>cityGroupOf(p)===city), sample=places.find(imageOf);
   return `<article class="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-[0_12px_32px_-4px_rgba(36,51,44,0.1)] transition-all flex flex-col">
     <button type="button" class="relative h-64 overflow-hidden text-left" data-city-pick="${esc(city)}">
       ${sample&&imageOf(sample)?`<img class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" src="${esc(imageOf(sample))}" alt="${esc(city)}" loading="lazy">`:'<div class="w-full h-full bg-surface-container-low flex items-center justify-center"><span class="material-symbols-outlined text-5xl text-primary/40">location_city</span></div>'}
@@ -68,10 +139,66 @@ function cityCard(city) {
 }
 function syncHeader() {
   const count=state.places.filter(p=>state.favs.has(p.id)||state.favs.has(String(p.id))).length;
-  const header=$("header");if(header){const cityButton=[...header.querySelectorAll("button")].find(b=>/Санкт-Петербург|Баку|Москва|Екатеринбург/.test(b.textContent));if(cityButton){const spans=cityButton.querySelectorAll("span");if(spans.length>1)spans[1].textContent=activeCity;}}
+  const cityLabel=$("header [data-current-city]");
+  if(cityLabel)cityLabel.textContent=activeCity==="all"?"Все города":activeCity;
+  const switcher=$("header [data-city-switcher]");
+  if(switcher)switcher.setAttribute("aria-label","Выбранный регион: "+activeCity);
+  $("[data-select-city]").forEach(button=>{
+    const selected=button.dataset.selectCity===activeCity;
+    button.setAttribute("aria-current",selected?"true":"false");
+    button.classList.toggle("bg-primary-container",selected);
+    button.classList.toggle("text-on-primary",selected);
+  });
+  $("[data-map-city]").forEach(button=>{
+    const selected=button.dataset.mapCity===activeCity;
+    button.classList.toggle("bg-primary",selected);
+    button.classList.toggle("text-on-primary",selected);
+  });
+  $("[data-fav-city]").forEach(button=>{
+    const selected=button.dataset.favCity===activeCity||(button.dataset.favCity==="all"&&activeCity==="all");
+    button.classList.toggle("bg-primary-container",selected);
+    button.classList.toggle("text-on-primary",selected);
+  });
   const favLink=$('a[data-path="izbrannoe"]')||$('a[href="favorites.html"]');
-  if(favLink){const spans=favLink.querySelectorAll("span"); if(spans.length)spans[spans.length-1].textContent=String(count);}
-  const label=$("header [data-current-city]"); if(label)label.textContent=activeCity;
+  if(favLink){const spans=favLink.querySelectorAll("span");if(spans.length)spans[spans.length-1].textContent=String(count);}
+}
+function initHeaderCitySwitcher() {
+  const wrapper=$("header .relative.inline-flex.items-center");
+  const button=wrapper?.querySelector("button");
+  if(!wrapper||!button)return;
+  wrapper.replaceChildren(button);
+  button.dataset.citySwitcher="true";
+  button.type="button";
+  button.setAttribute("aria-haspopup","menu");
+  button.setAttribute("aria-expanded","false");
+  button.innerHTML='<span class="material-symbols-outlined text-secondary text-[18px]">location_on</span><span data-current-city></span><span class="material-symbols-outlined text-on-surface-variant text-[16px]">expand_more</span>';
+  const menu=document.createElement("div");
+  menu.id="header-city-menu";
+  menu.className="absolute left-0 top-full mt-2 min-w-[230px] max-h-[70vh] overflow-y-auto bg-surface-container-lowest rounded-xl shadow-xl border border-outline-variant/40 p-2 z-[1000] hidden";
+  menu.setAttribute("role","menu");
+  menu.setAttribute("aria-label","Выберите город или страну");
+  menu.innerHTML=allCities().map(city=>'<button type="button" role="menuitem" data-select-city="'+esc(city)+'" class="w-full text-left px-3 py-2.5 rounded-lg text-sm hover:bg-surface-container-low transition-colors">'+esc(city)+'</button>').join("");
+  wrapper.append(menu);
+  const close=()=>{menu.classList.add("hidden");button.setAttribute("aria-expanded","false");};
+  button.addEventListener("click",e=>{e.stopPropagation();const opening=menu.classList.contains("hidden");menu.classList.toggle("hidden",!opening);button.setAttribute("aria-expanded",String(opening));});
+  menu.addEventListener("click",e=>{const choice=e.target.closest("[data-select-city]");if(!choice)return;applySelectedCity(choice.dataset.selectCity);close();});
+  document.addEventListener("click",e=>{if(!wrapper.contains(e.target))close();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+}
+function applySelectedCity(city) {
+  if(!allCities().includes(city))return;
+  activeCity=city;
+  try{localStorage.setItem(CITY_STORAGE_KEY,city);}catch{}
+  syncHeader();
+  if(page==="home"){
+    const select=$("#hero-city-select");if(select)select.value=city;
+    try{renderHome();}catch(error){console.error("Homepage content:",error);}
+    homeMapView?.setPlaces(state.places.filter(p=>matchesCity(p)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)),true);
+  } else if(page==="catalog")renderCatalog();
+  else if(page==="map"){const select=$("#map-city-select");if(select)select.value=city;mapListRefresh?.();}
+  else if(page==="planner"){const select=$("#config-city");if(select)select.value=city;renderSuggestedRoutes();}
+  else if(page==="routes")renderRoutesPage();
+  else if(page==="favorites")renderFavorites();
 }
 function fillSelect(select, values, allLabel=null) {
   if(!select)return;
@@ -82,46 +209,68 @@ function fillSelect(select, values, allLabel=null) {
 function renderHome() {
   const cityGrid=$("#city-grid");
   if(cityGrid)cityGrid.innerHTML=allCities().map(cityCard).join("");
+  const homeRoutes=state.routes.filter(r=>(r.places||[]).some(id=>{const p=placeById(id);return p&&matchesCity(p);})).slice(0,3);
   const routeGrid=$("#routes-grid");
-  if(routeGrid)routeGrid.innerHTML=state.routes.slice(0,3).map(routeCard).join("");
+  if(routeGrid)routeGrid.innerHTML=homeRoutes.length?homeRoutes.map(routeCard).join(""):'<p class="col-span-full text-on-surface-variant py-6">Готовые маршруты для выбранного региона скоро появятся.</p>';
   const allRoutesLink=[...($("#planner-builder")?.querySelectorAll("a")||[])].find(a=>/Смотреть все/.test(a.textContent));
-  if(allRoutesLink){allRoutesLink.href="routes.html";allRoutesLink.textContent="Все маршруты ("+state.routes.length+") →";}
+  if(allRoutesLink){allRoutesLink.href="routes.html";allRoutesLink.textContent="Все маршруты ("+homeRoutes.length+") →";}
   const heroPlannerLink=[...($("#top")?.querySelectorAll("a")||[])].find(a=>/Создать маршрут/.test(a.textContent));
   if(heroPlannerLink)heroPlannerLink.href="planner.html";
   const heroCity=$("#hero-city-select");
   fillSelect(heroCity,allCities());
-  if(heroCity){if(allCities().includes(heroCity.value))activeCity=heroCity.value;else{heroCity.value=allCities().includes("Баку")?"Баку":allCities()[0]||"";activeCity=heroCity.value;}}
+  if(heroCity)heroCity.value=activeCity;
   const mapWrap=$("#home-map-wrap");
   if(mapWrap&&!$("#homeMapCanvas")){mapWrap.innerHTML='<div id="homeMapCanvas" class="w-full h-full min-h-[420px]"></div><a href="map.html" class="absolute bottom-4 right-4 z-[500] px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg shadow-lg">Открыть полную карту ↗</a>';}
-  const featured=state.places.find(p=>cityOf(p)===activeCity&&imageOf(p))||state.places.find(imageOf);
+  const featured=state.places.find(p=>cityGroupOf(p)===activeCity&&imageOf(p))||state.places.find(p=>cityGroupOf(p)===activeCity);
   if(featured){
+    const openCard=$("main button").find(b=>/Открыть карточку/.test(b.textContent));
+    if(openCard)openCard.onclick=()=>location.href="place.html?id="+encodeURIComponent(featured.id);
+    const addFeatured=$("main button").find(b=>/В маршрут/.test(b.textContent));
+    if(addFeatured)addFeatured.onclick=()=>{if(!plan.ids.some(id=>String(id)===String(featured.id)))plan.ids.push(featured.id);writePlan();location.href="planner.html";};
+    const moreFeatured=$("main button").find(b=>b.textContent.trim()==="Подробнее");
+    if(moreFeatured)moreFeatured.onclick=()=>location.href="place.html?id="+encodeURIComponent(featured.id);
     const heroSection=$("main section");
     const featurePanel=[...heroSection.querySelectorAll("div")].find(el=>el.classList.contains("lg:col-span-12")&&el.classList.contains("bg-surface-container-lowest"));
-    if(featurePanel)featurePanel.innerHTML=`<div class="relative h-56 overflow-hidden"><img src="${esc(imageOf(featured))}" alt="${esc(featured.title)}" class="w-full h-full object-cover"></div><div class="p-space-lg"><span class="font-label-caps text-label-caps uppercase text-secondary">Место из реального каталога</span><h3 class="font-headline-md text-primary mt-2">${esc(featured.title)}</h3><p class="font-body-md text-on-surface-variant mt-2">${esc(featured.description||"")}</p><p class="font-body-sm text-on-surface-variant mt-3">${esc(cityOf(featured))} · ${esc(featured.address||"Адрес уточняется")}</p><a class="inline-flex mt-4 text-secondary font-label-lg" href="place.html?id=${encodeURIComponent(featured.id)}">Открыть карточку →</a></div>`;
+    if(featurePanel){const media=imageOf(featured)?'<img src="'+esc(imageOf(featured))+'" alt="'+esc(featured.title)+'" class="w-full h-full object-cover">':'<div class="w-full h-full flex items-center justify-center bg-surface-container-low text-primary/40"><span class="material-symbols-outlined text-5xl">place</span></div>';featurePanel.innerHTML='<div class="relative h-56 overflow-hidden">'+media+'</div><div class="p-space-lg"><span class="font-label-caps text-label-caps uppercase text-secondary">Место из каталога выбранного региона</span><h3 class="font-headline-md text-primary mt-2">'+esc(featured.title)+'</h3><p class="font-body-md text-on-surface-variant mt-2">'+esc(featured.description||"") +'</p><p class="font-body-sm text-on-surface-variant mt-3">'+esc(cityOf(featured))+' · '+esc(featured.address||"Адрес уточняется")+'</p><a class="inline-flex mt-4 text-secondary font-label-lg" href="place.html?id='+encodeURIComponent(featured.id)+'">Открыть карточку →</a></div>';}
   }
   const mapFilters=$("#map-filter-group");
-  if(mapFilters){const cats=[...new Set(state.places.filter(p=>cityOf(p)===activeCity).map(p=>p.category).filter(Boolean))].slice(0,6);mapFilters.innerHTML='<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg" type="button" data-home-category="all">Все места</button>'+cats.map(c=>`<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface font-label-lg" type="button" data-home-category="${esc(c)}">${esc(categoryOf({category:c}))}</button>`).join("");}
-  const citySummary=[...$("#open-cities").querySelectorAll("span")].find(el=>/резиденц|локац/i.test(el.textContent));
+  if(mapFilters){const cats=[...new Set(state.places.filter(p=>cityGroupOf(p)===activeCity).map(p=>p.category).filter(Boolean))].slice(0,6);mapFilters.innerHTML='<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg" type="button" data-home-category="all">Все места</button>'+cats.map(c=>`<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface font-label-lg" type="button" data-home-category="${esc(c)}">${esc(categoryOf({category:c}))}</button>`).join("");}
+  const citySummary=[...($("#open-cities")?.querySelectorAll("span")||[])].find(el=>/резиденц|локац/i.test(el.textContent));
   if(citySummary)citySummary.textContent=allCities().length+" городов · "+state.places.length+" мест";
 }
 function renderCatalog() {
   const grid=$("#places-grid"); if(!grid)return;
   const list=visiblePlaces();
-  grid.innerHTML=list.length?list.map(stitchCard).join(""):'<div class="col-span-full text-center py-16 text-on-surface-variant">По вашему запросу ничего не найдено.</div>';
+  grid.innerHTML=list.length?list.map(stitchCard).join(""):'<div class="col-span-full text-center py-16 text-on-surface-variant">По выбранным фильтрам мест не найдено. Попробуйте изменить условия.</div>';
   grid.classList.toggle("grid-cols-1",viewMode==="list");
   grid.classList.toggle("md:grid-cols-2",viewMode!=="list");
   grid.classList.toggle("lg:grid-cols-3",viewMode!=="list");
   const citySelect=$("#city-select");
   if(citySelect){fillSelect(citySelect,allCities(),"Все города");citySelect.value=activeCity;}
   const cityPills=$("#city-pills");
-  if(cityPills)cityPills.innerHTML=['all',...allCities()].map(c=>`<button class="px-3.5 py-1.5 rounded-full ${activeCity===c?"bg-primary-container text-on-primary":"bg-surface-container-lowest text-on-surface"} font-label-lg text-label-lg" data-city-filter="${esc(c)}">${c==="all"?"Все города":esc(c)}</button>`).join("");
-  const cats=[...new Set(state.places.map(p=>p.category).filter(Boolean))].sort((a,b)=>categoryOf({category:a}).localeCompare(categoryOf({category:b}),"ru"));
+  if(cityPills)cityPills.innerHTML=allCities().map(c=>'<button type="button" class="px-3.5 py-1.5 rounded-full '+(activeCity===c?"bg-primary-container text-on-primary":"bg-surface-container-lowest text-on-surface")+' font-label-lg text-label-lg" data-city-filter="'+esc(c)+'">'+esc(c)+'</button>').join("");
+  const cats=[...new Set(state.places.filter(p=>matchesCity(p)).map(p=>p.category).filter(Boolean))].sort((a,b)=>categoryOf({category:a}).localeCompare(categoryOf({category:b}),"ru"));
   const categoryPills=$("#category-pills");
-  if(categoryPills)categoryPills.innerHTML=['all',...cats].map(c=>`<button class="px-3.5 py-1.5 rounded-full ${activeCategory===c?"bg-primary-container text-on-primary":"bg-surface-container-lowest text-on-surface"} font-label-lg text-label-lg" data-category-filter="${esc(c)}">${c==="all"?"Все категории":esc(categoryOf({category:c}))}</button>`).join("");
+  if(categoryPills)categoryPills.innerHTML=['all',...cats].map(c=>'<button type="button" class="px-3.5 py-1.5 rounded-full '+(activeCategory===c?"bg-primary-container text-on-primary":"bg-surface-container-lowest text-on-surface")+' font-label-lg text-label-lg" data-category-filter="'+esc(c)+'">'+(c==="all"?"Все категории":esc(categoryOf({category:c})))+'</button>').join("");
   const total=$("[data-results-count]");if(total)total.textContent=list.length+" мест";
   const stat=[...document.querySelectorAll("main span,main strong")].find(el=>/248 локаций|\d+ локаций/.test(el.textContent));if(stat)stat.textContent=state.places.length+" мест";
   const verified=[...document.querySelectorAll("main span,main strong")].find(el=>/100% мест/.test(el.textContent));if(verified)verified.textContent="Адреса уточняются";
   const verifiedLabel=[...document.querySelectorAll("main span,main strong")].find(el=>/Проверено лично/.test(el.textContent));if(verifiedLabel)verifiedLabel.textContent="Сведения каталога";
+  const sort=$("#catalog-sort");if(sort)sort.value=sortMode;
+  $$("[data-price-band]").forEach(button=>{
+    const selected=button.dataset.priceBand===activePriceBand;
+    button.setAttribute("aria-pressed",String(selected));
+    button.classList.toggle("bg-primary-container",selected);
+    button.classList.toggle("text-on-primary",selected);
+  });
+  $$("[data-feature-filter]").forEach(button=>{
+    const selected=activeFeatures.has(button.dataset.featureFilter);
+    button.setAttribute("aria-pressed",String(selected));
+    button.classList.toggle("bg-primary-container",selected);
+    button.classList.toggle("text-on-primary",selected);
+  });
+  $("#view-grid")?.classList.toggle("bg-surface-container-lowest",viewMode==="grid");
+  $("#view-list")?.classList.toggle("bg-surface-container-lowest",viewMode==="list");
 }
 function initCatalog() {
   const search=$("#place-search");if(search)search.addEventListener("input",e=>{query=e.target.value;renderCatalog();});
@@ -133,63 +282,142 @@ function initCatalog() {
     recognition.onresult=event=>{if(search){search.value=event.results[0][0].transcript;query=search.value;renderCatalog();}};
     recognition.onerror=()=>toast("Не удалось распознать запрос.");recognition.start();
   });
-  $("#city-select")?.addEventListener("change",e=>{activeCity=e.target.value;renderCatalog();});
-  $("#city-pills")?.addEventListener("click",e=>{const b=e.target.closest("[data-city-filter]");if(!b)return;activeCity=b.dataset.cityFilter;renderCatalog();});
+  $("#city-select")?.addEventListener("change",e=>applySelectedCity(e.target.value));
+  $("#city-pills")?.addEventListener("click",e=>{const b=e.target.closest("[data-city-filter]");if(b)applySelectedCity(b.dataset.cityFilter);});
   $("#category-pills")?.addEventListener("click",e=>{const b=e.target.closest("[data-category-filter]");if(!b)return;activeCategory=b.dataset.categoryFilter;renderCatalog();});
+  $$("[data-price-band]").forEach(button=>button.addEventListener("click",()=>{
+    activePriceBand=activePriceBand===button.dataset.priceBand?null:button.dataset.priceBand;
+    if(activePriceBand&&!state.places.some(p=>p.price_min!=null&&matchesCity(p)))toast("Для части мест цены ещё не указаны; фильтр использует только опубликованные цены.");
+    renderCatalog();
+  }));
+  $$("[data-feature-filter]").forEach(button=>button.addEventListener("click",()=>{
+    const key=button.dataset.featureFilter;
+    activeFeatures.has(key)?activeFeatures.delete(key):activeFeatures.add(key);
+    renderCatalog();
+    if(key==="dog"&&activeFeatures.has(key)&&visiblePlaces().length===0)toast("В каталоге пока нет мест с подтверждённой отметкой dog-friendly.");
+  }));
+  $("#catalog-sort")?.addEventListener("change",e=>{
+    const next=e.target.value;
+    if(next==="distance"){
+      if(!navigator.geolocation){toast("Браузер не поддерживает определение местоположения.");e.target.value=sortMode;return;}
+      navigator.geolocation.getCurrentPosition(pos=>{
+        userLocation={latitude:pos.coords.latitude,longitude:pos.coords.longitude};
+        sortMode="distance";renderCatalog();toast("Места отсортированы по расстоянию от вас.");
+      },()=>{toast("Нет доступа к местоположению. Разрешите геолокацию или выберите другую сортировку.");e.target.value=sortMode;},{enableHighAccuracy:true,timeout:10000,maximumAge:300000});
+      return;
+    }
+    sortMode=next;renderCatalog();
+  });
   $("#view-grid")?.addEventListener("click",()=>{viewMode="grid";renderCatalog();});
   $("#view-list")?.addEventListener("click",()=>{viewMode="list";renderCatalog();});
   $("#view-map")?.addEventListener("click",()=>location.href="map.html");
   const mapPreview=$("#map-preview-container");if(mapPreview)mapPreview.innerHTML='<a href="map.html" class="block rounded-xl bg-primary-container text-on-primary p-6 font-headline-md">Открыть интерактивную карту всех мест →</a>';
   renderCatalog();
 }
+function mapCategoryMatches(p,category) {
+  const groups={
+    all:null,
+    coffee:["coffee","cafe","bakery","fastfood"],
+    architecture:["historic","museum","monument","attraction","city","exhibition"],
+    parks:["park","square","garden","nature","embankment"],
+    viewpoints:["viewpoint","sea","boat","resort","trips","beach"],
+    date:["restaurant","cafe","coffee","bar","winebar","hookah","sea","boat","resort"]
+  };
+  return !groups[category]||groups[category].includes(p.category);
+}
 function initMapPage(home=false) {
   if(!window.L){toast("Карта не загрузилась: библиотека Leaflet недоступна.");return;}
   if(!home){
     const container=$("#map-canvas-container");
     if(container){
-      container.style.position="relative";
-      container.style.height="640px";
-      container.style.minHeight="640px";
-      container.style.width="100%";
+      container.style.position="relative";container.style.height="640px";container.style.minHeight="640px";container.style.width="100%";
       container.innerHTML='<div id="mapCanvas" style="position:absolute;inset:0;width:100%;height:100%;min-height:640px"></div>';
     }
   }
   const el=home?$("#homeMapCanvas"):$("#mapCanvas");
-  if(!el){toast("Не найден контейнер карты.");return;}
+  if(!el)return;
   const instance=new MapView(el,id=>location.href="place.html?id="+encodeURIComponent(id));
-  const filtered=()=>state.places.filter(p=>(activeCity==="all"||cityOf(p)===activeCity)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
-  instance.setPlaces(filtered(),true);
-  requestAnimationFrame(()=>instance.refresh());
-  if(home)homeMapView=instance;else mapView=instance;
-  if(!home){
-    const citySelect=$("#map-city-select");
-    const renderList=()=>{
-      const q=mapQuery.toLocaleLowerCase("ru");
-      const list=filtered().filter(p=>!q||[p.title,p.address,cityOf(p)].join(" ").toLocaleLowerCase("ru").includes(q));
-      const target=$("#places-container");
-      const countLabel=[...document.querySelectorAll("#map-sidebar span")].find(el=>/Список мест/.test(el.textContent));
-      if(countLabel)countLabel.textContent="Список мест ("+list.length+")";
-      if(target)target.innerHTML=list.slice(0,100).map(p=>`<button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-container-low text-left" data-map-place="${esc(p.id)}"><span class="w-2.5 h-2.5 rounded-full ${p.is_approx?"bg-secondary":"bg-primary"}"></span><span class="min-w-0"><strong class="block truncate text-primary text-sm">${esc(p.title)}</strong><small class="block truncate text-on-surface-variant">${esc(p.address||"Адрес уточняется")}</small></span></button>`).join("");
-    };
-    if(citySelect){fillSelect(citySelect,allCities(),"Все города");citySelect.value=activeCity;citySelect.addEventListener("change",()=>{activeCity=citySelect.value;instance.setPlaces(filtered(),true);renderList();});}
-    renderList();
-    $("#map-search-input")?.addEventListener("input",e=>{mapQuery=e.target.value;renderList();});
-    $("#btn-geolocate")?.addEventListener("click",async()=>{try{const pos=await instance.locate();instance.map.setView([pos.latitude,pos.longitude],15);}catch{toast("Не удалось определить местоположение.");}});
-    $("#btn-zoom-in")?.addEventListener("click",()=>instance.map.zoomIn());
-    $("#btn-zoom-out")?.addEventListener("click",()=>instance.map.zoomOut());
-    $("#btn-compass")?.addEventListener("click",()=>instance.fit(filtered()));
-    $("#btn-layers")?.addEventListener("click",()=>toast("Используется карта OpenStreetMap."));
-    $("#btn-route-toggle")?.addEventListener("click",()=>location.href="planner.html");
-    $("#sidebar-toggle-btn")?.addEventListener("click",()=>$("#map-sidebar")?.classList.toggle("is-collapsed"));
-    $("#tab-route")?.addEventListener("click",()=>location.href="planner.html");
-    $("#tab-locations")?.addEventListener("click",renderList);
-    $("#places-container")?.addEventListener("click",e=>{const b=e.target.closest("[data-map-place]");if(!b)return;const p=placeById(b.dataset.mapPlace);if(p){instance.focus(p);location.href="place.html?id="+encodeURIComponent(p.id);}});
+  const filtered=()=>state.places.filter(p=>matchesCity(p)&&mapCategoryMatches(p,mapCategory)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
+  instance.setPlaces(filtered(),true);requestAnimationFrame(()=>instance.refresh());
+  if(home){
+    homeMapView=instance;
+    $('button[aria-label="Zoom in"]')?.addEventListener("click",()=>instance.map.zoomIn());
+    $('button[aria-label="Zoom out"]')?.addEventListener("click",()=>instance.map.zoomOut());
+    $('button[aria-label="Locate me"]')?.addEventListener("click",async()=>{try{const pos=await instance.locate();instance.map.setView([pos.latitude,pos.longitude],15);}catch{toast("Не удалось определить местоположение.");}});
+    return;
   }
+  mapView=instance;
+  const renderList=()=>{
+    const q=mapQuery.toLocaleLowerCase("ru");
+    const list=filtered().filter(p=>!q||[p.title,p.address,cityOf(p),cityGroupOf(p)].join(" ").toLocaleLowerCase("ru").includes(q));
+    const target=$("#places-container");
+    const countLabel=[...document.querySelectorAll("#map-sidebar span")].find(el=>/Список мест/.test(el.textContent));
+    if(countLabel)countLabel.textContent="Список мест ("+list.length+")";
+    if(target)target.innerHTML=list.slice(0,150).map(p=>'<button type="button" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-container-low text-left" data-map-place="'+esc(p.id)+'"><span class="w-2.5 h-2.5 rounded-full '+(p.is_approx?"bg-secondary":"bg-primary")+'"></span><span class="min-w-0"><strong class="block truncate text-primary text-sm">'+esc(p.title)+'</strong><small class="block truncate text-on-surface-variant">'+esc(p.address||"Адрес уточняется")+'</small></span></button>').join("");
+  };
+  const refresh=()=>{instance.setPlaces(filtered(),true);renderList();};
+  mapListRefresh=refresh;
+  const citySelect=$("#map-city-select");
+  if(citySelect){fillSelect(citySelect,allCities(),"Все города");citySelect.value=activeCity;citySelect.addEventListener("change",e=>applySelectedCity(e.target.value));}
+  const cityPills=$("#map-city-pills");
+  if(cityPills){
+    cityPills.innerHTML='<span class="material-symbols-outlined text-[15px] text-secondary ml-2">location_city</span>'+allCities().map(city=>'<button type="button" data-map-city="'+esc(city)+'" class="px-2.5 py-1 rounded-full text-label-caps font-label-caps whitespace-nowrap '+(city===activeCity?"bg-primary text-on-primary shadow-xs":"hover:bg-surface-container text-on-surface-variant")+'">'+esc(city)+'</button>').join("");
+    cityPills.addEventListener("click",e=>{const b=e.target.closest("[data-map-city]");if(b)applySelectedCity(b.dataset.mapCity);});
+  }
+  const categoryPills=$("#map-category-pills");
+  const mapFilters=["all","coffee","architecture","parks","viewpoints","date"];
+  if(categoryPills){
+    $$("button.filter-chip",categoryPills).forEach((b,i)=>{b.dataset.mapCategory=mapFilters[i]||"all";});
+    categoryPills.addEventListener("click",e=>{
+      const b=e.target.closest("[data-map-category]");if(!b)return;
+      mapCategory=b.dataset.mapCategory;
+      $$("#map-category-pills [data-map-category]").forEach(x=>x.classList.toggle("active",x===b));
+      refresh();
+    });
+  }
+  const areaButton=$("#map-area-select");
+  const areaWrapper=areaButton?.parentElement;
+  const areaMenu=areaWrapper?.querySelector("div.absolute");
+  if(areaButton&&areaMenu){
+    areaMenu.className="absolute left-0 top-full mt-1 min-w-[230px] max-h-[70vh] overflow-y-auto bg-surface-container-lowest rounded-xl shadow-lg p-2 hidden z-[1000] text-body-sm";
+    areaMenu.innerHTML=allCities().map(city=>'<button type="button" data-map-area-city="'+esc(city)+'" class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-container-low">'+esc(city)+'</button>').join("");
+    areaButton.addEventListener("click",e=>{e.stopPropagation();areaMenu.classList.toggle("hidden");});
+    areaMenu.addEventListener("click",e=>{const b=e.target.closest("[data-map-area-city]");if(!b)return;applySelectedCity(b.dataset.mapAreaCity);areaMenu.classList.add("hidden");});
+    document.addEventListener("click",e=>{if(!areaWrapper.contains(e.target))areaMenu.classList.add("hidden");});
+  }
+  $("#map-search-input")?.addEventListener("input",e=>{mapQuery=e.target.value;renderList();});
+  $("#btn-geolocate")?.addEventListener("click",async()=>{try{const pos=await instance.locate();instance.map.setView([pos.latitude,pos.longitude],15);}catch{toast("Не удалось определить местоположение.");}});
+  $("#btn-zoom-in")?.addEventListener("click",()=>instance.map.zoomIn());
+  $("#btn-zoom-out")?.addEventListener("click",()=>instance.map.zoomOut());
+  $("#btn-compass")?.addEventListener("click",()=>instance.fit(filtered()));
+  $("#btn-layers")?.addEventListener("click",()=>toast("Используется карта OpenStreetMap."));
+  $("#btn-route-toggle")?.addEventListener("click",()=>location.href="planner.html");
+  $("#sidebar-toggle-btn")?.addEventListener("click",()=>{$("#map-sidebar")?.classList.add("is-collapsed");$("#sidebar-expand-btn")?.classList.remove("hidden");});
+  $("#sidebar-expand-btn")?.addEventListener("click",()=>{$("#map-sidebar")?.classList.remove("is-collapsed");$("#sidebar-expand-btn")?.classList.add("hidden");});
+  $("#tab-route")?.addEventListener("click",()=>location.href="planner.html");
+  $("#tab-locations")?.addEventListener("click",renderList);
+  $("#places-container")?.addEventListener("click",e=>{const b=e.target.closest("[data-map-place]");if(!b)return;const p=placeById(b.dataset.mapPlace);if(p){instance.focus(p);location.href="place.html?id="+encodeURIComponent(p.id);}});
+  $$("[data-map-reset]").forEach(b=>b.addEventListener("click",()=>{mapQuery="";mapCategory="all";const input=$("#map-search-input");if(input)input.value="";const all=$('#map-category-pills [data-map-category="all"]');if(all)all.click();else refresh();}));
+  $$("[data-export-gpx]").forEach(b=>b.addEventListener("click",()=>{
+    const points=filtered();if(!points.length){toast("Нет точек для экспорта.");return;}
+    const escXml=value=>String(value??"").replace(/[<>&'"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;","'":"&apos;",'"':"&quot;"}[c]));
+    const body=points.map(p=>'<wpt lat="'+Number(p.latitude)+'" lon="'+Number(p.longitude)+'"><name>'+escXml(p.title)+'</name><desc>'+escXml(p.address||"")+'</desc></wpt>').join("");
+    const xml='<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="Прогулки с Катюшей" xmlns="http://www.topografix.com/GPX/1/1">'+body+'</gpx>';
+    const url=URL.createObjectURL(new Blob([xml],{type:"application/gpx+xml"}));const a=document.createElement("a");a.href=url;a.download="katyusha-"+activeCity.toLowerCase().replace(/\s+/g,"-")+".gpx";a.click();URL.revokeObjectURL(url);toast("GPX-файл подготовлен.");
+  }));
+  const mapCanvas=$("#map-canvas-container");
+  $("#style-paper")?.addEventListener("click",()=>{if(mapCanvas)mapCanvas.style.filter="none";$("#style-paper")?.classList.add("bg-primary-container","text-on-primary");$("#style-vintage")?.classList.remove("bg-primary-container","text-on-primary");});
+  $("#style-vintage")?.addEventListener("click",()=>{if(mapCanvas)mapCanvas.style.filter="sepia(.32) saturate(.72) contrast(.96)";$("#style-vintage")?.classList.add("bg-primary-container","text-on-primary");$("#style-paper")?.classList.remove("bg-primary-container","text-on-primary");});
+  renderList();
 }
 function renderFavorites() {
   const grid=$("#favorites-grid");if(!grid)return;
-  const favs=state.places.filter(p=>state.favs.has(p.id)||state.favs.has(String(p.id)));
-  if(favoritesGrouped)favs.sort((a,b)=>cityOf(a).localeCompare(cityOf(b),"ru")||a.title.localeCompare(b.title,"ru"));
+  let favs=state.places.filter(p=>(state.favs.has(p.id)||state.favs.has(String(p.id)))&&matchesCity(p));
+  const favoriteGroups={coffee:["coffee","cafe","bakery"],architecture:["historic","museum","monument","attraction"],parks:["park","square","garden","nature"],viewpoints:["viewpoint","sea","embankment","boat"]};
+  if(favoriteCategory!=="all")favs=favs.filter(p=>(favoriteGroups[favoriteCategory]||[]).includes(p.category));
+  if(favoriteSort==="popular")favs.sort((a,b)=>(Number(b.review_count)||0)-(Number(a.review_count)||0));
+  else favs.sort((a,b)=>String(b.last_verified_at||"").localeCompare(String(a.last_verified_at||"")));
+  if(favoritesGrouped)favs.sort((a,b)=>cityGroupOf(a).localeCompare(cityGroupOf(b),"ru")||a.title.localeCompare(b.title,"ru"));
   grid.innerHTML=favs.length?favs.map(stitchCard).join(""):'<div class="col-span-full text-center py-16 bg-surface-container-low rounded-xl"><span class="material-symbols-outlined text-4xl text-secondary">favorite_border</span><p class="font-headline-md text-primary mt-3">Коллекция пока пуста</p><p class="font-body-md text-on-surface-variant mt-2">Нажимайте на сердечко в карточках мест, чтобы сохранять интересное.</p><a href="catalog.html" class="inline-flex mt-5 px-5 py-2.5 rounded-full bg-primary-container text-on-primary">Открыть каталог</a></div>';
   const headings=$("main h1,main h2");const title=headings.find(h=>/персональн|коллекц/i.test(h.textContent));if(title)title.textContent="Ваша персональная коллекция";
   const savedText=$$("main h1,main h2,main p,main span").find(el=>/18 сохранённых мест/.test(el.textContent));if(savedText)savedText.textContent=favs.length+" сохранённых мест";
@@ -198,14 +426,37 @@ function renderFavorites() {
 }
 function initFavoritesPage() {
   renderFavorites();
-  const buttons=$("main button");
+  const cityWrap=$("#favorites-city-filters");
+  if(cityWrap){
+    cityWrap.innerHTML='<button type="button" data-fav-city="all" class="px-3.5 py-1.5 rounded-full font-label-caps text-label-caps uppercase transition-all">Все города</button>'+allCities().map(city=>'<button type="button" data-fav-city="'+esc(city)+'" class="px-3.5 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container-low font-label-caps text-label-caps uppercase transition-all">'+esc(city)+'</button>').join("");
+    cityWrap.addEventListener("click",e=>{const b=e.target.closest("[data-fav-city]");if(!b)return;if(b.dataset.favCity==="all"){activeCity="all";try{localStorage.removeItem(CITY_STORAGE_KEY);}catch{}syncHeader();renderFavorites();}else applySelectedCity(b.dataset.favCity);});
+  }
+  const categoryWrap=$("#favorites-category-filters");
+  if(categoryWrap){
+    const keys=["coffee","architecture","parks","viewpoints"];
+    $$("button",categoryWrap).forEach((b,i)=>{b.dataset.favoriteCategory=keys[i];});
+    categoryWrap.addEventListener("click",e=>{const b=e.target.closest("[data-favorite-category]");if(!b)return;favoriteCategory=favoriteCategory===b.dataset.favoriteCategory?"all":b.dataset.favoriteCategory;renderFavorites();});
+  }
+  const buttons=$$("main button");
   buttons.find(b=>/Поделиться коллекцией/.test(b.textContent))?.addEventListener("click",async()=>{
-    const list=state.places.filter(p=>state.favs.has(p.id)||state.favs.has(String(p.id)));
+    const list=state.places.filter(p=>(state.favs.has(p.id)||state.favs.has(String(p.id)))&&matchesCity(p));
     const textValue="Мои места из «Прогулок с Катюшей»:\n"+list.map(p=>"• "+p.title+" — "+cityOf(p)).join("\n");
     try{await navigator.clipboard.writeText(textValue);toast("Список избранного скопирован.");}catch{toast("Не удалось скопировать список.");}
   });
   buttons.find(b=>/Экспорт в PDF/.test(b.textContent))?.addEventListener("click",()=>window.print());
   buttons.find(b=>/Автогруппировка по районам/.test(b.textContent))?.addEventListener("click",()=>{favoritesGrouped=!favoritesGrouped;renderFavorites();toast(favoritesGrouped?"Места сгруппированы по городам.":"Показан исходный порядок.");});
+  buttons.find(b=>/На карте/.test(b.textContent))?.addEventListener("click",()=>location.href="map.html");
+  buttons.find(b=>/Выбрать вручную/.test(b.textContent))?.addEventListener("click",()=>location.href="catalog.html");
+  const tabs=$("#favorites-tabs");
+  if(tabs){
+    const tabButtons=$("button",tabs);
+    tabButtons[0]?.addEventListener("click",()=>$("#favorites-grid")?.scrollIntoView({behavior:"smooth",block:"start"}));
+    tabButtons[1]?.addEventListener("click",()=>location.href="routes.html");
+    tabButtons[2]?.addEventListener("click",()=>location.href="planner.html");
+  }
+  buttons.find(b=>b.title==="Сетка карточек")?.addEventListener("click",()=>{$("#favorites-grid")?.classList.remove("grid-cols-1");toast("Показана сетка карточек.");});
+  const sortButton=buttons.find(b=>/Недавно добавленные|По популярности/.test(b.textContent));
+  sortButton?.addEventListener("click",()=>{favoriteSort=favoriteSort==="new"?"popular":"new";const label=sortButton.querySelector("span:last-child");if(label)label.textContent=favoriteSort==="new"?"Недавно добавленные":"По популярности";renderFavorites();});
 }
 function readPlan() {
   try{const saved=JSON.parse(localStorage.getItem("rfn:plan")||"null");if(saved&&Array.isArray(saved.ids))plan={...plan,...saved};}catch{}
@@ -254,8 +505,8 @@ function initPlannerPage() {
         rain:["museum","cafe","coffee","historic","gallery","mall"]
       };
       const preferred=new Set(groups[mood]||groups.coffee);
-      const candidates=state.places.filter(p=>(city==="all"||cityOf(p)===city)&&preferred.has(p.category)).sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));
-      const fallback=state.places.filter(p=>city==="all"||cityOf(p)===city).sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));
+      const candidates=state.places.filter(p=>matchesCity(p,city)&&preferred.has(p.category)).sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));
+      const fallback=state.places.filter(p=>matchesCity(p,city)).sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));
       plan.ids=(candidates.length?candidates:fallback).slice(0,count).map(p=>p.id);
       plan.name=(($("#config-mood option:checked")?.textContent||"Прогулка").trim())+" · "+city;
       writePlan();renderPlanPage();toast("Собрали сценарий из мест вашего каталога.");return;
@@ -282,24 +533,81 @@ function initPlannerPage() {
   $("#btn-export-guide")?.addEventListener("click",()=>window.print());
   const actions=$("#btn-export-guide")?.parentElement;
   if(actions&&!$("#btn-open-navigation")){const nav=document.createElement("button");nav.id="btn-open-navigation";nav.type="button";nav.className="px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg";nav.textContent="Открыть в Google Maps";actions.append(nav);nav.addEventListener("click",()=>{const pts=plan.ids.map(placeById).filter(p=>p&&!p.is_approx&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));if(pts.length<2)return toast("Для точной навигации нужны минимум две точные точки.");window.open(googleUrl(pts[pts.length-1],pts[0],pts.slice(1,-1),"walk"),"_blank");});}
-  const city=$("#config-city");if(city){fillSelect(city,allCities());city.value=allCities().includes(activeCity)?activeCity:allCities()[0];city.addEventListener("change",()=>{activeCity=city.value;renderSuggestedRoutes();});}
+  const city=$("#config-city");if(city){fillSelect(city,allCities());city.value=activeCity;city.addEventListener("change",()=>applySelectedCity(city.value));}
   $("#btn-recalculate")?.setAttribute("type","button");
   renderSuggestedRoutes();
 }
 function renderSuggestedRoutes() {
   const grid=$("#suggested-routes-grid");if(!grid)return;
-  const city=$("#config-city")?.value;
-  const filtered=state.routes.filter(r=>(r.places||[]).some(id=>{const p=placeById(id);return p&&(!city||city==="all"||cityOf(p)===city);}));
-  grid.innerHTML=(filtered.length?filtered:state.routes).map(routeCard).join("");
+  const city=$("#config-city")?.value||activeCity;
+  const filtered=state.routes.filter(r=>(r.places||[]).some(id=>{const p=placeById(id);return p&&matchesCity(p,city);}));
+  grid.innerHTML=filtered.length?filtered.map(routeCard).join(""):'<p class="col-span-full text-center text-on-surface-variant py-8">Для выбранного региона пока нет готовых маршрутов. Выберите другой регион или соберите прогулку самостоятельно.</p>';
+}
+function routePlaces(route){return (route.places||[]).map(placeById).filter(Boolean);}
+function routeMatches(route) {
+  const places=routePlaces(route), categories=places.map(p=>p.category);
+  const topicGroups={
+    romance:["restaurant","cafe","coffee","viewpoint","sea","spa","park","garden","boat"],
+    architecture:["historic","monument","museum","attraction","city","viewpoint","square"],
+    coffee:["coffee","cafe","bakery","restaurant"],
+    gardens:["park","garden","nature","square","embankment"],
+    gastro:["restaurant","cafe","bar","winebar","coffee","foodcourt"]
+  };
+  const paceGroups={
+    flaneur:["historic","monument","museum","attraction","city","viewpoint","square","coffee","cafe","park","garden"],
+    brisk:["trips","nature","boat","sea","karting","zoo","beach"],
+    kids:["zoo","park","nature","capybara","entertainment","garden","museum"]
+  };
+  if(routeTopic!=="all"&&!places.some(p=>(topicGroups[routeTopic]||[]).includes(p.category)))return false;
+  if(routePace!=="all"&&!places.some(p=>(paceGroups[routePace]||[]).includes(p.category)))return false;
+  return true;
+}
+function syncRouteFilterButtons() {
+  $$("[data-route-city]").forEach(b=>b.classList.toggle("bg-primary-container",b.dataset.routeCity===activeCity));
+  $$("[data-route-city]").forEach(b=>b.classList.toggle("text-on-primary",b.dataset.routeCity===activeCity));
+  $$("[data-route-topic]").forEach(b=>b.classList.toggle("bg-secondary-fixed",b.dataset.routeTopic===routeTopic));
+  $$("[data-route-pace]").forEach(b=>b.classList.toggle("bg-surface-container-lowest",b.dataset.routePace===routePace));
 }
 function renderRoutesPage() {
-  const grid=$("#routes-grid");if(grid)grid.innerHTML=state.routes.map(routeCard).join("");
-  const r=state.routes[0],stops=(r?.places||[]).map(placeById).filter(Boolean);
+  const grid=$("#routes-grid");
+  const filtered=state.routes.filter(r=>(r.places||[]).some(id=>{const p=placeById(id);return p&&matchesCity(p);})&&routeMatches(r));
+  if(grid)grid.innerHTML=filtered.length?filtered.map(routeCard).join(""):'<p class="col-span-full text-center text-on-surface-variant py-8">Для выбранного города и фильтров пока нет готовых маршрутов.</p>';
+  const r=filtered[0],stops=routePlaces(r||{});
   const featureTitle=$$("main h2").find(h=>/Скрытый Петербург|Редакторские маршруты/i.test(h.textContent));
   if(featureTitle&&r)featureTitle.textContent=r.title;
   const featureImage=$("main img");if(featureImage&&stops.find(imageOf)){featureImage.src=imageOf(stops.find(imageOf));featureImage.alt=r.title;}
   const featureText=$$("main p").find(p=>p.textContent.includes("Здесь пахнет старой типографской"));
   if(featureText&&r)featureText.textContent=r.description||"Авторский маршрут из реальных мест каталога.";
+  syncRouteFilterButtons();
+}
+function initRoutesPage() {
+  const audioButtons=$("main button").filter(b=>b.getAttribute("aria-label")==="Слушать фрагмент"||b.textContent.trim()==="play_arrow");
+  audioButtons.forEach(b=>b.remove());
+  const fullScenario=$("main button").find(b=>/Открыть полный сценарий/.test(b.textContent));
+  fullScenario?.addEventListener("click",()=>$("#routes-grid")?.scrollIntoView({behavior:"smooth",block:"start"}));
+  const toPlanner=$("main button").find(b=>/В конструктор/.test(b.textContent));
+  toPlanner?.addEventListener("click",()=>location.href="planner.html");
+  $("main button").filter(b=>/Редакторская подборка/.test(b.textContent)).forEach(b=>b.addEventListener("click",()=>{routeTopic="all";routePace="all";renderRoutesPage();toast("Показана редакторская подборка.");}));
+  const cityWrap=$("#routes-city-filters");
+  if(cityWrap){
+    const label='<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider pr-space-xs">Город:</span>';
+    cityWrap.innerHTML=label+['all',...allCities()].map(city=>'<button type="button" data-route-city="'+esc(city)+'" class="filter-city-btn px-4 py-1.5 rounded-full font-label-lg text-label-lg transition-all '+((city==="all"&&activeCity==="all")||(city===activeCity)?"bg-primary-container text-on-primary":"bg-surface-container-low text-on-surface hover:bg-surface-container")+'">'+(city==="all"?"Все города":esc(city))+'</button>').join("");
+    cityWrap.addEventListener("click",e=>{const b=e.target.closest("[data-route-city]");if(!b)return;if(b.dataset.routeCity==="all"){activeCity="all";try{localStorage.removeItem(CITY_STORAGE_KEY);}catch{}syncHeader();renderRoutesPage();}else applySelectedCity(b.dataset.routeCity);});
+  }
+  const topicWrap=$("#routes-topic-filters");
+  const topicKeys=["all","romance","architecture","coffee","gardens","gastro"];
+  if(topicWrap){
+    const buttons=$$("button",topicWrap).filter(b=>b.textContent.trim()!=="Темы:");
+    buttons.forEach((b,i)=>{b.dataset.routeTopic=topicKeys[i]||"all";});
+    topicWrap.addEventListener("click",e=>{const b=e.target.closest("[data-route-topic]");if(!b)return;routeTopic=b.dataset.routeTopic;renderRoutesPage();});
+  }
+  const paceWrap=$("#routes-filter-box");
+  if(paceWrap){
+    const paceButtons=$$("button",paceWrap).filter(b=>["Фланёрский","Бодрый","С детьми"].includes(b.textContent.trim()));
+    paceButtons.forEach((b,i)=>{b.dataset.routePace=["flaneur","brisk","kids"][i];});
+    paceWrap.addEventListener("click",e=>{const b=e.target.closest("[data-route-pace]");if(!b)return;routePace=b.dataset.routePace===routePace?"all":b.dataset.routePace;renderRoutesPage();});
+  }
+  renderRoutesPage();
 }
 function renderPlacePage() {
   const id=new URLSearchParams(location.search).get("id");
@@ -333,8 +641,11 @@ async function init() {
   state.favs=loaded.favs||new Set();
   hydrateVisits().catch(()=>{});
   readPlan();
-  const cities=allCities();if(!cities.includes(activeCity))activeCity=cities.includes("Баку")?"Баку":cities[0]||"all";
-  const params=new URLSearchParams(location.search);if(params.has("city"))activeCity=params.get("city");else if(page==="catalog")activeCity="all";
+  let storedCity=null;try{storedCity=localStorage.getItem(CITY_STORAGE_KEY);}catch{}
+  if(storedCity&&allCities().includes(storedCity))activeCity=storedCity;
+  const params=new URLSearchParams(location.search);
+  if(params.has("city")){const fromUrl=cityFromParam(params.get("city"));if(fromUrl&&allCities().includes(fromUrl))activeCity=fromUrl;}
+  initHeaderCitySwitcher();
   bindCommon();
   const headerSearch=[...document.querySelectorAll("header button")].find(b=>/Найти место|Найти место, улицу/i.test(b.textContent));
   headerSearch?.addEventListener("click",()=>location.href="catalog.html");
@@ -343,14 +654,14 @@ async function init() {
     // a missing homepage content selector must never prevent Leaflet from mounting.
     try { renderHome(); } catch(error) { console.error("Homepage content:",error); }
     try { initMapPage(true); } catch(error) { console.error("Homepage map:",error); toast("Не удалось открыть карту. Обновите страницу."); }
-    $("#hero-city-select")?.addEventListener("change",e=>{activeCity=e.target.value;syncHeader();try{renderHome();}catch(error){console.error("Homepage content:",error);}homeMapView?.setPlaces(state.places.filter(p=>Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude)&&cityOf(p)===activeCity),true);});
-    $("#map-filter-group")?.addEventListener("click",e=>{const b=e.target.closest("[data-home-category]");if(!b)return;const category=b.dataset.homeCategory;const points=state.places.filter(p=>cityOf(p)===activeCity&&(category==="all"||p.category===category)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));homeMapView?.setPlaces(points,true);});
+    $("#hero-city-select")?.addEventListener("change",e=>applySelectedCity(e.target.value));
+    $("#map-filter-group")?.addEventListener("click",e=>{const b=e.target.closest("[data-home-category]");if(!b)return;const category=b.dataset.homeCategory;const points=state.places.filter(p=>matchesCity(p)&&(category==="all"||p.category===category)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));homeMapView?.setPlaces(points,true);});
   }
   if(page==="catalog")initCatalog();
   if(page==="map")initMapPage(false);
   if(page==="favorites")initFavoritesPage();
   if(page==="planner")initPlannerPage();
-  if(page==="routes")renderRoutesPage();
+  if(page==="routes")initRoutesPage();
   if(page==="place")renderPlacePage();
   if(page==="about"){
     const curatorHeading=$$("main h1,main h2,main h3").find(h=>/редакция и кураторы/i.test(h.textContent));
