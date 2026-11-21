@@ -163,9 +163,14 @@ function syncHeader() {
   if(favLink){const spans=favLink.querySelectorAll("span");if(spans.length)spans[spans.length-1].textContent=String(count);}
 }
 function initHeaderCitySwitcher() {
-  const wrapper=$("header .relative.inline-flex.items-center");
-  const button=wrapper?.querySelector("button");
+  let wrapper=$("header .relative.inline-flex.items-center");
+  let button=wrapper?.querySelector("button");
+  if(!button){
+    button=$$("header button").find(b=>b.querySelector(".material-symbols-outlined")?.textContent.trim()==="location_on");
+    wrapper=button?.parentElement;
+  }
   if(!wrapper||!button)return;
+  wrapper.style.position="relative";
   wrapper.replaceChildren(button);
   button.dataset.citySwitcher="true";
   button.type="button";
