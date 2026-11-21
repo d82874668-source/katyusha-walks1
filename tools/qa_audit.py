@@ -153,10 +153,16 @@ check(not (ROOT / "favorites.html").exists(), "Retired collection page still exi
 css = (ROOT / "assets/css/stitch-app.css").read_text(encoding="utf-8")
 check("@media(max-width:767px)" in css, "Mobile breakpoint missing")
 check("KATYUSHA EDITORIAL REFRESH" in css, "Editorial visual layer missing")
+check("RELEASE HARDENING" in css, "Responsive release hardening missing")
+check("overflow-wrap:break-word" in css and "text-wrap:balance" in css, "Text wrapping safeguards missing")
+check("@media(min-width:768px) and (max-width:1199px)" in css, "Tablet layout breakpoint missing")
+check("@media(max-width:380px)" in css, "Small-phone layout breakpoint missing")
+check("header.fixed nav.hidden" in css and "bottom:calc(8px + env(safe-area-inset-bottom))" in css, "Mobile navigation safe-area layout missing")
+check("min-width:0" in css, "Grid/flex overflow containment missing")
 check("overflow-x:clip" in css or "overflow-x:hidden" in css, "Horizontal overflow safeguard missing")
 check("44px" in css, "Minimum mobile touch target rule missing")
 sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-check("katyusha-pwa-v18" in sw, "PWA cache version not bumped")
+check("katyusha-pwa-v19" in sw, "PWA cache version not bumped")
 check("visits.js" not in sw, "PWA still precaches retired visits module")
 
 seed = committed_seed
