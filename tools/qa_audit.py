@@ -108,6 +108,8 @@ check(any(p.get("category") == "mall" for p in places), "Shopping mall category 
 # Check that the public map does not display approximate pins.
 map_js = (ROOT / "assets/js/map.js").read_text(encoding="utf-8")
 check("!p.is_approx" in map_js, "Map must filter approximate coordinates")
+check('const initialCity=requestedCity==="all"?"all":(cityFromParam(requestedCity)||activeCity)' in (ROOT / "assets/js/stitch-app.js").read_text(encoding="utf-8"), "First visit must use the configured default city instead of all cities")
+check('$("#map-area-select .font-label-lg")' in (ROOT / "assets/js/stitch-app.js").read_text(encoding="utf-8"), "Map region label must follow the selected city")
 store_js = (ROOT / "assets/js/store.js").read_text(encoding="utf-8")
 check("const publicPlaces = allPlaces.filter" in store_js and "place.image.trim()" in store_js, "Public catalog must hide records without photos")
 check('place.status !== "closed"' in store_js and 'place.verification_status !== "needs_review"' in store_js, "Public catalog must hide closed and review-needed records")
