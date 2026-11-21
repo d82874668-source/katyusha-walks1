@@ -34,7 +34,7 @@ const categoryOf = p => CATEGORIES[p.category]?.title || "Место";
 const priceOf = p => p.price_min == null ? "Стоимость не указана" : Number(p.price_min) === 0 ? "Бесплатно" : (Number(p.price_min) === Number(p.price_max) ? Number(p.price_min).toLocaleString("ru-RU") : "от " + Number(p.price_min).toLocaleString("ru-RU")) + " " + (p.price_unit || "");
 let mapView = null, homeMapView = null, activeCity = "Азербайджан", activeCategory = "all", query = "", mapQuery = "", sortMode = "rating", viewMode = "grid", plan = {ids:[],mode:"walk",name:"Моя прогулка"};
 let activePriceBand=null, activeFeatures=new Set(), userLocation=null, mapCategory="all", mapListRefresh=null;
-let routeTopic="all", routePace="all", favoriteCategory="all";
+let routeTopic="all", routePace="all", favoriteCategory="all", favoriteSort="new";
 
 function toast(message) {
   let el = $("#stitch-toast");
@@ -222,6 +222,12 @@ function renderHome() {
   if(mapWrap&&!$("#homeMapCanvas")){mapWrap.innerHTML='<div id="homeMapCanvas" class="w-full h-full min-h-[420px]"></div><a href="map.html" class="absolute bottom-4 right-4 z-[500] px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg shadow-lg">Открыть полную карту ↗</a>';}
   const featured=state.places.find(p=>cityGroupOf(p)===activeCity&&imageOf(p))||state.places.find(imageOf);
   if(featured){
+    const openCard=$("main button").find(b=>/Открыть карточку/.test(b.textContent));
+    if(openCard)openCard.onclick=()=>location.href="place.html?id="+encodeURIComponent(featured.id);
+    const addFeatured=$("main button").find(b=>/В маршрут/.test(b.textContent));
+    if(addFeatured)addFeatured.onclick=()=>{if(!plan.ids.some(id=>String(id)===String(featured.id)))plan.ids.push(featured.id);writePlan();location.href="planner.html";};
+    const moreFeatured=$("main button").find(b=>b.textContent.trim()==="Подробнее");
+    if(moreFeatured)moreFeatured.onclick=()=>location.href="place.html?id="+encodeURIComponent(featured.id);
     const heroSection=$("main section");
     const featurePanel=[...heroSection.querySelectorAll("div")].find(el=>el.classList.contains("lg:col-span-12")&&el.classList.contains("bg-surface-container-lowest"));
     if(featurePanel)featurePanel.innerHTML=`<div class="relative h-56 overflow-hidden"><img src="${esc(imageOf(featured))}" alt="${esc(featured.title)}" class="w-full h-full object-cover"></div><div class="p-space-lg"><span class="font-label-caps text-label-caps uppercase text-secondary">Место из реального каталога</span><h3 class="font-headline-md text-primary mt-2">${esc(featured.title)}</h3><p class="font-body-md text-on-surface-variant mt-2">${esc(featured.description||"")}</p><p class="font-body-sm text-on-surface-variant mt-3">${esc(cityOf(featured))} · ${esc(featured.address||"Адрес уточняется")}</p><a class="inline-flex mt-4 text-secondary font-label-lg" href="place.html?id=${encodeURIComponent(featured.id)}">Открыть карточку →</a></div>`;
@@ -332,7 +338,13 @@ function initMapPage(home=false) {
   const instance=new MapView(el,id=>location.href="place.html?id="+encodeURIComponent(id));
   const filtered=()=>state.places.filter(p=>matchesCity(p)&&mapCategoryMatches(p,mapCategory)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
   instance.setPlaces(filtered(),true);requestAnimationFrame(()=>instance.refresh());
-  if(home){homeMapView=instance;return;}
+  if(home){
+    homeMapView=instance;
+    $('button[aria-label="Zoom in"]')?.addEventListener("click",()=>instance.map.zoomIn());
+    $('button[aria-label="Zoom out"]')?.addEventListener("click",()=>instance.map.zoomOut());
+    $('button[aria-label="Locate me"]')?.addEventListener("click",async()=>{try{const pos=await instance.locate();instance.map.setView([pos.latitude,pos.longitude],15);}catch{toast("Не удалось определить местоположение.");}});
+    return;
+  }
   mapView=instance;
   const renderList=()=>{
     const q=mapQuery.toLocaleLowerCase("ru");
@@ -402,6 +414,8 @@ function renderFavorites() {
   let favs=state.places.filter(p=>(state.favs.has(p.id)||state.favs.has(String(p.id)))&&matchesCity(p));
   const favoriteGroups={coffee:["coffee","cafe","bakery"],architecture:["historic","museum","monument","attraction"],parks:["park","square","garden","nature"],viewpoints:["viewpoint","sea","embankment","boat"]};
   if(favoriteCategory!=="all")favs=favs.filter(p=>(favoriteGroups[favoriteCategory]||[]).includes(p.category));
+  if(favoriteSort==="popular")favs.sort((a,b)=>(Number(b.review_count)||0)-(Number(a.review_count)||0));
+  else favs.sort((a,b)=>String(b.last_verified_at||"").localeCompare(String(a.last_verified_at||"")));
   if(favoritesGrouped)favs.sort((a,b)=>cityGroupOf(a).localeCompare(cityGroupOf(b),"ru")||a.title.localeCompare(b.title,"ru"));
   grid.innerHTML=favs.length?favs.map(stitchCard).join(""):'<div class="col-span-full text-center py-16 bg-surface-container-low rounded-xl"><span class="material-symbols-outlined text-4xl text-secondary">favorite_border</span><p class="font-headline-md text-primary mt-3">Коллекция пока пуста</p><p class="font-body-md text-on-surface-variant mt-2">Нажимайте на сердечко в карточках мест, чтобы сохранять интересное.</p><a href="catalog.html" class="inline-flex mt-5 px-5 py-2.5 rounded-full bg-primary-container text-on-primary">Открыть каталог</a></div>';
   const headings=$("main h1,main h2");const title=headings.find(h=>/персональн|коллекц/i.test(h.textContent));if(title)title.textContent="Ваша персональная коллекция";
@@ -432,6 +446,16 @@ function initFavoritesPage() {
   buttons.find(b=>/Автогруппировка по районам/.test(b.textContent))?.addEventListener("click",()=>{favoritesGrouped=!favoritesGrouped;renderFavorites();toast(favoritesGrouped?"Места сгруппированы по городам.":"Показан исходный порядок.");});
   buttons.find(b=>/На карте/.test(b.textContent))?.addEventListener("click",()=>location.href="map.html");
   buttons.find(b=>/Выбрать вручную/.test(b.textContent))?.addEventListener("click",()=>location.href="catalog.html");
+  const tabs=$("#favorites-tabs");
+  if(tabs){
+    const tabButtons=$("button",tabs);
+    tabButtons[0]?.addEventListener("click",()=>$("#favorites-grid")?.scrollIntoView({behavior:"smooth",block:"start"}));
+    tabButtons[1]?.addEventListener("click",()=>location.href="routes.html");
+    tabButtons[2]?.addEventListener("click",()=>location.href="planner.html");
+  }
+  buttons.find(b=>b.title==="Сетка карточек")?.addEventListener("click",()=>{$("#favorites-grid")?.classList.remove("grid-cols-1");toast("Показана сетка карточек.");});
+  const sortButton=buttons.find(b=>/Недавно добавленные|По популярности/.test(b.textContent));
+  sortButton?.addEventListener("click",()=>{favoriteSort=favoriteSort==="new"?"popular":"new";const label=sortButton.querySelector("span:last-child");if(label)label.textContent=favoriteSort==="new"?"Недавно добавленные":"По популярности";renderFavorites();});
 }
 function readPlan() {
   try{const saved=JSON.parse(localStorage.getItem("rfn:plan")||"null");if(saved&&Array.isArray(saved.ids))plan={...plan,...saved};}catch{}
@@ -556,6 +580,13 @@ function renderRoutesPage() {
   syncRouteFilterButtons();
 }
 function initRoutesPage() {
+  const audioButtons=$("main button").filter(b=>b.getAttribute("aria-label")==="Слушать фрагмент"||b.textContent.trim()==="play_arrow");
+  audioButtons.forEach(b=>b.remove());
+  const fullScenario=$("main button").find(b=>/Открыть полный сценарий/.test(b.textContent));
+  fullScenario?.addEventListener("click",()=>$("#routes-grid")?.scrollIntoView({behavior:"smooth",block:"start"}));
+  const toPlanner=$("main button").find(b=>/В конструктор/.test(b.textContent));
+  toPlanner?.addEventListener("click",()=>location.href="planner.html");
+  $("main button").filter(b=>/Редакторская подборка/.test(b.textContent)).forEach(b=>b.addEventListener("click",()=>{routeTopic="all";routePace="all";renderRoutesPage();toast("Показана редакторская подборка.");}));
   const cityWrap=$("#routes-city-filters");
   if(cityWrap){
     const label='<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider pr-space-xs">Город:</span>';
