@@ -95,7 +95,9 @@ export class MapView {
   }
 
   setPlaces(places, fit = true, numbered = false) {
-    this.places = (places || []).filter(validPoint);
+    // Неточные координаты не показываем на карте: несколько таких записей
+    // раньше накладывались в одной условной точке города.
+    this.places = (places || []).filter((p) => validPoint(p) && !p.is_approx);
     this.numbered = numbered;
     this.renderMarkers();
     if (fit) this.fit(this.places);
@@ -117,8 +119,20 @@ export class MapView {
     buckets.forEach((group) => {
       const samePoint = group.length > 1 && group.every((p) => Number(p.latitude) === Number(group[0].latitude) && Number(p.longitude) === Number(group[0].longitude));
       if (group.length > 1 && (zoom < 16 || samePoint) && !this.numbered) {
-        const lat = group.reduce((sum, p) => sum + Number(p.latitude), 0) / group.length;
-        const lng = group.reduce((sum, p) => sum + Number(p.longitude), 0) / group.length;
+        // Не ставим кластер в геометрический центр группы: он может попасть
+        // в реку или на пустое место. Выбираем реальную точку, ближайшую к центру.
+        const center = {
+          latitude: group.reduce((sum, p) => sum + Number(p.latitude), 0) / group.length,
+          longitude: group.reduce((sum, p) => sum + Number(p.longitude), 0) / group.length,
+        };
+        const anchor = group.reduce((best, p) => {
+          const distance = (Number(p.latitude) - center.latitude) ** 2
+            + ((Number(p.longitude) - center.longitude) * Math.cos(center.latitude * Math.PI / 180)) ** 2;
+          if (!best || distance < best.distance) return { place: p, distance };
+          return best;
+        }, null).place;
+        const lat = Number(anchor.latitude);
+        const lng = Number(anchor.longitude);
         const cluster = L.marker([lat, lng], {
           icon: L.divIcon({
             className: "pin-cluster",
