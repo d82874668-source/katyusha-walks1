@@ -143,18 +143,18 @@ function syncHeader() {
   if(cityLabel)cityLabel.textContent=activeCity==="all"?"Все города":activeCity;
   const switcher=$("header [data-city-switcher]");
   if(switcher)switcher.setAttribute("aria-label","Выбранный регион: "+activeCity);
-  $("[data-select-city]").forEach(button=>{
+  $$("[data-select-city]").forEach(button=>{
     const selected=button.dataset.selectCity===activeCity;
     button.setAttribute("aria-current",selected?"true":"false");
     button.classList.toggle("bg-primary-container",selected);
     button.classList.toggle("text-on-primary",selected);
   });
-  $("[data-map-city]").forEach(button=>{
+  $$("[data-map-city]").forEach(button=>{
     const selected=button.dataset.mapCity===activeCity;
     button.classList.toggle("bg-primary",selected);
     button.classList.toggle("text-on-primary",selected);
   });
-  $("[data-fav-city]").forEach(button=>{
+  $$("[data-fav-city]").forEach(button=>{
     const selected=button.dataset.favCity===activeCity||(button.dataset.favCity==="all"&&activeCity==="all");
     button.classList.toggle("bg-primary-container",selected);
     button.classList.toggle("text-on-primary",selected);
@@ -223,11 +223,11 @@ function renderHome() {
   if(mapWrap&&!$("#homeMapCanvas")){mapWrap.innerHTML='<div id="homeMapCanvas" class="w-full h-full min-h-[420px]"></div><a href="map.html" class="absolute bottom-4 right-4 z-[500] px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg shadow-lg">Открыть полную карту ↗</a>';}
   const featured=state.places.find(p=>cityGroupOf(p)===activeCity&&imageOf(p))||state.places.find(p=>cityGroupOf(p)===activeCity);
   if(featured){
-    const openCard=$("main button").find(b=>/Открыть карточку/.test(b.textContent));
+    const openCard=$$("main button").find(b=>/Открыть карточку/.test(b.textContent));
     if(openCard)openCard.onclick=()=>location.href="place.html?id="+encodeURIComponent(featured.id);
-    const addFeatured=$("main button").find(b=>/В маршрут/.test(b.textContent));
+    const addFeatured=$$("main button").find(b=>/В маршрут/.test(b.textContent));
     if(addFeatured)addFeatured.onclick=()=>{if(!plan.ids.some(id=>String(id)===String(featured.id)))plan.ids.push(featured.id);writePlan();location.href="planner.html";};
-    const moreFeatured=$("main button").find(b=>b.textContent.trim()==="Подробнее");
+    const moreFeatured=$$("main button").find(b=>b.textContent.trim()==="Подробнее");
     if(moreFeatured)moreFeatured.onclick=()=>location.href="place.html?id="+encodeURIComponent(featured.id);
     const heroSection=$("main section");
     const featurePanel=[...heroSection.querySelectorAll("div")].find(el=>el.classList.contains("lg:col-span-12")&&el.classList.contains("bg-surface-container-lowest"));
@@ -581,13 +581,13 @@ function renderRoutesPage() {
   syncRouteFilterButtons();
 }
 function initRoutesPage() {
-  const audioButtons=$("main button").filter(b=>b.getAttribute("aria-label")==="Слушать фрагмент"||b.textContent.trim()==="play_arrow");
+  const audioButtons=$$("main button").filter(b=>b.getAttribute("aria-label")==="Слушать фрагмент"||b.textContent.trim()==="play_arrow");
   audioButtons.forEach(b=>b.remove());
-  const fullScenario=$("main button").find(b=>/Открыть полный сценарий/.test(b.textContent));
+  const fullScenario=$$("main button").find(b=>/Открыть полный сценарий/.test(b.textContent));
   fullScenario?.addEventListener("click",()=>$("#routes-grid")?.scrollIntoView({behavior:"smooth",block:"start"}));
-  const toPlanner=$("main button").find(b=>/В конструктор/.test(b.textContent));
+  const toPlanner=$$("main button").find(b=>/В конструктор/.test(b.textContent));
   toPlanner?.addEventListener("click",()=>location.href="planner.html");
-  $("main button").filter(b=>/Редакторская подборка/.test(b.textContent)).forEach(b=>b.addEventListener("click",()=>{routeTopic="all";routePace="all";renderRoutesPage();toast("Показана редакторская подборка.");}));
+  $$("main button").filter(b=>/Редакторская подборка/.test(b.textContent)).forEach(b=>b.addEventListener("click",()=>{routeTopic="all";routePace="all";renderRoutesPage();toast("Показана редакторская подборка.");}));
   const cityWrap=$("#routes-city-filters");
   if(cityWrap){
     const label='<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider pr-space-xs">Город:</span>';
