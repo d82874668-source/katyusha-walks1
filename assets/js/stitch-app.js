@@ -141,6 +141,8 @@ function syncHeader() {
   if(cityLabel)cityLabel.textContent=activeCity==="all"?"Все города":activeCity;
   const switcher=$("header [data-city-switcher]");
   if(switcher)switcher.setAttribute("aria-label","Выбранный регион: "+activeCity);
+  const mapAreaLabel=$("#map-area-select .font-label-lg");
+  if(mapAreaLabel)mapAreaLabel.innerHTML=esc(activeCity==="all"?"Все города":activeCity)+' <span class="material-symbols-outlined text-[16px] text-on-surface-variant transition-transform group-hover:rotate-180">expand_more</span>';
   $$("[data-select-city]").forEach(button=>{
     const selected=button.dataset.selectCity===activeCity;
     button.setAttribute("aria-current",selected?"true":"false");
@@ -589,7 +591,8 @@ function bindCommon() {
 async function init() {
   const page=document.body.dataset.page;
   const params=new URLSearchParams(location.search);
-  const initialCity=params.get("city")||localStorage.getItem(CITY_STORAGE_KEY)||"all";
+  const requestedCity=params.get("city")||localStorage.getItem(CITY_STORAGE_KEY)||"";
+  const initialCity=requestedCity==="all"?"all":(cityFromParam(requestedCity)||activeCity);
   state.places=PLACES;
   state.routes=ROUTES;
   if(initialCity!=="all")activeCity=initialCity;
