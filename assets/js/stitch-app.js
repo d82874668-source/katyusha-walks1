@@ -1,7 +1,7 @@
 import { loadData } from "./store.js";
 import { state } from "./state.js";
-import { PLACES, ROUTES, CATEGORIES } from "./data.js?v=4";
-import { MapView, googleUrl, osmUrl, haversineKm, fmtDist } from "./map.js?v=7";
+import { PLACES, ROUTES, CATEGORIES } from "./data.js?v=5";
+import { MapView, googleUrl, osmUrl, haversineKm, fmtDist } from "./map.js?v=8";
 
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => [...r.querySelectorAll(s)];
