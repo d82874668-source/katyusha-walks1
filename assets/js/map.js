@@ -118,9 +118,15 @@ export class MapView {
     const clusterRadius = 44;
 
     screenPoints.forEach((item) => {
-      let target = groups.find((group) => group.some((member) =>
-        Math.hypot(item.point.x - member.point.x, item.point.y - member.point.y) < clusterRadius
-      ));
+      // Сравниваем с центром группы, а не с любой её точкой:
+      // это не даёт длинным цепочкам маркеров сливаться в один огромный кластер.
+      let target = groups.find((group) => {
+        const center = group.reduce((sum, member) => ({
+          x: sum.x + member.point.x / group.length,
+          y: sum.y + member.point.y / group.length,
+        }), { x: 0, y: 0 });
+        return Math.hypot(item.point.x - center.x, item.point.y - center.y) < clusterRadius;
+      });
       if (!target) {
         target = [];
         groups.push(target);
@@ -188,6 +194,17 @@ export class MapView {
           title: group.length + " мест рядом",
         }).addTo(this.map);
         cluster.on("click", () => {
+          // Сначала раскрываем скопление на карте. Если после приближения
+          // места всё ещё рядом (один адрес/здание), повторный клик покажет список.
+          if (this.map.getZoom() < 18) {
+            const bounds = L.latLngBounds(group.map(({ place }) => [
+              Number(place.latitude), Number(place.longitude),
+            ]));
+            if (bounds.isValid() && bounds.getNorthEast().distanceTo(bounds.getSouthWest()) > 12) {
+              this.map.fitBounds(bounds, { padding: [56, 56], maxZoom: 18 });
+              return;
+            }
+          }
           const list = document.createElement("div");
           list.className = "pin-cluster-popup";
           const heading = document.createElement("strong");
@@ -199,7 +216,7 @@ export class MapView {
             button.type = "button";
             button.textContent = place.title || "Показать место";
             button.style.cssText = "display:block;width:100%;padding:8px 10px;text-align:left;border:0;border-radius:8px;background:#f5f3ef;margin:4px 0;cursor:pointer;font:inherit;";
-            button.addEventListener("click", () => showPreview(place, latlng));
+            button.addEventListener("click", () => showPreview(place, [Number(place.latitude), Number(place.longitude)]));
             list.append(button);
           });
           L.popup({ maxWidth: 290, maxHeight: 320, closeButton: true })
