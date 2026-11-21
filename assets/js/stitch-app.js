@@ -209,10 +209,11 @@ function fillSelect(select, values, allLabel=null) {
 function renderHome() {
   const cityGrid=$("#city-grid");
   if(cityGrid)cityGrid.innerHTML=allCities().map(cityCard).join("");
+  const homeRoutes=state.routes.filter(r=>(r.places||[]).some(id=>{const p=placeById(id);return p&&matchesCity(p);})).slice(0,3);
   const routeGrid=$("#routes-grid");
-  if(routeGrid)routeGrid.innerHTML=state.routes.slice(0,3).map(routeCard).join("");
+  if(routeGrid)routeGrid.innerHTML=homeRoutes.length?homeRoutes.map(routeCard).join(""):'<p class="col-span-full text-on-surface-variant py-6">Готовые маршруты для выбранного региона скоро появятся.</p>';
   const allRoutesLink=[...($("#planner-builder")?.querySelectorAll("a")||[])].find(a=>/Смотреть все/.test(a.textContent));
-  if(allRoutesLink){allRoutesLink.href="routes.html";allRoutesLink.textContent="Все маршруты ("+state.routes.length+") →";}
+  if(allRoutesLink){allRoutesLink.href="routes.html";allRoutesLink.textContent="Все маршруты ("+homeRoutes.length+") →";}
   const heroPlannerLink=[...($("#top")?.querySelectorAll("a")||[])].find(a=>/Создать маршрут/.test(a.textContent));
   if(heroPlannerLink)heroPlannerLink.href="planner.html";
   const heroCity=$("#hero-city-select");
@@ -220,7 +221,7 @@ function renderHome() {
   if(heroCity)heroCity.value=activeCity;
   const mapWrap=$("#home-map-wrap");
   if(mapWrap&&!$("#homeMapCanvas")){mapWrap.innerHTML='<div id="homeMapCanvas" class="w-full h-full min-h-[420px]"></div><a href="map.html" class="absolute bottom-4 right-4 z-[500] px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg shadow-lg">Открыть полную карту ↗</a>';}
-  const featured=state.places.find(p=>cityGroupOf(p)===activeCity&&imageOf(p))||state.places.find(imageOf);
+  const featured=state.places.find(p=>cityGroupOf(p)===activeCity&&imageOf(p))||state.places.find(p=>cityGroupOf(p)===activeCity);
   if(featured){
     const openCard=$("main button").find(b=>/Открыть карточку/.test(b.textContent));
     if(openCard)openCard.onclick=()=>location.href="place.html?id="+encodeURIComponent(featured.id);
@@ -230,7 +231,7 @@ function renderHome() {
     if(moreFeatured)moreFeatured.onclick=()=>location.href="place.html?id="+encodeURIComponent(featured.id);
     const heroSection=$("main section");
     const featurePanel=[...heroSection.querySelectorAll("div")].find(el=>el.classList.contains("lg:col-span-12")&&el.classList.contains("bg-surface-container-lowest"));
-    if(featurePanel)featurePanel.innerHTML=`<div class="relative h-56 overflow-hidden"><img src="${esc(imageOf(featured))}" alt="${esc(featured.title)}" class="w-full h-full object-cover"></div><div class="p-space-lg"><span class="font-label-caps text-label-caps uppercase text-secondary">Место из реального каталога</span><h3 class="font-headline-md text-primary mt-2">${esc(featured.title)}</h3><p class="font-body-md text-on-surface-variant mt-2">${esc(featured.description||"")}</p><p class="font-body-sm text-on-surface-variant mt-3">${esc(cityOf(featured))} · ${esc(featured.address||"Адрес уточняется")}</p><a class="inline-flex mt-4 text-secondary font-label-lg" href="place.html?id=${encodeURIComponent(featured.id)}">Открыть карточку →</a></div>`;
+    if(featurePanel){const media=imageOf(featured)?'<img src="'+esc(imageOf(featured))+'" alt="'+esc(featured.title)+'" class="w-full h-full object-cover">':'<div class="w-full h-full flex items-center justify-center bg-surface-container-low text-primary/40"><span class="material-symbols-outlined text-5xl">place</span></div>';featurePanel.innerHTML='<div class="relative h-56 overflow-hidden">'+media+'</div><div class="p-space-lg"><span class="font-label-caps text-label-caps uppercase text-secondary">Место из каталога выбранного региона</span><h3 class="font-headline-md text-primary mt-2">'+esc(featured.title)+'</h3><p class="font-body-md text-on-surface-variant mt-2">'+esc(featured.description||"") +'</p><p class="font-body-sm text-on-surface-variant mt-3">'+esc(cityOf(featured))+' · '+esc(featured.address||"Адрес уточняется")+'</p><a class="inline-flex mt-4 text-secondary font-label-lg" href="place.html?id='+encodeURIComponent(featured.id)+'">Открыть карточку →</a></div>';}
   }
   const mapFilters=$("#map-filter-group");
   if(mapFilters){const cats=[...new Set(state.places.filter(p=>cityGroupOf(p)===activeCity).map(p=>p.category).filter(Boolean))].slice(0,6);mapFilters.innerHTML='<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-lg" type="button" data-home-category="all">Все места</button>'+cats.map(c=>`<button class="px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface font-label-lg" type="button" data-home-category="${esc(c)}">${esc(categoryOf({category:c}))}</button>`).join("");}
