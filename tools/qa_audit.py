@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -48,6 +49,19 @@ routes_start = data_js.find(";\nexport const ROUTES", places_start)
 check(places_start >= len("export const PLACES = "), "PLACES export missing")
 check(routes_start > places_start, "Could not locate end of PLACES array")
 places = json.loads(data_js[places_start:routes_start]) if routes_start > places_start else []
+
+def parse_places(text: str):
+    start = text.find("export const PLACES = ") + len("export const PLACES = ")
+    end = text.find(";\\nexport const ROUTES", start)
+    if start < len("export const PLACES = ") or end <= start:
+        raise ValueError("Invalid committed data.js")
+    return json.loads(text[start:end])
+
+
+committed_data = subprocess.check_output(["git", "show", "HEAD:assets/js/data.js"], text=True, encoding="utf-8")
+committed_places = parse_places(committed_data)
+check(committed_places == places, "Committed data.js differs from canonical generator output")
+committed_seed = subprocess.check_output(["git", "show", "HEAD:supabase/seed.sql"], text=True, encoding="utf-8")
 
 ids = [int(p["id"]) for p in places]
 check(len(ids) == len(set(ids)), "Duplicate place IDs")
@@ -116,8 +130,9 @@ sw = (ROOT / "sw.js").read_text(encoding="utf-8")
 check("katyusha-pwa-v13" in sw, "PWA cache version not bumped")
 check("visits.js" not in sw, "PWA still precaches retired visits module")
 
-seed = (ROOT / "supabase/seed.sql").read_text(encoding="utf-8")
-check(all(str(i) in seed for i in range(990150, 990174)), "Supabase seed is missing one or more new catalogue IDs")
+seed = committed_seed
+check(all(str(i) in seed for i in range(990150, 990174)), "Committed Supabase seed is missing one or more new catalogue IDs")
+check(all(p["image"] in seed for p in places if p.get("image")), "Committed Supabase seed is missing one or more place images")
 
 if ERRORS:
     for error in ERRORS:
