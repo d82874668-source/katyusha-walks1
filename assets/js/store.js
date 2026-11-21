@@ -6,6 +6,7 @@ const LS_KEY = "katyusha:favorites";
 const SUPABASE_ESM = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 
 let sb = null;
+let favoritesEnabled = false;
 // Принимаем и «https://x.supabase.co», и ошибочно скопированный «https://x.supabase.co/rest/v1/»
 const projectUrl = () => String(CONFIG.SUPABASE_URL).trim().replace(/\/rest\/v1\/?$/, "").replace(/\/+$/, "");
 
@@ -25,13 +26,18 @@ export async function loadData() {
     // SDK подгружается только когда Supabase настроен: так сайт грузится быстрее.
     const { createClient } = await import(SUPABASE_ESM);
     sb = createClient(projectUrl(), CONFIG.SUPABASE_ANON_KEY);
-    const [p, r, f] = await Promise.all([
+    // Основной каталог не должен зависеть от необязательной таблицы избранного.
+    const [p, r] = await Promise.all([
       sb.from("places").select("*").order("id"),
       sb.from("routes").select("*").order("id"),
-      sb.from("favorites").select("place_id"),
     ]);
-    const err = p.error || r.error || f.error;
+    const err = p.error || r.error;
     if (err) throw err;
+    let remoteFavs = null;
+    const f = await sb.from("favorites").select("place_id");
+    favoritesEnabled = !f.error;
+    if (favoritesEnabled) remoteFavs = f.data || [];
+    else console.info("Таблица favorites не настроена: избранное хранится на этом устройстве.");
     if (!p.data.length) return local; // база пустая: показываем встроенные данные
     // Не теряем новые встроенные записи, пока их не добавили в подключённую Supabase.
     // Существующая запись из базы всегда имеет приоритет над резервной копией с тем же id.
@@ -49,12 +55,13 @@ export async function loadData() {
     return {
       places: [...mergedPlaces, ...PLACES.filter((place) => !remoteIds.has(String(place.id)))],
       routes: r.data,
-      favs: new Set(f.data.map((x) => x.place_id)),
+      favs: favoritesEnabled ? new Set(remoteFavs.map((x) => x.place_id)) : local.favs,
       mode: "supabase",
     };
   } catch (e) {
     console.warn("Supabase недоступен, используются встроенные данные:", e);
     sb = null;
+    favoritesEnabled = false;
     return local;
   }
 }
@@ -63,7 +70,7 @@ export async function loadData() {
 export async function setFavorite(placeId, on, favs) {
   on ? favs.add(placeId) : favs.delete(placeId);
   writeLocal(favs);
-  if (!sb) return true;
+  if (!sb || !favoritesEnabled) return true;
   const { error } = on
     ? await sb.from("favorites").upsert({ place_id: placeId }, { onConflict: "place_id" })
     : await sb.from("favorites").delete().eq("place_id", placeId);
@@ -72,7 +79,7 @@ export async function setFavorite(placeId, on, favs) {
 
 /** Подписка на изменения избранного с другого устройства (Supabase Realtime). */
 export function subscribeFavorites(onChange) {
-  if (!sb) return;
+  if (!sb || !favoritesEnabled) return;
   sb.channel("favorites-sync")
     .on("postgres_changes", { event: "*", schema: "public", table: "favorites" }, async () => {
       const { data } = await sb.from("favorites").select("place_id");
