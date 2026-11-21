@@ -193,8 +193,7 @@ def make_extra(item, fallback_id):
     last_verified_at=item.get("last_verified_at"),
   )
 
-# Сохраняем прежний порядок и ID: явные ID, достопримечательности 63–68,
-# затем записи с авто-ID 69–104. Новые места получают явные ID 990xxx.
+# Сохраняем стабильные ID из verified_places.json; шесть исторических объектов Баку имеют ID 63–68.
 explicit_extras = [item for item in extras if item.get("id") is not None]
 generated_extras = [item for item in extras if item.get("id") is None]
 for item in explicit_extras:
