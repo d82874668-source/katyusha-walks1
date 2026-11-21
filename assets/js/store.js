@@ -48,7 +48,15 @@ export async function loadData() {
       return merged;
     });
     const allPlaces = [...mergedPlaces, ...PLACES.filter((place) => !remoteIds.has(String(place.id)))];
-    const publicPlaces = allPlaces.filter((place) => typeof place.image === "string" && place.image.trim());
+    // Не публикуем закрытые и ожидающие ручной проверки места, даже если у них есть фото.
+    // Карточки без фотографий остаются скрытыми до добавления подтверждённого изображения.
+    const publicPlaces = allPlaces.filter((place) =>
+      place.status !== "closed" &&
+      place.status !== "needs_review" &&
+      place.verification_status !== "needs_review" &&
+      typeof place.image === "string" &&
+      /^https?:\/\//i.test(place.image.trim())
+    );
     return {
       places: publicPlaces,
       hiddenIncompleteCount: allPlaces.length - publicPlaces.length,
