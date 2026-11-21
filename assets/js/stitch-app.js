@@ -413,7 +413,7 @@ function initFavoritesPage() {
   renderFavorites();
   const cityWrap=$("#favorites-city-filters");
   if(cityWrap){
-    cityWrap.innerHTML='<button type="button" data-fav-city="all" class="px-3.5 py-1.5 rounded-full font-label-caps text-label-caps uppercase transition-all">Все города</button>'+allCities().map(city=>'<button type="button" data-fav-city="'+esc(city)+'" class="px-3.5 py-1.5 rounded-full font-label-caps text-label-caps uppercase transition-all">'+esc(city)+'</button>').join("");
+    cityWrap.innerHTML='<button type="button" data-fav-city="all" class="px-3.5 py-1.5 rounded-full font-label-caps text-label-caps uppercase transition-all">Все города</button>'+allCities().map(city=>'<button type="button" data-fav-city="'+esc(city)+'" class="px-3.5 py-1.5 rounded-full text-on-surface-variant hover:bg-surface-container-low font-label-caps text-label-caps uppercase transition-all">'+esc(city)+'</button>').join("");
     cityWrap.addEventListener("click",e=>{const b=e.target.closest("[data-fav-city]");if(!b)return;if(b.dataset.favCity==="all"){activeCity="all";try{localStorage.removeItem(CITY_STORAGE_KEY);}catch{}syncHeader();renderFavorites();}else applySelectedCity(b.dataset.favCity);});
   }
   const categoryWrap=$("#favorites-category-filters");
@@ -560,7 +560,7 @@ function initRoutesPage() {
   if(cityWrap){
     const label='<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider pr-space-xs">Город:</span>';
     cityWrap.innerHTML=label+['all',...allCities()].map(city=>'<button type="button" data-route-city="'+esc(city)+'" class="filter-city-btn px-4 py-1.5 rounded-full font-label-lg text-label-lg transition-all '+((city==="all"&&activeCity==="all")||(city===activeCity)?"bg-primary-container text-on-primary":"bg-surface-container-low text-on-surface hover:bg-surface-container")+'">'+(city==="all"?"Все города":esc(city))+'</button>').join("");
-    cityWrap.addEventListener("click",e=>{const b=e.target.closest("[data-route-city]");if(!b)return;if(b.dataset.routeCity==="all"){activeCity="all";try{localStorage.setItem(CITY_STORAGE_KEY,"Азербайджан");}catch{}renderRoutesPage();}else applySelectedCity(b.dataset.routeCity);});
+    cityWrap.addEventListener("click",e=>{const b=e.target.closest("[data-route-city]");if(!b)return;if(b.dataset.routeCity==="all"){activeCity="all";try{localStorage.removeItem(CITY_STORAGE_KEY);}catch{}syncHeader();renderRoutesPage();}else applySelectedCity(b.dataset.routeCity);});
   }
   const topicWrap=$("#routes-topic-filters");
   const topicKeys=["all","romance","architecture","coffee","gardens","gastro"];
