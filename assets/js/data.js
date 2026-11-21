@@ -2015,7 +2015,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 55.7539,
   "longitude": 37.6208,
-  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Red%20Square,%20GUM,%20Moscow,%20Russia.jpg?width=1280",
+  "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2e/4f/7e/22/visitrussia-moscow-day.jpg?w=1600&h=900&s=1",
   "rating": null,
   "is_approx": false,
   "region": "Москва",
@@ -2032,8 +2032,8 @@ export const PLACES = [
   "source_urls": [
    "https://www.mos.ru/",
    "https://www.openstreetmap.org/?mlat=55.7539&mlon=37.6208#map=17/55.7539/37.6208",
-   "https://commons.wikimedia.org/wiki/File:Red_Square,_GUM,_Moscow,_Russia.jpg",
-   "https://commons.wikimedia.org/wiki/Special:FilePath/Red%20Square,%20GUM,%20Moscow,%20Russia.jpg?width=1280"
+   "https://www.tripadvisor.com/Attraction_Review-g298484-d300394-Reviews-Red_Square-Moscow_Central_Russia.html",
+   "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2e/4f/7e/22/visitrussia-moscow-day.jpg?w=1600&h=900&s=1"
   ]
  },
  {
@@ -2043,7 +2043,7 @@ export const PLACES = [
   "category": "attraction",
   "latitude": 55.7525,
   "longitude": 37.62306,
-  "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Saint%20Basil%27s%20Cathedral%2C%20Moscow%20-%20exterior%20details.jpg?width=1280",
+  "image": "https://shm.ru/upload/iblock/31b/8.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Москва",
@@ -2058,9 +2058,9 @@ export const PLACES = [
   "map_url": "https://www.google.com/maps/search/?api=1&query=55.7525,37.62306",
   "last_verified_at": "2026-11-21",
   "source_urls": [
+   "https://shm.ru/museum/hvb/",
    "https://commons.wikimedia.org/wiki/Saint_Basil%27s_Cathedral",
-   "https://commons.wikimedia.org/wiki/File:Saint_Basil%27s_Cathedral,_Moscow_-_exterior_details.jpg",
-   "https://commons.wikimedia.org/wiki/Special:FilePath/Saint%20Basil%27s%20Cathedral%2C%20Moscow%20-%20exterior%20details.jpg?width=1280"
+   "https://shm.ru/upload/iblock/31b/8.jpg"
   ]
  },
  {
