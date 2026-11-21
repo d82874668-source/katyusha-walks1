@@ -155,7 +155,7 @@ check("@media(max-width:767px)" in css, "Mobile breakpoint missing")
 check("overflow-x:clip" in css or "overflow-x:hidden" in css, "Horizontal overflow safeguard missing")
 check("44px" in css, "Minimum mobile touch target rule missing")
 sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-check("katyusha-pwa-v15" in sw, "PWA cache version not bumped")
+check("katyusha-pwa-v16" in sw, "PWA cache version not bumped")
 check("visits.js" not in sw, "PWA still precaches retired visits module")
 
 seed = committed_seed
