@@ -17,6 +17,7 @@ export const VENUE_GROUPS = [
   { key: "gaming", title: "Компьютерные клубы", cats: ["gaming", "gaming247", "esports", "gamecenter", "vr"] },
   { key: "mall", title: "Торговые центры", cats: ["mall", "shop", "market"] },
   { key: "cinema", title: "Кинотеатры", cats: ["cinema"] },
+  { key: "culture", title: "Культурные пространства", cats: ["cultural_space", "theatre"] },
   { key: "fun", title: "Развлекательные центры", cats: ["entertainment", "quest", "karaoke", "aquapark", "zoo", "capybara", "recreation", "gym", "theatre", "karting", "boat"] },
   { key: "night", title: "Ночные клубы", cats: ["nightclub"] },
   { key: "bowling", title: "Боулинг и бильярд", cats: ["bowling", "billiards"] },
@@ -27,7 +28,7 @@ export const groupOf = (p) => VENUE_GROUPS.find((g) => g.cats.includes(p.categor
 export const ROLES = {
   walk:    { title: "Прогулка", cats: ["park", "garden", "square", "embankment", "city", "beach", "sea", "viewpoint", "attraction"] },
   photo:   { title: "Красивое место", cats: ["viewpoint", "attraction", "city", "embankment", "square", "park"] },
-  culture: { title: "Культура", cats: ["museum", "exhibition", "attraction", "zoo"] },
+  culture: { title: "Культура", cats: ["museum", "exhibition", "attraction", "zoo", "cultural_space"] },
   meal:    { title: "Обед или ужин", cats: ["restaurant", "cafe", "foodcourt"] },
   cafe:    { title: "Кофе и десерты", cats: ["coffee", "bakery", "cafe", "anticafe"] },
   drinks:  { title: "Кафе или бар", cats: ["cafe", "coffee", "bar", "pub", "winebar", "lounge", "hookah"] },
@@ -65,7 +66,7 @@ export const ATMOSPHERES = {
 
 /** Ориентировочная длительность визита в минутах (используется, если нет своих данных). */
 export const VISIT_MIN = {
-  city: 120, attraction: 60, museum: 90, exhibition: 60, viewpoint: 30, park: 60, garden: 75, square: 30, embankment: 45,
+  city: 120, attraction: 60, museum: 90, exhibition: 60, cultural_space: 90, viewpoint: 30, park: 60, garden: 75, square: 30, embankment: 45,
   beach: 90, sea: 90, trips: 240, zoo: 120, restaurant: 75, cafe: 45, coffee: 30, bakery: 25, foodcourt: 45, anticafe: 90,
   bar: 60, pub: 60, winebar: 60, lounge: 75, hookah: 75, nightclub: 120, karaoke: 90, billiards: 60, bowling: 75, cinema: 130,
   mall: 90, entertainment: 90, quest: 70, vr: 60, gaming: 90, gaming247: 90, esports: 90, gamecenter: 90, aquapark: 180,
