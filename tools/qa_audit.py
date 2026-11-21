@@ -60,7 +60,18 @@ def parse_places(text: str):
 
 committed_data = subprocess.check_output(["git", "show", "HEAD:assets/js/data.js"], text=True, encoding="utf-8")
 committed_places = parse_places(committed_data)
-check(committed_places == places, "Committed data.js differs from canonical generator output")
+if committed_places != places:
+    differences = 0
+    for index, (committed, generated) in enumerate(zip(committed_places, places)):
+        for key in sorted(set(committed) | set(generated)):
+            if committed.get(key) != generated.get(key):
+                print("CATALOG DIFF", index, committed.get("id"), key, repr(committed.get(key))[:180], "=>", repr(generated.get(key))[:180])
+                differences += 1
+                if differences >= 40:
+                    break
+        if differences >= 40:
+            break
+    check(False, "Committed data.js differs from canonical generator output")
 committed_seed = subprocess.check_output(["git", "show", "HEAD:supabase/seed.sql"], text=True, encoding="utf-8")
 
 ids = [int(p["id"]) for p in places]
