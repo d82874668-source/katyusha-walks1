@@ -374,8 +374,6 @@ header.fixed nav a{min-width:0;white-space:normal;overflow-wrap:anywhere;text-al
  main h3{font-size:clamp(19px,5.2vw,24px)!important;line-height:1.24!important}
  main p,main li{font-size:15px;line-height:1.6!important}
  main .text-body-xl{font-size:16px!important;line-height:1.6!important}
- main .grid{grid-template-columns:minmax(0,1fr)!important}
- main .grid>*{grid-column:1/-1!important;min-width:0!important}
  main .flex{min-width:0}
  main .flex>*{min-width:0}
  main .flex.flex-wrap{row-gap:10px!important}
