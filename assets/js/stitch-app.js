@@ -143,9 +143,19 @@ function syncHeader() {
   if(cityLabel)cityLabel.textContent=activeCity==="all"?"Все города":activeCity;
   const switcher=$("header [data-city-switcher]");
   if(switcher)switcher.setAttribute("aria-label","Выбранный регион: "+activeCity);
-  $$("[data-select-city]").forEach(button=>{
+  $("[data-select-city]").forEach(button=>{
     const selected=button.dataset.selectCity===activeCity;
     button.setAttribute("aria-current",selected?"true":"false");
+    button.classList.toggle("bg-primary-container",selected);
+    button.classList.toggle("text-on-primary",selected);
+  });
+  $("[data-map-city]").forEach(button=>{
+    const selected=button.dataset.mapCity===activeCity;
+    button.classList.toggle("bg-primary",selected);
+    button.classList.toggle("text-on-primary",selected);
+  });
+  $("[data-fav-city]").forEach(button=>{
+    const selected=button.dataset.favCity===activeCity||(button.dataset.favCity==="all"&&activeCity==="all");
     button.classList.toggle("bg-primary-container",selected);
     button.classList.toggle("text-on-primary",selected);
   });
