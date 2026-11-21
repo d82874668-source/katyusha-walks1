@@ -74,7 +74,8 @@ export function estimateLeg(a, b, mode = "drive") {
 /* ---------- Карта ---------- */
 const validPoint = (p) => Number.isFinite(Number(p?.latitude)) && Number.isFinite(Number(p?.longitude)) && Math.abs(Number(p.latitude)) <= 90 && Math.abs(Number(p.longitude)) <= 180;
 
-const imageOfPlace = (p) => p?.image || (Array.isArray(p?.photos) ? p.photos[0]?.url : "") || "";\nexport class MapView {
+const imageOfPlace = (p) => p?.image || (Array.isArray(p?.photos) ? p.photos[0]?.url : "") || "";
+export class MapView {
   constructor(el, onSelect = () => {}) {
     this.onSelect = onSelect;
     this.markers = new Map();
