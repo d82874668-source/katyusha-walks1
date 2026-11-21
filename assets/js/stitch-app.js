@@ -34,7 +34,7 @@ const categoryOf = p => CATEGORIES[p.category]?.title || "Место";
 const priceOf = p => p.price_min == null ? "Стоимость не указана" : Number(p.price_min) === 0 ? "Бесплатно" : (Number(p.price_min) === Number(p.price_max) ? Number(p.price_min).toLocaleString("ru-RU") : "от " + Number(p.price_min).toLocaleString("ru-RU")) + " " + (p.price_unit || "");
 let mapView = null, homeMapView = null, activeCity = "Азербайджан", activeCategory = "all", query = "", mapQuery = "", sortMode = "rating", viewMode = "grid", plan = {ids:[],mode:"walk",name:"Моя прогулка"};
 let activePriceBand=null, activeFeatures=new Set(), userLocation=null, mapCategory="all", mapListRefresh=null;
-let routeTopic="all", routePace="all";
+let routeTopic="all", routePace="all", favoriteCategory="all";
 
 function toast(message) {
   let el = $("#stitch-toast");
@@ -380,7 +380,9 @@ function initMapPage(home=false) {
 }
 function renderFavorites() {
   const grid=$("#favorites-grid");if(!grid)return;
-  const favs=state.places.filter(p=>(state.favs.has(p.id)||state.favs.has(String(p.id)))&&matchesCity(p));
+  let favs=state.places.filter(p=>(state.favs.has(p.id)||state.favs.has(String(p.id)))&&matchesCity(p));
+  const favoriteGroups={coffee:["coffee","cafe","bakery"],architecture:["historic","museum","monument","attraction"],parks:["park","square","garden","nature"],viewpoints:["viewpoint","sea","embankment","boat"]};
+  if(favoriteCategory!=="all")favs=favs.filter(p=>(favoriteGroups[favoriteCategory]||[]).includes(p.category));
   if(favoritesGrouped)favs.sort((a,b)=>cityGroupOf(a).localeCompare(cityGroupOf(b),"ru")||a.title.localeCompare(b.title,"ru"));
   grid.innerHTML=favs.length?favs.map(stitchCard).join(""):'<div class="col-span-full text-center py-16 bg-surface-container-low rounded-xl"><span class="material-symbols-outlined text-4xl text-secondary">favorite_border</span><p class="font-headline-md text-primary mt-3">Коллекция пока пуста</p><p class="font-body-md text-on-surface-variant mt-2">Нажимайте на сердечко в карточках мест, чтобы сохранять интересное.</p><a href="catalog.html" class="inline-flex mt-5 px-5 py-2.5 rounded-full bg-primary-container text-on-primary">Открыть каталог</a></div>';
   const headings=$("main h1,main h2");const title=headings.find(h=>/персональн|коллекц/i.test(h.textContent));if(title)title.textContent="Ваша персональная коллекция";
@@ -390,14 +392,27 @@ function renderFavorites() {
 }
 function initFavoritesPage() {
   renderFavorites();
-  const buttons=$("main button");
+  const cityWrap=$("#favorites-city-filters");
+  if(cityWrap){
+    cityWrap.innerHTML='<button type="button" data-fav-city="all" class="px-3.5 py-1.5 rounded-full font-label-caps text-label-caps uppercase transition-all">Все города</button>'+allCities().map(city=>'<button type="button" data-fav-city="'+esc(city)+'" class="px-3.5 py-1.5 rounded-full font-label-caps text-label-caps uppercase transition-all">'+esc(city)+'</button>').join("");
+    cityWrap.addEventListener("click",e=>{const b=e.target.closest("[data-fav-city]");if(!b)return;if(b.dataset.favCity==="all"){activeCity="all";try{localStorage.removeItem(CITY_STORAGE_KEY);}catch{}syncHeader();renderFavorites();}else applySelectedCity(b.dataset.favCity);});
+  }
+  const categoryWrap=$("#favorites-category-filters");
+  if(categoryWrap){
+    const keys=["coffee","architecture","parks","viewpoints"];
+    $$("button",categoryWrap).forEach((b,i)=>{b.dataset.favoriteCategory=keys[i];});
+    categoryWrap.addEventListener("click",e=>{const b=e.target.closest("[data-favorite-category]");if(!b)return;favoriteCategory=favoriteCategory===b.dataset.favoriteCategory?"all":b.dataset.favoriteCategory;renderFavorites();});
+  }
+  const buttons=$$("main button");
   buttons.find(b=>/Поделиться коллекцией/.test(b.textContent))?.addEventListener("click",async()=>{
-    const list=state.places.filter(p=>state.favs.has(p.id)||state.favs.has(String(p.id)));
+    const list=state.places.filter(p=>(state.favs.has(p.id)||state.favs.has(String(p.id)))&&matchesCity(p));
     const textValue="Мои места из «Прогулок с Катюшей»:\n"+list.map(p=>"• "+p.title+" — "+cityOf(p)).join("\n");
     try{await navigator.clipboard.writeText(textValue);toast("Список избранного скопирован.");}catch{toast("Не удалось скопировать список.");}
   });
   buttons.find(b=>/Экспорт в PDF/.test(b.textContent))?.addEventListener("click",()=>window.print());
   buttons.find(b=>/Автогруппировка по районам/.test(b.textContent))?.addEventListener("click",()=>{favoritesGrouped=!favoritesGrouped;renderFavorites();toast(favoritesGrouped?"Места сгруппированы по городам.":"Показан исходный порядок.");});
+  buttons.find(b=>/На карте/.test(b.textContent))?.addEventListener("click",()=>location.href="map.html");
+  buttons.find(b=>/Выбрать вручную/.test(b.textContent))?.addEventListener("click",()=>location.href="catalog.html");
 }
 function readPlan() {
   try{const saved=JSON.parse(localStorage.getItem("rfn:plan")||"null");if(saved&&Array.isArray(saved.ids))plan={...plan,...saved};}catch{}
