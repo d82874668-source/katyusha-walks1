@@ -2634,6 +2634,150 @@ export const PLACES = [
    "https://m.zerkalo.az/ne-rozovoe-ozero-a-ambre-stalo-vizitnoj-kartoj-masazyra/",
    "https://cdn.zerkalo.az/2022/08/OZERO-masazyr-929x600.jpg"
   ]
+ },
+ {
+  "id": 990120,
+  "title": "Парк 28 панфиловцев",
+  "description": "Исторический парк в центре Алматы с мемориалом Славы, Вечным огнём и Вознесенским кафедральным собором. Подходит для спокойной прогулки по тенистым аллеям.",
+  "category": "park",
+  "latitude": 43.25972,
+  "longitude": 76.95472,
+  "image": null,
+  "rating": null,
+  "is_approx": false,
+  "region": "Казахстан",
+  "city": "Алматы",
+  "address": "Улица Гоголя, между улицами Кунаева и Зенкова, Алматы, Казахстан",
+  "price_min": 0,
+  "price_max": 0,
+  "price_unit": "Вход свободный",
+  "review_count": null,
+  "opening_hours": "Круглосуточно",
+  "phone": null,
+  "source_urls": [
+   "https://kazakhstan.travel/en/attractions/402"
+  ],
+  "last_verified_at": "2026-11-21"
+ },
+ {
+  "id": 990121,
+  "title": "Парк Кок-Тобе",
+  "description": "Парк и смотровая площадка на вершине холма Кок-Тобе с панорамой Алматы и гор Заилийского Алатау. На территории есть кафе, рестораны и канатная дорога.",
+  "category": "viewpoint",
+  "latitude": 43.23394,
+  "longitude": 76.97528,
+  "image": null,
+  "rating": null,
+  "is_approx": false,
+  "region": "Казахстан",
+  "city": "Алматы",
+  "address": "Улица Жамал Омаровой, 41, Алматы, Казахстан",
+  "price_min": 0,
+  "price_max": 10000,
+  "price_unit": "KZT: пеший вход бесплатный; канатная дорога для взрослых — 6 000 тенге в одну сторону или 10 000 тенге туда-обратно",
+  "review_count": null,
+  "opening_hours": "Ежедневно 09:00–22:00",
+  "phone": "+7 727 272 77 77",
+  "source_urls": [
+   "https://kazakhstan.travel/en/attractions/400"
+  ],
+  "last_verified_at": "2026-11-21"
+ },
+ {
+  "id": 990122,
+  "title": "Главный ботанический сад Алматы",
+  "description": "Большой ботанический сад с коллекцией более 3 000 видов растений, дендрарием, оранжереями и тематическими прогулочными дорожками.",
+  "category": "garden",
+  "latitude": 43.2226,
+  "longitude": 76.8994,
+  "image": null,
+  "rating": null,
+  "is_approx": false,
+  "region": "Казахстан",
+  "city": "Алматы",
+  "address": "Улица Тимирязева, 36Д, Алматы, Казахстан",
+  "price_min": null,
+  "price_max": null,
+  "price_unit": null,
+  "review_count": null,
+  "opening_hours": "Ежедневно 09:00–18:00",
+  "phone": "+7 708 970 58 66",
+  "source_urls": [
+   "https://kazakhstan.travel/en/attractions/401"
+  ],
+  "last_verified_at": "2026-11-21"
+ },
+ {
+  "id": 990123,
+  "title": "Музей Алматы",
+  "description": "Городской музей об истории, культуре и развитии Алматы: археологические находки, архивные фотографии, предметы быта и мультимедийные экспозиции.",
+  "category": "museum",
+  "latitude": 43.2557,
+  "longitude": 76.9456,
+  "image": null,
+  "rating": null,
+  "is_approx": false,
+  "region": "Казахстан",
+  "city": "Алматы",
+  "address": "Улица Кабанбай батыра, 132, Алматы, Казахстан",
+  "price_min": 300,
+  "price_max": 1000,
+  "price_unit": "KZT за билет; стоимость зависит от категории и экспозиции",
+  "review_count": null,
+  "opening_hours": "Ежедневно 10:00–19:00",
+  "phone": "+7 727 267 59 05",
+  "source_urls": [
+   "https://kazakhstan.travel/en/attractions/405"
+  ],
+  "last_verified_at": "2026-11-21"
+ },
+ {
+  "id": 990124,
+  "title": "Монумент Независимости",
+  "description": "Монумент Независимости на площади Республики, увенчанный фигурой Золотого человека. Один из главных символов современной истории Казахстана.",
+  "category": "monument",
+  "latitude": 43.2386,
+  "longitude": 76.9453,
+  "image": null,
+  "rating": null,
+  "is_approx": false,
+  "region": "Казахстан",
+  "city": "Алматы",
+  "address": "Площадь Республики, проспект Достык, Алматы, Казахстан",
+  "price_min": 0,
+  "price_max": 0,
+  "price_unit": "Осмотр бесплатный",
+  "review_count": null,
+  "opening_hours": "Круглосуточно",
+  "phone": null,
+  "source_urls": [
+   "https://kazakhstan.travel/en/attractions/411"
+  ],
+  "last_verified_at": "2026-11-21"
+ },
+ {
+  "id": 990125,
+  "title": "Алматинский зоопарк",
+  "description": "Один из старейших зоопарков Казахстана с коллекцией животных из разных регионов мира; подходит для семейного посещения и знакомства с природой.",
+  "category": "zoo",
+  "latitude": 43.2633,
+  "longitude": 76.9742,
+  "image": null,
+  "rating": null,
+  "is_approx": false,
+  "region": "Казахстан",
+  "city": "Алматы",
+  "address": "Улица Есенберлина, 166, Алматы, Казахстан",
+  "price_min": 562,
+  "price_max": 1427,
+  "price_unit": "KZT за билет: детский — взрослый",
+  "review_count": null,
+  "opening_hours": "Ежедневно 09:00–18:00",
+  "phone": "+7 727 291 37 19",
+  "source_urls": [
+   "https://kazakhstan.travel/en/attractions/416"
+  ],
+  "last_verified_at": "2026-11-21"
  }
 ];
 export const ROUTES = [
