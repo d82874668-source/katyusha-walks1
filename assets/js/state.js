@@ -6,6 +6,5 @@ export const state = {
   // направления платформы
   city: "Баку", venueCity: "Баку", venueGroup: "all",
   plan: { ids: [], mode: "walk", name: "" },
-  saved: [],
 };
 export const byId = (id) => state.places.find((p) => p.id === id);
