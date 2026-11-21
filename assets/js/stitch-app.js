@@ -296,49 +296,86 @@ function initCatalog() {
   const mapPreview=$("#map-preview-container");if(mapPreview)mapPreview.innerHTML='<a href="map.html" class="block rounded-xl bg-primary-container text-on-primary p-6 font-headline-md">Открыть интерактивную карту всех мест →</a>';
   renderCatalog();
 }
+function mapCategoryMatches(p,category) {
+  const groups={
+    all:null,
+    coffee:["coffee","cafe","bakery","fastfood"],
+    architecture:["historic","museum","monument","attraction","city","exhibition"],
+    parks:["park","square","garden","nature","embankment"],
+    viewpoints:["viewpoint","sea","boat","resort","trips","beach"],
+    date:["restaurant","cafe","coffee","bar","winebar","hookah","sea","boat","resort"]
+  };
+  return !groups[category]||groups[category].includes(p.category);
+}
 function initMapPage(home=false) {
   if(!window.L){toast("Карта не загрузилась: библиотека Leaflet недоступна.");return;}
   if(!home){
     const container=$("#map-canvas-container");
     if(container){
-      container.style.position="relative";
-      container.style.height="640px";
-      container.style.minHeight="640px";
-      container.style.width="100%";
+      container.style.position="relative";container.style.height="640px";container.style.minHeight="640px";container.style.width="100%";
       container.innerHTML='<div id="mapCanvas" style="position:absolute;inset:0;width:100%;height:100%;min-height:640px"></div>';
     }
   }
   const el=home?$("#homeMapCanvas"):$("#mapCanvas");
-  if(!el){toast("Не найден контейнер карты.");return;}
+  if(!el)return;
   const instance=new MapView(el,id=>location.href="place.html?id="+encodeURIComponent(id));
-  const filtered=()=>state.places.filter(p=>(activeCity==="all"||cityOf(p)===activeCity)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
-  instance.setPlaces(filtered(),true);
-  requestAnimationFrame(()=>instance.refresh());
-  if(home)homeMapView=instance;else mapView=instance;
-  if(!home){
-    const citySelect=$("#map-city-select");
-    const renderList=()=>{
-      const q=mapQuery.toLocaleLowerCase("ru");
-      const list=filtered().filter(p=>!q||[p.title,p.address,cityOf(p)].join(" ").toLocaleLowerCase("ru").includes(q));
-      const target=$("#places-container");
-      const countLabel=[...document.querySelectorAll("#map-sidebar span")].find(el=>/Список мест/.test(el.textContent));
-      if(countLabel)countLabel.textContent="Список мест ("+list.length+")";
-      if(target)target.innerHTML=list.slice(0,100).map(p=>`<button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-container-low text-left" data-map-place="${esc(p.id)}"><span class="w-2.5 h-2.5 rounded-full ${p.is_approx?"bg-secondary":"bg-primary"}"></span><span class="min-w-0"><strong class="block truncate text-primary text-sm">${esc(p.title)}</strong><small class="block truncate text-on-surface-variant">${esc(p.address||"Адрес уточняется")}</small></span></button>`).join("");
-    };
-    if(citySelect){fillSelect(citySelect,allCities(),"Все города");citySelect.value=activeCity;citySelect.addEventListener("change",()=>{activeCity=citySelect.value;instance.setPlaces(filtered(),true);renderList();});}
-    renderList();
-    $("#map-search-input")?.addEventListener("input",e=>{mapQuery=e.target.value;renderList();});
-    $("#btn-geolocate")?.addEventListener("click",async()=>{try{const pos=await instance.locate();instance.map.setView([pos.latitude,pos.longitude],15);}catch{toast("Не удалось определить местоположение.");}});
-    $("#btn-zoom-in")?.addEventListener("click",()=>instance.map.zoomIn());
-    $("#btn-zoom-out")?.addEventListener("click",()=>instance.map.zoomOut());
-    $("#btn-compass")?.addEventListener("click",()=>instance.fit(filtered()));
-    $("#btn-layers")?.addEventListener("click",()=>toast("Используется карта OpenStreetMap."));
-    $("#btn-route-toggle")?.addEventListener("click",()=>location.href="planner.html");
-    $("#sidebar-toggle-btn")?.addEventListener("click",()=>$("#map-sidebar")?.classList.toggle("is-collapsed"));
-    $("#tab-route")?.addEventListener("click",()=>location.href="planner.html");
-    $("#tab-locations")?.addEventListener("click",renderList);
-    $("#places-container")?.addEventListener("click",e=>{const b=e.target.closest("[data-map-place]");if(!b)return;const p=placeById(b.dataset.mapPlace);if(p){instance.focus(p);location.href="place.html?id="+encodeURIComponent(p.id);}});
+  const filtered=()=>state.places.filter(p=>matchesCity(p)&&mapCategoryMatches(p,mapCategory)&&Number.isFinite(+p.latitude)&&Number.isFinite(+p.longitude));
+  instance.setPlaces(filtered(),true);requestAnimationFrame(()=>instance.refresh());
+  if(home){homeMapView=instance;return;}
+  mapView=instance;
+  const renderList=()=>{
+    const q=mapQuery.toLocaleLowerCase("ru");
+    const list=filtered().filter(p=>!q||[p.title,p.address,cityOf(p),cityGroupOf(p)].join(" ").toLocaleLowerCase("ru").includes(q));
+    const target=$("#places-container");
+    const countLabel=[...document.querySelectorAll("#map-sidebar span")].find(el=>/Список мест/.test(el.textContent));
+    if(countLabel)countLabel.textContent="Список мест ("+list.length+")";
+    if(target)target.innerHTML=list.slice(0,150).map(p=>'<button type="button" class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-surface-container-low text-left" data-map-place="'+esc(p.id)+'"><span class="w-2.5 h-2.5 rounded-full '+(p.is_approx?"bg-secondary":"bg-primary")+'"></span><span class="min-w-0"><strong class="block truncate text-primary text-sm">'+esc(p.title)+'</strong><small class="block truncate text-on-surface-variant">'+esc(p.address||"Адрес уточняется")+'</small></span></button>').join("");
+  };
+  const refresh=()=>{instance.setPlaces(filtered(),true);renderList();};
+  mapListRefresh=refresh;
+  const citySelect=$("#map-city-select");
+  if(citySelect){fillSelect(citySelect,allCities(),"Все города");citySelect.value=activeCity;citySelect.addEventListener("change",e=>applySelectedCity(e.target.value));}
+  const cityPills=$("#map-city-pills");
+  if(cityPills){
+    cityPills.innerHTML='<span class="material-symbols-outlined text-[15px] text-secondary ml-2">location_city</span>'+allCities().map(city=>'<button type="button" data-map-city="'+esc(city)+'" class="px-2.5 py-1 rounded-full text-label-caps font-label-caps whitespace-nowrap '+(city===activeCity?"bg-primary text-on-primary shadow-xs":"hover:bg-surface-container text-on-surface-variant")+'">'+esc(city)+'</button>').join("");
+    cityPills.addEventListener("click",e=>{const b=e.target.closest("[data-map-city]");if(b)applySelectedCity(b.dataset.mapCity);});
   }
+  const categoryPills=$("#map-category-pills");
+  const mapFilters=["all","coffee","architecture","parks","viewpoints","date"];
+  if(categoryPills){
+    $$("button.filter-chip",categoryPills).forEach((b,i)=>{b.dataset.mapCategory=mapFilters[i]||"all";});
+    categoryPills.addEventListener("click",e=>{
+      const b=e.target.closest("[data-map-category]");if(!b)return;
+      mapCategory=b.dataset.mapCategory;
+      $$("#map-category-pills [data-map-category]").forEach(x=>x.classList.toggle("active",x===b));
+      refresh();
+    });
+  }
+  $("#map-area-select")?.addEventListener("click",()=>{$("#map-city-select")?.scrollIntoView({behavior:"smooth",block:"center"});$("#map-city-select")?.focus();});
+  $("#map-search-input")?.addEventListener("input",e=>{mapQuery=e.target.value;renderList();});
+  $("#btn-geolocate")?.addEventListener("click",async()=>{try{const pos=await instance.locate();instance.map.setView([pos.latitude,pos.longitude],15);}catch{toast("Не удалось определить местоположение.");}});
+  $("#btn-zoom-in")?.addEventListener("click",()=>instance.map.zoomIn());
+  $("#btn-zoom-out")?.addEventListener("click",()=>instance.map.zoomOut());
+  $("#btn-compass")?.addEventListener("click",()=>instance.fit(filtered()));
+  $("#btn-layers")?.addEventListener("click",()=>toast("Используется карта OpenStreetMap."));
+  $("#btn-route-toggle")?.addEventListener("click",()=>location.href="planner.html");
+  $("#sidebar-toggle-btn")?.addEventListener("click",()=>{$("#map-sidebar")?.classList.add("is-collapsed");$("#sidebar-expand-btn")?.classList.remove("hidden");});
+  $("#sidebar-expand-btn")?.addEventListener("click",()=>{$("#map-sidebar")?.classList.remove("is-collapsed");$("#sidebar-expand-btn")?.classList.add("hidden");});
+  $("#tab-route")?.addEventListener("click",()=>location.href="planner.html");
+  $("#tab-locations")?.addEventListener("click",renderList);
+  $("#places-container")?.addEventListener("click",e=>{const b=e.target.closest("[data-map-place]");if(!b)return;const p=placeById(b.dataset.mapPlace);if(p){instance.focus(p);location.href="place.html?id="+encodeURIComponent(p.id);}});
+  $$("[data-map-reset]").forEach(b=>b.addEventListener("click",()=>{mapQuery="";mapCategory="all";const input=$("#map-search-input");if(input)input.value="";const all=$('#map-category-pills [data-map-category="all"]');if(all)all.click();else refresh();}));
+  $$("[data-export-gpx]").forEach(b=>b.addEventListener("click",()=>{
+    const points=filtered();if(!points.length){toast("Нет точек для экспорта.");return;}
+    const escXml=value=>String(value??"").replace(/[<>&'"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;","'":"&apos;",'"':"&quot;"}[c]));
+    const body=points.map(p=>'<wpt lat="'+Number(p.latitude)+'" lon="'+Number(p.longitude)+'"><name>'+escXml(p.title)+'</name><desc>'+escXml(p.address||"")+'</desc></wpt>').join("");
+    const xml='<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="Прогулки с Катюшей" xmlns="http://www.topografix.com/GPX/1/1">'+body+'</gpx>';
+    const url=URL.createObjectURL(new Blob([xml],{type:"application/gpx+xml"}));const a=document.createElement("a");a.href=url;a.download="katyusha-"+activeCity.toLowerCase().replace(/\s+/g,"-")+".gpx";a.click();URL.revokeObjectURL(url);toast("GPX-файл подготовлен.");
+  }));
+  const mapCanvas=$("#map-canvas-container");
+  $("#style-paper")?.addEventListener("click",()=>{if(mapCanvas)mapCanvas.style.filter="none";$("#style-paper")?.classList.add("bg-primary-container","text-on-primary");$("#style-vintage")?.classList.remove("bg-primary-container","text-on-primary");});
+  $("#style-vintage")?.addEventListener("click",()=>{if(mapCanvas)mapCanvas.style.filter="sepia(.32) saturate(.72) contrast(.96)";$("#style-vintage")?.classList.add("bg-primary-container","text-on-primary");$("#style-paper")?.classList.remove("bg-primary-container","text-on-primary");});
+  renderList();
 }
 function renderFavorites() {
   const grid=$("#favorites-grid");if(!grid)return;
