@@ -497,11 +497,11 @@ export const PLACES = [
   "title": "MALACANNES 145",
   "description": "Кальянная: вечер за разговором.",
   "category": "hookah",
-  "latitude": 40.372,
-  "longitude": 49.872,
-  "image": null,
+  "latitude": 40.3710075,
+  "longitude": 49.8401042,
+  "image": "https://cdn.aitcomp.com/projects/3a6b82aa-d7d8-4873-abb4-bb80c9ea3810.webp",
   "rating": null,
-  "is_approx": true,
+  "is_approx": false,
   "region": "Азербайджан",
   "city": "Баку",
   "address": "11 Rasul Rza Street, Baku, Azerbaijan",
@@ -509,13 +509,16 @@ export const PLACES = [
   "price_max": null,
   "price_unit": null,
   "review_count": null,
-  "opening_hours": null,
-  "phone": null,
-  "map_url": null,
+  "opening_hours": "Ежедневно, круглосуточно",
+  "phone": "+994 51 500 0145",
+  "map_url": "https://www.openstreetmap.org/?mlat=40.3710075&mlon=49.8401042#map=18/40.3710075/49.8401042",
   "source_urls": [
-   "https://www.145group.com/ru/projects/malacannes"
+   "https://www.145group.com/ru/projects/malacannes",
+   "https://www.145group.com/en/projects/malacannes",
+   "https://cdn.aitcomp.com/projects/3a6b82aa-d7d8-4873-abb4-bb80c9ea3810.webp",
+   "https://www.openstreetmap.org/?mlat=40.3710075&mlon=49.8401042#map=18/40.3710075/49.8401042"
   ],
-  "last_verified_at": "2026-11-21"
+  "last_verified_at": "2026-11-22"
  },
  {
   "id": 7,
@@ -626,22 +629,27 @@ export const PLACES = [
   "title": "Ibrazoro Cyber Zone",
   "description": "Компьютерный клуб: игровой вечер вдвоём.",
   "category": "gaming",
-  "latitude": 40.399,
-  "longitude": 49.856,
-  "image": null,
+  "latitude": 40.380901,
+  "longitude": 49.847473,
+  "image": "https://uxcedpbumulpheglhlvs.supabase.co/storage/v1/object/public/club-images/fe59a1dd-e8e7-411c-b8d3-ff046e78d5b6/profile/1787839395921-dc31a094-c337-4557-b6af-bd45f905d566.jpg",
   "rating": null,
-  "is_approx": true,
+  "is_approx": false,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": null,
+  "address": "28 May metro, S. Rahimov Street, near Nikola Tesla Park, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
   "review_count": null,
-  "opening_hours": null,
-  "phone": null,
-  "map_url": null,
-  "source_urls": []
+  "opening_hours": "Ежедневно, круглосуточно",
+  "phone": "+994 77 312 7577",
+  "map_url": "https://www.openstreetmap.org/?mlat=40.380901&mlon=49.847473#map=18/40.380901/49.847473",
+  "source_urls": [
+   "https://gameyer.az/klub/ibrazoro-cyber-zone-28-may",
+   "https://uxcedpbumulpheglhlvs.supabase.co/storage/v1/object/public/club-images/fe59a1dd-e8e7-411c-b8d3-ff046e78d5b6/profile/1787839395921-dc31a094-c337-4557-b6af-bd45f905d566.jpg",
+   "https://www.openstreetmap.org/?mlat=40.380901&mlon=49.847473#map=18/40.380901/49.847473"
+  ],
+  "last_verified_at": "2026-11-22"
  },
  {
   "id": 12,
@@ -704,50 +712,56 @@ export const PLACES = [
   "title": "PlayerCyberBar",
   "description": "Компьютерный клуб и бар.",
   "category": "gaming",
-  "latitude": 40.404,
-  "longitude": 49.87,
-  "image": null,
+  "latitude": 40.396118,
+  "longitude": 49.822398,
+  "image": "https://playercyberbar.az/wp-content/uploads/2024/10/415227803_17906334491897744_3799340732837938160_n.jpg",
   "rating": null,
-  "is_approx": true,
+  "is_approx": false,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": "176 Hasan Aliyev Passage, Baku, Azerbaijan",
+  "address": "Hasan Aliyev Passage, 176, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
   "review_count": null,
-  "opening_hours": null,
-  "phone": null,
-  "map_url": null,
+  "opening_hours": "Ежедневно, круглосуточно",
+  "phone": "+994 50 999 95 96",
+  "map_url": "https://www.openstreetmap.org/?mlat=40.396118&mlon=49.822398#map=18/40.396118/49.822398",
   "source_urls": [
-   "https://gameyer.az/bakida-internet-klublari"
+   "https://gameyer.az/bakida-internet-klublari",
+   "https://playercyberbar.az/",
+   "https://playercyberbar.az/wp-content/uploads/2024/10/415227803_17906334491897744_3799340732837938160_n.jpg",
+   "https://www.openstreetmap.org/?mlat=40.396118&mlon=49.822398#map=18/40.396118/49.822398"
   ],
-  "last_verified_at": "2026-11-21"
+  "last_verified_at": "2026-11-22"
  },
  {
   "id": 15,
   "title": "Milli Gaming Arena",
   "description": "Компьютерный клуб: игровой вечер вдвоём.",
   "category": "gaming",
-  "latitude": 40.392,
-  "longitude": 49.848,
-  "image": null,
+  "latitude": 40.403509,
+  "longitude": 49.871897,
+  "image": "https://milligamingarena.az/storage/content-pages/s76LhuY3KUquLj1NHlLBInsOB01nmvycdBdE2fs0.jpg",
   "rating": null,
-  "is_approx": true,
+  "is_approx": false,
   "region": "Азербайджан",
   "city": "Баку",
-  "address": "97 Tabriz Street, Baku, Azerbaijan",
+  "address": "Tabriz Street, 97, Baku, Azerbaijan",
   "price_min": null,
   "price_max": null,
   "price_unit": null,
   "review_count": null,
-  "opening_hours": null,
-  "phone": null,
-  "map_url": null,
+  "opening_hours": "Ежедневно, круглосуточно",
+  "phone": "+994 77 616 00 11",
+  "map_url": "https://www.openstreetmap.org/?mlat=40.403509&mlon=49.871897#map=18/40.403509/49.871897",
   "source_urls": [
-   "https://gameyer.az/"
+   "https://gameyer.az/",
+   "https://milligamingarena.az/",
+   "https://milligamingarena.az/storage/content-pages/s76LhuY3KUquLj1NHlLBInsOB01nmvycdBdE2fs0.jpg",
+   "https://www.openstreetmap.org/?mlat=40.403509&mlon=49.871897#map=18/40.403509/49.871897"
   ],
-  "last_verified_at": "2026-11-21"
+  "last_verified_at": "2026-11-22"
  },
  {
   "id": 16,
@@ -1794,7 +1808,7 @@ export const PLACES = [
   "category": "restaurant",
   "latitude": 57.90549,
   "longitude": 59.982369,
-  "image": null,
+  "image": "https://cdn-ru.bitrix24.ru/b32520688/landing/d6c/d6cb837ae1dc4ce94f13ccc0ed6609f4/img_9147_1x.jpg",
   "rating": 5,
   "is_approx": false,
   "region": "Нижний Тагил",
@@ -1810,8 +1824,9 @@ export const PLACES = [
   "source_urls": [
    "https://2gis.ru/ntagil/firm/70000001057293964",
    "https://navisrest.ru/",
-   null
-  ]
+   "https://cdn-ru.bitrix24.ru/b32520688/landing/d6c/d6cb837ae1dc4ce94f13ccc0ed6609f4/img_9147_1x.jpg"
+  ],
+  "last_verified_at": "2026-11-22"
  },
  {
   "id": 56,
@@ -1820,7 +1835,7 @@ export const PLACES = [
   "category": "restaurant",
   "latitude": 57.845898,
   "longitude": 59.930368,
-  "image": null,
+  "image": "https://optim.tildacdn.com/tild3962-3833-4062-b534-396133336338/-/format/webp/IMG_7585.jpg.webp",
   "rating": 5,
   "is_approx": false,
   "region": "Нижний Тагил",
@@ -1836,17 +1851,18 @@ export const PLACES = [
   "source_urls": [
    "https://2gis.ru/ntagil/firm/70000001063367348",
    "https://www.ludigovoryat.top/rest",
-   null
-  ]
+   "https://optim.tildacdn.com/tild3962-3833-4062-b534-396133336338/-/format/webp/IMG_7585.jpg.webp"
+  ],
+  "last_verified_at": "2026-11-22"
  },
  {
   "id": 57,
   "title": "TipoCafe",
   "description": "Бизнес-кафе с завтраками, домашними обедами и десертами собственного производства; расписание завтраков опубликовано на сайте кафе.",
   "category": "cafe",
-  "latitude": 57.913796,
-  "longitude": 59.971202,
-  "image": null,
+  "latitude": 57.91377475366758,
+  "longitude": 59.971135630551245,
+  "image": "https://avatars.mds.yandex.net/get-sprav-posts/18799621/2a0000019dba709a9adffa2ed2983c18fe55/XL",
   "rating": 5,
   "is_approx": false,
   "region": "Нижний Тагил",
@@ -1858,12 +1874,14 @@ export const PLACES = [
   "review_count": 91,
   "opening_hours": "Ежедневно 08:00–20:00",
   "phone": "+7 3435 46-70-00",
-  "map_url": "https://2gis.ru/ntagil/firm/70000001051419273",
+  "map_url": "https://yandex.ru/maps/?ll=59.971135630551245%2C57.91377475366758&mode=routes&rtext=~57.91377475366758%2C59.971135630551245&z=17",
   "source_urls": [
    "https://2gis.ru/ntagil/firm/70000001051419273",
    "https://tipocafe.ru/menu",
-   null
-  ]
+   "https://avatars.mds.yandex.net/get-sprav-posts/18799621/2a0000019dba709a9adffa2ed2983c18fe55/XL",
+   "https://tipocafe.clients.site/"
+  ],
+  "last_verified_at": "2026-11-22"
  },
  {
   "id": 58,
@@ -1872,7 +1890,7 @@ export const PLACES = [
   "category": "park",
   "latitude": 57.905537,
   "longitude": 59.959615,
-  "image": null,
+  "image": "https://kartin.papik.pro/uploads/posts/2023-07/1689224828_kartin-papik-pro-p-kartinki-park-bondina-2.jpg",
   "rating": 5,
   "is_approx": false,
   "region": "Нижний Тагил",
@@ -1890,8 +1908,9 @@ export const PLACES = [
    "https://park-bondina.ru/park/grafik/",
    "https://park-bondina.ru/rest/price/",
    "https://ntagil.org/kultura/mesta/park/142329/",
-   null
-  ]
+   "https://kartin.papik.pro/uploads/posts/2023-07/1689224828_kartin-papik-pro-p-kartinki-park-bondina-2.jpg"
+  ],
+  "last_verified_at": "2026-11-22"
  },
  {
   "id": 59,
@@ -1900,12 +1919,12 @@ export const PLACES = [
   "category": "museum",
   "latitude": 57.905605,
   "longitude": 59.95148,
-  "image": null,
+  "image": "https://museum-nt.ru/upload/iblock/0ce/0ced896887845380f08441a55d962e3d.jpg",
   "rating": 4.9,
   "is_approx": false,
   "region": "Нижний Тагил",
   "city": "Нижний Тагил",
-  "address": "Проспект Ленина, 1, м-н Центр, Ленинский район, Нижний Тагил, Свердловская область, 622001",
+  "address": "проспект Ленина, 1А, Нижний Тагил, Свердловская область, Россия",
   "price_min": 0,
   "price_max": 200,
   "price_unit": "RUB за входной билет: дошкольники — бесплатно, взрослые — 200 ₽",
@@ -1916,8 +1935,10 @@ export const PLACES = [
   "source_urls": [
    "https://2gis.ru/ntagil/firm/6333715256967305",
    "https://museum-nt.ru/content/visit/museum/museum.php?ELEMENT_ID=121",
-   null
-  ]
+   "https://museum-nt.ru/upload/iblock/0ce/0ced896887845380f08441a55d962e3d.jpg",
+   "https://ntagil.org/kultura/mesta/muzei/260682/"
+  ],
+  "last_verified_at": "2026-11-22"
  },
  {
   "id": 60,
@@ -2698,11 +2719,11 @@ export const PLACES = [
   "title": "Национальный музей истории Азербайджана",
   "description": "Национальный музей истории Азербайджана расположен в бывшем дворце мецената Гаджи Зейналабдина Тагиева. Экспозиция рассказывает об истории страны от древности до современности.",
   "category": "museum",
-  "latitude": 40.3694979,
-  "longitude": 49.8401199,
+  "latitude": 40.3698,
+  "longitude": 49.8407,
   "image": "https://azerbaijan.travel/resize3000/center/pages/3275/9e37d259-6b58-4894-a6b2-b87ec389c2fb.jpeg",
   "rating": 4.5,
-  "is_approx": false,
+  "is_approx": true,
   "region": "Азербайджан",
   "city": "Баку",
   "address": "4 H. Z. Taghiyev Street, Baku AZ1005, Azerbaijan",
@@ -2853,7 +2874,6 @@ export const PLACES = [
    "https://azertag.az/xeber/sumqayit_seherinin_75_yasi_tamam_olur___fotoreportaj-3298304",
    "https://president.az/en/articles/view/21182",
    "https://en.wikipedia.org/wiki/Sumgait_Boulevard",
-   "https://azertag.az/xeber/sumqayit_seherinin_75_yasi_tamam_olur___fotoreportaj-3298304",
    "https://azertag.az/files/galleryphoto/2024/3/1200x630/17322838971761657107_1200x630.jpg"
   ]
  },
@@ -2881,7 +2901,6 @@ export const PLACES = [
    "https://commons.wikimedia.org/wiki/Category:Nasimi_park_(Sumqay%C4%B1t)",
    "https://mapcarta.com/W234544084",
    "https://en.wikipedia.org/wiki/Nasimi_Park",
-   "https://commons.wikimedia.org/wiki/Category:Nasimi_park_(Sumqay%C4%B1t)",
    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Sevgilil%C9%99r_k%C3%B6rp%C3%BCs%C3%BC_%28Sumqay%C4%B1t%29.jpg/1280px-Sevgilil%C9%99r_k%C3%B6rp%C3%BCs%C3%BC_%28Sumqay%C4%B1t%29.jpg"
   ]
  },
@@ -2906,7 +2925,6 @@ export const PLACES = [
   "phone": null,
   "map_url": "https://www.google.com/maps/search/?api=1&query=40.59244,49.68333",
   "source_urls": [
-   "https://525.az/news/136651-sumqayitdaki-sulh-goyercini-abidesinin-muellifi-vefat-edib",
    "https://525.az/news/136651-sumqayitdaki-sulh-goyercini-abidesinin-muellifi-vefat-edib",
    "https://dergipark.org.tr/en/download/issue-full-file/100179",
    "https://525.az/img/pics/large/153414_gseec99wew.jpeg"
@@ -2936,7 +2954,6 @@ export const PLACES = [
    "https://commons.wikimedia.org/wiki/File:Sumqay%C4%B1t%C4%B1n_Tarixi_Muzeyi_-_2.jpg",
    "https://sumgait.mct.az/az/preview/360/26/print/Sumqayit_seher_Dostluq_medeniyyet_evi",
    "https://en.wikipedia.org/wiki/Sumgait_History_Museum",
-   "https://commons.wikimedia.org/wiki/File:Sumqay%C4%B1t%C4%B1n_Tarixi_Muzeyi_-_2.jpg",
    "https://upload.wikimedia.org/wikipedia/commons/4/4f/Sumqay%C4%B1t%C4%B1n_Tarixi_Muzeyi_-_2.jpg"
   ]
  },
@@ -2964,7 +2981,6 @@ export const PLACES = [
    "https://visitsilkroad.org/destination/gala-state-historical-and-ethnographic-reserve/",
    "https://azerbaijan.travel/gala-state-historical-and-ethnographic-reserve",
    "https://icherisheher.gov.az/en/activity/gala",
-   "https://visitsilkroad.org/destination/gala-state-historical-and-ethnographic-reserve/",
    "https://visitsilkroad.org/wp-content/uploads/2021/06/Qala-Archaeological-and-Ethnographic-Museum-featured_image.jpg"
   ]
  },
@@ -2992,7 +3008,6 @@ export const PLACES = [
    "https://commons.wikimedia.org/wiki/File:Mardakan_Castle,_Baku,_Azerbaijan.jpg",
    "https://mapcarta.com/N10705337409",
    "https://en.wikipedia.org/wiki/Round_Mardakan_Fortress",
-   "https://commons.wikimedia.org/wiki/File:Mardakan_Castle,_Baku,_Azerbaijan.jpg",
    "https://commons.wikimedia.org/wiki/Special:FilePath/Mardakan%20Castle%2C%20Baku%2C%20Azerbaijan.jpg?width=1200"
   ]
  },
@@ -3020,7 +3035,6 @@ export const PLACES = [
    "https://commons.wikimedia.org/wiki/File:Ramana_Castle.jpg",
    "https://mapcarta.com/N10119666141",
    "https://azerbaijan-guide.app/orte/ramana-castle?lang=ru",
-   "https://commons.wikimedia.org/wiki/File:Ramana_Castle.jpg",
    "https://commons.wikimedia.org/wiki/Special:FilePath/Ramana%20Castle.jpg?width=1200"
   ]
  },
@@ -3047,8 +3061,6 @@ export const PLACES = [
   "source_urls": [
    "https://en.wikipedia.org/wiki/Nardaran_Fortress",
    "https://mapcarta.com/W313087730",
-   "https://en.wikipedia.org/wiki/Nardaran_Fortress",
-   "https://upload.wikimedia.org/wikipedia/commons/3/38/Nrdaran_qalas%C4%B1%2C_1301-ci_il.jpg",
    "https://upload.wikimedia.org/wikipedia/commons/3/38/Nrdaran_qalas%C4%B1%2C_1301-ci_il.jpg"
   ]
  },
@@ -3076,7 +3088,6 @@ export const PLACES = [
    "https://www.getyourguide.com/yanar-dag-l109247/",
    "https://azerbaijan-guide.app/orte/yanardag?lang=ru",
    "https://en.wikipedia.org/wiki/Yanar_Dagh",
-   "https://www.getyourguide.com/yanar-dag-l109247/",
    "https://cdn.getyourguide.com/image/format%3Dauto%2Cfit%3Dcrop%2Cgravity%3Dauto%2Cquality%3D60%2Cwidth%3D400%2Cheight%3D265%2Cdpr%3D2/tour_img/c72e8ad3724ceea6978bdebd6b2305c1ece854fadaf35e86a974e9d4329233ea.jpg"
   ]
  },
@@ -3104,7 +3115,6 @@ export const PLACES = [
    "https://commons.wikimedia.org/wiki/File:Ateshgah_Fire_Temple.jpg",
    "https://mapcarta.com/W218848941",
    "https://azerbaijan-guide.app/orte/ateshgah-fire-temple?lang=en",
-   "https://commons.wikimedia.org/wiki/File:Ateshgah_Fire_Temple.jpg",
    "https://commons.wikimedia.org/wiki/Special:FilePath/Ateshgah%20Fire%20Temple.jpg?width=1200"
   ]
  },
@@ -3132,7 +3142,6 @@ export const PLACES = [
    "https://m.zerkalo.az/ne-rozovoe-ozero-a-ambre-stalo-vizitnoj-kartoj-masazyra/",
    "https://mapcarta.com/13516798",
    "https://en.wikipedia.org/wiki/Lake_Masazir",
-   "https://m.zerkalo.az/ne-rozovoe-ozero-a-ambre-stalo-vizitnoj-kartoj-masazyra/",
    "https://cdn.zerkalo.az/2022/08/OZERO-masazyr-929x600.jpg"
   ]
  },
@@ -3143,7 +3152,7 @@ export const PLACES = [
   "category": "park",
   "latitude": 43.25972,
   "longitude": 76.95472,
-  "image": null,
+  "image": "https://www.advantour.com/img/tours/central-asia-6/panfilov-park.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Казахстан",
@@ -3156,9 +3165,12 @@ export const PLACES = [
   "opening_hours": "Круглосуточно",
   "phone": null,
   "source_urls": [
-   "https://kazakhstan.travel/en/attractions/402"
+   "https://kazakhstan.travel/en/attractions/402",
+   "https://www.advantour.com/img/tours/central-asia-6/panfilov-park.jpg",
+   "https://www.advantour.com/central-asia/tours/central-asia-6.htm"
   ],
-  "last_verified_at": "2026-11-21"
+  "last_verified_at": "2026-11-22",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=43.25972,76.95472"
  },
  {
   "id": 990121,
@@ -3184,7 +3196,8 @@ export const PLACES = [
    "https://koktobe.com/",
    "https://koktobe.com/storage/services/May2026/X4QIzQlYjmLSm8dcXUeE.jpg"
   ],
-  "last_verified_at": "2026-11-21"
+  "last_verified_at": "2026-11-21",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=43.23394,76.97528"
  },
  {
   "id": 990122,
@@ -3193,7 +3206,7 @@ export const PLACES = [
   "category": "garden",
   "latitude": 43.2226,
   "longitude": 76.8994,
-  "image": null,
+  "image": "https://np.admin.appstrakt.world/uploads/Foto_Botsad_c4f3ebd41d.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Казахстан",
@@ -3206,9 +3219,12 @@ export const PLACES = [
   "opening_hours": "Ежедневно 09:00–18:00",
   "phone": "+7 708 970 58 66",
   "source_urls": [
-   "https://kazakhstan.travel/en/attractions/401"
+   "https://kazakhstan.travel/en/attractions/401",
+   "https://np.admin.appstrakt.world/uploads/Foto_Botsad_c4f3ebd41d.jpg",
+   "https://www.np.kz/news/sreda-obitaniya/nash-kraj/kollaboracziya-v-botanicheskom-sadu"
   ],
-  "last_verified_at": "2026-11-21"
+  "last_verified_at": "2026-11-22",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=43.2226,76.8994"
  },
  {
   "id": 990123,
@@ -3217,7 +3233,7 @@ export const PLACES = [
   "category": "museum",
   "latitude": 43.2557,
   "longitude": 76.9456,
-  "image": null,
+  "image": "https://ais.citypass.kz/media/attractions/museum_almaty-1.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Казахстан",
@@ -3230,9 +3246,12 @@ export const PLACES = [
   "opening_hours": "Ежедневно 10:00–19:00",
   "phone": "+7 727 267 59 05",
   "source_urls": [
-   "https://kazakhstan.travel/en/attractions/405"
+   "https://kazakhstan.travel/en/attractions/405",
+   "https://ais.citypass.kz/media/attractions/museum_almaty-1.jpg",
+   "https://almaty.citypass.kz/ru/attractions/almatinskiy-zoopark"
   ],
-  "last_verified_at": "2026-11-21"
+  "last_verified_at": "2026-11-22",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=43.2557,76.9456"
  },
  {
   "id": 990124,
@@ -3241,7 +3260,7 @@ export const PLACES = [
   "category": "monument",
   "latitude": 43.2386,
   "longitude": 76.9453,
-  "image": null,
+  "image": "https://cdn.ruwiki.ru/ruwiki/files/thumb/f/fa/Independence_Monument_in_Almaty.JPG/1200px-Independence_Monument_in_Almaty.JPG",
   "rating": null,
   "is_approx": false,
   "region": "Казахстан",
@@ -3254,9 +3273,12 @@ export const PLACES = [
   "opening_hours": "Круглосуточно",
   "phone": null,
   "source_urls": [
-   "https://kazakhstan.travel/en/attractions/411"
+   "https://kazakhstan.travel/en/attractions/411",
+   "https://cdn.ruwiki.ru/ruwiki/files/thumb/f/fa/Independence_Monument_in_Almaty.JPG/1200px-Independence_Monument_in_Almaty.JPG",
+   "https://ru.ruwiki.ru/wiki/Монумент_независимости_Казахстана"
   ],
-  "last_verified_at": "2026-11-21"
+  "last_verified_at": "2026-11-22",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=43.2386,76.9453"
  },
  {
   "id": 990125,
@@ -3265,7 +3287,7 @@ export const PLACES = [
   "category": "zoo",
   "latitude": 43.2633,
   "longitude": 76.9742,
-  "image": null,
+  "image": "https://ais.citypass.kz/media/attractions/cxz-1.jpg",
   "rating": null,
   "is_approx": false,
   "region": "Казахстан",
@@ -3278,9 +3300,12 @@ export const PLACES = [
   "opening_hours": "Ежедневно 09:00–18:00",
   "phone": "+7 727 291 37 19",
   "source_urls": [
-   "https://kazakhstan.travel/en/attractions/416"
+   "https://kazakhstan.travel/en/attractions/416",
+   "https://ais.citypass.kz/media/attractions/cxz-1.jpg",
+   "https://almaty.citypass.kz/ru/attractions/almatinskiy-zoopark"
   ],
-  "last_verified_at": "2026-11-21"
+  "last_verified_at": "2026-11-22",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=43.2633,76.9742"
  },
  {
   "id": 990150,
