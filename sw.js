@@ -1,13 +1,13 @@
-const VERSION = "katyusha-pwa-v11";
+const VERSION = "katyusha-pwa-v12";
 const STATIC_CACHE = VERSION + "-static";
 const DATA_CACHE = VERSION + "-data";
 const IMAGE_CACHE = VERSION + "-images";
 const ROOT = new URL("./", self.location.href);
 const PRECACHE = [
   "./","./index.html","./catalog.html","./map.html","./planner.html","./routes.html","./place.html","./admin.html","./404.html",
-  "./manifest.webmanifest","./assets/css/stitch-app.css?v=6","./assets/css/styles.css?v=6","./assets/favicon.svg","./assets/icons/pwa-icon.svg",
-  "./assets/js/stitch-app.js?v=10","./assets/js/admin.js","./assets/js/config.js","./assets/js/data.js?v=4","./assets/js/map.js?v=7",
-  "./assets/js/state.js","./assets/js/store.js","./assets/js/visits.js","./assets/js/pwa.js"
+  "./manifest.webmanifest","./assets/css/stitch-app.css?v=7","./assets/css/styles.css?v=7","./assets/favicon.svg","./assets/icons/pwa-icon.svg",
+  "./assets/js/stitch-app.js?v=11","./assets/js/admin.js","./assets/js/config.js","./assets/js/data.js","./assets/js/map.js?v=7",
+  "./assets/js/state.js","./assets/js/store.js","./assets/js/pwa.js"
 ].map((path) => new URL(path, ROOT).href);
 
 self.addEventListener("install", (event) => {
