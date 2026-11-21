@@ -125,29 +125,29 @@
 <div class="flex flex-wrap items-center gap-2">
 <!-- Price Segment Control -->
 <div class="inline-flex items-center bg-surface-container-low rounded-lg p-1 text-label-caps font-label-caps">
-<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-primary shadow-sm">₽</button>
-<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">₽₽</button>
-<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">₽₽₽</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-primary shadow-sm" data-price-band="low" type="button" aria-label="Бюджетно" aria-pressed="false">₽</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" data-price-band="mid" type="button" aria-label="Средняя цена" aria-pressed="false">₽₽</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" data-price-band="high" type="button" aria-label="Дороже" aria-pressed="false">₽₽₽</button>
 </div>
 <div class="w-px h-5 bg-surface-variant mx-1 hidden sm:block"></div>
 <!-- Feature Filter Badges -->
-<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1" data-feature-filter="water" type="button" aria-pressed="false">
 <span class="material-symbols-outlined text-[16px] text-secondary">water</span>
 <span>С видом на воду</span>
 </button>
-<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1" data-feature-filter="terrace" type="button" aria-pressed="false">
 <span class="material-symbols-outlined text-[16px] text-secondary">deck</span>
 <span>С верандой</span>
 </button>
-<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1" data-feature-filter="dog" type="button" aria-pressed="false">
 <span class="material-symbols-outlined text-[16px] text-secondary">pets</span>
 <span>Дог-френдли</span>
 </button>
-<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1" data-feature-filter="work" type="button" aria-pressed="false">
 <span class="material-symbols-outlined text-[16px] text-secondary">laptop_chromebook</span>
 <span>Тихо для работы</span>
 </button>
-<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors flex items-center gap-1" data-feature-filter="historic" type="button" aria-pressed="false">
 <span class="material-symbols-outlined text-[16px] text-secondary">history_edu</span>
 <span>Исторический интерьер</span>
 </button>
@@ -156,11 +156,11 @@
 <div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant">
 <span class="material-symbols-outlined text-[18px]">sort</span>
 <span>Сортировка:</span>
-<select class="bg-transparent font-label-lg text-label-lg text-primary hover:text-secondary focus:outline-none cursor-pointer py-1">
-<option>По кураторскому рейтингу</option>
-<option>По популярности</option>
-<option>По расстоянию от меня</option>
-<option>Новинки недели</option>
+<select id="catalog-sort" class="bg-transparent font-label-lg text-label-lg text-primary hover:text-secondary focus:outline-none cursor-pointer py-1">
+<option value="rating">По кураторскому рейтингу</option>
+<option value="popular">По популярности</option>
+<option value="distance">По расстоянию от меня</option>
+<option value="new">Новинки недели</option>
 </select>
 </div>
 </div>
@@ -567,46 +567,13 @@
 <div class="bg-secondary h-full rounded-full transition-all duration-500" style="width: 2.4%;"></div>
 </div>
 <!-- Load More Action -->
-<button class="mt-2 inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-surface-container-lowest hover:bg-surface-container text-primary font-label-lg text-label-lg shadow-sm hover:shadow-md transition-all active:scale-[0.98]">
-<span class="material-symbols-outlined text-[20px] text-secondary animate-bounce">expand_more</span>
-<span>Загрузить ещё вдохновляющие места</span>
-</button>
+
 </div>
 </section>
 <!-- Editorial Callout / Community Suggestion Banner -->
-<section class="w-full max-w-[1360px] mx-auto px-gutter pb-16">
-<div class="relative rounded-3xl bg-primary-container text-on-primary overflow-hidden shadow-xl p-8 md:p-12">
-<!-- Background Ambient Graphic Pattern -->
-<div class="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-surface-tint/15 blur-3xl pointer-events-none"></div>
-<div class="absolute top-0 right-0 w-80 h-full opacity-10 pointer-events-none flex items-center justify-end pr-10">
-<span class="material-symbols-outlined text-[280px]">explore</span>
-</div>
-<div class="relative z-10 max-w-2xl space-y-5">
-<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/40 text-on-primary-container text-label-caps font-label-caps uppercase tracking-wider">
-<span class="material-symbols-outlined text-[14px]">edit_note</span>
-<span>Соавторство с горожанами</span>
-</div>
-<h2 class="font-headline-xl text-headline-xl text-on-primary tracking-tight leading-tight">
-          Знаете тайное место, о котором должны узнать внимательные горожане?
-        </h2>
-<p class="font-body-lg text-body-xl text-on-primary-container">
-          Если вы нашли тихий внутренний дворик с ароматом жасмина, крошечную кофейню в бывшей дворницкой или видовой балкон без толп — поделитесь с нашей редакцией.
-        </p>
-<div class="pt-3 flex flex-wrap items-center gap-4">
-<button class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-secondary hover:bg-on-secondary-container text-on-secondary font-label-lg text-label-lg shadow-md hover:shadow-lg transition-all">
-<span class="material-symbols-outlined text-[20px]">add_location_alt</span>
-<span>Предложить локацию кураторам</span>
-</button>
-<a class="inline-flex items-center gap-1.5 text-on-primary hover:text-tertiary-fixed font-label-lg text-label-lg py-2 transition-colors" href="#">
-<span>Правила отбора мест</span>
-<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-</section>
-<!-- Inline Micro-interactions Script -->
 
-</div></main><footer class="w-full bg-surface-container-low text-on-surface mt-space-xl"><div class="max-w-[1360px] mx-auto px-gutter py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-lg mb-space-xl"><div class="lg:col-span-5 flex flex-col justify-between"><div class="space-y-space-sm"><span class="font-label-caps text-label-caps uppercase text-secondary tracking-widest">Городской альманах &amp; путеводитель</span><h3 class="font-headline-md text-headline-md text-primary font-medium tracking-tight">Прогулки с Катюшей</h3><p class="font-body-md text-body-md text-on-surface-variant max-w-md">Культурная геометрия, скрытые дворы, тихие кофейни и живые истории улиц. Мы исследуем города не как туристы, а как внимательные читатели открытой книги жизни.</p></div><div class="pt-space-md"><span class="font-label-caps text-label-caps text-on-surface-variant block mb-space-xs">Мобильные приложения</span><div class="flex items-center gap-space-sm"><button class="inline-flex items-center gap-space-xs px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)]" type="button"><span class="material-symbols-outlined text-[18px]">phone_iphone</span><span>App Store</span></button><button class="inline-flex items-center gap-space-xs px-4 py-2 rounded-full bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)]" type="button"><span class="material-symbols-outlined text-[18px]">android</span><span>Google Play</span></button></div></div></div><div class="lg:col-span-4 bg-surface-container-lowest p-space-lg rounded-xl shadow-[0_2px_12px_rgba(27,28,26,0.04)] flex flex-col justify-between"><div class="space-y-space-xs"><span class="font-label-caps text-label-caps uppercase text-secondary">Еженедельная редакторская рассылка</span><h4 class="font-headline-sm text-headline-sm text-primary">Секретные маршруты в почте</h4><p class="font-body-sm text-body-sm text-on-surface-variant">Каждую пятницу — одна неочевидная улочка, свежая кофейня недели и вдохновляющий пеший маршрут от Катюши.</p></div><form class="pt-space-md space-y-space-xs" onsubmit="event.preventDefault();"><div class="flex items-center gap-space-xs bg-surface rounded-lg p-1"><input class="w-full bg-transparent px-3 py-2 text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="Ваш e-mail" type="email"><button class="px-4 py-2 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg transition-colors whitespace-nowrap" type="submit">Подписаться</button></div><p class="font-body-sm text-body-sm text-outline-variant text-[11px]">Бережно относимся к письмам. Никакого спама, только городские находки.</p></form></div><div class="lg:col-span-3 flex flex-col justify-between space-y-space-md"><div class="space-y-space-xs"><span class="font-label-caps text-label-caps uppercase text-secondary">Навигация альманаха</span><ul class="space-y-space-xs font-body-md text-body-md"><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="mesta" href="catalog.html">Каталог мест</a></li><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="interaktivnaya-karta" href="map.html">Интерактивная карта</a></li><li class="py-1"><a class="text-on-surface-variant hover:text-primary transition-colors" data-path="splanirovat-progulku" href="planner.html">Конструктор прогулок</a></li><li class="py-1"></li><li class="py-1"></li></ul></div><div><span class="font-label-caps text-label-caps uppercase text-on-surface-variant block mb-space-xs">Сообщество</span><div class="flex items-center gap-space-sm"><a class="w-9 h-9 rounded-full bg-surface-container-lowest hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">send</span></a><a class="w-9 h-9 rounded-full bg-surface-container-lowest hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">photo_camera</span></a><a class="w-9 h-9 rounded-full bg-surface-container-lowest hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">podcasts</span></a></div></div></div></div><div class="pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm text-body-sm font-body-sm text-on-surface-variant"><p>© 2026 «Прогулки с Катюшей». Все права защищены. Независимый исследовательский медиапроект.</p><div class="flex items-center gap-space-md"></div></div></div></footer>
 
-<script type="module" src="assets/js/stitch-app.js?v=3"></script></body></html>
+
+</div></main>
+
+<script type="module" src="assets/js/stitch-app.js?v=4"></script></body></html>
