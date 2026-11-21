@@ -1863,7 +1863,7 @@
     "last_verified_at": "2026-11-21",
     "sources": [
       "https://galleria.ge/",
-      "https://mapcarta.com/W123456789"
+      "https://www.openstreetmap.org/?mlat=41.69452&mlon=44.79987#map=17/41.69452/44.79987"
     ]
   },
   {
@@ -1890,7 +1890,7 @@
     "last_verified_at": "2026-11-21",
     "sources": [
       "https://eastpoint.ge/",
-      "https://mapcarta.com/W123456789"
+      "https://www.openstreetmap.org/?mlat=41.6899&mlon=44.89825#map=17/41.6899/44.89825"
     ]
   },
   {
@@ -2000,7 +2000,7 @@
     "last_verified_at": "2026-11-21",
     "sources": [
       "https://tagil.kit-trc.ru/",
-      "https://mapcarta.com/"
+      "https://www.openstreetmap.org/?mlat=57.869587&mlon=59.94262#map=17/57.869587/59.94262"
     ]
   }
 ]
