@@ -158,7 +158,8 @@ places = list(legacy_places)
 
 EXTRA_FILE = ROOT / "tools" / "verified_places.json"
 extras = json.loads(EXTRA_FILE.read_text(encoding="utf-8")) if EXTRA_FILE.exists() else []
-for offset, item in enumerate(extras, start=len(places)+1):
+
+def make_extra(item, fallback_id):
   label = str(item["category"]).strip().casefold()
   category = CATEGORY_SLUGS.get(label)
   if not category:
@@ -166,18 +167,24 @@ for offset, item in enumerate(extras, start=len(places)+1):
   region = item["region"]
   if region not in {"Азербайджан", "Екатеринбург", "Москва", "Санкт-Петербург", "Нижний Тагил", "Грузия", "Посёлок Аять, Свердловская область", "Казахстан"}:
     raise ValueError(f"Unknown region for {item.get('title')}: {region}")
-  places.append(dict(
-    id=int(item.get("id", offset)), title=item["title"], description=item["description"], category=category,
+  return dict(
+    id=int(item.get("id", fallback_id)), title=item["title"], description=item["description"], category=category,
     latitude=float(item["latitude"]), longitude=float(item["longitude"]), image=item.get("image_path") or item.get("image_url") or None,
     rating=round(float(item["rating"]), 1) if item.get("rating") is not None else None, is_approx=bool(item.get("is_approx", False)), region=region, city=item["city"],
     address=item["address"], price_min=float(item["price_min"]) if item.get("price_min") is not None else None, price_max=float(item["price_max"]) if item.get("price_max") is not None else None,
     price_unit=item.get("price_unit") or None, review_count=int(item["review_count"]) if item.get("review_count") is not None else None,
     opening_hours=item.get("opening_hours") or None, phone=item.get("phone") or None,
     map_url=item["map_url"], source_urls=list(dict.fromkeys([*item["sources"], *([item["image_url"]] if item.get("image_url") else [])])),
-  ))
+    last_verified_at=item.get("last_verified_at"),
+  )
 
-# Достопримечательности Баку без проверенных рейтингов и цен: координаты приблизительные (is_approx),
-# фото, рейтинг и стоимость намеренно не заполнены. Дополните их в Supabase, когда проверите данные.
+# Сохраняем прежний порядок и ID: явные ID, достопримечательности 63–68,
+# затем записи с авто-ID 69–104. Новые места получают явные ID 990xxx.
+explicit_extras = [item for item in extras if item.get("id") is not None]
+generated_extras = [item for item in extras if item.get("id") is None]
+for item in explicit_extras:
+  places.append(make_extra(item, 0))
+
 SIGHTS = [
  ("Старый город (Ичери-Шехер)","attraction","Исторический центр Баку за крепостными стенами: узкие улицы, мечети, караван-сараи. Входит в список Всемирного наследия ЮНЕСКО.",40.3660,49.8370),
  ("Дворец Ширваншахов","attraction","Дворцовый комплекс XV века в Старом городе.",40.3664,49.8369),
@@ -186,6 +193,25 @@ SIGHTS = [
  ("Маленькая Венеция","attraction","Каналы и лодки на Приморском бульваре.",40.3590,49.8400),
  ("Площадь Фонтанов","square","Пешеходная площадь в центре Баку, удобная отправная точка для прогулки к Старому городу.",40.3725,49.8355),
 ]
+SIGHT_IDS = {
+ "Старый город (Ичери-Шехер)":63, "Дворец Ширваншахов":64,
+ "Башни Пламени (Flame Towers)":65, "Приморский бульвар":66,
+ "Маленькая Венеция":67, "Площадь Фонтанов":68,
+}
+SIGHT_META = {
+ "Дворец Ширваншахов": {
+   "latitude":40.36618,"longitude":49.83315,"is_approx":False,
+   "address":"Дворец Ширваншахов, Ичери-Шехер, Баку, Азербайджан",
+   "source_urls":["https://icherisheher.gov.az/en/","https://www.openstreetmap.org/?mlat=40.36618&mlon=49.83315#map=18/40.36618/49.83315"],
+   "last_verified_at":"2026-11-21",
+ },
+ "Башни Пламени (Flame Towers)": {
+   "latitude":40.35998,"longitude":49.82625,"is_approx":False,
+   "address":"Mehdi Huseyn Street 1A, Baku, Azerbaijan",
+   "source_urls":["https://mapcarta.com/W340060268"],
+   "last_verified_at":"2026-11-21",
+ },
+}
 SIGHT_MEDIA = {
  "Старый город (Ичери-Шехер)": ("https://worldheritagesites.net/wp-content/uploads/2025/06/Walled_City_Baku_2.jpg", "https://worldheritagesites.net/walled-city-of-baku/"),
  "Дворец Ширваншахов": ("https://infonews.az/wp-content/uploads/2021/10/Sirvansahlar_sarayi_2016-scaled.jpg", "https://infonews.az/?p=13785"),
@@ -196,12 +222,20 @@ SIGHT_MEDIA = {
 }
 for title, cat_, desc, lat, lng in SIGHTS:
   image, photo_source = SIGHT_MEDIA.get(title, (None, None))
+  meta = SIGHT_META.get(title, {})
+  latitude = float(meta.get("latitude", lat))
+  longitude = float(meta.get("longitude", lng))
   places.append(dict(
-    id=len(places)+1, title=title, description=desc, category=cat_, latitude=lat, longitude=lng, image=image,
-    rating=None, is_approx=True, region="Азербайджан", city="Баку", address=None, price_min=None, price_max=None,
-    price_unit=None, review_count=None, opening_hours=None, phone=None,
-    map_url=f"https://www.google.com/maps/search/?api=1&query={lat},{lng}",
-    source_urls=[photo_source] if photo_source else []))
+    id=SIGHT_IDS[title], title=title, description=desc, category=cat_, latitude=latitude, longitude=longitude, image=image,
+    rating=None, is_approx=bool(meta.get("is_approx", True)), region="Азербайджан", city="Баку", address=meta.get("address"),
+    price_min=None, price_max=None, price_unit=None, review_count=None, opening_hours=None, phone=None,
+    map_url=meta.get("map_url") or f"https://www.google.com/maps/search/?api=1&query={latitude},{longitude}",
+    source_urls=list(dict.fromkeys(([photo_source] if photo_source else []) + meta.get("source_urls", []))),
+    last_verified_at=meta.get("last_verified_at"),
+  ))
+
+for offset, item in enumerate(generated_extras, start=69):
+  places.append(make_extra(item, offset))
 
 
 R = [
