@@ -129,20 +129,28 @@ export class MapView {
           title: group.length + " мест рядом",
         }).addTo(this.map);
         cluster.on("click", () => {
-          if (samePoint) {
-            const list = document.createElement("div");
-            list.className = "pin-cluster-popup";
-            group.forEach((place) => {
-              const button = document.createElement("button");
-              button.type = "button";
-              button.dataset.place = place.id;
-              button.textContent = place.title;
-              list.append(button);
+          // Кластер всегда открывает список мест: пользователь сразу видит,
+          // что скрывается за числом, даже если точки имеют разные координаты.
+          const list = document.createElement("div");
+          list.className = "pin-cluster-popup";
+          const heading = document.createElement("strong");
+          heading.textContent = group.length + " мест рядом";
+          list.append(heading);
+          group.forEach((place) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.dataset.place = place.id;
+            button.textContent = place.title || "Открыть место";
+            button.addEventListener("click", () => {
+              this.map.closePopup();
+              this.onSelect(place.id);
             });
-            L.popup().setLatLng([lat, lng]).setContent(list).openOn(this.map);
-            return;
-          }
-          this.map.fitBounds(L.latLngBounds(group.map((p) => [p.latitude, p.longitude])), { padding: [70, 70], maxZoom: Math.min(17, zoom + 3) });
+            list.append(button);
+          });
+          L.popup({ maxWidth: 280, maxHeight: 300 })
+            .setLatLng([lat, lng])
+            .setContent(list)
+            .openOn(this.map);
         });
         return;
       }
