@@ -46,6 +46,9 @@ jobs:
             if (new Set(ids).size !== ids.length) throw new Error("Duplicate place IDs");
             if (PLACES.length < 100) throw new Error("Catalogue unexpectedly small: " + PLACES.length);
             for (let id = 990126; id <= 990143; id++) if (!ids.includes(String(id))) throw new Error("Missing added place ID " + id);
+            for (let id = 990150; id <= 990173; id++) if (!ids.includes(String(id))) throw new Error("Missing verified place ID " + id);
+            const added = PLACES.filter((place) => Number(place.id) >= 990150 && Number(place.id) <= 990173);
+            if (added.length !== 24 || added.some((place) => !place.image || !place.address || place.is_approx || !Number.isFinite(Number(place.latitude)) || !Number.isFinite(Number(place.longitude)))) throw new Error("New catalogue records are incomplete or approximate");
             if (!PLACES.some((place) => place.category === "mall")) throw new Error("Mall category missing");
             if (!PLACES.some((place) => place.category === "attraction")) throw new Error("Attraction category missing");
             if (PLACES.find((place) => String(place.id) === "64")?.is_approx !== false) throw new Error("Shirvanshah Palace coordinates are not verified");
