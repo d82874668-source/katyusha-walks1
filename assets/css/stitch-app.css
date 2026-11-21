@@ -69,3 +69,13 @@ button,a{ -webkit-tap-highlight-color:transparent}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* Mobile touch fix: keep the bottom navigation fixed to the viewport, not trapped by the blurred header stacking context. */
+@media(max-width:767px){
+  header.fixed{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(251,249,245,.98)!important;}
+  header.fixed nav.hidden.xl\\:flex{position:fixed!important;inset:auto 8px calc(8px + env(safe-area-inset-bottom)) 8px!important;z-index:10000!important;pointer-events:auto!important;transform:none!important;}
+  header.fixed nav a{pointer-events:auto!important;position:relative;z-index:1;}
+  header.fixed>div{pointer-events:auto!important;}
+  main,main *{touch-action:pan-y pinch-zoom;}
+  main button,main a,main input,main select,main textarea,[data-leaflet-interactive="true"]{touch-action:manipulation;}
+}
