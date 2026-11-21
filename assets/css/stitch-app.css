@@ -22,12 +22,10 @@ button,a{ -webkit-tap-highlight-color:transparent}
   header.fixed>div>div:first-child>div{min-width:0}
   header.fixed>div>div:first-child>div button{max-width:112px!important;padding:6px 8px!important;font-size:11px!important;white-space:nowrap;overflow:hidden}
   header.fixed>div>div:first-child>div button span:nth-child(2){overflow:hidden;text-overflow:ellipsis}
-  header.fixed nav.hidden.xl\:flex{display:flex!important;position:fixed!important;z-index:10000!important;left:8px!important;right:8px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;top:auto!important;height:64px!important;padding:5px!important;gap:2px!important;align-items:stretch!important;justify-content:space-around!important;border:1px solid rgba(7,36,26,.12)!important;border-radius:20px!important;background:rgba(251,249,245,.96)!important;backdrop-filter:blur(18px)!important;box-shadow:0 8px 28px rgba(7,36,26,.16)!important;overflow:visible!important}
+  header.fixed nav.hidden{display:flex!important;position:fixed!important;z-index:10000!important;left:8px!important;right:8px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;top:auto!important;height:64px!important;padding:5px!important;gap:2px!important;align-items:stretch!important;justify-content:space-around!important;border:1px solid rgba(7,36,26,.12)!important;border-radius:20px!important;background:rgba(251,249,245,.96)!important;backdrop-filter:blur(18px)!important;box-shadow:0 8px 28px rgba(7,36,26,.16)!important;overflow:visible!important}
   header.fixed nav a{display:flex!important;flex:1 1 0!important;min-width:0!important;align-items:center!important;justify-content:center!important;text-align:center!important;padding:5px 2px!important;font-size:10px!important;line-height:1.15!important;white-space:normal!important;border-radius:13px!important}
   header.fixed>div>div:last-child{gap:5px!important;flex:none!important}
   header.fixed>div>div:last-child>a[data-path="splanirovat-progulku"]{display:none!important}
-  header.fixed>div>div:last-child>a[data-path="izbrannoe"]{padding:7px!important;min-width:36px!important}
-  header.fixed>div>div:last-child>a[data-path="izbrannoe"] span:last-child{font-size:12px!important}
   main{padding-top:64px!important;min-width:0!important}
   main .max-w-\[1360px\]{padding-left:16px!important;padding-right:16px!important}
   main .px-gutter{padding-left:16px!important;padding-right:16px!important}
@@ -62,7 +60,7 @@ button,a{ -webkit-tap-highlight-color:transparent}
   main h1{font-size:33px!important}
 }
 @media(min-width:768px) and (max-width:1199px){
-  header.fixed nav.hidden.xl\:flex{display:flex!important;gap:2px!important}
+  header.fixed nav.hidden{display:flex!important;gap:2px!important}
   header.fixed nav a{padding-left:7px!important;padding-right:7px!important;font-size:12px!important}
   header.fixed>div{padding-left:18px!important;padding-right:18px!important}
 }
@@ -73,10 +71,10 @@ button,a{ -webkit-tap-highlight-color:transparent}
 /* Mobile touch fix: keep the bottom navigation fixed to the viewport, not trapped by the blurred header stacking context. */
 @media(max-width:767px){
   header.fixed{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(251,249,245,.98)!important;}
-  header.fixed nav.hidden.xl\\:flex{position:fixed!important;inset:auto 8px calc(8px + env(safe-area-inset-bottom)) 8px!important;z-index:10000!important;pointer-events:auto!important;transform:none!important;}
+  header.fixed nav.hidden{position:fixed!important;inset:auto 8px calc(8px + env(safe-area-inset-bottom)) 8px!important;z-index:10000!important;pointer-events:auto!important;transform:none!important;}
   header.fixed nav a{pointer-events:auto!important;position:relative;z-index:1;}
   header.fixed>div{pointer-events:auto!important;}
-  main,main *{touch-action:pan-y pinch-zoom;}
+  main{touch-action:pan-y pinch-zoom;}
   main button,main a,main input,main select,main textarea,[data-leaflet-interactive="true"]{touch-action:manipulation;}
 }
 
@@ -101,9 +99,17 @@ button:disabled,[aria-disabled="true"]{cursor:not-allowed;opacity:.58}
   header.fixed nav a{min-height:48px!important}
   .leaflet-control a{min-width:40px!important;min-height:40px!important;line-height:40px!important}
   .leaflet-control-zoom{touch-action:manipulation}
-  .leaflet-container{touch-action:pan-x pan-y}
+  .leaflet-container{touch-action:none!important;}
 }
 @media(prefers-reduced-motion:reduce){
   html:focus-within{scroll-behavior:auto!important}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+/* Mobile gesture and viewport safeguards */
+@media(max-width:767px){
+  html,body{width:100%;max-width:100%;overflow-x:clip;}
+  main{touch-action:pan-y pinch-zoom;}
+  .leaflet-container{touch-action:none!important;}
+  .leaflet-control a{min-width:40px!important;min-height:40px!important;line-height:40px!important;}
 }
