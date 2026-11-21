@@ -1,5 +1,5 @@
 import { CONFIG } from "./config.js";
-import { PLACES, ROUTES } from "./data.js?v=4";
+import { PLACES, ROUTES } from "./data.js?v=5";
 
 const SUPABASE_ESM = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 let sb = null;
