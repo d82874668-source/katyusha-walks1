@@ -25,7 +25,8 @@
     ],
     "title": "Azerbaijan National Carpet Museum",
     "region": "Азербайджан",
-    "image_path": "assets/images/places/27.jpg"
+    "image_path": "assets/images/places/27.jpg",
+    "id": 27
   },
   {
     "address": "99 Neftchilar Avenue, Baku, Azerbaijan",
@@ -52,7 +53,8 @@
     ],
     "title": "Девичья башня",
     "region": "Азербайджан",
-    "image_path": "assets/images/places/28.jpg"
+    "image_path": "assets/images/places/28.jpg",
+    "id": 28
   },
   {
     "address": "Parliament Avenue, Dağüstü Park, Sabail District, Baku, Azerbaijan",
@@ -79,7 +81,8 @@
     ],
     "title": "Highland Park (Dağüstü Park)",
     "region": "Азербайджан",
-    "image_path": "assets/images/places/29.jpg"
+    "image_path": "assets/images/places/29.jpg",
+    "id": 29
   },
   {
     "address": "Heydar Aliyev Avenue 1, Baku, Azerbaijan",
@@ -107,7 +110,8 @@
     ],
     "title": "Heydar Aliyev Center",
     "region": "Азербайджан",
-    "image_path": "assets/images/places/30.jpg"
+    "image_path": "assets/images/places/30.jpg",
+    "id": 30
   },
   {
     "address": "улица Мамина-Сибиряка, 189",
@@ -133,7 +137,8 @@
     ],
     "title": "Екатеринбургский зоопарк",
     "region": "Екатеринбург",
-    "image_path": "assets/images/places/31.jpg"
+    "image_path": "assets/images/places/31.jpg",
+    "id": 31
   },
   {
     "address": "улица Бориса Ельцина, 3а, 2–3 этаж",
@@ -159,7 +164,8 @@
     ],
     "title": "Музей первого президента России Б.Н. Ельцина",
     "region": "Екатеринбург",
-    "image_path": "assets/images/places/32.jpg"
+    "image_path": "assets/images/places/32.jpg",
+    "id": 32
   },
   {
     "address": "улица Мичурина, 230",
@@ -185,7 +191,8 @@
     ],
     "title": "Центральный парк культуры и отдыха им. В.В. Маяковского",
     "region": "Екатеринбург",
-    "image_path": "assets/images/places/33.jpg"
+    "image_path": "assets/images/places/33.jpg",
+    "id": 33
   },
   {
     "address": "улица Малышева, 51, 52 этаж",
@@ -211,7 +218,8 @@
     ],
     "title": "Высоцкий",
     "region": "Екатеринбург",
-    "image_path": "assets/images/places/34.jpg"
+    "image_path": "assets/images/places/34.jpg",
+    "id": 34
   },
   {
     "address": "улица Мамина-Сибиряка, 137, цокольный этаж, вход со двора",
@@ -237,7 +245,8 @@
     ],
     "title": "VRPlay",
     "region": "Екатеринбург",
-    "image_path": "assets/images/places/35.jpg"
+    "image_path": "assets/images/places/35.jpg",
+    "id": 35
   },
   {
     "address": "проспект Ленина, 50ж, павильон №2",
@@ -263,7 +272,8 @@
     ],
     "title": "Парк чудес Галилео",
     "region": "Екатеринбург",
-    "image_path": "assets/images/places/36.jpg"
+    "image_path": "assets/images/places/36.jpg",
+    "id": 36
   },
   {
     "address": "улица Добролюбова, 6",
@@ -289,7 +299,8 @@
     ],
     "title": "Горожане",
     "region": "Екатеринбург",
-    "image_path": "assets/images/places/37.jpg"
+    "image_path": "assets/images/places/37.jpg",
+    "id": 37
   },
   {
     "address": "ул. Покровка, 21",
@@ -313,7 +324,8 @@
     ],
     "title": "Хачапури и Вино — Покровка",
     "region": "Москва",
-    "image_path": "assets/images/places/38.jpg"
+    "image_path": "assets/images/places/38.jpg",
+    "id": 38
   },
   {
     "address": "ул. Пятницкая, 3/4с1",
@@ -337,7 +349,8 @@
     ],
     "title": "Хачапури и Вино — Пятницкая",
     "region": "Москва",
-    "image_path": "assets/images/places/39.jpg"
+    "image_path": "assets/images/places/39.jpg",
+    "id": 39
   },
   {
     "address": "ул. Солянка, 1/2с1",
@@ -361,7 +374,8 @@
     ],
     "title": "Хачапури и Вино — Солянка",
     "region": "Москва",
-    "image_path": "assets/images/places/40.jpg"
+    "image_path": "assets/images/places/40.jpg",
+    "id": 40
   },
   {
     "address": "Трубная ул., 20",
@@ -385,7 +399,8 @@
     ],
     "title": "Хачапури и Вино — Трубная",
     "region": "Москва",
-    "image_path": "assets/images/places/41.jpg"
+    "image_path": "assets/images/places/41.jpg",
+    "id": 41
   },
   {
     "address": "ул. Большая Дмитровка, 12/1с1",
@@ -409,7 +424,8 @@
     ],
     "title": "Хачапури и Вино — Большая Дмитровка",
     "region": "Москва",
-    "image_path": "assets/images/places/42.jpg"
+    "image_path": "assets/images/places/42.jpg",
+    "id": 42
   },
   {
     "address": "Мясницкая ул., 13с1",
@@ -433,7 +449,8 @@
     ],
     "title": "Хачапури и Вино — Мясницкая",
     "region": "Москва",
-    "image_path": "assets/images/places/43.jpg"
+    "image_path": "assets/images/places/43.jpg",
+    "id": 43
   },
   {
     "address": "Большой проспект П.С., 74",
@@ -458,7 +475,8 @@
     ],
     "title": "Хачапури и Вино — Большой проспект П.С., 74",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/44.jpg"
+    "image_path": "assets/images/places/44.jpg",
+    "id": 44
   },
   {
     "address": "Греческий проспект, 10 (угол с ул. Некрасова, 60)",
@@ -483,7 +501,8 @@
     ],
     "title": "Хачапури и Вино — Греческий проспект, 10",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/45.jpg"
+    "image_path": "assets/images/places/45.jpg",
+    "id": 45
   },
   {
     "address": "Кадетская линия, 29",
@@ -508,7 +527,8 @@
     ],
     "title": "Хачапури и Вино — Кадетская линия, 29",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/46.jpg"
+    "image_path": "assets/images/places/46.jpg",
+    "id": 46
   },
   {
     "address": "ул. Казанская, 29",
@@ -533,7 +553,8 @@
     ],
     "title": "Хачапури и Вино — Казанская, 29",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/47.jpg"
+    "image_path": "assets/images/places/47.jpg",
+    "id": 47
   },
   {
     "address": "Коломяжский проспект, 15к2",
@@ -558,7 +579,8 @@
     ],
     "title": "Хачапури и Вино — Коломяжский проспект, 15к2",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/48.jpg"
+    "image_path": "assets/images/places/48.jpg",
+    "id": 48
   },
   {
     "address": "ул. Малая Конюшенная, 9",
@@ -583,7 +605,8 @@
     ],
     "title": "Хачапури и Вино — Малая Конюшенная, 9",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/49.jpg"
+    "image_path": "assets/images/places/49.jpg",
+    "id": 49
   },
   {
     "address": "ул. Маяковского, 54–56",
@@ -608,7 +631,8 @@
     ],
     "title": "Хачапури и Вино — улица Маяковского, 54–56",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/50.jpg"
+    "image_path": "assets/images/places/50.jpg",
+    "id": 50
   },
   {
     "address": "ул. Правды, 9/10",
@@ -633,7 +657,8 @@
     ],
     "title": "Хачапури и Вино — улица Правды, 9/10",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/51.jpg"
+    "image_path": "assets/images/places/51.jpg",
+    "id": 51
   },
   {
     "address": "ул. Решетникова, 12, корп. 1 (Московский рынок)",
@@ -658,7 +683,8 @@
     ],
     "title": "Хачапури и Вино — Решетникова, 12",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/52.jpg"
+    "image_path": "assets/images/places/52.jpg",
+    "id": 52
   },
   {
     "address": "наб. Адмиралтейского канала, 2",
@@ -683,7 +709,8 @@
     ],
     "title": "Остров Новая Голландия",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/53.jpg"
+    "image_path": "assets/images/places/53.jpg",
+    "id": 53
   },
   {
     "address": "Дворцовая площадь, 2",
@@ -708,14 +735,15 @@
     ],
     "title": "Государственный Эрмитаж — Главный музейный комплекс",
     "region": "Санкт-Петербург",
-    "image_path": "assets/images/places/54.jpg"
+    "image_path": "assets/images/places/54.jpg",
+    "id": 54
   },
   {
     "address": "Набережная Тагильская Лагуна, улица Горошникова, 9, м-н Центр, Ленинский район, Нижний Тагил, Свердловская область, 622034",
     "category": "Рестораны",
     "city": "Нижний Тагил",
     "description": "Ресторан авторской кухни с направлениями «море и мясо»; расположен у набережной Тагильская Лагуна.",
-    "image_url": null,
+    "image_url": "https://cdn-ru.bitrix24.ru/b32520688/landing/d6c/d6cb837ae1dc4ce94f13ccc0ed6609f4/img_9147_1x.jpg",
     "latitude": 57.90549,
     "longitude": 59.982369,
     "map_url": "https://2gis.ru/ntagil/firm/70000001057293964",
@@ -728,18 +756,21 @@
     "review_count": 499,
     "sources": [
       "https://2gis.ru/ntagil/firm/70000001057293964",
-      "https://navisrest.ru/"
+      "https://navisrest.ru/",
+      "https://cdn-ru.bitrix24.ru/b32520688/landing/d6c/d6cb837ae1dc4ce94f13ccc0ed6609f4/img_9147_1x.jpg"
     ],
     "title": "NAVIS",
     "region": "Нижний Тагил",
-    "image_path": null
+    "image_path": null,
+    "id": 55,
+    "last_verified_at": "2026-11-22"
   },
   {
     "address": "Улица Горбуновская, 33, м-н Горбуново, Ленинский район, Нижний Тагил, Свердловская область, 622049",
     "category": "Рестораны",
     "city": "Нижний Тагил",
     "description": "Ресторан с меню, которое, по описанию заведения, вдохновлено Уралом; на официальном сайте опубликованы меню и часы работы.",
-    "image_url": null,
+    "image_url": "https://optim.tildacdn.com/tild3962-3833-4062-b534-396133336338/-/format/webp/IMG_7585.jpg.webp",
     "latitude": 57.845898,
     "longitude": 59.930368,
     "map_url": "https://2gis.ru/ntagil/firm/70000001063367348",
@@ -752,21 +783,24 @@
     "review_count": 267,
     "sources": [
       "https://2gis.ru/ntagil/firm/70000001063367348",
-      "https://www.ludigovoryat.top/rest"
+      "https://www.ludigovoryat.top/rest",
+      "https://optim.tildacdn.com/tild3962-3833-4062-b534-396133336338/-/format/webp/IMG_7585.jpg.webp"
     ],
     "title": "Люди говорят",
     "region": "Нижний Тагил",
-    "image_path": null
+    "image_path": null,
+    "id": 56,
+    "last_verified_at": "2026-11-22"
   },
   {
     "address": "Газетная улица, 81, м-н Центр, Ленинский район, Нижний Тагил, Свердловская область, 622036",
     "category": "Кафе",
     "city": "Нижний Тагил",
     "description": "Бизнес-кафе с завтраками, домашними обедами и десертами собственного производства; расписание завтраков опубликовано на сайте кафе.",
-    "image_url": null,
-    "latitude": 57.913796,
-    "longitude": 59.971202,
-    "map_url": "https://2gis.ru/ntagil/firm/70000001051419273",
+    "image_url": "https://avatars.mds.yandex.net/get-sprav-posts/18799621/2a0000019dba709a9adffa2ed2983c18fe55/XL",
+    "latitude": 57.91377475366758,
+    "longitude": 59.971135630551245,
+    "map_url": "https://yandex.ru/maps/?ll=59.971135630551245%2C57.91377475366758&mode=routes&rtext=~57.91377475366758%2C59.971135630551245&z=17",
     "opening_hours": "Ежедневно 08:00–20:00",
     "phone": "+7 3435 46-70-00",
     "price_max": 500,
@@ -776,18 +810,22 @@
     "review_count": 91,
     "sources": [
       "https://2gis.ru/ntagil/firm/70000001051419273",
-      "https://tipocafe.ru/menu"
+      "https://tipocafe.ru/menu",
+      "https://avatars.mds.yandex.net/get-sprav-posts/18799621/2a0000019dba709a9adffa2ed2983c18fe55/XL",
+      "https://tipocafe.clients.site/"
     ],
     "title": "TipoCafe",
     "region": "Нижний Тагил",
-    "image_path": null
+    "image_path": null,
+    "id": 57,
+    "last_verified_at": "2026-11-22"
   },
   {
     "address": "Уральская улица, 20, м-н Центр, Ленинский район, Нижний Тагил, Свердловская область, 622001",
     "category": "Парки",
     "city": "Нижний Тагил",
     "description": "Городской парк у Тагильского пруда, территория открыта для прогулок ежедневно; официальный прайс перечисляет семейные и детские аттракционы.",
-    "image_url": null,
+    "image_url": "https://kartin.papik.pro/uploads/posts/2023-07/1689224828_kartin-papik-pro-p-kartinki-park-bondina-2.jpg",
     "latitude": 57.905537,
     "longitude": 59.959615,
     "map_url": "https://2gis.ru/ntagil/firm/6333715256967712",
@@ -802,18 +840,21 @@
       "https://2gis.ru/ntagil/firm/6333715256967712",
       "https://park-bondina.ru/park/grafik/",
       "https://park-bondina.ru/rest/price/",
-      "https://ntagil.org/kultura/mesta/park/142329/"
+      "https://ntagil.org/kultura/mesta/park/142329/",
+      "https://kartin.papik.pro/uploads/posts/2023-07/1689224828_kartin-papik-pro-p-kartinki-park-bondina-2.jpg"
     ],
     "title": "Нижнетагильский парк культуры и отдыха им. А.П. Бондина",
     "region": "Нижний Тагил",
-    "image_path": null
+    "image_path": null,
+    "id": 58,
+    "last_verified_at": "2026-11-22"
   },
   {
-    "address": "Проспект Ленина, 1, м-н Центр, Ленинский район, Нижний Тагил, Свердловская область, 622001",
+    "address": "проспект Ленина, 1А, Нижний Тагил, Свердловская область, Россия",
     "category": "Музеи",
     "city": "Нижний Тагил",
     "description": "Экспозиция посвящена истории Нижнего Тагила и края до 1917 года; во вторник открыта только постоянная экспозиция первого этажа.",
-    "image_url": null,
+    "image_url": "https://museum-nt.ru/upload/iblock/0ce/0ced896887845380f08441a55d962e3d.jpg",
     "latitude": 57.905605,
     "longitude": 59.95148,
     "map_url": "https://2gis.ru/ntagil/firm/6333715256967305",
@@ -826,11 +867,15 @@
     "review_count": 40,
     "sources": [
       "https://2gis.ru/ntagil/firm/6333715256967305",
-      "https://museum-nt.ru/content/visit/museum/museum.php?ELEMENT_ID=121"
+      "https://museum-nt.ru/content/visit/museum/museum.php?ELEMENT_ID=121",
+      "https://museum-nt.ru/upload/iblock/0ce/0ced896887845380f08441a55d962e3d.jpg",
+      "https://ntagil.org/kultura/mesta/muzei/260682/"
     ],
     "title": "Нижнетагильский историко-краеведческий музей",
     "region": "Нижний Тагил",
-    "image_path": null
+    "image_path": null,
+    "id": 59,
+    "last_verified_at": "2026-11-22"
   },
   {
     "address": "Botanical Street 1, Тбилиси 0105, Грузия",
@@ -858,7 +903,8 @@
     ],
     "title": "Национальный ботанический сад Грузии",
     "region": "Грузия",
-    "image_path": "assets/images/places/60.jpg"
+    "image_path": "assets/images/places/60.jpg",
+    "id": 60
   },
   {
     "address": "Главный вход/касса № 1, Зелёный мыс (Мцване-Концхи), Батуми, Аджария, Грузия",
@@ -886,7 +932,8 @@
     ],
     "title": "Батумский ботанический сад",
     "region": "Грузия",
-    "image_path": "assets/images/places/61.jpg"
+    "image_path": "assets/images/places/61.jpg",
+    "id": 61
   },
   {
     "address": "Свердловская область, Невьянский муниципальный округ, посёлок Аять, улица Химиков, 5А",
@@ -913,7 +960,8 @@
     ],
     "title": "Дом в лесу с баней и чаном",
     "region": "Посёлок Аять, Свердловская область",
-    "image_path": "assets/images/places/62.jpg"
+    "image_path": "assets/images/places/62.jpg",
+    "id": 62
   },
   {
     "title": "Парк «Зарядье»",
@@ -1370,7 +1418,7 @@
     "category": "Парки",
     "city": "Алматы",
     "description": "Исторический парк в центре Алматы с мемориалом Славы, Вечным огнём и Вознесенским кафедральным собором. Подходит для спокойной прогулки по тенистым аллеям.",
-    "image_url": "",
+    "image_url": "https://www.advantour.com/img/tours/central-asia-6/panfilov-park.jpg",
     "latitude": 43.25972,
     "longitude": 76.95472,
     "map_url": "https://www.google.com/maps/search/?api=1&query=43.25972,76.95472",
@@ -1382,11 +1430,15 @@
     "rating": null,
     "review_count": null,
     "sources": [
-      "https://kazakhstan.travel/en/attractions/402"
+      "https://kazakhstan.travel/en/attractions/402",
+      "https://www.advantour.com/img/tours/central-asia-6/panfilov-park.jpg",
+      "https://www.advantour.com/central-asia/tours/central-asia-6.htm"
     ],
     "title": "Парк 28 панфиловцев",
     "region": "Казахстан",
-    "id": 990120
+    "id": 990120,
+    "image_path": null,
+    "last_verified_at": "2026-11-22"
   },
   {
     "address": "Улица Жамал Омаровой, 41, Алматы, Казахстан",
@@ -1419,7 +1471,7 @@
     "category": "Ботанический сад",
     "city": "Алматы",
     "description": "Большой ботанический сад с коллекцией более 3 000 видов растений, дендрарием, оранжереями и тематическими прогулочными дорожками.",
-    "image_url": "",
+    "image_url": "https://np.admin.appstrakt.world/uploads/Foto_Botsad_c4f3ebd41d.jpg",
     "latitude": 43.2226,
     "longitude": 76.8994,
     "map_url": "https://www.google.com/maps/search/?api=1&query=43.2226,76.8994",
@@ -1431,18 +1483,22 @@
     "rating": null,
     "review_count": null,
     "sources": [
-      "https://kazakhstan.travel/en/attractions/401"
+      "https://kazakhstan.travel/en/attractions/401",
+      "https://np.admin.appstrakt.world/uploads/Foto_Botsad_c4f3ebd41d.jpg",
+      "https://www.np.kz/news/sreda-obitaniya/nash-kraj/kollaboracziya-v-botanicheskom-sadu"
     ],
     "title": "Главный ботанический сад Алматы",
     "region": "Казахстан",
-    "id": 990122
+    "id": 990122,
+    "image_path": null,
+    "last_verified_at": "2026-11-22"
   },
   {
     "address": "Улица Кабанбай батыра, 132, Алматы, Казахстан",
     "category": "Музеи",
     "city": "Алматы",
     "description": "Городской музей об истории, культуре и развитии Алматы: археологические находки, архивные фотографии, предметы быта и мультимедийные экспозиции.",
-    "image_url": "",
+    "image_url": "https://ais.citypass.kz/media/attractions/museum_almaty-1.jpg",
     "latitude": 43.2557,
     "longitude": 76.9456,
     "map_url": "https://www.google.com/maps/search/?api=1&query=43.2557,76.9456",
@@ -1454,18 +1510,22 @@
     "rating": null,
     "review_count": null,
     "sources": [
-      "https://kazakhstan.travel/en/attractions/405"
+      "https://kazakhstan.travel/en/attractions/405",
+      "https://ais.citypass.kz/media/attractions/museum_almaty-1.jpg",
+      "https://almaty.citypass.kz/ru/attractions/almatinskiy-zoopark"
     ],
     "title": "Музей Алматы",
     "region": "Казахстан",
-    "id": 990123
+    "id": 990123,
+    "image_path": null,
+    "last_verified_at": "2026-11-22"
   },
   {
     "address": "Площадь Республики, проспект Достык, Алматы, Казахстан",
     "category": "Памятники и архитектура",
     "city": "Алматы",
     "description": "Монумент Независимости на площади Республики, увенчанный фигурой Золотого человека. Один из главных символов современной истории Казахстана.",
-    "image_url": "",
+    "image_url": "https://cdn.ruwiki.ru/ruwiki/files/thumb/f/fa/Independence_Monument_in_Almaty.JPG/1200px-Independence_Monument_in_Almaty.JPG",
     "latitude": 43.2386,
     "longitude": 76.9453,
     "map_url": "https://www.google.com/maps/search/?api=1&query=43.2386,76.9453",
@@ -1477,18 +1537,22 @@
     "rating": null,
     "review_count": null,
     "sources": [
-      "https://kazakhstan.travel/en/attractions/411"
+      "https://kazakhstan.travel/en/attractions/411",
+      "https://cdn.ruwiki.ru/ruwiki/files/thumb/f/fa/Independence_Monument_in_Almaty.JPG/1200px-Independence_Monument_in_Almaty.JPG",
+      "https://ru.ruwiki.ru/wiki/Монумент_независимости_Казахстана"
     ],
     "title": "Монумент Независимости",
     "region": "Казахстан",
-    "id": 990124
+    "id": 990124,
+    "image_path": null,
+    "last_verified_at": "2026-11-22"
   },
   {
     "address": "Улица Есенберлина, 166, Алматы, Казахстан",
     "category": "Зоопарки",
     "city": "Алматы",
     "description": "Один из старейших зоопарков Казахстана с коллекцией животных из разных регионов мира; подходит для семейного посещения и знакомства с природой.",
-    "image_url": "",
+    "image_url": "https://ais.citypass.kz/media/attractions/cxz-1.jpg",
     "latitude": 43.2633,
     "longitude": 76.9742,
     "map_url": "https://www.google.com/maps/search/?api=1&query=43.2633,76.9742",
@@ -1500,11 +1564,15 @@
     "rating": null,
     "review_count": null,
     "sources": [
-      "https://kazakhstan.travel/en/attractions/416"
+      "https://kazakhstan.travel/en/attractions/416",
+      "https://ais.citypass.kz/media/attractions/cxz-1.jpg",
+      "https://almaty.citypass.kz/ru/attractions/almatinskiy-zoopark"
     ],
     "title": "Алматинский зоопарк",
     "region": "Казахстан",
-    "id": 990125
+    "id": 990125,
+    "image_path": null,
+    "last_verified_at": "2026-11-22"
   },
   {
     "id": 990126,
