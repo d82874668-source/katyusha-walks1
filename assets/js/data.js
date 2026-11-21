@@ -1890,7 +1890,7 @@ export const PLACES = [
   "category": "park",
   "latitude": 57.905537,
   "longitude": 59.959615,
-  "image": "https://kartin.papik.pro/uploads/posts/2023-07/1689224828_kartin-papik-pro-p-kartinki-park-bondina-2.jpg",
+  "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Nizhny_Tagil_%2816%29.JPG/960px-Nizhny_Tagil_%2816%29.JPG",
   "rating": 5,
   "is_approx": false,
   "region": "Нижний Тагил",
@@ -1904,11 +1904,9 @@ export const PLACES = [
   "phone": "+7 3435 25-32-83",
   "map_url": "https://2gis.ru/ntagil/firm/6333715256967712",
   "source_urls": [
-   "https://2gis.ru/ntagil/firm/6333715256967712",
+   "https://commons.wikimedia.org/wiki/File:Nizhny_Tagil_(16).JPG",
    "https://park-bondina.ru/park/grafik/",
-   "https://park-bondina.ru/rest/price/",
-   "https://ntagil.org/kultura/mesta/park/142329/",
-   "https://kartin.papik.pro/uploads/posts/2023-07/1689224828_kartin-papik-pro-p-kartinki-park-bondina-2.jpg"
+   "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Nizhny_Tagil_%2816%29.JPG/960px-Nizhny_Tagil_%2816%29.JPG"
   ],
   "last_verified_at": "2026-11-22"
  },
@@ -1919,7 +1917,7 @@ export const PLACES = [
   "category": "museum",
   "latitude": 57.905605,
   "longitude": 59.95148,
-  "image": "https://museum-nt.ru/upload/iblock/0ce/0ced896887845380f08441a55d962e3d.jpg",
+  "image": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Collections_of_the_Nizhny_Tagil_Local_History_Museum_-_58.jpg/960px-Collections_of_the_Nizhny_Tagil_Local_History_Museum_-_58.jpg",
   "rating": 4.9,
   "is_approx": false,
   "region": "Нижний Тагил",
@@ -1933,10 +1931,9 @@ export const PLACES = [
   "phone": "+7 909 019-61-41",
   "map_url": "https://2gis.ru/ntagil/firm/6333715256967305",
   "source_urls": [
-   "https://2gis.ru/ntagil/firm/6333715256967305",
+   "https://commons.wikimedia.org/wiki/File:Collections_of_the_Nizhny_Tagil_Local_History_Museum_-_58.jpg",
    "https://museum-nt.ru/content/visit/museum/museum.php?ELEMENT_ID=121",
-   "https://museum-nt.ru/upload/iblock/0ce/0ced896887845380f08441a55d962e3d.jpg",
-   "https://ntagil.org/kultura/mesta/muzei/260682/"
+   "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Collections_of_the_Nizhny_Tagil_Local_History_Museum_-_58.jpg/960px-Collections_of_the_Nizhny_Tagil_Local_History_Museum_-_58.jpg"
   ],
   "last_verified_at": "2026-11-22"
  },
