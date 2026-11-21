@@ -1,4 +1,4 @@
-import { loadData } from "./store.js";
+import { loadData } from "./store.js?v=2";
 import { state } from "./state.js";
 import { PLACES, ROUTES, CATEGORIES } from "./data.js?v=5";
 import { MapView, googleUrl, osmUrl, haversineKm, fmtDist } from "./map.js?v=8";
