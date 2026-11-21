@@ -141,6 +141,19 @@ const visible = () => {
   });
 };
 
+function renderRegionFilter() {
+  const select = $("#regionFilter");
+  const regions = [...new Set(state.places.map((p) => String(p.region || "").trim()).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, "ru"));
+  const selected = regions.includes(state.region) ? state.region : "all";
+  select.innerHTML = [
+    '<option value="all">Все города и регионы</option>',
+    ...regions.map((region) => `<option value="${esc(region)}">${esc(region)}</option>`)
+  ].join("");
+  state.region = selected;
+  select.value = selected;
+}
+
 function renderChips() {
   const used = Object.keys(CATEGORIES).filter((k) => state.places.some((p) => p.category === k));
   $("#chips").innerHTML = [["all", "Все"], ...used.map((k) => [k, CATEGORIES[k].title])]
@@ -374,6 +387,7 @@ $("#locateBtn").addEventListener("click", async () => {
 /* ---------- Запуск ---------- */
 async function init() {
   Object.assign(state, await loadData());
+  renderRegionFilter();
   renderHero(); renderDirections(); renderDiscover(); renderVenues(); renderChips(); renderList(); renderRoutes(); renderCollections(); renderFavs();
   initPlanner(); initIdeal({ favBtn });
   subscribeFavorites((favs) => { state.favs = favs; renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); refreshIdeal(); });
