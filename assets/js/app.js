@@ -1,11 +1,11 @@
 // Точка входа: рендер секций, навигация, взаимодействие с картой.
-import { CATEGORIES } from "./data.js?v=20261124g";
+import { CATEGORIES, PLACES, ROUTES } from "./data.js?v=20261124g";
 import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124h";
 import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./map.js?v=20261124g";
 import { state, byId } from "./state.js?v=20261124g";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124g";
 import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124g";
-import { initPlanner, addToPlan } from "./planner.js?v=20261124g";
+import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124g";
 import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124g";
 
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
@@ -496,16 +496,46 @@ $("#locateBtn").addEventListener("click", async () => {
 });
 
 /* ---------- Запуск ---------- */
-async function init() {
-  Object.assign(state, await loadData());
+function renderCatalog() {
   renderRegionFilter();
-  renderHero(); renderDirections(); renderDiscover(); renderVenues(); renderAquaparks(); renderChips(); renderList(); renderRoutes(); renderCollections(); renderFavs();
-  initPlanner(); initIdeal({ favBtn });
-  subscribeFavorites((favs) => { state.favs = favs; renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); refreshIdeal(); });
+  renderHero(); renderDirections(); renderDiscover(); renderVenues(); renderAquaparks();
+  renderChips(); renderList(); renderRoutes(); renderCollections(); renderFavs();
+}
 
-  // Создаём карту сразу после отрисовки каталога, чтобы Leaflet не оставался пустым
-  // из-за задержанного IntersectionObserver на мобильных браузерах.
-  ensureMap();
-  requestAnimationFrame(() => mapView?.refresh());
+function init() {
+  // Сначала мгновенно показываем встроенный каталог. Интерфейс и карта не должны
+  // зависеть от скорости ответа Supabase: даже медленная сеть не оставит страницу пустой.
+  Object.assign(state, { places: PLACES, routes: ROUTES, favs: new Set(state.favs), mode: "local" });
+  renderCatalog();
+  initPlanner();
+  initIdeal({ favBtn });
+  subscribeFavorites((favs) => {
+    state.favs = favs;
+    renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); refreshIdeal();
+  });
+
+  // Карта и локальный каталог запускаются независимо от сетевого запроса.
+  try {
+    ensureMap();
+    requestAnimationFrame(() => mapView?.refresh());
+  } catch (error) {
+    console.error("Не удалось запустить карту:", error);
+    const canvas = $("#mapCanvas");
+    if (canvas) canvas.innerHTML = '<div class="empty map-error">Карта временно недоступна. Список мест и каталог продолжают работать.</div>';
+  }
+
+  // Когда Supabase ответит, заменяем резервные данные полным каталогом (242 места).
+  // Если сеть недоступна, уже показанные локальные данные остаются на странице.
+  loadData().then((data) => {
+    if (!data?.places?.length) return;
+    Object.assign(state, data);
+    renderCatalog();
+    renderPlanner();
+    refreshIdeal();
+    mapView?.setPlaces(visible(), true);
+    requestAnimationFrame(() => mapView?.refresh());
+  }).catch((error) => {
+    console.error("Не удалось обновить каталог из Supabase; оставлены резервные данные:", error);
+  });
 }
 init();
