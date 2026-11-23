@@ -269,9 +269,9 @@ function renderVenues() {
   const cities = citiesFor((p) => kindOf(p) === "venue");
   if (!cities.some(([c]) => c === state.venueCity) && cities.length) state.venueCity = cities[0][0];
   $("#venueCities").innerHTML = cityChips(cities, state.venueCity, venueCityQuery);
-  const inCity = state.places.filter((p) => kindOf(p) === "venue" && p.city === state.venueCity);
+  const inCity = state.places.filter((p) => kindOf(p) === "venue" && p.category !== "aquapark" && p.city === state.venueCity);
   // Показываем все группы из задачи: пустые приглушены, так видно, чего в каталоге ещё нет
-  const groups = VENUE_GROUPS.map((g) => [g, inCity.filter((p) => g.cats.includes(p.category)).length]);
+  const groups = VENUE_GROUPS.filter((g) => g.key !== "aquapark").map((g) => [g, inCity.filter((p) => g.cats.includes(p.category)).length]);
   $("#venueGroups").innerHTML = [`<button class="chip" role="tab" aria-selected="${state.venueGroup === "all"}" data-vgroup="all">Все <small>${inCity.length}</small></button>`,
     ...groups.map(([g, n]) => `<button class="chip ${n ? "" : "is-empty"}" role="tab" aria-selected="${state.venueGroup === g.key}" data-vgroup="${g.key}">${esc(g.title)} <small>${n}</small></button>`)].join("");
   const sort = $("#venueSort").value;
