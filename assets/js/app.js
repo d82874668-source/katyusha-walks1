@@ -325,8 +325,12 @@ function renderVenues() {
   if (!cities.some(([c]) => c === state.venueCity) && cities.length) state.venueCity = cities[0][0];
   $("#venueCities").innerHTML = cityChips(cities, state.venueCity, venueCityQuery);
   const inCity = state.places.filter((p) => kindOf(p) === "venue" && p.category !== "aquapark" && p.city === state.venueCity);
-  // Показываем все группы из задачи: пустые приглушены, так видно, чего в каталоге ещё нет
-  const groups = VENUE_GROUPS.filter((g) => g.key !== "aquapark").map((g) => [g, inCity.filter((p) => g.cats.includes(p.category)).length]);
+  // Не засоряем интерфейс нулевыми категориями: показываем только то,
+  // что действительно доступно в выбранном городе. Данные при этом не скрываются.
+  const groups = VENUE_GROUPS
+    .filter((g) => g.key !== "aquapark")
+    .map((g) => [g, inCity.filter((p) => g.cats.includes(p.category)).length])
+    .filter(([, count]) => count > 0);
   $("#venueGroups").innerHTML = [`<button class="chip" role="tab" aria-selected="${state.venueGroup === "all"}" data-vgroup="all">Все <small>${inCity.length}</small></button>`,
     ...groups.map(([g, n]) => `<button class="chip ${n ? "" : "is-empty"}" role="tab" aria-selected="${state.venueGroup === g.key}" data-vgroup="${g.key}">${esc(g.title)} <small>${n}</small></button>`)].join("");
   const sort = $("#venueSort").value;
