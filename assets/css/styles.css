@@ -706,3 +706,6 @@ a,button,input,select{ -webkit-tap-highlight-color:transparent }
   .chips--wrap{gap:7px}
   .city-search input{font-size:14px}
 }
+
+/* Раздел аквапарков */
+#waterparks .pgrid{margin-top:18px}
