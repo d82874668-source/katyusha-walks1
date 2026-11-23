@@ -1,5 +1,5 @@
 // Общие помощники интерфейса: выборка элементов, иконки, экранирование, карточки мест, уведомления.
-import { CATEGORIES } from "./data.js";
+import { CATEGORIES } from "./data.js?v=20261123a";
 import { kindOf, groupOf, visitMinutes } from "./taxonomy.js";
 
 export const $ = (s, r = document) => r.querySelector(s);
@@ -28,7 +28,7 @@ export const fmtMin = (m) => (m < 60 ? `${Math.round(m)} мин` : `${Math.floor
 const photoPromises = new Map();
 let photoActive = 0;
 const photoWaiters = [];
-const normalizePhotoText = (value) => String(value || "").toLocaleLowerCase("ru").replace(/ё/g, "е").replace(/[^\\p{L}\\p{N}]+/gu, " ").trim();
+const normalizePhotoText = (value) => String(value || "").toLocaleLowerCase("ru").replace(/ё/g, "е").replace(/[^a-zа-яё0-9]+/gi, " ").trim();
 async function withPhotoSlot(task) {
   if (photoActive >= 3) await new Promise((resolve) => photoWaiters.push(resolve));
   photoActive++;
