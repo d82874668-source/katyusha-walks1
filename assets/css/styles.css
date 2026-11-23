@@ -1,33 +1,33 @@
 /* ===== Дизайн-токены ===== */
 :root{
   color-scheme:light;
-  --bg:#F5F6FA; --surface:#fff; --surface-2:#EDEFF6; --ink:#0F1522; --muted:#5C6578;
-  --line:rgba(15,21,34,.10); --accent:#D8365C; --accent-ink:#fff; --accent-soft:#FDE7EC; --caspian:#1E4FA3;
-  --glass:rgba(255,255,255,.72); --glass-line:rgba(255,255,255,.6);
-  --shadow:0 1px 2px rgba(15,21,34,.06),0 18px 40px -18px rgba(15,21,34,.22);
-  --sky:linear-gradient(180deg,#EAF0FF 0%,#F8E9EF 62%,var(--bg) 100%);
+  --bg:#F4F1E9; --surface:#FFFEFA; --surface-2:#ECE9DF; --ink:#26342E; --muted:#6B756C;
+  --line:rgba(38,52,46,.14); --accent:#B85F45; --accent-ink:#FFFAF5; --accent-soft:#F2E4DC; --caspian:#547B70;
+  --glass:rgba(255,254,250,.78); --glass-line:rgba(255,255,255,.76);
+  --shadow:0 1px 2px rgba(38,52,46,.05),0 18px 42px -20px rgba(62,54,42,.22);
+  --sky:linear-gradient(180deg,#E6EEE7 0%,#F2E7DA 62%,var(--bg) 100%);
   --r-card:24px; --r-in:14px; --nav-h:64px;
   --font:"Geist",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --display:"Instrument Serif",Georgia,"Times New Roman",serif;
-  --tile-filter:saturate(.75) contrast(.96);
+  --tile-filter:saturate(.82) contrast(.96);
 }
 [data-theme="dark"]{
   color-scheme:dark;
-  --bg:#0A0E17; --surface:#121826; --surface-2:#1A2233; --ink:#EEF1F8; --muted:#98A2B8;
-  --line:rgba(238,241,248,.11); --accent:#FF5C80; --accent-ink:#1A0A10; --accent-soft:rgba(255,92,128,.15); --caspian:#7BA6FF;
-  --glass:rgba(18,24,38,.7); --glass-line:rgba(255,255,255,.08);
-  --shadow:0 1px 2px rgba(0,0,0,.5),0 20px 44px -18px rgba(0,0,0,.75);
-  --sky:linear-gradient(180deg,#0E1830 0%,#2A1430 62%,var(--bg) 100%);
+  --bg:#111A17; --surface:#19241F; --surface-2:#23312A; --ink:#F1F0E8; --muted:#A5B0A7;
+  --line:rgba(241,240,232,.16); --accent:#D98565; --accent-ink:#21140F; --accent-soft:rgba(217,133,101,.17); --caspian:#94B7A5;
+  --glass:rgba(25,36,31,.78); --glass-line:rgba(255,255,255,.09);
+  --shadow:0 1px 2px rgba(0,0,0,.48),0 20px 44px -18px rgba(0,0,0,.72);
+  --sky:linear-gradient(180deg,#17251F 0%,#30251F 62%,var(--bg) 100%);
   --tile-filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.9) saturate(.7);
 }
 
 [data-theme="hearts"]{
   color-scheme:light;
-  --bg:#FFF7FA; --surface:#FFFFFF; --surface-2:#FFF0F4; --ink:#3A1725; --muted:#805D6A;
-  --line:rgba(120,48,72,.14); --accent:#C2305F; --accent-ink:#FFFFFF; --accent-soft:#FCE0EA; --caspian:#8F5670;
-  --glass:rgba(255,255,255,.82); --glass-line:rgba(255,255,255,.75);
-  --shadow:0 1px 2px rgba(90,20,45,.06),0 18px 40px -18px rgba(120,35,65,.22);
-  --sky:linear-gradient(180deg,#FFE6EE 0%,#FFF1F4 62%,var(--bg) 100%); --tile-filter:saturate(.82) contrast(.97);
+  --bg:#FBF2F0; --surface:#FFFCFA; --surface-2:#F5E8E3; --ink:#3A2929; --muted:#806D68;
+  --line:rgba(91,55,49,.16); --accent:#B85F62; --accent-ink:#FFFFFF; --accent-soft:#F3E1DF; --caspian:#936B67;
+  --glass:rgba(255,252,250,.84); --glass-line:rgba(255,255,255,.78);
+  --shadow:0 1px 2px rgba(90,45,40,.06),0 18px 40px -18px rgba(120,55,50,.2);
+  --sky:linear-gradient(180deg,#F6E5E0 0%,#FBF0E8 62%,var(--bg) 100%); --tile-filter:saturate(.82) contrast(.97);
 }
 [data-theme="hearts"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='120' viewBox='0 0 140 120'%3E%3Cpath d='M22 22c-8-12-26 0 0 19 26-19 8-31 0-19ZM104 78c-8-12-26 0 0 19 26-19 8-31 0-19Z' fill='%23D83F73' fill-opacity='.075'/%3E%3C/svg%3E");background-size:140px 120px;background-attachment:fixed}
 /* окно выбора тем */
