@@ -3,7 +3,7 @@ import { CATEGORIES } from "./data.js";
 import { loadData, setFavorite, subscribeFavorites } from "./store.js";
 import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./map.js";
 import { state, byId } from "./state.js";
-import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast } from "./ui.js";
+import { $, $, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js";
 import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js";
 import { initPlanner, addToPlan } from "./planner.js";
 import { initIdeal, refreshIdeal } from "./ideal.js";
@@ -208,7 +208,7 @@ function renderSheet() {
     <div class="sheet__top"><span class="badge badge--lg" style="--h:${c.hue}">${icon(c.icon)}</span>
       <div><h3>${esc(p.title)}</h3><p class="muted">${esc(c.title)}${p.rating ? ` · ${icon("star")} ${p.rating}` : ""}</p></div>
       <button class="icon-btn" data-close aria-label="Закрыть">${icon("x")}</button></div>
-    ${p.image ? `<img class="sheet__img" src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy">` : ""}
+    ${cover(p, "sheet__img")}
     <p class="sheet__desc">${esc(p.description)}</p>
     ${p.address ? `<p class="muted">${esc(p.address)}${p.city ? ` · ${esc(p.city)}` : ""}</p>` : ""}
     ${p.opening_hours ? `<p class="muted">Часы работы: ${esc(p.opening_hours)}</p>` : ""}
@@ -225,6 +225,7 @@ function renderSheet() {
       <button class="btn" data-plan-add="${p.id}">${icon("plus")}В маршрут</button>
       ${favBtn(p, "icon-btn--lg")}
     </div>`;
+  hydratePhotos(sheet);
 }
 
 /* ---------- Направления: «Открой город» и «Куда сходить» ---------- */
@@ -233,24 +234,39 @@ const citiesFor = (pred) => {
   state.places.filter(pred).forEach((p) => p.city && m.set(p.city, (m.get(p.city) || 0) + 1));
   return [...m].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
 };
-const cityChips = (list, active) => list.map(([c, n]) =>
-  `<button class="chip" role="tab" aria-selected="${c === active}" data-city="${esc(c)}">${esc(c)} <small>${n}</small></button>`).join("");
+const cityAliases = {
+  "Баку": "baku", "Гянджа": "ganja gence", "Шеки": "sheki shaki",
+  "Казань": "kazan", "Сочи": "sochi", "Тбилиси": "tbilisi", "Батуми": "batumi",
+  "Екатеринбург": "ekaterinburg", "Нижний Тагил": "nizhny tagil",
+  "Санкт-Петербург": "saint petersburg spb", "Москва": "moscow"
+};
+const citySearchText = (value) => String(value || "").toLocaleLowerCase("ru").replace(/ё/g, "е").trim();
+const cityChips = (list, active, query = "") => {
+  const q = citySearchText(query);
+  const filtered = q ? list.filter(([city]) => citySearchText(`${city} ${cityAliases[city] || ""}`).includes(q)) : list;
+  return filtered.length
+    ? filtered.map(([c, n]) => `<button class="chip" role="tab" aria-selected="${c === active}" data-city="${esc(c)}">${esc(c)} <small>${n}</small></button>`).join("")
+    : `<p class="city-empty">Город не найден. Попробуйте другое название.</p>`;
+};
+let discoverCityQuery = "";
+let venueCityQuery = "";
 const byQuality = (a, b) => (Number(b.rating || 0) - Number(a.rating || 0)) || (Number(b.review_count || 0) - Number(a.review_count || 0)) || (!!b.image - !!a.image) || String(a.title).localeCompare(String(b.title), "ru");
 
 function renderDiscover() {
   const sights = citiesFor((p) => kindOf(p) === "sight");
   if (!sights.some(([c]) => c === state.city)) state.city = sights[0]?.[0] || state.city;
-  $("#discoverCities").innerHTML = cityChips(sights, state.city);
+  $("#discoverCities").innerHTML = cityChips(sights, state.city, discoverCityQuery);
   const items = state.places.filter((p) => kindOf(p) === "sight" && p.city === state.city).sort(byQuality);
   $("#discoverGrid").innerHTML = items.length
     ? items.map((p, i) => placeCard(p, favBtn, { large: i < 2 && items.length > 3 })).join("")
     : `<div class="card empty"><p>Для этого города достопримечательностей пока нет в каталоге.</p></div>`;
+  hydratePhotos($("#discoverGrid"));
 }
 
 function renderVenues() {
   const cities = citiesFor((p) => kindOf(p) === "venue");
   if (!cities.some(([c]) => c === state.venueCity) && cities.length) state.venueCity = cities[0][0];
-  $("#venueCities").innerHTML = cityChips(cities, state.venueCity);
+  $("#venueCities").innerHTML = cityChips(cities, state.venueCity, venueCityQuery);
   const inCity = state.places.filter((p) => kindOf(p) === "venue" && p.city === state.venueCity);
   // Показываем все группы из задачи: пустые приглушены, так видно, чего в каталоге ещё нет
   const groups = VENUE_GROUPS.map((g) => [g, inCity.filter((p) => g.cats.includes(p.category)).length]);
@@ -262,6 +278,7 @@ function renderVenues() {
   $("#venueGrid").innerHTML = items.length
     ? items.map((p) => placeCard(p, favBtn)).join("")
     : `<div class="card empty"><p>В городе «${esc(state.venueCity)}» пока нет заведений в этой категории. Выберите другую категорию или город.</p></div>`;
+  hydratePhotos($("#venueGrid"));
 }
 
 function renderDirections() {
@@ -344,8 +361,12 @@ document.addEventListener("click", (e) => {
   if (t.dataset.fav) { e.stopPropagation(); return toggleFav(+t.dataset.fav); }
   if (t.hasAttribute("data-close")) return closeSheet();
   if (t.dataset.city) {
-    if (t.closest("#venueCities")) { state.venueCity = t.dataset.city; state.venueGroup = "all"; return renderVenues(); }
-    state.city = t.dataset.city; return renderDiscover();
+    if (t.closest("#venueCities")) {
+      state.venueCity = t.dataset.city; state.venueGroup = "all"; venueCityQuery = "";
+      $("#venueCitySearch").value = ""; return renderVenues();
+    }
+    state.city = t.dataset.city; discoverCityQuery = "";
+    $("#discoverCitySearch").value = ""; return renderDiscover();
   }
   if (t.dataset.vgroup) { state.venueGroup = t.dataset.vgroup; return renderVenues(); }
   if (t.dataset.cat) { state.filter = t.dataset.cat; return applyFilter(); }
@@ -374,6 +395,16 @@ $("#priceMax").addEventListener("input", (e) => { state.maxPrice = e.target.valu
 $("#minRating").addEventListener("change", (e) => { state.minRating = Number(e.target.value); applyFilter(); });
 $("#sortPlaces").addEventListener("change", (e) => { state.sort = e.target.value; applyFilter(false); });
 $("#venueSort").addEventListener("change", renderVenues);
+$("#discoverCitySearch").addEventListener("input", (e) => {
+  discoverCityQuery = e.target.value;
+  const cities = citiesFor((p) => kindOf(p) === "sight");
+  $("#discoverCities").innerHTML = cityChips(cities, state.city, discoverCityQuery);
+});
+$("#venueCitySearch").addEventListener("input", (e) => {
+  venueCityQuery = e.target.value;
+  const cities = citiesFor((p) => kindOf(p) === "venue");
+  $("#venueCities").innerHTML = cityChips(cities, state.venueCity, venueCityQuery);
+});
 $("#fitBtn").addEventListener("click", () => { ensureMap().clearRoute(); mapView.fit(visible()); });
 $("#locateBtn").addEventListener("click", async () => {
   try {
