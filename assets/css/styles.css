@@ -1021,3 +1021,13 @@ h3{letter-spacing:-.025em}
 @media(prefers-reduced-motion:reduce){
   .pcard,.dir,.btn{transition:none!important}
 }
+
+
+/* Mobile viewport guard: prevent map tiles or long content from widening the page. */
+html,body{max-width:100%;overflow-x:clip}
+main,.wrap,.nav__in,.hero__in,.mapbox,.mapbox__stage,#mapCanvas,.leaflet-container{min-width:0;max-width:100%}
+@media(max-width:760px){
+  .mapbox{width:100%;grid-template-columns:minmax(0,1fr)}
+  .mapbox__side,.mapbox__stage{min-width:0;width:100%}
+  #mapCanvas{width:100%;max-width:100%}
+}
