@@ -125,7 +125,7 @@ function initCompactSections() {
     if (target?.dataset.collapsible === "true") update(target, true);
   });
 }
-initCompactSections();
+// Разделы открыты сразу: посетитель видит содержимое и может прокручивать страницу естественно.
 
 addEventListener("keydown", (e) => e.key === "Escape" && setMenu(false));
 addEventListener("scroll", () => nav.classList.toggle("is-scrolled", scrollY > 8), { passive: true });
