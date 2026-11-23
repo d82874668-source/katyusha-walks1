@@ -709,3 +709,16 @@ a,button,input,select{ -webkit-tap-highlight-color:transparent }
 
 /* Раздел аквапарков */
 #waterparks .pgrid{margin-top:18px}
+
+
+/* Компактный каталог заведений: больше карточек на экране, меньше пустого пространства. */
+.pgrid--compact{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:14px}
+.pgrid--compact .pcard__body{padding:13px 14px 15px;gap:5px}
+.pgrid--compact .pcard .cover{aspect-ratio:16/10}
+.pgrid--compact .pcard h3{font-size:16px;line-height:1.25}
+.pgrid--compact .pcard__desc{-webkit-line-clamp:2;font-size:13px;line-height:1.4}
+.pgrid--compact .pcard__meta,.pgrid--compact .pcard__addr,.pgrid--compact .pcard__facts{font-size:12px}
+.pgrid--compact .pcard__actions{padding-top:8px;gap:6px}
+.pgrid--compact .pcard__actions .btn{min-height:34px;padding:7px 10px;font-size:12px}
+@media(max-width:720px){.pgrid--compact{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pgrid--compact .pcard__body{padding:11px}.pgrid--compact .pcard h3{font-size:14px}.pgrid--compact .pcard__desc{font-size:12px}.pgrid--compact .pcard__actions .btn{font-size:11px;padding:6px 8px}}
+@media(max-width:420px){.pgrid--compact{grid-template-columns:1fr}}
