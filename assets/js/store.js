@@ -7,7 +7,11 @@ const SUPABASE_ESM = "https://esm.sh/@supabase/supabase-js@2";
 
 let sb = null;
 let favoritesEnabled = false;
-const projectUrl = () => String(CONFIG.SUPABASE_URL).trim().replace(/\\/rest\\/v1\\/?$/, "").replace(/\\/+$/, "");
+// Нормализуем URL проекта без повреждённого regex: Supabase URL обычно уже корневой.
+const projectUrl = () => String(CONFIG.SUPABASE_URL || "")
+  .trim()
+  .replace(/\/rest\/v1\/?$/, "")
+  .replace(/\/+$/, "");
 
 const readLocal = () => {
   try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch { return []; }
