@@ -12,6 +12,12 @@
   (function(){var t;try{t=localStorage.getItem("katyusha:theme")}catch(e){}
   document.documentElement.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})();
 </script>
+<script>
+  // При новом открытии и перезагрузке всегда начинаем с начала страницы.
+  // Внутренние переходы и прокрутка по разделам сайта не затрагиваются.
+  try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+  window.addEventListener("pageshow", function () { window.scrollTo(0, 0); });
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
