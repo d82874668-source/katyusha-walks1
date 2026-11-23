@@ -448,3 +448,244 @@ input,select,textarea,button{color-scheme:inherit}
 select option{background:var(--surface);color:var(--ink)}
 .themeDlg__foot .btn,#resetFilters{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
 #themeApply{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+
+/* =========================================================
+   KATYUSHA WALKS — editorial city guide refresh
+   Visual direction: warm editorial travel UI, soft paper,
+   deep botanical green and terracotta accents.
+   Existing HTML, data, Supabase and interactions are preserved.
+   ========================================================= */
+:root{
+  --bg:#F4F1E9;
+  --surface:#FFFEFA;
+  --surface-2:#EBE8DF;
+  --ink:#26342E;
+  --muted:#727B72;
+  --line:rgba(38,52,46,.12);
+  --accent:#B85F45;
+  --accent-ink:#fffaf5;
+  --accent-soft:#F4E2D9;
+  --caspian:#55766B;
+  --glass:rgba(255,254,250,.82);
+  --glass-line:rgba(255,255,255,.72);
+  --shadow:0 2px 8px rgba(39,48,40,.04),0 22px 55px -28px rgba(39,48,40,.28);
+  --sky:radial-gradient(ellipse at 78% 22%,rgba(185,112,80,.17),transparent 36%),linear-gradient(135deg,#F1EDE3 0%,#F8F4EA 48%,#E7EDE5 100%);
+  --r-card:22px;
+  --r-in:13px;
+  --tile-filter:saturate(.86) contrast(.98);
+}
+[data-theme="dark"]{
+  --bg:#111A17;
+  --surface:#19241F;
+  --surface-2:#22302A;
+  --ink:#F1F0E8;
+  --muted:#A5B0A6;
+  --line:rgba(241,240,232,.12);
+  --accent:#D98565;
+  --accent-ink:#21140F;
+  --accent-soft:rgba(217,133,101,.16);
+  --caspian:#91B4A4;
+  --glass:rgba(25,36,31,.84);
+  --glass-line:rgba(255,255,255,.09);
+  --shadow:0 2px 8px rgba(0,0,0,.2),0 22px 55px -28px rgba(0,0,0,.8);
+  --sky:radial-gradient(ellipse at 78% 22%,rgba(185,112,80,.16),transparent 36%),linear-gradient(135deg,#18241F 0%,#1B2923 52%,#18231F 100%);
+  --tile-filter:saturate(.78) brightness(.88);
+}
+[data-theme="hearts"]{
+  --bg:#FBF2F0;
+  --surface:#FFFCFA;
+  --surface-2:#F4E7E4;
+  --ink:#3A2929;
+  --muted:#806E6B;
+  --line:rgba(91,55,49,.13);
+  --accent:#B85F62;
+  --accent-ink:#fff;
+  --accent-soft:#F5E1E0;
+  --caspian:#98716C;
+  --glass:rgba(255,252,250,.84);
+  --glass-line:rgba(255,255,255,.8);
+  --shadow:0 2px 8px rgba(90,48,45,.04),0 22px 55px -28px rgba(90,48,45,.22);
+  --sky:radial-gradient(ellipse at 78% 22%,rgba(194,104,100,.15),transparent 36%),linear-gradient(135deg,#F7E9E4 0%,#FBF3EC 52%,#F0E9E2 100%);
+}
+
+/* Общая типографика и ритм */
+body{letter-spacing:-.012em}
+.wrap,.nav__in{width:min(1240px,100% - 48px)}
+.sec{padding-block:clamp(64px,8vw,104px)}
+h2{letter-spacing:-.025em}
+h3{letter-spacing:-.02em}
+.lead{color:var(--muted);max-width:54ch}
+::selection{background:var(--accent-soft);color:var(--ink)}
+a,button,input,select{ -webkit-tap-highlight-color:transparent }
+
+/* Верхняя навигация — лёгкая панель, не перекрывающая контент */
+.nav{height:72px}
+.nav__in{gap:24px}
+.nav.is-scrolled,.nav[data-open="true"]{
+  background:var(--glass);
+  backdrop-filter:blur(22px) saturate(1.35);
+  box-shadow:0 1px 0 var(--line),0 8px 30px rgba(25,35,29,.035);
+}
+.brand{gap:11px;font-size:15px;white-space:nowrap}
+.brand__mark{width:38px;height:38px;border-radius:13px;background:var(--ink);color:var(--bg)}
+.brand__mark .i{fill:none}
+#menu{gap:4px}
+#menu a{padding:9px 12px;font-size:14px;white-space:nowrap}
+#menu a[aria-current]{background:var(--accent-soft);color:var(--accent)}
+.icon-btn{transition:background .2s,color .2s,transform .2s}
+.icon-btn:hover{transform:translateY(-1px)}
+@media(max-width:1020px){
+  .nav{height:66px}
+  #menu{padding:14px 24px 22px}
+  #menu a{font-size:16px}
+}
+
+/* Первый экран — журнальная обложка */
+.hero{
+  min-height:min(790px,92svh);
+  padding:calc(var(--nav-h) + 66px) 0 100px;
+  background:var(--sky);
+}
+.hero:before{
+  content:"";
+  position:absolute;
+  width:min(54vw,700px);
+  aspect-ratio:1;
+  right:-8%;
+  top:4%;
+  border-radius:50%;
+  border:1px solid rgba(85,118,107,.16);
+  box-shadow:0 0 0 42px rgba(85,118,107,.035),0 0 0 86px rgba(85,118,107,.025);
+  pointer-events:none;
+}
+.hero__towers{
+  right:max(0px,calc((100% - 1240px)/2 - 28px));
+  height:min(78%,590px);
+  opacity:.46;
+  filter:saturate(.62);
+}
+[data-theme="dark"] .hero__towers{opacity:.35;filter:saturate(.7) drop-shadow(0 0 60px rgba(217,133,101,.2))}
+.hero__in{grid-template-columns:minmax(0,1.25fr) minmax(260px,.58fr);gap:56px;align-items:end}
+.hero__copy{padding-bottom:20px}
+.hero h1{font-size:clamp(54px,8.2vw,112px);line-height:.94;max-width:10ch;letter-spacing:-.045em}
+.hero .lead{font-size:clamp(17px,1.7vw,20px);max-width:48ch;color:color-mix(in srgb,var(--ink) 76%,transparent)}
+.hero__cta{gap:10px;margin-top:30px}
+.btn{min-height:46px;padding-inline:21px;border-radius:12px;font-weight:600}
+.btn--lg{min-height:54px;padding-inline:25px;font-size:15px}
+.btn--primary{background:var(--accent);box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 22%,transparent)}
+.btn--primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px color-mix(in srgb,var(--accent) 28%,transparent)}
+.btn--glass{border-color:var(--line);background:var(--glass);color:var(--ink)}
+.hero__card{width:min(100%,340px);padding:24px;border-radius:20px;background:var(--glass);border:1px solid var(--glass-line);box-shadow:var(--shadow)}
+@media(max-width:860px){
+  .hero{min-height:auto;padding:calc(66px + 52px) 0 74px}
+  .hero:before{width:80vw;right:-35%;top:15%}
+  .hero__in{grid-template-columns:1fr;gap:30px}
+  .hero__copy{padding-bottom:0}
+  .hero__towers{height:44%;right:-6%;opacity:.25}
+  .hero h1{max-width:11ch;font-size:clamp(50px,12vw,82px)}
+  .hero__card{width:min(100%,420px)}
+}
+@media(max-width:560px){
+  .wrap,.nav__in{width:min(100% - 32px,1240px)}
+  .hero{padding-top:104px;padding-bottom:62px}
+  .hero h1{font-size:clamp(48px,14vw,68px)}
+  .hero__cta{display:grid;grid-template-columns:1fr}
+  .hero__cta .btn{width:100%}
+}
+
+/* Направления и карточки — единая визуальная система */
+.sec--tight{margin-top:-42px}
+.dirs{gap:12px}
+.dir{
+  min-height:218px;
+  padding:22px;
+  border-radius:20px;
+  box-shadow:0 8px 28px rgba(35,48,40,.07);
+  transition:transform .22s,border-color .22s,box-shadow .22s;
+}
+.dir:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--accent) 42%,var(--line))}
+.dir .badge{width:46px;height:46px;border-radius:14px;background:var(--surface-2);color:var(--caspian)}
+.dir--hero{background:var(--ink);color:var(--bg)}
+.dir--hero .badge{background:var(--accent);color:var(--accent-ink)}
+.dir--hero small{color:var(--accent)}
+@media(max-width:560px){.sec--tight{margin-top:-22px}.dir{min-height:0;padding:20px}}
+
+/* Секции — чище заголовки и более свободная сетка */
+.sec__head{margin-bottom:30px;gap:8px 28px}
+.sec__head h2{font-size:clamp(36px,5.2vw,58px)}
+.sec__head>.muted{max-width:48ch;font-size:15px}
+.chips--wrap{gap:8px;padding-bottom:18px}
+.chip{padding:8px 15px;border-color:var(--line);background:var(--surface);color:var(--muted);font-weight:500}
+.chip[aria-selected="true"],.chip--check:has(input:checked){background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,285px),1fr));gap:20px}
+.pcard{border-radius:20px;box-shadow:0 4px 18px rgba(35,48,40,.035);transition:transform .22s,box-shadow .22s,border-color .22s}
+.pcard:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--caspian) 30%,var(--line))}
+.cover{background:var(--surface-2)}
+.cover img{transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.pcard:hover .cover img{transform:scale(1.045)}
+.pcard__body{padding:18px 19px 20px;gap:8px}
+.pcard h3{font-size:18px;line-height:1.3}
+.pcard--sight h3{font-size:28px;line-height:1.05}
+.pcard__desc{line-height:1.55}
+.pcard__meta{align-items:center}
+.pcard__actions{gap:8px}
+.pcard__actions .btn{min-height:40px;font-size:13px}
+.pcard__actions .icon-btn{background:var(--surface-2);margin-left:auto}
+.rate{color:var(--ink)}
+@media(max-width:560px){
+  .pgrid{grid-template-columns:1fr;gap:14px}
+  .pcard--sight .cover{aspect-ratio:16/10}
+  .pcard__body{padding:16px}
+}
+
+/* Карта и маршрут — чёткие границы, спокойные поверхности */
+.mapbox{border-radius:22px;box-shadow:var(--shadow);border-color:var(--line)}
+.mapbox__side{background:var(--surface)}
+.mapbox__stage{background:var(--surface-2)}
+.mapbox__tools .icon-btn{border:1px solid var(--line)}
+.sheet{border:1px solid var(--glass-line);box-shadow:0 18px 50px rgba(20,30,24,.22)}
+.plan__side{border-radius:22px;box-shadow:0 5px 22px rgba(35,48,40,.04)}
+.plan__map{border-radius:22px}
+.totals{background:var(--surface-2)}
+.results{border-radius:16px}
+.stop__n{background:var(--caspian)}
+@media(max-width:860px){
+  .mapbox{border-radius:18px}
+  .mapbox__stage{height:390px}
+}
+
+/* Идеальный день — не инвертируем цвета между темами */
+#ideal .ideal__form,#ideal .ideal__result .card{
+  background:var(--surface)!important;
+  color:var(--ink)!important;
+  border-color:var(--line);
+}
+#ideal .ideal__form legend,#ideal .ideal__form label,
+#ideal .ideal__form .mood strong,#ideal .ideal__form .mood small{color:var(--ink)}
+#ideal .ideal__form .mood small{color:var(--muted)}
+#ideal .ideal__form .field input,#ideal .ideal__form .field select{
+  background:var(--surface-2)!important;
+  color:var(--ink)!important;
+  border-color:var(--line)!important;
+}
+#ideal .mood span{background:var(--surface-2);color:var(--ink)}
+#ideal .mood input:checked+span{background:var(--accent-soft);border-color:var(--accent)}
+#ideal .ideal__result .note{background:var(--surface-2);color:var(--muted)}
+
+/* Поля и состояния */
+.search{border:1px solid transparent;background:var(--surface-2)}
+.search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.field input,.field select,.select select{border-radius:12px}
+.field input:focus,.field select:focus,.select select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.card{border-radius:20px}
+.themeDlg{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.themeOpt{background:var(--surface-2);color:var(--ink)}
+.toast{background:var(--ink);color:var(--bg);border:1px solid var(--line)}
+.foot{background:color-mix(in srgb,var(--surface) 48%,var(--bg));border-color:var(--line)}
+@media(hover:none){
+  .dir:hover,.pcard:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero__towers,.hero h1,.hero .lead,.hero__cta,.hero__card{animation:none}
+}
