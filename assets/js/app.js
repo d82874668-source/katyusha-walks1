@@ -102,7 +102,7 @@ const setMenu = (open) => {
   document.body.classList.toggle("menu-open", open);
 };
 $("#menuBtn").addEventListener("click", () => setMenu(nav.dataset.open !== "true"));
-$("#menu a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+$$("#menu a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
 
 /* Компактная навигация по разделам: контент раскрывается только по запросу. */
 function initCompactSections() {
