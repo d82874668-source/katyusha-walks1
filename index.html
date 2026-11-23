@@ -102,6 +102,7 @@
     <nav id="menu" aria-label="Разделы сайта">
       <a href="#discover">Открой город</a>
       <a href="#venues">Куда сходить</a>
+      <a href="#waterparks">Аквапарки</a>
       <a href="#planner">Прогулка</a>
       <a href="#ideal">Идеальный день</a>
       <a href="#map">Карта</a>
@@ -170,6 +171,16 @@
         <label class="select"><span class="sr">Сортировка</span><select id="venueSort"><option value="quality">Лучшие по рейтингу</option><option value="popular">Популярные</option><option value="price">Дешевле</option></select></label>
       </div>
       <div class="pgrid pgrid--venues" id="venueGrid"></div>
+    </div>
+  </section>
+
+  <!-- Аквапарки -->
+  <section class="sec" id="waterparks" aria-labelledby="h-waterparks">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-waterparks">Аквапарки</h2><p class="muted">Водные горки, бассейны и отдых для всей семьи.</p></div>
+      <label class="search city-search"><svg class="i"><use href="#i-search"/></svg><input id="waterparkCitySearch" type="search" placeholder="Найти город: Екатеринбург, Баку, Казань…" autocomplete="off" aria-label="Поиск города с аквапарками"></label>
+      <div class="chips chips--wrap" id="waterparkCities" role="tablist" aria-label="Город с аквапарками"></div>
+      <div class="pgrid pgrid--venues" id="waterparkGrid"></div>
     </div>
   </section>
 
