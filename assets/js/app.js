@@ -1,6 +1,6 @@
 // Точка входа: рендер секций, навигация, взаимодействие с картой.
 import { CATEGORIES } from "./data.js?v=20261123b";
-import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261123b";
+import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124c";
 import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./map.js";
 import { state, byId } from "./state.js";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261123c";
@@ -416,15 +416,20 @@ function renderFavs() {
 }
 
 function renderHero() {
+  // Счётчики каталога не должны зависеть от наличия маршрутов.
+  $("#cPlaces").textContent = state.places.length;
+  $("#cRoutes").textContent = state.routes.length;
+  $("#cCats").textContent = new Set(state.places.map((p) => p.category).filter(Boolean)).size;
   const r = state.routes[1] || state.routes[0];
-  if (!r) return;
-  const stops = r.places.map(byId).filter(Boolean);
+  if (!r) {
+    $("#heroRoute").innerHTML = '<p class="muted">Маршруты скоро появятся</p>';
+    return;
+  }
+  const routePlaceIds = Array.isArray(r.places) ? r.places : [];
+  const stops = routePlaceIds.map((id) => byId(Number(id))).filter(Boolean);
   $("#heroRoute").innerHTML = `<p class="muted">Маршрут на вечер</p><h3>${esc(r.title)}</h3>
     <ol class="stops stops--sm">${stops.map((s) => `<li><span>${esc(s.title)}</span></li>`).join("")}</ol>
     <button class="btn btn--primary btn--sm" data-show-route="${r.id}">Показать на карте</button>`;
-  $("#cPlaces").textContent = state.places.length;
-  $("#cRoutes").textContent = state.routes.length;
-  $("#cCats").textContent = new Set(state.places.map((p) => p.category)).size;
 }
 
 /* ---------- Делегирование событий ---------- */
