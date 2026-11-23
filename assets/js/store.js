@@ -29,6 +29,7 @@ async function readTable(table, query = "select=*") {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   let response;
+  let body;
   try {
     response = await fetch(`${base}/rest/v1/${table}?${query}`, {
       method: "GET",
@@ -39,13 +40,16 @@ async function readTable(table, query = "select=*") {
       cache: "no-store",
       signal: controller.signal,
     });
+    // Таймер должен охватывать не только получение заголовков, но и чтение тела.
+    // Иначе fetch может вернуть HTTP 200, зависнуть на response.text(), а init()
+    // навсегда останется в ожидании и не покажет даже локальный резервный каталог.
+    body = await response.text();
   } catch (error) {
-    if (error?.name === "AbortError") throw new Error(`Supabase ${table}: превышено время ожидания (12 секунд)`);
+    if (error?.name === "AbortError") throw new Error(`Supabase ${table}: превышено время ожидания чтения ответа (12 секунд)`);
     throw error;
   } finally {
     clearTimeout(timeout);
   }
-  const body = await response.text();
   if (!response.ok) {
     let detail = body;
     try {
