@@ -266,7 +266,7 @@ function renderDiscover() {
 }
 
 function renderVenues() {
-  const cities = citiesFor((p) => kindOf(p) === "venue");
+  const cities = citiesFor((p) => kindOf(p) === "venue" && p.category !== "aquapark");
   if (!cities.some(([c]) => c === state.venueCity) && cities.length) state.venueCity = cities[0][0];
   $("#venueCities").innerHTML = cityChips(cities, state.venueCity, venueCityQuery);
   const inCity = state.places.filter((p) => kindOf(p) === "venue" && p.category !== "aquapark" && p.city === state.venueCity);
