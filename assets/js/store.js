@@ -1,6 +1,6 @@
 // Слой данных: Supabase REST API + резервный локальный каталог.
-import { CONFIG } from "./config.js";
-import { PLACES, ROUTES } from "./data.js?v=20261123b";
+import { CONFIG } from "./config.js?v=20261124g";
+import { PLACES, ROUTES } from "./data.js?v=20261124g";
 
 const LS_KEY = "katyusha:favorites";
 let lastLoadMode = "local";
@@ -26,14 +26,25 @@ async function readTable(table, query = "select=*") {
   const key = String(CONFIG.SUPABASE_ANON_KEY || "").trim();
   if (!base || !key) throw new Error("Supabase URL или publishable key не настроен");
 
-  const response = await fetch(`${base}/rest/v1/${table}?${query}`, {
-    method: "GET",
-    headers: {
-      apikey: key,
-      Accept: "application/json",
-    },
-    cache: "no-store",
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
+  let response;
+  try {
+    response = await fetch(`${base}/rest/v1/${table}?${query}`, {
+      method: "GET",
+      headers: {
+        apikey: key,
+        Accept: "application/json",
+      },
+      cache: "no-store",
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error?.name === "AbortError") throw new Error(`Supabase ${table}: превышено время ожидания (12 секунд)`);
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
   const body = await response.text();
   if (!response.ok) {
     let detail = body;
