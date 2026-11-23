@@ -13,10 +13,29 @@
   document.documentElement.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})();
 </script>
 <script>
-  // При новом открытии и перезагрузке всегда начинаем с начала страницы.
-  // Внутренние переходы и прокрутка по разделам сайта не затрагиваются.
-  try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
-  window.addEventListener("pageshow", function () { window.scrollTo(0, 0); });
+  // Сбрасываем восстановленную браузером позицию только при загрузке документа.
+  // Внутренние переходы по разделам после загрузки продолжают работать как обычно.
+  (function () {
+    try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+    // Не позволяем сохранённому якорю вернуть страницу к старому разделу после обновления.
+    try {
+      if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    } catch (e) {}
+    function resetInitialScroll() {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+    }
+    resetInitialScroll();
+    window.addEventListener("pageshow", resetInitialScroll, { once: true });
+    window.addEventListener("load", function () {
+      resetInitialScroll();
+      // Некоторые мобильные браузеры восстанавливают позицию чуть позже события load.
+      [50, 180, 450, 900].forEach(function (delay) {
+        setTimeout(resetInitialScroll, delay);
+      });
+    }, { once: true });
+  })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
