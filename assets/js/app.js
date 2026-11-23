@@ -3,7 +3,7 @@ import { CATEGORIES } from "./data.js?v=20261123b";
 import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261123b";
 import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./map.js";
 import { state, byId } from "./state.js";
-import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261123b";
+import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261123c";
 import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261123d";
 import { initPlanner, addToPlan } from "./planner.js";
 import { initIdeal, refreshIdeal } from "./ideal.js?v=20261123b";
