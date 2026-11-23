@@ -21,9 +21,19 @@ const cityOrigin = (place) => {
 };
 
 let mapView = null;
-// Карта создаётся лениво: при первом обращении или когда секция приближается к экрану.
+let mapResizeObserver = null;
+// Карта создаётся лениво и пересчитывает размеры при изменении ширины экрана/контейнера.
 const ensureMap = () => {
-  if (!mapView) { mapView = new MapView($("#mapCanvas"), (id) => openPlace(id)); mapView.setPlaces(visible()); }
+  if (!mapView) {
+    mapView = new MapView($("#mapCanvas"), (id) => openPlace(id));
+    mapView.setPlaces(visible());
+    if ("ResizeObserver" in window) {
+      mapResizeObserver = new ResizeObserver(() => requestAnimationFrame(() => mapView?.refresh()));
+      mapResizeObserver.observe($("#map"));
+    } else {
+      addEventListener("resize", () => mapView?.refresh(), { passive: true });
+    }
+  }
   return mapView;
 };
 
