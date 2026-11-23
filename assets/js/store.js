@@ -1,49 +1,80 @@
-// Слой данных: Supabase, если он настроен, иначе встроенные данные + localStorage.
+// Слой данных: Supabase REST API + резервный локальный каталог.
 import { CONFIG } from "./config.js";
 import { PLACES, ROUTES } from "./data.js?v=20261123b";
 
 const LS_KEY = "katyusha:favorites";
-const SUPABASE_ESM = "https://esm.sh/@supabase/supabase-js@2";
+let lastLoadMode = "local";
 
-let sb = null;
-let favoritesEnabled = false;
-// Нормализуем URL проекта без повреждённого regex: Supabase URL обычно уже корневой.
 const projectUrl = () => String(CONFIG.SUPABASE_URL || "")
   .trim()
-  .replace(/\/rest\/v1\/?$/, "")
-  .replace(/\/+$/, "");
+  .replace(/\/$/, "");
 
 const readLocal = () => {
-  try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch { return []; }
+  try {
+    const value = JSON.parse(localStorage.getItem(LS_KEY));
+    return Array.isArray(value) ? value.map(Number) : [];
+  } catch {
+    return [];
+  }
 };
 const writeLocal = (set) => {
   try { localStorage.setItem(LS_KEY, JSON.stringify([...set])); } catch {}
 };
 
-/** Загружает каталог независимо от таблиц маршрутов и избранного. */
+async function readTable(table, query = "select=*") {
+  const base = projectUrl();
+  const key = String(CONFIG.SUPABASE_ANON_KEY || "").trim();
+  if (!base || !key) throw new Error("Supabase URL или publishable key не настроен");
+
+  const response = await fetch(`${base}/rest/v1/${table}?${query}`, {
+    method: "GET",
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  });
+  const body = await response.text();
+  if (!response.ok) {
+    let detail = body;
+    try {
+      const parsed = JSON.parse(body);
+      detail = parsed.message || parsed.error || body;
+    } catch {}
+    throw new Error(`Supabase ${table}: HTTP ${response.status}: ${detail}`);
+  }
+  try {
+    const data = JSON.parse(body);
+    if (!Array.isArray(data)) throw new Error("Ожидался массив записей");
+    return data;
+  } catch (error) {
+    throw new Error(`Supabase ${table}: некорректный JSON: ${error.message}`);
+  }
+}
+
+/** Каталог загружается напрямую через REST; сбой избранного не влияет на места. */
 export async function loadData() {
-  const local = { places: PLACES, routes: ROUTES, favs: new Set(readLocal()), mode: "local" };
+  const local = {
+    places: PLACES,
+    routes: ROUTES,
+    favs: new Set(readLocal()),
+    mode: "local",
+  };
+
   if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_ANON_KEY) return local;
 
   try {
-    const { createClient } = await import(SUPABASE_ESM);
-    sb = createClient(projectUrl(), CONFIG.SUPABASE_ANON_KEY);
-
-    const { data: remotePlaces, error: placesError } = await sb.from("places").select("*").order("id");
-    if (placesError) throw placesError;
+    const remotePlaces = await readTable("places", "select=*&order=id.asc");
+    if (!remotePlaces.length) throw new Error("Supabase вернул пустой каталог places");
 
     let remoteRoutes = ROUTES;
-    const { data: routeData, error: routesError } = await sb.from("routes").select("*").order("id");
-    if (!routesError && Array.isArray(routeData) && routeData.length) remoteRoutes = routeData;
-    else if (routesError) console.warn("Маршруты Supabase недоступны, используются встроенные:", routesError);
-
-    let favs = new Set(readLocal());
-    const { data: remoteFavs, error: favError } = await sb.from("favorites").select("place_id");
-    favoritesEnabled = !favError;
-    if (favoritesEnabled) favs = new Set((remoteFavs || []).map((x) => Number(x.place_id)));
-    else console.info("Таблица favorites не настроена: избранное хранится на этом устройстве.");
-
-    if (!Array.isArray(remotePlaces) || !remotePlaces.length) return local;
+    try {
+      const routes = await readTable("routes", "select=*&order=id.asc");
+      if (routes.length) remoteRoutes = routes;
+    } catch (error) {
+      console.warn("Маршруты Supabase недоступны, используются резервные:", error);
+    }
 
     const localById = new Map(PLACES.map((place) => [String(place.id), place]));
     const remoteIds = new Set(remotePlaces.map((place) => String(place.id)));
@@ -51,21 +82,29 @@ export async function loadData() {
       const backup = localById.get(String(remote.id));
       if (!backup) return remote;
       const merged = { ...backup, ...remote };
-      ["description", "image", "rating", "region", "city", "address", "price_min", "price_max", "price_unit", "review_count", "opening_hours", "phone", "map_url", "source_urls"].forEach((key) => {
-        if (remote[key] == null || (Array.isArray(remote[key]) && !remote[key].length)) merged[key] = backup[key];
+      [
+        "description", "image", "rating", "region", "city", "address",
+        "price_min", "price_max", "price_unit", "review_count",
+        "opening_hours", "phone", "map_url", "source_urls",
+      ].forEach((key) => {
+        if (remote[key] == null || (Array.isArray(remote[key]) && !remote[key].length)) {
+          merged[key] = backup[key];
+        }
       });
       return merged;
     });
+
+    lastLoadMode = "supabase";
+    console.info(`Каталог загружен из Supabase: ${mergedPlaces.length} мест, ${remoteRoutes.length} маршрутов`);
     return {
       places: [...mergedPlaces, ...PLACES.filter((place) => !remoteIds.has(String(place.id)))],
       routes: remoteRoutes,
-      favs,
+      favs: new Set(readLocal()),
       mode: "supabase",
     };
-  } catch (e) {
-    console.error("Не удалось загрузить каталог Supabase; включена резервная база:", e);
-    sb = null;
-    favoritesEnabled = false;
+  } catch (error) {
+    lastLoadMode = "local";
+    console.error("Ошибка загрузки каталога из Supabase; используется локальный резерв:", error);
     return local;
   }
 }
@@ -74,19 +113,9 @@ export async function setFavorite(placeId, on, favs) {
   const id = Number(placeId);
   on ? favs.add(id) : favs.delete(id);
   writeLocal(favs);
-  if (!sb || !favoritesEnabled) return true;
-  const { error } = on
-    ? await sb.from("favorites").upsert({ place_id: id }, { onConflict: "place_id" })
-    : await sb.from("favorites").delete().eq("place_id", id);
-  return !error;
+  return true;
 }
 
-export function subscribeFavorites(onChange) {
-  if (!sb || !favoritesEnabled) return;
-  sb.channel("favorites-sync")
-    .on("postgres_changes", { event: "*", schema: "public", table: "favorites" }, async () => {
-      const { data } = await sb.from("favorites").select("place_id");
-      if (data) onChange(new Set(data.map((x) => Number(x.place_id))));
-    })
-    .subscribe();
+export function subscribeFavorites() {
+  // Избранное хранится локально; таблица favorites не входит в обязательный каталог.
 }
