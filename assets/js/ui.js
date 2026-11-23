@@ -24,12 +24,95 @@ export const priceShort = (p) => {
 };
 export const fmtMin = (m) => (m < 60 ? `${Math.round(m)} мин` : `${Math.floor(m / 60)} ч${m % 60 ? ` ${Math.round(m % 60)} мин` : ""}`);
 
-/** Изображение места или цветная заглушка с иконкой категории (пока нет фото). */
+/** Подбирает фотографию по названию места через Wikimedia Commons / Wikipedia. */
+const photoPromises = new Map();
+let photoActive = 0;
+const photoWaiters = [];
+const normalizePhotoText = (value) => String(value || "").toLocaleLowerCase("ru").replace(/ё/g, "е").replace(/[^\\p{L}\\p{N}]+/gu, " ").trim();
+async function withPhotoSlot(task) {
+  if (photoActive >= 3) await new Promise((resolve) => photoWaiters.push(resolve));
+  photoActive++;
+  try { return await task(); }
+  finally { photoActive--; photoWaiters.shift()?.(); }
+}
+async function fetchJson(url) {
+  const response = await fetch(url, { headers: { Accept: "application/json" } });
+  if (!response.ok) throw new Error("Image lookup failed");
+  return response.json();
+}
+async function lookupPlacePhoto(title, city) {
+  const cacheKey = `katyusha:photo:${normalizePhotoText(title)}:${normalizePhotoText(city)}`;
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached === "none") return null;
+    if (cached) return cached;
+  } catch {}
+  const query = `${title} ${city}`.trim();
+  // Сначала ищем фотографию непосредственно в Wikimedia Commons.
+  try {
+    const url = "https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit=8&gsrsearch=" +
+      encodeURIComponent(query) + "&prop=imageinfo&iiprop=url&iiurlwidth=1000&format=json&origin=*";
+    const data = await fetchJson(url);
+    const pages = Object.values(data.query?.pages || []);
+    const tokens = normalizePhotoText(title).split(" ").filter((x) => x.length > 3);
+    const ranked = pages.map((page) => {
+      const name = normalizePhotoText(page.title);
+      return { page, score: tokens.reduce((n, token) => n + (name.includes(token) ? 1 : 0), 0) };
+    }).sort((a, b) => b.score - a.score);
+    const image = ranked.find((x) => x.score > 0)?.page.imageinfo?.[0]?.thumburl;
+    if (image) { try { localStorage.setItem(cacheKey, image); } catch {} return image; }
+  } catch {}
+  // Если в Commons нет подходящего файла, используем миниатюру статьи Wikipedia.
+  for (const language of ["ru", "en"]) {
+    try {
+      const url = `https://${language}.wikipedia.org/w/api.php?action=query&generator=search&gsrnamespace=0&gsrlimit=5&gsrsearch=` +
+        encodeURIComponent(query) + "&prop=pageimages&piprop=thumbnail&pithumbsize=1000&format=json&origin=*";
+      const data = await fetchJson(url);
+      const pages = Object.values(data.query?.pages || []);
+      const titleTokens = normalizePhotoText(title).split(" ").filter((x) => x.length > 3);
+      const ranked = pages.map((page) => {
+        const name = normalizePhotoText(page.title);
+        return { page, score: titleTokens.reduce((n, token) => n + (name.includes(token) ? 1 : 0), 0) };
+      }).sort((a, b) => b.score - a.score);
+      const image = ranked.find((x) => x.score > 0)?.page.thumbnail?.source || pages.find((x) => x.thumbnail)?.thumbnail?.source;
+      if (image) { try { localStorage.setItem(cacheKey, image); } catch {} return image; }
+    } catch {}
+  }
+  try { localStorage.setItem(cacheKey, "none"); } catch {}
+  return null;
+}
+export function hydratePhotos(root = document) {
+  root.querySelectorAll(".cover--art[data-photo-title]").forEach((node) => {
+    if (node.dataset.photoLoading) return;
+    node.dataset.photoLoading = "true";
+    const key = `${node.dataset.photoTitle}|${node.dataset.photoCity}`;
+    if (!photoPromises.has(key)) {
+      photoPromises.set(key, withPhotoSlot(() => lookupPlacePhoto(node.dataset.photoTitle, node.dataset.photoCity)));
+    }
+    photoPromises.get(key).then((url) => {
+      if (!url || !node.isConnected) return;
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = `${node.dataset.photoTitle} — ${node.dataset.photoCity}`;
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.addEventListener("error", () => {
+        node.classList.add("cover--art--failed");
+        const cacheKey = `katyusha:photo:${normalizePhotoText(node.dataset.photoTitle)}:${normalizePhotoText(node.dataset.photoCity)}`;
+        try { localStorage.removeItem(cacheKey); } catch {}
+      }, { once: true });
+      node.replaceChildren(img);
+      node.classList.remove("cover--art");
+    }).catch(() => {});
+  });
+}
+
+/** Изображение места. Если локального фото нет, оно подбирается автоматически по названию. */
 export const cover = (p, cls = "cover") => {
   const c = cat(p);
   return p.image
     ? `<div class="${cls}"><img src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy" decoding="async"></div>`
-    : `<div class="${cls} cover--art" style="--h:${c.hue}" aria-hidden="true">${icon(c.icon)}</div>`;
+    : `<div class="${cls} cover--art" style="--h:${c.hue}" data-photo-title="${esc(p.title)}" data-photo-city="${esc(p.city || "")}" aria-hidden="true">${icon(c.icon)}</div>`;
 };
 
 /** Карточка места. large = крупная карточка достопримечательности. favBtn передаётся из app.js. */
