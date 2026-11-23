@@ -1,6 +1,6 @@
 // Точка входа: рендер секций, навигация, взаимодействие с картой.
 import { CATEGORIES } from "./data.js?v=20261124g";
-import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124g";
+import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124h";
 import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./map.js?v=20261124g";
 import { state, byId } from "./state.js?v=20261124g";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124g";
