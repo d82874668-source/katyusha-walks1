@@ -1,8 +1,8 @@
 // «Спланируй прогулку»: ручной конструктор маршрута (добавление, порядок, режим, участки, сохранение, ссылка).
-import { state, byId } from "./state.js?v=20261124g";
-import { $, $$, icon, esc, cat, toast, fmtMin } from "./ui.js?v=20261124g";
-import { MapView, route, estimateLeg, haversineKm, googleUrl, osmUrl, fmtDist, fmtDur } from "./map.js?v=20261124g";
-import { visitMinutes, currencyFor } from "./taxonomy.js?v=20261124g";
+import { state, byId } from "./state.js?v=20261124n";
+import { $, $$, icon, esc, cat, toast, fmtMin } from "./ui.js?v=20261124n";
+import { MapView, route, estimateLeg, haversineKm, googleUrl, osmUrl, fmtDist, fmtDur } from "./map.js?v=20261124n";
+import { visitMinutes, currencyFor } from "./taxonomy.js?v=20261124n";
 
 const LS_PLAN = "rfn:plan", LS_SAVED = "rfn:saved-routes";
 const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
