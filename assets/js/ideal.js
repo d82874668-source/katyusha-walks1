@@ -1,10 +1,10 @@
 // «Мой идеальный день»: подбор программы по настроению, городу, бюджету, времени и интересам.
 // Алгоритм детерминирован при одном seed и не использует внешние сервисы: работает офлайн на данных каталога.
-import { state } from "./state.js?v=20261124g";
-import { $, $$, icon, esc, cat, cover, toast, fmtMin } from "./ui.js?v=20261124g";
-import { MOODS, ROLES, ATMOSPHERES, VENUE_GROUPS, kindOf, groupOf, visitMinutes, currencyFor } from "./taxonomy.js?v=20261124g";
-import { estimateLeg, haversineKm, fmtDist } from "./map.js?v=20261124g";
-import { setPlan, sharePlan, savePlanAs } from "./planner.js?v=20261124g";
+import { state } from "./state.js?v=20261124n";
+import { $, $$, icon, esc, cat, cover, toast, fmtMin } from "./ui.js?v=20261124n";
+import { MOODS, ROLES, ATMOSPHERES, VENUE_GROUPS, kindOf, groupOf, visitMinutes, currencyFor } from "./taxonomy.js?v=20261124n";
+import { estimateLeg, haversineKm, fmtDist } from "./map.js?v=20261124n";
+import { setPlan, sharePlan, savePlanAs } from "./planner.js?v=20261124n";
 
 const EXTRA_ROLES = ["walk", "drinks", "night", "cafe"]; // если время ещё осталось, а сценарий закончился
 const SIGHT_ROLES = new Set(["walk", "photo", "culture"]);
