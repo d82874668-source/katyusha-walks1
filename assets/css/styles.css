@@ -692,3 +692,17 @@ a,button,input,select{ -webkit-tap-highlight-color:transparent }
 
 :root{--nav-h:72px}
 @media(max-width:1020px){:root{--nav-h:66px}}
+
+
+/* Быстрый поиск города в каталоге */
+.city-search{max-width:440px;margin:0 0 12px;height:46px;border:1px solid var(--line);background:var(--surface)}
+.city-search input::placeholder{color:var(--muted);opacity:.8}
+.city-empty{margin:4px 0 18px;color:var(--muted);font-size:14px}
+.sheet__img{display:block;overflow:hidden;background:var(--surface-2)}
+.sheet__img img{display:block;width:100%;height:100%;object-fit:cover;border-radius:14px}
+.cover--art--failed{opacity:.8}
+@media(max-width:560px){
+  .city-search{max-width:none;margin:0 0 10px}
+  .chips--wrap{gap:7px}
+  .city-search input{font-size:14px}
+}
