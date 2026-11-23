@@ -2670,7 +2670,7 @@ export const PLACES = [
   "category": "nature",
   "latitude": 56.8389,
   "longitude": 60.6057,
-  "image": null,
+  "image": "https://uktus.ural.ski/wp-content/gallery/d0b4d0b5d0bdd18c-d0b3d0bed180d0bed0b4d0b0-d0bdd0b0-d183d0bad182d183d181d0b5//thumbs/thumbs_001.jpg",
   "rating": null,
   "is_approx": true,
   "region": "Екатеринбург",
@@ -2683,7 +2683,9 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": "https://www.google.com/maps/search/?api=1&query=Уктус+Екатеринбург+Россия",
-  "source_urls": []
+  "source_urls": [
+   "https://uktus.ural.ski/about/photo/"
+  ]
  },
  {
   "id": 990025,
@@ -4232,7 +4234,7 @@ export const PLACES = [
   "category": "garden",
   "latitude": 59.9485733,
   "longitude": 30.368532,
-  "image": null,
+  "image": "https://static.tildacdn.com/tild3839-3662-4733-b835-353533643365/1000148394.png",
   "rating": null,
   "is_approx": false,
   "region": "Санкт-Петербург",
@@ -4245,7 +4247,9 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": "https://www.openstreetmap.org/node/4191691297",
-  "source_urls": []
+  "source_urls": [
+   "https://tavr-orangery.ru/"
+  ]
  },
  {
   "id": 990093,
