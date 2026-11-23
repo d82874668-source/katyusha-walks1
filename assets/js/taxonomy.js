@@ -18,7 +18,8 @@ export const VENUE_GROUPS = [
   { key: "mall", title: "Торговые центры", cats: ["mall", "shop", "market"] },
   { key: "cinema", title: "Кинотеатры", cats: ["cinema"] },
   { key: "culture", title: "Культурные пространства", cats: ["cultural_space", "theatre"] },
-  { key: "fun", title: "Развлекательные центры", cats: ["entertainment", "quest", "karaoke", "aquapark", "zoo", "capybara", "recreation", "gym", "theatre", "karting", "boat"] },
+  { key: "fun", title: "Развлекательные центры", cats: ["entertainment", "quest", "karaoke", "zoo", "capybara", "recreation", "gym", "theatre", "karting", "boat"] },
+  { key: "aquapark", title: "Аквапарки", cats: ["aquapark"] },
   { key: "night", title: "Ночные клубы", cats: ["nightclub"] },
   { key: "bowling", title: "Боулинг и бильярд", cats: ["bowling", "billiards"] },
 ];
