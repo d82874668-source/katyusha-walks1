@@ -503,8 +503,9 @@ async function init() {
   initPlanner(); initIdeal({ favBtn });
   subscribeFavorites((favs) => { state.favs = favs; renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); refreshIdeal(); });
 
-  // Карта инициализируется, когда секция приближается к экрану: быстрее первая загрузка.
-  const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); ensureMap(); } }, { rootMargin: "500px" });
-  io.observe($("#map"));
+  // Создаём карту сразу после отрисовки каталога, чтобы Leaflet не оставался пустым
+  // из-за задержанного IntersectionObserver на мобильных браузерах.
+  ensureMap();
+  requestAnimationFrame(() => mapView?.refresh());
 }
 init();
