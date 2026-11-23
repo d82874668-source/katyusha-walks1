@@ -1,12 +1,12 @@
 // Точка входа: рендер секций, навигация, взаимодействие с картой.
-import { CATEGORIES } from "./data.js?v=20261123b";
-import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124e";
-import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./map.js";
-import { state, byId } from "./state.js";
-import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261123c";
-import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261123d";
-import { initPlanner, addToPlan } from "./planner.js";
-import { initIdeal, refreshIdeal } from "./ideal.js?v=20261123b";
+import { CATEGORIES } from "./data.js?v=20261124g";
+import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124g";
+import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./map.js?v=20261124g";
+import { state, byId } from "./state.js?v=20261124g";
+import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124g";
+import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124g";
+import { initPlanner, addToPlan } from "./planner.js?v=20261124g";
+import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124g";
 
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
 const cityOrigin = (place) => {
