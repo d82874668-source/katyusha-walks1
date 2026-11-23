@@ -1,5 +1,5 @@
 // Общие помощники интерфейса: выборка элементов, иконки, экранирование, карточки мест, уведомления.
-import { CATEGORIES } from "./data.js?v=20261123a";
+import { CATEGORIES } from "./data.js?v=20261123b";
 import { kindOf, groupOf, visitMinutes } from "./taxonomy.js";
 
 export const $ = (s, r = document) => r.querySelector(s);
