@@ -689,3 +689,6 @@ a,button,input,select{ -webkit-tap-highlight-color:transparent }
 @media(prefers-reduced-motion:reduce){
   .hero__towers,.hero h1,.hero .lead,.hero__cta,.hero__card{animation:none}
 }
+
+:root{--nav-h:72px}
+@media(max-width:1020px){:root{--nav-h:66px}}
