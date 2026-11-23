@@ -72,6 +72,17 @@ $("#themeClose").addEventListener("click", closeThemeDlg);
 themeDlg.addEventListener("cancel", (e) => { e.preventDefault(); closeThemeDlg(); });
 applyTheme(document.documentElement.dataset.theme);
 
+/* ---------- Дополнительный каталог аквапарков ---------- */
+const waterparksSection = $("#waterparks");
+const openWaterparksLink = $('[data-open-waterparks]');
+openWaterparksLink?.addEventListener("click", (e) => {
+  e.preventDefault();
+  waterparksSection.hidden = false;
+  history.replaceState(null, "", "#waterparks");
+  waterparksSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  setMenu(false);
+});
+
 /* ---------- Навигация ---------- */
 const nav = $("#nav");
 const setMenu = (open) => {
