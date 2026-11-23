@@ -13,25 +13,33 @@
   document.documentElement.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")})();
 </script>
 <script>
-  // Сбрасываем восстановленную браузером позицию только при загрузке документа.
-  // Внутренние переходы по разделам после загрузки продолжают работать как обычно.
+  // Жёстко сбрасываем только начальную позицию документа.
+  // Явный instant важен: в CSS у html включён smooth scroll.
   (function () {
     try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
-    // Не позволяем сохранённому якорю вернуть страницу к старому разделу после обновления.
     try {
       if (location.hash) history.replaceState(null, "", location.pathname + location.search);
     } catch (e) {}
+
     function resetInitialScroll() {
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      if (document.body) document.body.scrollTop = 0;
+      var root = document.documentElement;
+      var body = document.body;
+      // Не даём CSS scroll-behavior:smooth превратить сброс в долгую анимацию.
+      var previousBehavior = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      try { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); }
+      catch (e) { window.scrollTo(0, 0); }
+      root.scrollTop = 0;
+      if (body) body.scrollTop = 0;
+      root.style.scrollBehavior = previousBehavior;
     }
+
     resetInitialScroll();
-    window.addEventListener("pageshow", resetInitialScroll, { once: true });
+    window.addEventListener("pageshow", resetInitialScroll);
+    document.addEventListener("DOMContentLoaded", resetInitialScroll, { once: true });
     window.addEventListener("load", function () {
       resetInitialScroll();
-      // Некоторые мобильные браузеры восстанавливают позицию чуть позже события load.
-      [50, 180, 450, 900].forEach(function (delay) {
+      [80, 250, 600, 1200, 2000].forEach(function (delay) {
         setTimeout(resetInitialScroll, delay);
       });
     }, { once: true });
