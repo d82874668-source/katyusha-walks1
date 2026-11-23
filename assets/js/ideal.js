@@ -111,6 +111,19 @@ export function renderIdealForm() {
   const sel = $("#idealCity");
   sel.innerHTML = cities.map(([c, n]) => `<option value="${esc(c)}">${esc(c)} (${n})</option>`).join("");
   sel.value = cities.some(([c]) => c === state.city) ? state.city : cities[0]?.[0] || "";
+  const citySearch = $("#idealCitySearch");
+  const cityOptions = $("#idealCityOptions");
+  const cityAliases = { "Баку": "baku", "Гянджа": "ganja gence", "Шеки": "sheki shaki", "Казань": "kazan", "Сочи": "sochi", "Тбилиси": "tbilisi", "Батуми": "batumi", "Москва": "moscow", "Санкт-Петербург": "saint petersburg spb", "Екатеринбург": "ekaterinburg" };
+  const norm = (v) => String(v || "").toLocaleLowerCase("ru").replace(/ё/g, "е").trim();
+  cityOptions.innerHTML = cities.map(([c, n]) => `<option value="${esc(c)}" label="${n} мест"></option>`).join("");
+  citySearch.value = sel.value;
+  citySearch.oninput = () => {
+    const q = norm(citySearch.value);
+    const match = cities.find(([c]) => norm(c) === q || norm(cityAliases[c]).split(" ").includes(q)) ||
+      cities.find(([c]) => norm(c).startsWith(q) || norm(cityAliases[c]).split(" ").some((alias) => alias.startsWith(q)));
+    sel.value = match?.[0] || "";
+    sel.dispatchEvent(new Event("change", { bubbles: true }));
+  };
   $("#idealMoods").innerHTML = Object.entries(MOODS).map(([k, m], i) =>
     `<label class="mood"><input type="radio" name="mood" value="${k}" ${i === 0 ? "checked" : ""}><span><strong>${esc(m.title)}</strong><small>${esc(m.hint)}</small></span></label>`).join("");
   $("#idealInterests").innerHTML = [["sights", "Достопримечательности"], ...VENUE_GROUPS.map((g) => [g.key, g.title])]
