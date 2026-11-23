@@ -102,7 +102,7 @@ async function toggleFav(id) {
   const ok = await setFavorite(id, on, state.favs);
   if (!ok) toast("Не удалось синхронизировать, сохранено на этом устройстве");
   else toast(on ? "Добавлено в избранное" : "Убрано из избранного");
-  renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); refreshIdeal();
+  renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); renderAquaparks(); refreshIdeal();
 }
 const favBtn = (p, cls = "") => {
   const on = state.favs.has(p.id);
@@ -250,6 +250,8 @@ const cityChips = (list, active, query = "") => {
 };
 let discoverCityQuery = "";
 let venueCityQuery = "";
+let waterCityQuery = "";
+let waterCity = "";
 const byQuality = (a, b) => (Number(b.rating || 0) - Number(a.rating || 0)) || (Number(b.review_count || 0) - Number(a.review_count || 0)) || (!!b.image - !!a.image) || String(a.title).localeCompare(String(b.title), "ru");
 
 function renderDiscover() {
@@ -279,6 +281,22 @@ function renderVenues() {
     ? items.map((p) => placeCard(p, favBtn)).join("")
     : `<div class="card empty"><p>В городе «${esc(state.venueCity)}» пока нет заведений в этой категории. Выберите другую категорию или город.</p></div>`;
   hydratePhotos($("#venueGrid"));
+}
+
+function renderAquaparks() {
+  const parks = state.places.filter((p) => p.category === "aquapark");
+  const cities = citiesFor((p) => p.category === "aquapark");
+  if (!cities.some(([c]) => c === waterCity) && cities.length) waterCity = cities[0][0];
+  const q = citySearchText(waterCityQuery);
+  const filteredCities = q ? cities.filter(([c]) => citySearchText(`${c} ${cityAliases[c] || ""}`).includes(q)) : cities;
+  $("#waterparkCities").innerHTML = filteredCities.length
+    ? filteredCities.map(([c,n]) => `<button class="chip" role="tab" aria-selected="${c === waterCity}" data-water-city="${esc(c)}">${esc(c)} <small>${n}</small></button>`).join("")
+    : `<p class="city-empty">Город не найден. Попробуйте другое название.</p>`;
+  const items = parks.filter((p) => p.city === waterCity).sort(byQuality);
+  $("#waterparkGrid").innerHTML = items.length
+    ? items.map((p) => placeCard(p, favBtn)).join("")
+    : `<div class="card empty"><p>В этом городе аквапарков пока нет в каталоге.</p></div>`;
+  hydratePhotos($("#waterparkGrid"));
 }
 
 function renderDirections() {
@@ -356,10 +374,11 @@ function renderHero() {
 
 /* ---------- Делегирование событий ---------- */
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-fav],[data-close],[data-city],[data-vgroup],[data-cat],[data-place],[data-place-open],[data-collection],[data-show-route]");
+  const t = e.target.closest("[data-fav],[data-close],[data-city],[data-water-city],[data-vgroup],[data-cat],[data-place],[data-place-open],[data-collection],[data-show-route]");
   if (!t) return;
   if (t.dataset.fav) { e.stopPropagation(); return toggleFav(+t.dataset.fav); }
   if (t.hasAttribute("data-close")) return closeSheet();
+  if (t.dataset.waterCity) { waterCity = t.dataset.waterCity; waterCityQuery = ""; $("#waterparkCitySearch").value = ""; return renderAquaparks(); }
   if (t.dataset.city) {
     if (t.closest("#venueCities")) {
       state.venueCity = t.dataset.city; state.venueGroup = "all"; venueCityQuery = "";
@@ -400,6 +419,7 @@ $("#discoverCitySearch").addEventListener("input", (e) => {
   const cities = citiesFor((p) => kindOf(p) === "sight");
   $("#discoverCities").innerHTML = cityChips(cities, state.city, discoverCityQuery);
 });
+$("#waterparkCitySearch").addEventListener("input", (e) => { waterCityQuery = e.target.value; renderAquaparks(); });
 $("#venueCitySearch").addEventListener("input", (e) => {
   venueCityQuery = e.target.value;
   const cities = citiesFor((p) => kindOf(p) === "venue");
@@ -419,7 +439,7 @@ $("#locateBtn").addEventListener("click", async () => {
 async function init() {
   Object.assign(state, await loadData());
   renderRegionFilter();
-  renderHero(); renderDirections(); renderDiscover(); renderVenues(); renderChips(); renderList(); renderRoutes(); renderCollections(); renderFavs();
+  renderHero(); renderDirections(); renderDiscover(); renderVenues(); renderAquaparks(); renderChips(); renderList(); renderRoutes(); renderCollections(); renderFavs();
   initPlanner(); initIdeal({ favBtn });
   subscribeFavorites((favs) => { state.favs = favs; renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); refreshIdeal(); });
 
