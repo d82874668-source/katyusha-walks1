@@ -119,6 +119,11 @@ export function renderIdealForm() {
   citySearch.value = sel.value;
   citySearch.oninput = () => {
     const q = norm(citySearch.value);
+    if (!q) {
+      sel.value = cities.some(([c]) => c === state.city) ? state.city : cities[0]?.[0] || "";
+      sel.dispatchEvent(new Event("change", { bubbles: true }));
+      return;
+    }
     const match = cities.find(([c]) => norm(c) === q || norm(cityAliases[c]).split(" ").includes(q)) ||
       cities.find(([c]) => norm(c).startsWith(q) || norm(cityAliases[c]).split(" ").some((alias) => alias.startsWith(q)));
     sel.value = match?.[0] || "";
