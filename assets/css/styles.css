@@ -722,3 +722,98 @@ a,button,input,select{ -webkit-tap-highlight-color:transparent }
 .pgrid--compact .pcard__actions .btn{min-height:34px;padding:7px 10px;font-size:12px}
 @media(max-width:720px){.pgrid--compact{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pgrid--compact .pcard__body{padding:11px}.pgrid--compact .pcard h3{font-size:14px}.pgrid--compact .pcard__desc{font-size:12px}.pgrid--compact .pcard__actions .btn{font-size:11px;padding:6px 8px}}
 @media(max-width:420px){.pgrid--compact{grid-template-columns:1fr}}
+
+
+/* ===== Единая компактная система интерфейса ===== */
+:root{--nav-h:66px}
+.sec{padding:38px 0}
+.sec__head{margin-bottom:14px;align-items:center;gap:8px 14px}
+.sec__head h2{font-size:clamp(28px,4vw,42px)}
+.sec__head>.muted{font-size:13px;max-width:42ch}
+.hero{min-height:min(74svh,680px);padding:calc(var(--nav-h) + 26px) 0 54px}
+.hero h1{font-size:clamp(44px,7.8vw,92px);margin-bottom:16px;max-width:10ch}
+.hero__cta{margin-top:22px;gap:9px}
+.hero__cta .btn--lg{min-height:44px;padding:0 18px;font-size:14px}
+.hero__card{padding:16px;gap:9px}
+.sec--tight{margin-top:-30px}
+.dirs{gap:10px}
+.dir{min-height:0;padding:14px 16px;gap:5px;border-radius:16px}
+.dir .badge{width:34px;height:34px;margin:0 0 3px;border-radius:10px}
+.dir .badge .i{width:18px;height:18px}
+.dir h3{font-size:15px}
+.dir p{display:none}
+.dir small{padding-top:2px;font-size:11px}
+.pgrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:13px}
+.pcard{border-radius:16px}
+.pcard__body{padding:13px 14px 14px;gap:5px}
+.pcard h3{font-size:16px}
+.pcard--sight h3{font-size:22px}
+.pcard__desc{-webkit-line-clamp:2;font-size:13px;line-height:1.4}
+.pcard__actions{padding-top:8px;gap:6px}
+.pcard__actions .btn{min-height:36px;padding:0 12px;font-size:12px}
+.chips--wrap{gap:6px;padding:8px 0 12px}
+.chip{padding:6px 11px;font-size:12px}
+.city-search{height:40px;margin-bottom:8px}
+.card{padding:16px;border-radius:16px}
+.grid{gap:12px}
+.grid--routes,.grid--fav{grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
+.plan{gap:12px}
+.plan__side{padding:14px;gap:12px}
+.ideal__form{gap:18px;padding:18px}
+.ideal__fields{gap:11px}
+.moods{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.mood span{padding:11px 13px}
+.mapbox{height:min(590px,76vh);min-height:440px;border-radius:18px}
+
+/* Подборки — короткие строки вместо крупных рекламных карточек. */
+#collections .grid--cols{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+#collections .collection{display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;min-height:58px}
+#collections .collection .badge{width:34px;height:34px;margin:0;border-radius:10px}
+#collections .collection h3{font-size:13px;line-height:1.25;min-width:0}
+#collections .collection p{display:none}
+#collections .collection small{margin:0;padding:0;font-size:11px;white-space:nowrap}
+
+/* Секции превращаются в аккуратные пункты меню. */
+.sec[data-collapsible="true"]{padding:13px 0;border-bottom:1px solid var(--line)}
+.sec[data-collapsible="true"]>.wrap{width:min(1180px,100% - 40px)}
+.sec[data-collapsible="true"] .sec__head{margin:0;min-height:42px}
+.sec[data-collapsible="true"] .sec__head h2{font:600 17px/1.3 var(--font);letter-spacing:-.02em}
+.sec[data-collapsible="true"] .sec__head>.muted{font-size:12px;max-width:38ch}
+.sec[data-collapsible="true"]:not(.is-expanded) .wrap>:not(.sec__head){display:none!important}
+.sec[data-collapsible="true"].is-expanded{padding:28px 0 34px}
+.sec[data-collapsible="true"].is-expanded .sec__head{margin-bottom:16px}
+.section-toggle{display:inline-flex;align-items:center;gap:8px;flex:none;padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);font-size:12px;font-weight:600;transition:background .2s,color .2s}
+.section-toggle:hover{background:var(--accent-soft);color:var(--accent)}
+.section-toggle b{font-size:17px;font-weight:400;line-height:10px;transition:transform .2s}
+.section-toggle[aria-expanded="true"] b{transform:rotate(180deg)}
+@media(max-width:760px){
+  .sec{padding:30px 0}
+  .hero{min-height:66svh;padding-bottom:40px}
+  .hero__in{gap:18px}
+  .hero__card{max-width:300px}
+  .dirs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dir{padding:12px}
+  .dir .badge{width:30px;height:30px}
+  .dir h3{font-size:13px}
+  .dir small{font-size:10px}
+  .pgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .pcard__body{padding:10px}
+  .pcard h3{font-size:14px}
+  .pcard__desc{font-size:12px}
+  .pcard__actions .btn{font-size:11px;padding:0 9px;min-height:32px}
+  #collections .grid--cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #collections .collection{grid-template-columns:30px minmax(0,1fr);padding:9px}
+  #collections .collection .badge{width:30px;height:30px}
+  #collections .collection small{grid-column:2;font-size:10px}
+  .sec[data-collapsible="true"] .sec__head{gap:7px}
+  .sec[data-collapsible="true"] .sec__head>.muted{display:none}
+  .section-toggle{padding:6px 9px;font-size:11px}
+  .mapbox{min-height:0}
+}
+@media(max-width:390px){
+  .pgrid{grid-template-columns:1fr}
+  #collections .grid--cols{grid-template-columns:1fr}
+  .hero h1{font-size:44px}
+  .hero__cta{flex-direction:column;align-items:stretch}
+}
+@media(prefers-reduced-motion:reduce){.section-toggle,.section-toggle b{transition:none}}

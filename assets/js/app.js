@@ -92,7 +92,41 @@ const setMenu = (open) => {
   document.body.classList.toggle("menu-open", open);
 };
 $("#menuBtn").addEventListener("click", () => setMenu(nav.dataset.open !== "true"));
-$$("#menu a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+$("#menu a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+
+/* Компактная навигация по разделам: контент раскрывается только по запросу. */
+function initCompactSections() {
+  const sections = [...document.querySelectorAll("main > section.sec")];
+  const update = (section, open) => {
+    section.classList.toggle("is-expanded", open);
+    const toggle = section.querySelector(".section-toggle");
+    if (toggle) {
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.querySelector("span").textContent = open ? "Свернуть" : "Открыть раздел";
+    }
+  };
+  sections.forEach((section) => {
+    const head = section.querySelector(":scope > .wrap > .sec__head");
+    if (!head || section.id === "about") return;
+    section.dataset.collapsible = "true";
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "section-toggle";
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.innerHTML = "<span>Открыть раздел</span><b aria-hidden=\"true\">⌄</b>";
+    toggle.addEventListener("click", () => update(section, !section.classList.contains("is-expanded")));
+    head.append(toggle);
+    update(section, false);
+  });
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const target = document.getElementById(link.getAttribute("href").slice(1));
+    if (target?.dataset.collapsible === "true") update(target, true);
+  });
+}
+initCompactSections();
+
 addEventListener("keydown", (e) => e.key === "Escape" && setMenu(false));
 addEventListener("scroll", () => nav.classList.toggle("is-scrolled", scrollY > 8), { passive: true });
 
@@ -355,7 +389,7 @@ function renderCollections() {
     return `<button class="card collection" data-collection="${k}" style="--h:${c.hue}">
       <span class="badge badge--lg">${icon(c.icon)}</span>
       <h3>${esc(c.title)}</h3><p class="muted">${esc(c.blurb)}</p>
-      <small class="muted">${items.length} ${items.length === 1 ? "место" : items.length < 5 ? "места" : "мест"}: ${esc(items.slice(0, 2).map((p) => p.title).join(", "))}${items.length > 2 ? "…" : ""}</small></button>`;
+      <small class="muted">${items.length} ${items.length === 1 ? "место" : items.length < 5 ? "места" : "мест"}</small></button>`;
   }).join("");
 }
 
