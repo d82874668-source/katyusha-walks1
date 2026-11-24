@@ -321,7 +321,7 @@ html[data-theme="dark"] .nav .theme-toggle{background:#202b38;border-color:#3a48
   <div id="view-guide" class="hide" style="padding-top:32px">
     <div class="guide-hero"><div class="eyebrow">Помощник Катюша</div><h1 class="h1">Куда отправимся?</h1><p>Подберём интересные места под ваш город, свободное время и бюджет. Рекомендации строятся по реальным данным каталога.</p></div>
     <div class="guide-panel">
-      <div class="guide-field"><label for="guideCity">Город</label><select id="guideCity" onchange="updateGuideBudget()"><option value="all">Выберите город</option></select></div>
+      <div class="guide-field"><label for="guideCity">Город</label><select id="guideCity" onchange="updateGuideFilters()"><option value="all">Выберите город</option></select></div>
       <div class="guide-field"><label for="guideBudget">Бюджет на человека · необязательно</label><div class="guide-input-wrap"><input id="guideBudget" type="number" min="0" step="100" placeholder="Сначала выберите город" disabled><span id="guideCurrency">—</span></div></div>
       <div class="guide-field"><label for="guideDuration">Сколько времени</label><select id="guideDuration"><option value="2">Около 2 часов</option><option value="4" selected>Полдня · 4 часа</option><option value="6">Весь день · 6 часов</option></select></div>
       <div class="guide-field"><label for="guideCategory">Что интересно</label><select id="guideCategory"><option value="all">Любые места</option></select></div>
