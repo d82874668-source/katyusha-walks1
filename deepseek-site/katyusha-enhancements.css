@@ -812,3 +812,37 @@ html[data-theme="light"] body{background:#faf7f2;color:#1a2332}
 /* Rating badge: keep long review counts readable without covering card controls. */
 .place-rating{max-width:calc(100% - 58px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;line-height:1.25;backdrop-filter:blur(8px)}
 @media(max-width:420px){.place-rating{font-size:10px;padding:5px 7px;max-width:calc(100% - 54px)}}
+
+
+/* Map result cards: stable two-column layout; never let labels/body drift below or over the photo. */
+.kw-map-results .place-card{
+ display:grid!important;
+ grid-template-columns:minmax(112px,38%) minmax(0,1fr)!important;
+ grid-template-rows:minmax(148px,auto)!important;
+ align-items:stretch!important;
+ min-height:148px!important;
+ overflow:hidden!important;
+}
+.kw-map-results .place-card>.place-img{
+ position:relative!important;grid-column:1!important;grid-row:1!important;
+ width:100%!important;height:100%!important;min-height:148px!important;
+ aspect-ratio:4/5!important;overflow:hidden!important;
+}
+.kw-map-results .place-card>.place-body{
+ grid-column:2!important;grid-row:1!important;
+ display:flex!important;flex-direction:column!important;
+ min-width:0!important;width:100%!important;padding:12px!important;overflow:hidden!important;
+}
+.kw-map-results .place-card .place-title,
+.kw-map-results .place-card .place-addr,
+.kw-map-results .place-card .place-foot{min-width:0!important;overflow-wrap:anywhere!important;word-break:normal!important}
+.kw-map-results .place-card .place-addr{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden!important}
+.kw-map-results .place-card .place-rating{z-index:2;max-width:calc(100% - 54px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kw-map-results .place-card .place-cat{z-index:2;max-width:calc(100% - 20px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:560px){
+ .kw-map-results .place-card{grid-template-columns:minmax(104px,36%) minmax(0,1fr)!important;min-height:136px!important;grid-template-rows:minmax(136px,auto)!important}
+ .kw-map-results .place-card>.place-img{min-height:136px!important}
+ .kw-map-results .place-card>.place-body{padding:10px!important}
+ .kw-map-results .place-card .place-title{font-size:13px!important;line-height:1.25!important}
+ .kw-map-results .place-card .place-addr{font-size:10px!important;line-height:1.35!important}
+}
