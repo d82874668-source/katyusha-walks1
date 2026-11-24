@@ -306,6 +306,13 @@ const cityAliases = {
   "Екатеринбург": "ekaterinburg", "Нижний Тагил": "nizhny tagil",
   "Санкт-Петербург": "saint petersburg spb", "Москва": "moscow"
 };
+// Страна — верхний уровень каталога. Города остаются внутри страны, а не превращаются в отдельные регионы.
+const countryOf = (place) => place.country || (/Грузия|Тбилиси|Батуми/i.test(`${place.region || ""} ${place.city || ""}`) ? "Грузия" : /Азербайджан|Баку|Гянджа|Шеки|Габала|Губа|Гусар/i.test(`${place.region || ""} ${place.city || ""}`) ? "Азербайджан" : /Казахстан|Алматы/i.test(`${place.region || ""} ${place.city || ""}`) ? "Казахстан" : "Россия");
+let discoverCountry = "all";
+const countryChips = (list, active) => [
+  `<button class="chip" role="tab" aria-selected="${active === "all"}" data-country="all">Все страны <small>${list.reduce((n, x) => n + x[1], 0)}</small></button>`,
+  ...list.map(([name, count]) => `<button class="chip" role="tab" aria-selected="${name === active}" data-country="${esc(name)}">${esc(name)} <small>${count}</small></button>`)
+].join("");
 const citySearchText = (value) => String(value || "").toLocaleLowerCase("ru").replace(/ё/g, "е").trim();
 const cityChips = (list, active, query = "") => {
   const q = citySearchText(query);
@@ -319,13 +326,22 @@ let venueCityQuery = "";
 const byQuality = (a, b) => (Number(b.rating || 0) - Number(a.rating || 0)) || (Number(b.review_count || 0) - Number(a.review_count || 0)) || (!!b.image - !!a.image) || String(a.title).localeCompare(String(b.title), "ru");
 
 function renderDiscover() {
-  const sights = citiesFor((p) => kindOf(p) === "sight");
-  if (!sights.some(([c]) => c === state.city)) state.city = sights[0]?.[0] || state.city;
-  $("#discoverCities").innerHTML = cityChips(sights, state.city, discoverCityQuery);
-  const items = state.places.filter((p) => kindOf(p) === "sight" && p.city === state.city).sort(byQuality);
+  const allSights = state.places.filter((p) => kindOf(p) === "sight");
+  const countryCounts = new Map();
+  allSights.forEach((p) => { const country = countryOf(p); countryCounts.set(country, (countryCounts.get(country) || 0) + 1); });
+  const countries = [...countryCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
+  if (discoverCountry !== "all" && !countryCounts.has(discoverCountry)) discoverCountry = "all";
+  $("#discoverCountries").innerHTML = countryChips(countries, discoverCountry);
+  const countrySights = discoverCountry === "all" ? allSights : allSights.filter((p) => countryOf(p) === discoverCountry);
+  const cityCounts = new Map();
+  countrySights.forEach((p) => p.city && cityCounts.set(p.city, (cityCounts.get(p.city) || 0) + 1));
+  const cities = [...cityCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
+  if (!cities.some(([city]) => city === state.city)) state.city = cities[0]?.[0] || "";
+  $("#discoverCities").innerHTML = cityChips(cities, state.city, discoverCityQuery);
+  const items = countrySights.filter((p) => p.city === state.city).sort(byQuality);
   $("#discoverGrid").innerHTML = items.length
     ? items.map((p, i) => placeCard(p, favBtn, { large: i < 2 && items.length > 3 })).join("")
-    : `<div class="card empty"><p>Для этого города достопримечательностей пока нет в каталоге.</p></div>`;
+    : `<div class="card empty"><p>Для выбранной страны и города достопримечательностей пока нет в каталоге.</p></div>`;
   hydratePhotos($("#discoverGrid"));
 }
 
@@ -523,6 +539,10 @@ document.addEventListener("click", (e) => {
   }
   if (t.dataset.customShare) return shareCustomCollection(t.dataset.customShare);
   if (t.hasAttribute("data-close")) return closeSheet();
+  if (t.dataset.country) {
+    discoverCountry = t.dataset.country; state.city = ""; discoverCityQuery = "";
+    $("#discoverCitySearch").value = ""; return renderDiscover();
+  }
   if (t.dataset.city) {
     if (t.closest("#venueCities")) {
       state.venueCity = t.dataset.city; state.venueGroup = "all"; venueCityQuery = "";
@@ -573,7 +593,7 @@ $("#sortPlaces").addEventListener("change", (e) => { state.sort = e.target.value
 $("#venueSort").addEventListener("change", renderVenues);
 $("#discoverCitySearch").addEventListener("input", (e) => {
   discoverCityQuery = e.target.value;
-  const cities = citiesFor((p) => kindOf(p) === "sight");
+  const cities = citiesFor((p) => kindOf(p) === "sight" && (discoverCountry === "all" || countryOf(p) === discoverCountry));
   $("#discoverCities").innerHTML = cityChips(cities, state.city, discoverCityQuery);
 });
 $("#venueCitySearch").addEventListener("input", (e) => {
