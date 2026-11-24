@@ -1263,45 +1263,55 @@ main,.wrap,.nav__in,.hero__in,.mapbox,.mapbox__stage,#mapCanvas,.leaflet-contain
 }
 
 
-/* ===== Города сгруппированы по регионам ===== */
+/* ===== Компактная группировка городов ===== */
+#discover.sec{padding-block:clamp(34px,4.5vw,58px)}
+#discover .sec__head{margin-bottom:16px}
 #discoverCities{
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  gap:12px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;
+  gap:8px;
   overflow:visible;
-  padding:8px 0 16px;
+  padding:4px 0 12px;
 }
-#discoverCities>.chip{align-self:flex-start}
+#discoverCities>.chip{grid-column:1/-1;justify-self:start}
 .city-region-group{
   min-width:0;
-  padding:10px 12px 11px;
+  padding:8px 10px;
   border:1px solid var(--line);
-  border-radius:15px;
+  border-radius:13px;
   background:color-mix(in srgb,var(--surface) 78%,var(--bg));
 }
 .city-region-heading{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:12px;
-  margin:0 0 8px;
+  gap:8px;
+  margin:0 0 5px;
   color:var(--ink);
-  font-size:13px;
+  font-size:12px;
+  line-height:1.25;
 }
 .city-region-heading span{
+  flex:none;
   color:var(--muted);
-  font-size:11px;
+  font-size:10px;
   font-weight:500;
 }
 .city-region-chips{
   display:flex;
   flex-wrap:wrap;
-  gap:6px;
+  gap:4px;
 }
-.city-region-chips .chip{margin:0}
-@media(max-width:760px){
-  #discoverCities{gap:9px}
-  .city-region-group{padding:9px}
-  .city-region-chips{gap:5px}
+.city-region-chips .chip{
+  margin:0;
+  max-width:100%;
+  padding:5px 8px;
+  font-size:11px;
+  line-height:1.2;
+}
+@media(max-width:420px){
+  #discoverCities{gap:6px}
+  .city-region-group{padding:7px}
+  .city-region-chips .chip{padding:5px 7px;font-size:10px}
 }
