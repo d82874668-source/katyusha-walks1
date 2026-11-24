@@ -37,6 +37,7 @@ export const ROLES = {
   active:  { title: "Активный отдых", cats: ["park", "gym", "beach", "aquapark", "bowling", "sea", "zoo"] },
   family:  { title: "Для детей и семьи", cats: ["zoo", "park", "entertainment", "aquapark", "garden"] },
   night:   { title: "Вечер", cats: ["bar", "pub", "winebar", "lounge", "hookah", "nightclub", "karaoke", "restaurant"] },
+  discover:{ title: "Интересное место", cats: [] },
 };
 
 /** Настроения: порядок ролей, время старта и подсказка. */
