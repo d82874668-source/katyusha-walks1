@@ -317,6 +317,17 @@ html[data-theme="dark"] .filters button,html[data-theme="dark"] .btn-ghost{backg
 
 
 @media(max-width:640px){.header .nav{top:auto!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;height:auto!important;min-height:48px!important;grid-row:auto!important;grid-column:auto!important}}
+
+.map-list-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:14px 0 10px;padding:13px 16px;background:#fff;border:1px solid var(--kw-line);border-radius:14px}
+.map-list-bar div{display:grid;gap:3px}.map-list-bar b{font-size:12px}.map-list-bar span{font-size:10px;color:var(--kw-muted)}
+.map-list-grid{margin-top:12px}.map-list-grid[hidden]{display:none}
+.modal-gallery{display:flex;gap:8px;overflow-x:auto;padding:12px 20px;background:#fff;scrollbar-width:thin}
+.modal-gallery button{flex:0 0 86px;width:86px;height:64px;padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;background:#eee;cursor:pointer}
+.modal-gallery button.active{border-color:var(--kw-accent)}.modal-gallery img{width:100%;height:100%;object-fit:cover;display:block}
+.similar-section{margin-top:28px;padding-top:20px;border-top:1px solid var(--kw-line)}.similar-section h3{font:700 22px Fraunces,Georgia,serif;margin-bottom:14px}
+.similar-section .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.similar-section .place-body{padding:10px}.similar-section .place-title{font-size:14px}
+html[data-theme="dark"] .map-list-bar,html[data-theme="dark"] .modal-gallery{background:#1c2924;color:#e8eee8;border-color:#35443b}
+@media(max-width:760px){.map-list-bar{align-items:flex-start;flex-direction:column}.similar-section .grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body><script>(function(){try{if(localStorage.getItem("kw-theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}})();</script>
@@ -420,6 +431,9 @@ html[data-theme="dark"] .filters button,html[data-theme="dark"] .btn-ghost{backg
         <option value="rating">По рейтингу</option>
         <option value="name">По алфавиту</option>
       </select>
+      <select id="priceFilter" onchange="render()" aria-label="Фильтр по бюджету">
+        <option value="0">Любой бюджет</option><option value="500">До 500 ₽</option><option value="1000">До 1 000 ₽</option><option value="3000">До 3 000 ₽</option><option value="5000">До 5 000 ₽</option>
+      </select>
       <input id="searchInput" placeholder="Поиск по названию или адресу..." oninput="render()">
       <button onclick="resetFilters()">Сбросить</button>
     </div>
@@ -448,6 +462,8 @@ html[data-theme="dark"] .filters button,html[data-theme="dark"] .btn-ghost{backg
       </div>
       <div id="mapNote" class="kw-map-note" hidden></div>
     </div>
+    <div class="map-list-bar"><div><b>Список мест</b><span id="mapListCount">Загружаем точки карты</span></div><button type="button" class="btn btn-ghost" id="mapListToggle" onclick="toggleMapList()">Показать список</button></div>
+    <div id="mapList" class="grid map-list-grid" hidden></div>
   </div>
   
   <!-- ROUTES -->
@@ -775,6 +791,32 @@ window.generateGuide=function(){const city=$('guideCity').value||'all',budget=Ma
 window.setGuideMood=function(m){const groups={nature:['park','nature','garden','sea','beach','embankment','trips','resort'],food:['cafe','coffee','restaurant','bakery','fastfood'],culture:['museum','historic','monument','theatre','cultural_space','attraction'],active:['gaming','karting','aquapark','entertainment','vr','quest']};const keys=groups[m]||[];const found=keys.find(k=>[...$('guideCategory').options].some(o=>o.value===k));$('guideCategory').value=found||'all';generateGuide()};
 window.createWeekendRoute=function(){const city=$('guideCity').value||'all';if(city==='all'){toast('Сначала выберите город');return}const pts=PLACES.filter(p=>p.city_key===city&&hasMapCoords(p)&&!p.is_approx).sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0)).slice(0,6);if(pts.length<2){toast('Недостаточно мест с точными координатами');return}myRoute=pts.map(p=>p.id);saveRoute();nav('routes');renderMyRoute();toast('Маршрут на выходные собран: '+pts.length+' мест')};
 document.addEventListener('DOMContentLoaded',()=>{fillGuide();syncMapCats(false);renderRecent();renderMyRoute();const mc=$('mapCityFilter');if(mc)mc.addEventListener('change',()=>syncMapCats(false));try{history.scrollRestoration='manual'}catch(e){}if(!location.hash)window.scrollTo(0,0)});
+})();
+
+</script>
+<script id="katyusha-detail-and-filter-improvements">
+
+(function(){
+const baseOpen=window.openPlace;
+const baseFiltered=window.filteredPlaces;
+const baseReset=window.resetFilters;
+const baseUpdateMap=window.updateMapMarkers;
+window.filteredPlaces=function(map){let list=baseFiltered(map);if(!map){const max=Number($('priceFilter')?.value||0);if(max>0)list=list.filter(p=>{const price=Number(p.avg_check||p.price_min||p.price_max||0);return !price||price<=max})}return list};
+window.resetFilters=function(){if($('priceFilter'))$('priceFilter').value='0';baseReset()};
+window.toggleMapList=function(){const el=$('mapList');if(!el)return;el.hidden=!el.hidden;$('mapListToggle').textContent=el.hidden?'Показать список':'Скрыть список'};
+function renderMapList(){const el=$('mapList');if(!el)return;const all=filteredPlaces(true).filter(p=>hasMapCoords(p)&&!p.is_approx);$('mapListCount').textContent=all.length+' точек с учётом выбранных фильтров';el.innerHTML=all.slice(0,12).map(placeCardHTML).join('');if(all.length>12)el.insertAdjacentHTML('beforeend','<div style="grid-column:1/-1;text-align:center;color:var(--kw-muted);font-size:12px;padding:8px">Показаны первые 12 мест. Уточните город или категорию, чтобы сузить список.</div>')}
+window.updateMapMarkers=function(){baseUpdateMap();renderMapList()};
+window.openPlace=function(id){
+ const result=baseOpen(id),p=findPlace(id);if(!p)return result;const modal=$('modal');if(!modal)return result;
+ const photos=[...new Set((Array.isArray(p.photos)?p.photos:[]).filter(x=>typeof x==='string'&&/^https?:\/\//i.test(x)))].slice(0,10);
+ if(photos.length>1&&!modal.querySelector('.modal-gallery')){const hero=modal.querySelector('.modal-hero img'),body=modal.querySelector('.modal-body'),gallery=document.createElement('div');gallery.className='modal-gallery';gallery.innerHTML=photos.map((url,i)=>'<button type="button" class="'+(i===0?'active':'')+'" aria-label="Фото '+(i+1)+'"><img src="'+esc(url)+'" alt="" loading="lazy"></button>').join('');gallery.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!hero)return;gallery.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));hero.src=b.querySelector('img').src});if(body)modal.insertBefore(gallery,body)}
+ const info=modal.querySelector('.modal-info');
+ if(info&&!info.dataset.priceAdded){const min=Number(p.price_min||0),max=Number(p.price_max||0),avg=Number(p.avg_check||0),label=avg?'Средний чек':(min||max?'Стоимость':''),value=avg?avg.toLocaleString('ru-RU')+' ₽':(min&&max?min.toLocaleString('ru-RU')+'–'+max.toLocaleString('ru-RU')+' ₽':min?'от '+min.toLocaleString('ru-RU')+' ₽':max?'до '+max.toLocaleString('ru-RU')+' ₽':'');if(label&&value){const card=document.createElement('div');card.className='modal-info-card';card.innerHTML='<div class="label">'+label+'</div><div class="value">'+value+'</div>';info.appendChild(card)}info.dataset.priceAdded='1'}
+ const body=modal.querySelector('.modal-body');
+ if(body&&!body.querySelector('.similar-section')){const similar=PLACES.filter(x=>String(x.id)!==String(p.id)&&x.city_key===p.city_key&&x.category===p.category).slice(0,3);if(similar.length){const section=document.createElement('section');section.className='similar-section';section.innerHTML='<h3>Похожие места в этом городе</h3><div class="grid">'+similar.map(placeCardHTML).join('')+'</div>';body.appendChild(section)}}
+ return result;
+};
+document.addEventListener('DOMContentLoaded',()=>{if($('mapList'))renderMapList()});
 })();
 
 </script>
