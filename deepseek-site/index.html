@@ -238,6 +238,84 @@ html[data-theme="dark"] .modal-info-card,html[data-theme="dark"] .route-point,ht
 html[data-theme="dark"] .nav .theme-toggle{background:#202b38;border-color:#3a4858;color:#e7edf4}
 @media(max-width:1100px){.header-cta{grid-column:2;grid-row:1}}
 @media(max-width:640px){.nav .theme-toggle{padding:9px 11px;font-size:12px}.header-cta{display:none!important}}</style>
+<style id="katyusha-design-system">
+
+/* KATYUSHA DESIGN SYSTEM — editorial travel guide */
+:root{--kw-paper:#f6f5ef;--kw-surface:#fff;--kw-ink:#202b29;--kw-muted:#737d76;--kw-line:#e5e6dd;--kw-accent:#b85b43;--kw-accent-dark:#984632;--kw-green:#667c68;--kw-radius:22px;--kw-shadow:0 14px 38px rgba(33,43,38,.075)}
+html{scroll-behavior:smooth;scroll-padding-top:100px}body{background:var(--kw-paper);color:var(--kw-ink);font-size:14px}
+.header{padding:5px 24px;background:rgba(248,247,242,.94);border-bottom:1px solid rgba(32,43,41,.08);box-shadow:0 3px 20px rgba(33,43,38,.035)}
+.header-inner{max-width:1320px;min-height:66px;grid-template-columns:minmax(220px,1fr) auto auto;gap:22px}
+.logo,.logo-image{width:64px;height:64px;flex-basis:64px}.brand-name{font-size:18px;color:var(--kw-ink)}.brand-tagline{color:#8a8174}
+.nav{gap:5px}.nav button{padding:10px 13px;font-size:12px;color:#626e66}.nav button.active{background:#e9eee7;color:#395441}.nav button.active:after{display:none}
+.header-cta{background:var(--kw-ink);box-shadow:none;border-radius:12px;padding:12px 17px}.header-cta:hover{background:#344a3b;box-shadow:none}
+main{max-width:1320px;padding:0 28px 80px}section{margin-bottom:58px}.eyebrow{color:var(--kw-accent);font-size:10px;letter-spacing:.16em;margin-bottom:9px}
+.h1,.h2,.hero-title,.place-title,.empty-title{font-family:'Fraunces',Georgia,serif}.h1{font-size:38px;letter-spacing:-.035em;color:var(--kw-ink)}.h2{font-size:29px;letter-spacing:-.025em;color:var(--kw-ink)}
+.section-head{margin-bottom:20px;align-items:end}.section-subtitle{font-size:13px;color:var(--kw-muted);margin-top:6px}
+.hero{height:450px;margin:22px 0 36px;border-radius:28px;overflow:hidden;box-shadow:0 22px 50px rgba(28,39,34,.12)}.hero img{opacity:.78;filter:saturate(.82)}
+.hero-overlay{background:linear-gradient(90deg,rgba(18,29,26,.82) 0%,rgba(18,29,26,.58) 48%,rgba(18,29,26,.08) 100%),linear-gradient(0deg,rgba(18,29,26,.35),transparent 55%)}
+.hero-content{max-width:none;width:100%;margin:0;padding:52px 6.5%;align-items:flex-start;text-align:left}.hero-content>div:first-child{color:#e7c98d!important;font-size:10px!important;letter-spacing:.19em!important}
+.hero-title{font-size:clamp(42px,5vw,66px);line-height:1.02;max-width:650px;letter-spacing:-.04em;margin-bottom:16px}.hero-sub{font-size:15px;max-width:510px;line-height:1.65;margin-bottom:24px;color:rgba(255,255,255,.84)}
+.hero-search{width:min(650px,100%);padding:6px;border-radius:14px;background:rgba(255,255,255,.97);box-shadow:0 14px 38px rgba(0,0,0,.18)}.hero-search input{background:#f2f2ec;border-radius:10px;padding:13px 16px}.hero-search button{background:var(--kw-accent);border-radius:10px;padding:12px 22px}.hero-search button:hover{background:var(--kw-accent-dark)}
+.discovery-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 54px}.discovery-tile{display:flex;align-items:center;gap:13px;min-width:0;text-align:left;padding:17px 18px;background:#fff;border:1px solid var(--kw-line);border-radius:17px;cursor:pointer;color:var(--kw-ink);font:inherit;transition:transform .2s,border-color .2s,box-shadow .2s}
+.discovery-tile:hover{transform:translateY(-3px);border-color:#c9d3c7;box-shadow:var(--kw-shadow)}.discovery-icon{width:42px;height:42px;flex:0 0 42px;border-radius:13px;background:#edf1e9;color:#48644f;display:grid;place-items:center;font-size:22px}
+.discovery-tile span:nth-child(2){display:grid;gap:3px;min-width:0}.discovery-tile b{font-size:13px;font-weight:700}.discovery-tile small{font-size:11px;color:var(--kw-muted)}.discovery-tile i{font-style:normal;margin-left:auto;color:var(--kw-accent);font-size:18px}
+.home-extra[hidden]{display:none}.text-action{border:0;background:transparent;color:var(--kw-accent);font:600 12px Inter,system-ui,sans-serif;cursor:pointer;padding:8px 0}
+.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.grid-cities{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.city-card{aspect-ratio:16/10;border-radius:18px}.city-card-text{bottom:14px;left:15px;right:15px}.city-card-text .name{font-family:'Fraunces',Georgia,serif;font-size:18px}.city-card-text .count{font-size:11px}
+.city-card-overlay{background:linear-gradient(180deg,rgba(16,24,21,0) 28%,rgba(16,24,21,.76) 100%)}.city-card-rank{top:12px;left:12px;min-width:27px;height:27px;border-radius:9px}
+.place-card{border:1px solid var(--kw-line);border-radius:19px;box-shadow:0 3px 14px rgba(33,43,38,.025);transition:transform .22s,border-color .22s,box-shadow .22s}
+.place-card:hover{transform:translateY(-4px);box-shadow:0 18px 34px rgba(33,43,38,.1);border-color:#d9dfd5}.place-img{aspect-ratio:1.28;background:#e8e8df}.place-img img{transition:transform .55s}.place-card:hover .place-img img{transform:scale(1.035)}
+.place-rating{top:11px;left:11px;padding:5px 9px;border-radius:8px;background:rgba(28,40,34,.82);font-size:11px}.place-fav{top:10px;right:10px;width:35px;height:35px;box-shadow:0 3px 10px rgba(0,0,0,.1)}
+.place-cat{bottom:10px;left:10px;padding:5px 9px;border-radius:8px;font-size:10px}.place-body{padding:14px 15px 15px}.place-title{font-size:17px;line-height:1.18;letter-spacing:-.015em;margin-bottom:6px}
+.place-addr{font-size:11px;color:#778078;margin-bottom:8px}.place-desc{font-size:12px;line-height:1.55;color:#59665e;margin-bottom:12px}.place-foot{padding-top:10px;border-color:#eff0e9}.place-city{font-size:10px;letter-spacing:.04em;color:#899189}.place-more{font-size:12px;color:var(--kw-accent)}
+.filters{gap:10px;margin-bottom:16px}.filters select,.filters input{min-height:43px;border:1px solid var(--kw-line);border-radius:11px;padding:10px 13px;background:#fff;font-size:12px}.filters button{border-radius:11px;background:#e9eee7;color:#3f5544;font-size:12px}
+.chips{gap:7px;margin-bottom:18px}.chip{min-height:36px;padding:7px 11px;border-radius:10px;background:#fff;border-color:var(--kw-line);font-size:11px}.chip.active{background:#344f3c;border-color:#344f3c}
+#map{height:620px;border-radius:22px;border:1px solid var(--kw-line)}.map-tools button{border-radius:10px}.overlay{background:rgba(20,29,25,.68)}.modal{border-radius:24px;box-shadow:0 30px 90px rgba(0,0,0,.28)}.modal-hero{height:330px}.modal-body{padding:27px}.modal-info-card{background:#f1f2eb;border-radius:14px}
+.btn{border-radius:11px;font-size:12px;min-height:42px}.btn-primary{background:var(--kw-accent)}.btn-primary:hover{background:var(--kw-accent-dark)}.btn-ghost{background:#edf0e9;color:#425747}
+.route-builder{padding:22px 24px;margin:0 0 24px;border:1px solid var(--kw-line);border-radius:20px;background:linear-gradient(135deg,#fff 0%,#f0f3ec 100%)}
+.route-builder-head{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:15px}.route-builder h2{font:700 24px Fraunces,Georgia,serif;letter-spacing:-.02em}
+.route-builder h2 span{display:inline-grid;place-items:center;min-width:24px;height:24px;margin-left:5px;padding:0 6px;border-radius:8px;background:#e3eadf;color:#48634e;font:700 11px Inter,sans-serif;vertical-align:middle}
+.route-builder p{font-size:12px;color:var(--kw-muted);margin-top:5px}.route-builder-actions{display:flex;gap:8px;flex-wrap:wrap}.my-route-list{display:grid;gap:8px}
+.route-empty{padding:16px;border:1px dashed #cbd5c8;border-radius:13px;color:var(--kw-muted);font-size:12px}.builder-stop{display:flex;align-items:center;gap:11px;padding:9px 11px;background:#fff;border:1px solid #e8ebe3;border-radius:12px}
+.builder-stop-num{display:grid;place-items:center;width:28px;height:28px;flex:0 0 28px;border-radius:9px;background:#e8eee5;color:#48634e;font-size:12px;font-weight:800}.builder-stop-info{min-width:0;flex:1}
+.builder-stop-info b{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.builder-stop-info small{display:block;margin-top:3px;color:var(--kw-muted);font-size:10px}
+.builder-stop button{border:0;background:#f0f2ec;border-radius:8px;width:30px;height:30px;color:#5e6d61;cursor:pointer}
+.guide-hero{padding:28px 0 20px;max-width:700px}.guide-hero .h1{font-size:46px}.guide-hero p{max-width:610px;margin-top:10px;color:var(--kw-muted);font-size:14px;line-height:1.7}
+.guide-panel{display:grid;grid-template-columns:1.1fr .9fr .9fr 1fr auto;gap:12px;align-items:end;padding:20px;background:#fff;border:1px solid var(--kw-line);border-radius:20px;box-shadow:var(--kw-shadow)}
+.guide-field{display:grid;gap:7px;min-width:0}.guide-field label{font-size:10px;color:#6f7b72;font-weight:700;letter-spacing:.05em}
+.guide-field select,.guide-field input{width:100%;height:44px;border:1px solid var(--kw-line);border-radius:10px;padding:0 11px;background:#f8f8f3;color:var(--kw-ink);font:500 12px Inter,sans-serif;min-width:0}
+.guide-input-wrap{position:relative}.guide-input-wrap input{padding-right:30px}.guide-input-wrap span{position:absolute;right:11px;top:13px;color:var(--kw-muted);font-size:12px}.guide-submit{white-space:nowrap;padding:0 17px}
+.guide-shortcuts{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0 34px}.guide-shortcuts button{border:1px solid var(--kw-line);border-radius:999px;background:#fff;color:#56645a;padding:9px 13px;font:500 11px Inter,sans-serif;cursor:pointer}
+.guide-shortcuts button:hover{border-color:#aab9a8;background:#f1f4ed}.guide-results-section{margin-top:10px}
+html[data-theme="dark"] body{background:#111a18;color:#e8eee8}html[data-theme="dark"] .header{background:rgba(17,26,24,.95);border-color:#2b3932}
+html[data-theme="dark"] .brand-name,html[data-theme="dark"] .h1,html[data-theme="dark"] .h2{color:#f0f3ed}
+html[data-theme="dark"] .discovery-tile,html[data-theme="dark"] .route-builder,html[data-theme="dark"] .guide-panel,html[data-theme="dark"] .builder-stop{background:#1c2924;color:#e8eee8;border-color:#35443b}
+html[data-theme="dark"] .discovery-icon,html[data-theme="dark"] .route-builder h2 span{background:#2a3b31;color:#b9d0b9}
+html[data-theme="dark"] .discovery-tile small,html[data-theme="dark"] .route-builder p,html[data-theme="dark"] .guide-hero p,html[data-theme="dark"] .section-subtitle{color:#a8b5aa}
+html[data-theme="dark"] .guide-field select,html[data-theme="dark"] .guide-field input,html[data-theme="dark"] .guide-shortcuts button{background:#202f28;color:#e8eee8;border-color:#3a4a40}
+html[data-theme="dark"] .builder-stop button{background:#304137;color:#e8eee8}html[data-theme="dark"] .route-empty{border-color:#45594a;color:#a8b5aa}
+html[data-theme="dark"] .place-card{background:#1b2923;border-color:#35443b}html[data-theme="dark"] .place-desc{color:#c1cdc3}
+html[data-theme="dark"] .place-addr,html[data-theme="dark"] .place-city{color:#a7b4a8}
+html[data-theme="dark"] .filters select,html[data-theme="dark"] .filters input,html[data-theme="dark"] .chip{background:#202f28;color:#e8eee8;border-color:#3a4a40}
+html[data-theme="dark"] .filters button,html[data-theme="dark"] .btn-ghost{background:#304137;color:#e8eee8}html[data-theme="dark"] .modal-info-card,html[data-theme="dark"] .route-point,html[data-theme="dark"] .map-chooser{background:#202f28;color:#e8eee8}
+@media(max-width:1080px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.guide-panel{grid-template-columns:repeat(2,minmax(0,1fr))}.guide-submit{min-height:44px}}
+@media(max-width:760px){main{padding:0 17px 95px}.hero{height:420px;margin:15px 0 27px;border-radius:21px}.hero-content{padding:35px 25px}.hero-title{font-size:clamp(37px,8vw,48px)}.hero-sub{font-size:13px}
+.discovery-strip{grid-template-columns:1fr;gap:8px;margin-bottom:38px}.discovery-tile{padding:12px 14px;border-radius:14px}.discovery-icon{width:37px;height:37px;flex-basis:37px}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.grid-cities{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.city-card{aspect-ratio:1.22}.city-card-text .name{font-size:15px}
+.place-img{aspect-ratio:1.12}.place-body{padding:11px}.place-title{font-size:15px}.place-addr{font-size:10px}.place-desc{font-size:11px;-webkit-line-clamp:2}.place-cat{font-size:9px;padding:4px 7px}.place-rating{font-size:10px}
+.section-head{gap:8px}.h2{font-size:24px}.h1{font-size:32px}.route-builder{padding:17px}.route-builder-head{align-items:flex-start;flex-direction:column}
+.guide-panel{grid-template-columns:1fr 1fr;padding:15px;gap:10px}.guide-submit{grid-column:1/-1}.guide-hero .h1{font-size:36px}.guide-hero p{font-size:12px}
+.modal-hero{height:230px}.modal-body{padding:18px}#map{height:530px}}
+@media(max-width:640px){.header{padding:5px 14px 7px}.header-inner{min-height:54px;grid-template-columns:1fr auto;gap:6px}.logo,.logo-image{width:49px;height:49px;flex-basis:49px}
+.brand-name{font-size:15px}.brand-tagline{font-size:7px;margin-top:3px}.nav{position:fixed;z-index:1200;left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom));display:flex;justify-content:flex-start;gap:4px;overflow-x:auto;padding:7px;background:rgba(255,255,255,.94);border:1px solid rgba(35,48,40,.12);border-radius:17px;box-shadow:0 8px 30px rgba(23,35,28,.18);backdrop-filter:blur(18px);scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}.nav button{flex:0 0 auto;padding:9px 11px;font-size:10px;border-radius:10px}.nav button.active{background:#e8eee5;color:#3e5944}.nav .theme-toggle{padding:9px 10px}.nav .theme-toggle #themeLabel{display:none}
+.header-cta{display:none!important}body{padding-bottom:75px}.filters{display:grid;grid-template-columns:1fr 1fr}.filters input{grid-column:1/-1;min-width:0}.filters button{min-height:42px}
+.chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chip{flex:0 0 auto}.modal-info{grid-template-columns:1fr 1fr}.modal-actions .btn{min-width:0;flex:1 1 42%}.text-action{font-size:10px}
+.guide-panel{grid-template-columns:1fr 1fr}.guide-field:first-child,.guide-field:nth-child(4){grid-column:1/-1}}
+@media(max-width:390px){.grid{grid-template-columns:1fr 1fr;gap:8px}.place-body{padding:9px}.place-title{font-size:14px}.place-foot{padding-top:8px}.place-more{font-size:10px}.city-card-text .name{font-size:14px}.guide-panel{grid-template-columns:1fr}.guide-field:first-child,.guide-field:nth-child(4){grid-column:auto}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+</style>
 </head>
 <body><script>(function(){try{if(localStorage.getItem("kw-theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}})();</script>
 
@@ -275,7 +353,21 @@ html[data-theme="dark"] .nav .theme-toggle{background:#202b38;border-color:#3a48
       </div>
     </div>
     
-    <section>
+    
+    <section class="discovery-strip" aria-label="Быстрые действия">
+      <button class="discovery-tile" type="button" onclick="nav('guide')"><span class="discovery-icon">✦</span><span><b>Подобрать прогулку</b><small>По городу, времени и бюджету</small></span><i>↗</i></button>
+      <button class="discovery-tile" type="button" onclick="findNearby()"><span class="discovery-icon">⌖</span><span><b>Места рядом</b><small>Что интересного поблизости</small></span><i>↗</i></button>
+      <button class="discovery-tile" type="button" onclick="nav('routes')"><span class="discovery-icon">⌁</span><span><b>Свой маршрут</b><small>Собери места в одну прогулку</small></span><i>↗</i></button>
+    </section>
+    <section id="nearbySection" class="home-extra" hidden>
+      <div class="section-head"><div><div class="eyebrow">Вокруг вас</div><h2 class="h2">Места рядом</h2><p class="section-subtitle" id="nearbyCaption">Ближайшие интересные места</p></div><button class="text-action" type="button" onclick="findNearby()">Обновить ↗</button></div>
+      <div id="nearbyGrid" class="grid"></div>
+    </section>
+    <section id="recentSection" class="home-extra" hidden>
+      <div class="section-head"><div><div class="eyebrow">Продолжить знакомство</div><h2 class="h2">Вы недавно смотрели</h2></div><button class="text-action" type="button" onclick="clearRecent()">Очистить ↗</button></div>
+      <div id="recentGrid" class="grid"></div>
+    </section>
+<section>
       <div class="section-head">
         <div>
           <div class="eyebrow">Направления</div>
@@ -298,6 +390,20 @@ html[data-theme="dark"] .nav .theme-toggle{background:#202b38;border-color:#3a48
     </section>
   </div>
   
+
+  <div id="view-guide" class="hide" style="padding-top:32px">
+    <div class="guide-hero"><div class="eyebrow">Помощник Катюша</div><h1 class="h1">Куда отправимся?</h1><p>Подберём интересные места под ваш город, свободное время и бюджет. Рекомендации строятся по реальным данным каталога.</p></div>
+    <div class="guide-panel">
+      <div class="guide-field"><label for="guideCity">Город</label><select id="guideCity"><option value="all">Любой город</option></select></div>
+      <div class="guide-field"><label for="guideBudget">Бюджет на человека</label><div class="guide-input-wrap"><input id="guideBudget" type="number" min="0" step="500" value="5000"><span>₽</span></div></div>
+      <div class="guide-field"><label for="guideDuration">Сколько времени</label><select id="guideDuration"><option value="2">Около 2 часов</option><option value="4" selected>Полдня · 4 часа</option><option value="6">Весь день · 6 часов</option></select></div>
+      <div class="guide-field"><label for="guideCategory">Что интересно</label><select id="guideCategory"><option value="all">Любые места</option></select></div>
+      <button class="btn btn-primary guide-submit" type="button" onclick="generateGuide()">Подобрать места ↗</button>
+    </div>
+    <div class="guide-shortcuts"><button type="button" onclick="setGuideMood('nature')">🌿 Больше природы</button><button type="button" onclick="setGuideMood('food')">☕ Кафе и рестораны</button><button type="button" onclick="setGuideMood('culture')">🏛️ Культура и история</button><button type="button" onclick="setGuideMood('active')">🎯 Активный отдых</button></div>
+    <section class="guide-results-section"><div class="section-head"><div><div class="eyebrow">Ваш вариант</div><h2 class="h2">Идеи для прогулки</h2><p class="section-subtitle" id="guideCaption">Укажите параметры и нажмите «Подобрать места»</p></div><button class="text-action" type="button" onclick="createWeekendRoute()">Маршрут на выходные ↗</button></div><div id="guideResults" class="grid"></div></section>
+  </div>
+
   <!-- CATALOG -->
   <div id="view-catalog" class="hide" style="padding-top:32px">
     <div style="margin-bottom:24px">
@@ -348,6 +454,12 @@ html[data-theme="dark"] .nav .theme-toggle{background:#202b38;border-color:#3a48
       <div class="eyebrow">Прогулки</div>
       <h1 class="h1">Готовые маршруты</h1>
     </div>
+
+    <div class="route-builder">
+      <div class="route-builder-head"><div><div class="eyebrow">Ваш план</div><h2>Мой маршрут <span id="myRouteCount">0</span></h2><p>Сохраняйте места из карточек — они останутся в этом браузере.</p></div><div class="route-builder-actions"><button class="btn btn-ghost" type="button" onclick="clearMyRoute()">Очистить</button><button class="btn btn-primary" type="button" onclick="openMyRouteMap()">Проложить путь ↗</button></div></div>
+      <div id="myRouteList" class="my-route-list"><div class="route-empty">Добавьте первое место из его карточки — здесь появится ваш план прогулки.</div></div>
+    </div>
+
     <div id="routesGrid" class="grid"></div>
   </div>
   
@@ -615,5 +727,54 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 </script>
 <script>function applyTheme(t){const d=t==="dark";document.documentElement.dataset.theme=d?"dark":"light";try{localStorage.setItem("kw-theme",d?"dark":"light")}catch(e){}const i=document.getElementById("themeIcon"),l=document.getElementById("themeLabel");if(i)i.textContent=d?"☀️":"🌙";if(l)l.textContent=d?"Светлая тема":"Тёмная тема";const m=document.querySelector("meta[name=theme-color]");if(m)m.content=d?"#111821":"#faf7f2"}function toggleTheme(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")}document.addEventListener("DOMContentLoaded",()=>applyTheme(document.documentElement.dataset.theme==="dark"?"dark":"light"));</script>
+<script id="katyusha-product-improvements">
+
+/* Product improvements: personal route, recent places, nearby discovery and city-aware map filters. */
+(function(){
+let recent=[],myRoute=[];
+try{recent=JSON.parse(localStorage.getItem('kwk_recent')||'[]').map(String).slice(0,8)}catch(e){}
+try{myRoute=JSON.parse(localStorage.getItem('kwk_my_route')||'[]').map(String).slice(0,12)}catch(e){}
+const oldNav=window.nav,oldOpen=window.openPlace,oldPopulate=window.populateFilters,oldRenderRoutes=window.renderRoutes;
+const saveRecent=()=>{try{localStorage.setItem('kwk_recent',JSON.stringify(recent))}catch(e){}};
+const saveRoute=()=>{try{localStorage.setItem('kwk_my_route',JSON.stringify(myRoute))}catch(e){}};
+function fillGuide(){
+const c=$('guideCity'),k=$('guideCategory');if(c){const old=c.value||'all';c.innerHTML='<option value="all">Любой город</option>'+CITIES.slice().sort((a,b)=>a.name.localeCompare(b.name,'ru')).map(x=>'<option value="'+esc(x.key)+'">'+esc(x.name)+(x.country?' · '+esc(x.country):'')+'</option>').join('');c.value=[...c.options].some(o=>o.value===old)?old:'all'}
+if(k){const old=k.value||'all',used=[...new Set(PLACES.map(p=>p.category))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru'));k.innerHTML='<option value="all">Любые места</option>'+used.map(x=>'<option value="'+esc(x)+'">'+esc(categoryName(x))+'</option>').join('');k.value=[...k.options].some(o=>o.value===old)?old:'all'}
+}
+function syncMapCats(preserve){
+const el=$('mapCatFilter');if(!el)return;const city=$('mapCityFilter')?.value||'all',old=preserve?el.value:'all';
+const used=[...new Set(PLACES.filter(p=>city==='all'||p.city_key===city).map(p=>p.category))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru'));
+el.innerHTML='<option value="all">Все категории</option>'+used.map(x=>'<option value="'+esc(x)+'">'+esc(categoryName(x))+'</option>').join('');el.value=used.includes(old)?old:'all';
+}
+window.renderNav=function(){
+const items=[['home','Главная'],['catalog','Каталог'],['map','Карта'],['routes','Маршруты'],['collections','Подборки'],['guide','Подбор'],['favorites','♥ Избранное']];
+$('nav').innerHTML=items.map(([v,label])=>'<button type="button" onclick="nav(\''+v+'\')" class="nav-btn'+(state.view===v?' active':'')+'">'+label+(v==='favorites'?' <span class="badge" id="favBadge">'+favorites.length+'</span>':'')+'</button>').join('')+'<button class="nav-btn theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="Переключить тему"><span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная тема</span></button>';
+};
+window.nav=function(view){if(view==='guide'){state.view='guide';['home','catalog','map','routes','collections','favorites','guide'].forEach(v=>$('view-'+v)?.classList.toggle('hide',v!=='guide'));renderNav();fillGuide();window.scrollTo({top:0,behavior:'smooth'});return}$('view-guide')?.classList.add('hide');oldNav(view)};
+window.populateFilters=function(){oldPopulate();syncMapCats(false);fillGuide()};
+window.onMapFilters=function(){const city=$('mapCityFilter').value||'all';syncMapCats(true);state.mapCity=city;state.mapCat=$('mapCatFilter').value||'all';state.mapSearch=$('mapSearchFilter').value||'';state.city=city;state.cat=state.mapCat;state.search=state.mapSearch;$('cityFilter').value=city;$('searchInput').value=state.search;renderChips();renderCatalog();if(state.view==='map')updateMapMarkers()};
+window.onCity=function(v){state.city=v;state.mapCity=v;state.cat='all';state.mapCat='all';$('mapCityFilter').value=v;syncMapCats(false);$('mapCatFilter').value='all';renderCatalog();if(state.view==='map')updateMapMarkers()};
+window.openHomeCity=function(){const v=$('homeCity').value.trim();if(!v||v==='Все города'){openCity('all');return}const q=v.toLocaleLowerCase('ru');const city=CITIES.find(x=>x.name.toLocaleLowerCase('ru')===q||(x.name+(x.country?' · '+x.country:'')).toLocaleLowerCase('ru')===q||x.name.toLocaleLowerCase('ru').startsWith(q));if(city){openCity(city.key);return}state.city='all';state.cat='all';state.search=v;$('cityFilter').value='all';$('searchInput').value=v;renderChips();nav('catalog')};
+window.renderHomePlaces=function(){const list=PLACES.slice().sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0)).slice(0,8);$('homePlaces').innerHTML=list.map(placeCardHTML).join('');renderRecent()};
+function renderRecent(){const ids=recent.filter(id=>findPlace(id)).slice(0,6);const sec=$('recentSection');if(!sec)return;sec.hidden=!ids.length;$('recentGrid').innerHTML=ids.map(id=>placeCardHTML(findPlace(id))).join('')}
+window.clearRecent=function(){recent=[];saveRecent();renderRecent();toast('История просмотров очищена')};
+window.openPlace=function(id){id=String(id);recent=[id,...recent.filter(x=>x!==id)].slice(0,8);saveRecent();renderRecent();const out=oldOpen(id);const actions=$('modal')?.querySelector('.modal-actions');if(actions&&!actions.querySelector('[data-route-add]')){const b=document.createElement('button');b.type='button';b.className='btn btn-ghost';b.dataset.routeAdd='1';b.textContent=myRoute.includes(id)?'✓ В моём маршруте':'+ В мой маршрут';b.addEventListener('click',()=>{addToRoute(id);b.textContent='✓ В моём маршруте'});actions.insertBefore(b,actions.children[1]||null)}return out};
+function addToRoute(id){id=String(id);const p=findPlace(id);if(!p)return;if(myRoute.includes(id)){toast('Это место уже есть в маршруте');return}if(myRoute.length>=12){toast('В маршруте может быть не больше 12 мест');return}const first=myRoute.length?findPlace(myRoute[0]):null;if(first&&first.city_key!==p.city_key){toast('В одном маршруте пока можно объединять места только одного города');return}myRoute.push(id);saveRoute();renderMyRoute();toast('Добавлено в ваш маршрут')}
+window.addToMyRoute=addToRoute;
+window.removeFromMyRoute=function(id){myRoute=myRoute.filter(x=>x!==String(id));saveRoute();renderMyRoute()};
+window.moveMyRoute=function(id,delta){const i=myRoute.indexOf(String(id)),j=i+delta;if(i<0||j<0||j>=myRoute.length)return;[myRoute[i],myRoute[j]]=[myRoute[j],myRoute[i]];saveRoute();renderMyRoute()};
+window.clearMyRoute=function(){myRoute=[];saveRoute();renderMyRoute();toast('Маршрут очищен')};
+function renderMyRoute(){const list=$('myRouteList'),count=$('myRouteCount');if(!list)return;const pts=myRoute.map(findPlace).filter(Boolean);if(count)count.textContent=String(pts.length);list.innerHTML=pts.length?pts.map((p,i)=>'<div class="builder-stop"><span class="builder-stop-num">'+(i+1)+'</span><div class="builder-stop-info"><b>'+esc(p.title)+'</b><small>'+esc(p.address||p.city)+'</small></div><button type="button" aria-label="Выше" onclick="moveMyRoute(\''+p.id+'\',-1)">↑</button><button type="button" aria-label="Ниже" onclick="moveMyRoute(\''+p.id+'\',1)">↓</button><button type="button" aria-label="Удалить" onclick="removeFromMyRoute(\''+p.id+'\')">×</button></div>').join(''):'<div class="route-empty">Добавьте первое место из его карточки — здесь появится ваш план прогулки.</div>'}
+window.renderRoutes=function(){oldRenderRoutes();renderMyRoute()};
+window.openMyRouteMap=function(){const pts=myRoute.map(findPlace).filter(p=>p&&hasMapCoords(p)&&!p.is_approx);if(pts.length<2){toast('Добавьте минимум два места с точными координатами');return}const q=pts.map(p=>p.latitude+','+p.longitude);const url='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(q[0])+'&destination='+encodeURIComponent(q[q.length-1])+(q.length>2?'&waypoints='+encodeURIComponent(q.slice(1,-1).join('|')):'')+'&travelmode=walking';window.open(url,'_blank','noopener')};
+function distance(a,b,c,d){const r=x=>x*Math.PI/180,dl=r(c-a),dn=r(d-b),x=Math.sin(dl/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dn/2)**2;return 6371*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
+window.findNearby=function(){if(!navigator.geolocation){toast('Геолокация недоступна');return}toast('Определяем местоположение…');navigator.geolocation.getCurrentPosition(({coords})=>{const near=PLACES.filter(p=>hasMapCoords(p)&&!p.is_approx).map(p=>({...p,_km:distance(coords.latitude,coords.longitude,p.latitude,p.longitude)})).sort((a,b)=>a._km-b._km).slice(0,8);$('nearbySection').hidden=false;$('nearbyCaption').textContent='Ближайшие места по расстоянию от вашей геопозиции';$('nearbyGrid').innerHTML=near.map(p=>placeCardHTML({...p,description:(p._km<1?Math.round(p._km*1000)+' м от вас':p._km.toFixed(1)+' км от вас')+(p.description?' · '+p.description:'')})).join('');$('nearbySection').scrollIntoView({behavior:'smooth',block:'start'});toast('Нашли '+near.length+' мест поблизости')},()=>toast('Разрешите доступ к геолокации в браузере'),{enableHighAccuracy:false,timeout:10000,maximumAge:300000})};
+window.generateGuide=function(){const city=$('guideCity').value||'all',budget=Math.max(0,Number($('guideBudget').value||0)),dur=Number($('guideDuration').value||4),cat=$('guideCategory').value||'all';let list=PLACES.filter(p=>(city==='all'||p.city_key===city)&&(cat==='all'||p.category===cat));const cost=p=>Number(p.avg_check||p.price_min||p.price_max||0);if(budget>0)list=list.filter(p=>!cost(p)||cost(p)<=budget);list.sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));list=list.slice(0,dur===2?4:dur===4?6:8);$('guideCaption').textContent=list.length?'Подобрали '+list.length+' вариантов'+(budget?' в пределах '+budget.toLocaleString('ru-RU')+' ₽ по известным ценам':'')+'.':'По этим параметрам пока ничего не нашлось.';$('guideResults').innerHTML=list.length?list.map(placeCardHTML).join(''):'<div class="empty" style="grid-column:1/-1"><div class="empty-title">Попробуем иначе?</div><div class="empty-text">Увеличьте бюджет или выберите другой город.</div></div>'};
+window.setGuideMood=function(m){const groups={nature:['park','nature','garden','sea','beach','embankment','trips','resort'],food:['cafe','coffee','restaurant','bakery','fastfood'],culture:['museum','historic','monument','theatre','cultural_space','attraction'],active:['gaming','karting','aquapark','entertainment','vr','quest']};const keys=groups[m]||[];const found=keys.find(k=>[...$('guideCategory').options].some(o=>o.value===k));$('guideCategory').value=found||'all';generateGuide()};
+window.createWeekendRoute=function(){const city=$('guideCity').value||'all';if(city==='all'){toast('Сначала выберите город');return}const pts=PLACES.filter(p=>p.city_key===city&&hasMapCoords(p)&&!p.is_approx).sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0)).slice(0,6);if(pts.length<2){toast('Недостаточно мест с точными координатами');return}myRoute=pts.map(p=>p.id);saveRoute();nav('routes');renderMyRoute();toast('Маршрут на выходные собран: '+pts.length+' мест')};
+document.addEventListener('DOMContentLoaded',()=>{fillGuide();syncMapCats(false);renderRecent();renderMyRoute();const mc=$('mapCityFilter');if(mc)mc.addEventListener('change',()=>syncMapCats(false));try{history.scrollRestoration='manual'}catch(e){}if(!location.hash)window.scrollTo(0,0)});
+})();
+
+</script>
 </body>
 </html>
