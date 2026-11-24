@@ -477,7 +477,46 @@ function openMapChooser(id){
 function showOnMap(id){const p=findPlace(id);if(!p)return;state.city=p.city_key;state.mapCity=p.city_key;state.cat='all';state.mapCat='all';state.search='';state.mapSearch='';$('cityFilter').value=p.city_key;$('mapCityFilter').value=p.city_key;$('mapCatFilter').value='all';$('mapSearchFilter').value='';$('searchInput').value='';nav('map');}
 function renderRoutes(){$('routesGrid').innerHTML=ROUTES.length?ROUTES.map(r=>`<article class="place-card" onclick="openRoute('${r.id}')"><div class="place-img"><img src="${esc(photo(findPlace(r.points[0])))}" alt="" loading="lazy"><div class="place-rating">🗺️ Маршрут</div><div class="place-cat">${r.points.length} точек</div></div><div class="place-body"><h3 class="place-title">${esc(r.name)}</h3><div class="place-addr">📍 ${esc(r.city)}</div><p class="place-desc">${esc(r.desc)}</p><div class="place-foot"><span class="place-city">${r.points.length} мест</span><span class="place-more">Открыть →</span></div></div></article>`).join(''):'<div class="empty">Маршруты пока не сформированы.</div>';}
 function renderCollections(){$('collectionsGrid').innerHTML=COLLECTIONS.map(c=>`<article class="place-card" onclick="openCollection('${c.id}')"><div class="place-img"><img src="${esc(photo(findPlace(c.places[0])))}" alt="" loading="lazy"><div class="place-cat">${c.icon} Подборка</div></div><div class="place-body"><h3 class="place-title">${esc(c.name)}</h3><p class="place-desc">${esc(c.desc)}</p><div class="place-foot"><span class="place-city">${c.places.length} мест</span><span class="place-more">Смотреть →</span></div></div></article>`).join('');}
-function openRoute(id){const r=ROUTES.find(x=>x.id===id);if(!r)return;const pts=r.points.map(findPlace).filter(p=>p&&p.latitude!==null&&p.longitude!==null);$('modal').innerHTML=`<div class="modal-hero"><img src="${esc(photo(pts[0]))}" alt=""><div class="modal-hero-overlay"></div><button class="modal-close" onclick="closeModal()">✕</button><div class="modal-title"><div class="modal-badges"><span class="modal-badge modal-badge-editor">Маршрут</span></div><h2>${esc(r.name)}</h2><p>${esc(r.city)}</p></div></div><div class="modal-body"><p>${esc(r.desc)}</p><div id="routeMap" style="height:360px;margin:20px 0;border-radius:14px"></div>${pts.map((p,i)=>`<button class="route-point" onclick="openPlace('${esc(p.id)}')"><span class="route-point-num">${i+1}</span><img class="route-point-img" src="${esc(photo(p))}" alt=""><span class="route-point-info"><b>${esc(p.title)}</b><small>${esc(p.address)}</small></span></button>`).join('')}</div>`;$('overlay').classList.add('open');document.body.style.overflow='hidden';setTimeout(()=>{if(!pts.length)return;routeMapInst=L.map('routeMap').setView([pts[0].latitude,pts[0].longitude],13);L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(routeMapInst);const coords=pts.map(p=>[p.latitude,p.longitude]);L.polyline(coords,{color:'#c75d45',weight:4}).addTo(routeMapInst);pts.forEach((p,i)=>L.marker(coords[i]).addTo(routeMapInst).bindPopup(`${i+1}. ${p.title}`));routeMapInst.fitBounds(L.latLngBounds(coords).pad(.2));},100);}
+async function openRoute(id){
+ const r=ROUTES.find(x=>String(x.id)===String(id));if(!r)return;
+ const allPts=r.points.map(findPlace).filter(Boolean);
+ const exactPts=allPts.filter(p=>!p.is_approx&&p.latitude!==null&&p.longitude!==null&&Number.isFinite(Number(p.latitude))&&Number.isFinite(Number(p.longitude)));
+ $('modal').innerHTML=`<div class="modal-hero"><img src="${esc(photo(allPts[0]))}" alt=""><div class="modal-hero-overlay"></div><button class="modal-close" onclick="closeModal()">✕</button><div class="modal-title"><div class="modal-badges"><span class="modal-badge modal-badge-editor">Маршрут</span></div><h2>${esc(r.name)}</h2><p>${esc(r.city)}</p></div></div><div class="modal-body"><p>${esc(r.desc)}</p><div id="routeMap" style="height:390px;margin:20px 0;border-radius:14px;overflow:hidden"></div><div id="routeMapNote" class="muted" style="margin:0 0 12px"></div>${allPts.map((p,i)=>`<button class="route-point" onclick="openPlace('${esc(p.id)}')"><span class="route-point-num">${i+1}</span><img class="route-point-img" src="${esc(photo(p))}" alt=""><span class="route-point-info"><b>${esc(p.title)}</b><small>${esc(p.address||p.city)}</small></span></button>`).join('')}</div>`;
+ $('overlay').classList.add('open');document.body.style.overflow='hidden';
+ setTimeout(async()=>{
+  const el=$('routeMap');if(!el||!allPts.length)return;
+  routeMapInst=L.map(el,{zoomControl:false,attributionControl:true,scrollWheelZoom:false}).setView([40.4,49.87],10);
+  L.control.zoom({position:'topleft'}).addTo(routeMapInst);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(routeMapInst);
+  const routeLayer=L.layerGroup().addTo(routeMapInst);
+  const coords=exactPts.map(p=>[Number(p.latitude),Number(p.longitude)]);
+  exactPts.forEach((p,i)=>{
+   const marker=L.marker(coords[i],{title:p.title,icon:L.divIcon({className:'route-stop-pin',html:'<span style="display:flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:50%;background:#c75d45;border:3px solid #fff;box-shadow:0 2px 9px #0003;color:#fff;font-size:14px;font-weight:800">'+(allPts.indexOf(p)+1)+'</span>',iconSize:[34,34],iconAnchor:[17,17]})}).addTo(routeMapInst);
+   marker.bindPopup('<b>'+(allPts.indexOf(p)+1)+'. '+esc(p.title)+'</b><br>'+esc(p.address||p.city));
+  });
+  if(coords.length>=2){
+   try{
+    if(exactPts.some(p=>p.is_approx))throw new Error('approximate coordinates');
+    const routeCoords=exactPts.map(p=>Number(p.longitude)+','+Number(p.latitude)).join(';');
+    const response=await fetch('https://router.project-osrm.org/route/v1/driving/'+routeCoords+'?overview=full&geometries=geojson');
+    if(!response.ok)throw new Error('OSRM '+response.status);
+    const data=await response.json();const line=data.routes?.[0]?.geometry?.coordinates;
+    if(!line?.length)throw new Error('No road route');
+    L.polyline(line.map(([lon,lat])=>[lat,lon]),{color:'#D8365C',weight:5,opacity:.92,lineCap:'round'}).addTo(routeLayer);
+    const km=data.routes[0].distance/1000,mins=Math.round(data.routes[0].duration/60);
+    const duration=mins<60?mins+' мин':Math.floor(mins/60)+' ч '+String(mins%60).padStart(2,'0')+' мин';
+    $('routeMapNote').textContent='По дорогам: '+(km<10?km.toFixed(1):Math.round(km))+' км · '+duration;
+    routeMapInst.fitBounds(L.latLngBounds(line.map(([lon,lat])=>[lat,lon])).pad(.12));
+   }catch(err){
+    L.polyline(coords,{color:'#D8365C',weight:4,opacity:.9,dashArray:'8 8',lineCap:'round'}).addTo(routeLayer);
+    routeMapInst.fitBounds(L.latLngBounds(coords).pad(.18));
+    $('routeMapNote').textContent='Не удалось получить дорожный трек. Показана схема между точками; точные остановки отмечены на карте.';
+   }
+  }else if(coords.length===1){routeMapInst.setView(coords[0],14);$('routeMapNote').textContent='На карте отмечена единственная остановка с точными координатами.';}
+  else{$('routeMapNote').textContent='У остановок пока нет подтверждённых координат.';}
+  setTimeout(()=>routeMapInst?.invalidateSize(),120);
+ },120);
+}
 function openCollection(id){const c=COLLECTIONS.find(x=>x.id===id);if(!c)return;const list=c.places.map(findPlace).filter(Boolean);$('modal').innerHTML=`<div style="padding:32px;background:linear-gradient(135deg,#c75d45,#a84a37);color:#fff;position:relative"><button class="modal-close" onclick="closeModal()">✕</button><div style="font-size:42px">${c.icon}</div><div class="eyebrow" style="color:#ffe4d6">Подборка</div><h2>${esc(c.name)}</h2><p>${list.length} мест</p></div><div style="padding:24px"><div class="grid">${list.map(placeCardHTML).join('')}</div></div>`;$('overlay').classList.add('open');document.body.style.overflow='hidden';}
 function pluralCities(){return CITIES.length;}
 async function init(){try{const cats=await loadPlaces();populateFilters();renderNav();renderHomeCities();renderHomePlaces();renderChips();$('homeCity').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();openHomeCity();}});$('homeCity').addEventListener('change',()=>{const v=$('homeCity').value.trim();if(!v||v==='Все города')openCity('all');else{const q=v.toLocaleLowerCase('ru');const c=CITIES.find(x=>x.name.toLocaleLowerCase('ru')===q||`${x.name}${x.country?' · '+x.country:''}`.toLocaleLowerCase('ru')===q);if(c)openCity(c.key);}});$('errorBanner').classList.remove('show');const hero=$('view-home').querySelector('.hero img');if(hero&&PLACES[0])hero.src=photo(PLACES[0]);$('view-home').querySelector('.hero-sub').textContent=`${PLACES.length} мест · ${CITIES.length} городов · маршруты и подборки`;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal();});console.info(`Новый сайт DeepSeek: ${PLACES.length} записей прочитано из Supabase`);}catch(err){console.error(err);$('errorBanner').textContent='Не удалось загрузить каталог из основной базы: '+err.message;$('errorBanner').classList.add('show');$('homeCities').innerHTML='<div class="empty">Проверьте подключение к базе данных.</div>';}}
