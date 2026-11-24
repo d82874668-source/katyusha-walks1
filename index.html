@@ -316,6 +316,12 @@
       <div class="sec__head"><h2 id="h-fav">Избранное <span class="count" id="favCount">0</span></h2><p class="muted" id="favStatus"></p></div>
       <div class="grid grid--fav" id="favGrid"></div>
       <div id="favRoutes"></div>
+      <div class="sec__head sec__head--compact"><h3>Мои подборки</h3></div>
+      <form id="customCollectionForm" class="custom-collection-form">
+        <label class="field"><span>Название новой подборки</span><input id="customCollectionName" type="text" maxlength="60" placeholder="Например, романтический вечер"></label>
+        <button class="btn btn--primary" type="submit">Сохранить избранное в подборку</button>
+      </form>
+      <div class="grid grid--cols" id="customCollections"></div>
       <div class="sec__head sec__head--compact"><h3>Недавно просмотренные</h3><button class="btn btn--sm btn--ghost" id="historyClear" type="button">Очистить историю</button></div>
       <div class="grid grid--fav" id="historyGrid"></div>
     </div>
