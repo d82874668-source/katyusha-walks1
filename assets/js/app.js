@@ -391,7 +391,6 @@ function renderVenues() {
   // Не засоряем интерфейс нулевыми категориями: показываем только то,
   // что действительно доступно в выбранном городе. Данные при этом не скрываются.
   const groups = VENUE_GROUPS
-    .filter((g) => g.key !== "aquapark")
     .map((g) => [g, inCity.filter((p) => g.cats.includes(p.category)).length])
     .filter(([, count]) => count > 0);
   $("#venueGroups").innerHTML = [`<button class="chip" role="tab" aria-selected="${state.venueGroup === "all"}" data-vgroup="all">Все <small>${inCity.length}</small></button>`,
