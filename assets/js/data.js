@@ -718,7 +718,7 @@ export const PLACES = [
   "category": "gaming",
   "latitude": 40.403509,
   "longitude": 49.871897,
-  "image": "https://milligamingarena.az/storage/content-pages/s76LhuY3KUquLj1NHlLBInsOB01nmvycdBdE2fs0.jpg",
+  "image": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9ThYXoEb2wKmmZRLMeHQUU1TZRjHGQnbSyhboPLpl4MxZtWqZbqAwuHXC7GFK63c2Hx8OcCOXrTJ_9WILmspKom7GZ7qP7i_Uymj2ArG-Hfwwr__l9B21aIM_ndztiuNPzZ6y4T=s1360-w1360-h1020-rw",
   "rating": null,
   "is_approx": false,
   "region": "Азербайджан",
