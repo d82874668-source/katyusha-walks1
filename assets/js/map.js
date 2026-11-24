@@ -92,6 +92,7 @@ export class MapView {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(this.map);
     this.routeLayer = L.layerGroup().addTo(this.map);
+    this.emptyNotice = null;
     // Колесо мыши масштабирует только после клика по карте: страница не «залипает» при скролле.
     this.map.on("focus", () => this.map.scrollWheelZoom.enable());
     this.map.on("blur", () => this.map.scrollWheelZoom.disable());
@@ -105,6 +106,18 @@ export class MapView {
     const exactPlaces = places.filter((p) =>
       !p.is_approx && hasExactCoordinates(p)
     );
+    if (!exactPlaces.length) {
+      if (!this.emptyNotice) {
+        this.emptyNotice = document.createElement("div");
+        this.emptyNotice.className = "map-empty";
+        this.emptyNotice.setAttribute("role", "status");
+        this.emptyNotice.textContent = "Для выбранных мест пока нет точных координат. Они остаются в списке — адреса уточняются.";
+        this.map.getContainer().append(this.emptyNotice);
+      }
+    } else if (this.emptyNotice) {
+      this.emptyNotice.remove();
+      this.emptyNotice = null;
+    }
     exactPlaces.forEach((p, idx) => {
       const c = CATEGORIES[p.category] || { icon: "pin", hue: 340 };
       const m = L.marker([p.latitude, p.longitude], {
