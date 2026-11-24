@@ -255,3 +255,5 @@ html[data-theme="dark"] .theme-collection-card{background:#1b2923;border-color:#
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+/* Image credits and accessible gallery controls */
+.photo-credit{padding:0 22px 12px;background:#fff;color:#7a847c;font:10px/1.5 Inter,system-ui,sans-serif}.photo-credit-inner{display:flex;flex-wrap:wrap;gap:4px;align-items:center}.photo-credit a{color:var(--kw-accent);text-decoration:underline;text-underline-offset:2px}.modal-gallery button:focus-visible{outline:3px solid rgba(184,91,67,.5);outline-offset:2px}html[data-theme="dark"] .photo-credit{background:#1b2923;color:#a7b4a8}
