@@ -309,6 +309,7 @@ const cityAliases = {
 // Страна — верхний уровень каталога. Города остаются внутри страны, а не превращаются в отдельные регионы.
 const countryOf = (place) => place.country || (/Грузия|Тбилиси|Батуми/i.test(`${place.region || ""} ${place.city || ""}`) ? "Грузия" : /Азербайджан|Баку|Гянджа|Шеки|Габала|Губа|Гусар/i.test(`${place.region || ""} ${place.city || ""}`) ? "Азербайджан" : /Казахстан|Алматы/i.test(`${place.region || ""} ${place.city || ""}`) ? "Казахстан" : "Россия");
 let discoverCountry = "all";
+let venueCountry = "all";
 const countryChips = (list, active) => [
   `<button class="chip" role="tab" aria-selected="${active === "all"}" data-country="all">Все страны <small>${list.reduce((n, x) => n + x[1], 0)}</small></button>`,
   ...list.map(([name, count]) => `<button class="chip" role="tab" aria-selected="${name === active}" data-country="${esc(name)}">${esc(name)} <small>${count}</small></button>`)
@@ -317,8 +318,9 @@ const citySearchText = (value) => String(value || "").toLocaleLowerCase("ru").re
 const cityChips = (list, active, query = "") => {
   const q = citySearchText(query);
   const filtered = q ? list.filter(([city]) => citySearchText(`${city} ${cityAliases[city] || ""}`).includes(q)) : list;
+  const allButton = !q ? `<button class="chip" role="tab" aria-selected="${active === "all"}" data-city="all">Все города <small>${list.reduce((sum, [, count]) => sum + count, 0)}</small></button>` : "";
   return filtered.length
-    ? filtered.map(([c, n]) => `<button class="chip" role="tab" aria-selected="${c === active}" data-city="${esc(c)}">${esc(c)} <small>${n}</small></button>`).join("")
+    ? allButton + filtered.map(([c, n]) => `<button class="chip" role="tab" aria-selected="${c === active}" data-city="${esc(c)}">${esc(c)} <small>${n}</small></button>`).join("")
     : `<p class="city-empty">Город не найден. Попробуйте другое название.</p>`;
 };
 let discoverCityQuery = "";
@@ -336,9 +338,9 @@ function renderDiscover() {
   const cityCounts = new Map();
   countrySights.forEach((p) => p.city && cityCounts.set(p.city, (cityCounts.get(p.city) || 0) + 1));
   const cities = [...cityCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
-  if (!cities.some(([city]) => city === state.city)) state.city = cities[0]?.[0] || "";
+  if (state.city !== "all" && !cities.some(([city]) => city === state.city)) state.city = "all";
   $("#discoverCities").innerHTML = cityChips(cities, state.city, discoverCityQuery);
-  const items = countrySights.filter((p) => p.city === state.city).sort(byQuality);
+  const items = countrySights.filter((p) => state.city === "all" || p.city === state.city).sort(byQuality);
   $("#discoverGrid").innerHTML = items.length
     ? items.map((p, i) => placeCard(p, favBtn, { large: i < 2 && items.length > 3 })).join("")
     : `<div class="card empty"><p>Для выбранной страны и города достопримечательностей пока нет в каталоге.</p></div>`;
@@ -346,10 +348,19 @@ function renderDiscover() {
 }
 
 function renderVenues() {
-  const cities = citiesFor((p) => kindOf(p) === "venue" && p.category !== "aquapark");
-  if (!cities.some(([c]) => c === state.venueCity) && cities.length) state.venueCity = cities[0][0];
+  const allVenues = state.places.filter((p) => kindOf(p) === "venue" && p.category !== "aquapark");
+  const countryCounts = new Map();
+  allVenues.forEach((p) => { const country = countryOf(p); countryCounts.set(country, (countryCounts.get(country) || 0) + 1); });
+  const countries = [...countryCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
+  if (venueCountry !== "all" && !countryCounts.has(venueCountry)) venueCountry = "all";
+  $("#venueCountries").innerHTML = countryChips(countries, venueCountry);
+  const countryVenues = venueCountry === "all" ? allVenues : allVenues.filter((p) => countryOf(p) === venueCountry);
+  const cityCounts = new Map();
+  countryVenues.forEach((p) => p.city && cityCounts.set(p.city, (cityCounts.get(p.city) || 0) + 1));
+  const cities = [...cityCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
+  if (state.venueCity !== "all" && !cities.some(([city]) => city === state.venueCity)) state.venueCity = "all";
   $("#venueCities").innerHTML = cityChips(cities, state.venueCity, venueCityQuery);
-  const inCity = state.places.filter((p) => kindOf(p) === "venue" && p.category !== "aquapark" && p.city === state.venueCity);
+  const inCity = countryVenues.filter((p) => state.venueCity === "all" || p.city === state.venueCity);
   // Не засоряем интерфейс нулевыми категориями: показываем только то,
   // что действительно доступно в выбранном городе. Данные при этом не скрываются.
   const groups = VENUE_GROUPS
@@ -540,7 +551,11 @@ document.addEventListener("click", (e) => {
   if (t.dataset.customShare) return shareCustomCollection(t.dataset.customShare);
   if (t.hasAttribute("data-close")) return closeSheet();
   if (t.dataset.country) {
-    discoverCountry = t.dataset.country; state.city = ""; discoverCityQuery = "";
+    if (t.closest("#venueCountries")) {
+      venueCountry = t.dataset.country; state.venueCity = "all"; venueCityQuery = "";
+      $("#venueCitySearch").value = ""; return renderVenues();
+    }
+    discoverCountry = t.dataset.country; state.city = "all"; discoverCityQuery = "";
     $("#discoverCitySearch").value = ""; return renderDiscover();
   }
   if (t.dataset.city) {
@@ -598,7 +613,7 @@ $("#discoverCitySearch").addEventListener("input", (e) => {
 });
 $("#venueCitySearch").addEventListener("input", (e) => {
   venueCityQuery = e.target.value;
-  const cities = citiesFor((p) => kindOf(p) === "venue" && p.category !== "aquapark");
+  const cities = citiesFor((p) => kindOf(p) === "venue" && p.category !== "aquapark" && (venueCountry === "all" || countryOf(p) === venueCountry));
   $("#venueCities").innerHTML = cityChips(cities, state.venueCity, venueCityQuery);
 });
 $("#fitBtn").addEventListener("click", () => { ensureMap().clearRoute(); mapView.fit(visible()); });
