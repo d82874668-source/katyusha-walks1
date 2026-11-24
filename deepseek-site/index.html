@@ -19,7 +19,7 @@
   .header { position: sticky; top: 0; z-index: 100; padding: 8px 16px; background: rgba(250,247,242,.96); border-bottom: 1px solid #e9e1d5; box-shadow: 0 5px 22px rgba(40,35,28,.045); backdrop-filter: blur(14px); }
   .header-inner { max-width: 1320px; min-height: 70px; margin: 0 auto; display: grid; grid-template-columns: minmax(230px,1fr) auto auto; align-items: center; gap: 24px; }
   .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
-  .logo{appearance:none;-webkit-appearance:none;width:82px;height:82px;flex:0 0 82px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:0!important;outline:0!important;box-shadow:none!important;border-radius:50%;background:transparent!important;padding:0;margin:0;line-height:0;font-size:0;cursor:pointer}.logo-image{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border:0;outline:0;box-shadow:none;border-radius:50%}
+  .logo{appearance:none;-webkit-appearance:none;width:82px;height:82px;flex:0 0 82px;display:flex;align-items:center;justify-content:center;overflow:visible;border:0!important;outline:0!important;box-shadow:none!important;border-radius:0;background:transparent!important;padding:0;margin:0;line-height:0;font-size:0;cursor:pointer}.logo-image{display:block;width:100%;height:100%;object-fit:contain;object-position:center;border:0;outline:0;box-shadow:none;border-radius:0}
   .brand-copy { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
   .brand-name { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 700; letter-spacing: -.025em; color: #202b3a; white-space: nowrap; }
   .brand-tagline { margin-top: 5px; color: #8a7868; font-size: 10px; font-weight: 600; letter-spacing: .105em; text-transform: uppercase; white-space: nowrap; }
@@ -554,74 +554,8 @@ async function openRoute(id){
 function openCollection(id){const c=COLLECTIONS.find(x=>x.id===id);if(!c)return;const list=c.places.map(findPlace).filter(Boolean);$('modal').innerHTML=`<div style="padding:32px;background:linear-gradient(135deg,#c75d45,#a84a37);color:#fff;position:relative"><button class="modal-close" onclick="closeModal()">✕</button><div style="font-size:42px">${c.icon}</div><div class="eyebrow" style="color:#ffe4d6">Подборка</div><h2>${esc(c.name)}</h2><p>${list.length} мест</p></div><div style="padding:24px"><div class="grid">${list.map(placeCardHTML).join('')}</div></div>`;$('overlay').classList.add('open');document.body.style.overflow='hidden';}
 function pluralCities(){return CITIES.length;}
 async function init(){try{const cats=await loadPlaces();populateFilters();renderNav();renderHomeCities();renderHomePlaces();renderChips();$('homeCity').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();openHomeCity();}});$('homeCity').addEventListener('change',()=>{const v=$('homeCity').value.trim();if(!v||v==='Все города')openCity('all');else{const q=v.toLocaleLowerCase('ru');const c=CITIES.find(x=>x.name.toLocaleLowerCase('ru')===q||`${x.name}${x.country?' · '+x.country:''}`.toLocaleLowerCase('ru')===q);if(c)openCity(c.key);}});$('errorBanner').classList.remove('show');const hero=$('view-home').querySelector('.hero img');if(hero&&PLACES[0])hero.src=photo(PLACES[0]);$('view-home').querySelector('.hero-sub').textContent=`${PLACES.length} мест · ${CITIES.length} городов · маршруты и подборки`;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal();});console.info(`Новый сайт DeepSeek: ${PLACES.length} записей прочитано из Supabase`);}catch(err){console.error(err);$('errorBanner').textContent='Не удалось загрузить каталог из основной базы: '+err.message;$('errorBanner').classList.add('show');$('homeCities').innerHTML='<div class="empty">Проверьте подключение к базе данных.</div>';}}
-function makeLogoBackgroundTransparent(){
-  const img=document.querySelector('.logo-image');if(!img)return;
-  const process=()=>{
-    try{
-      const w=img.naturalWidth,h=img.naturalHeight;if(!w||!h)return;
-      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-      const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);
-      const frame=ctx.getImageData(0,0,w,h),p=frame.data,total=w*h;
-      const seen=new Uint8Array(total),queue=new Int32Array(total);let head=0,tail=0;
-      const isBackground=i=>{
-        const k=i*4,r=p[k],g=p[k+1],b=p[k+2];
-        const hi=Math.max(r,g,b),lo=Math.min(r,g,b),lum=(r+g+b)/3;
-        return lum>148 && hi-lo<58;
-      };
-      const add=i=>{if(i>=0&&i<total&&!seen[i]&&isBackground(i)){seen[i]=1;queue[tail++]=i;}};
-      for(let x=0;x<w;x++){add(x);add((h-1)*w+x);}
-      for(let y=1;y<h-1;y++){add(y*w);add(y*w+w-1);}
-      while(head<tail){
-        const i=queue[head++],x=i%w,y=(i/w)|0;
-        if(x>0)add(i-1);if(x<w-1)add(i+1);if(y>0)add(i-w);if(y<h-1)add(i+w);
-      }
-      for(let i=0;i<total;i++)if(seen[i]){
-        const k=i*4,lum=(p[k]+p[k+1]+p[k+2])/3;
-        p[k+3]=lum>205?0:Math.round(p[k+3]*Math.max(0,Math.min(1,(205-lum)/57)));
-      }
-      ctx.putImageData(frame,0,0);img.src=canvas.toDataURL('image/png');
-    }catch(e){console.warn('Не удалось сделать светлый фон логотипа прозрачным',e);}
-  };
-  if(img.complete&&img.naturalWidth)process();else img.addEventListener('load',process,{once:true});
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{makeLogoBackgroundTransparent();init();});else{makeLogoBackgroundTransparent();init();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 
-</script>
-<script>
-/* Remove only the edge-connected neutral checkerboard/background.
-   White details enclosed by the sticker remain fully opaque. */
-(function(){
-  const img=document.querySelector('.logo-image');
-  if(!img) return;
-  const clean=()=>{
-    try{
-      const w=img.naturalWidth,h=img.naturalHeight;
-      if(!w||!h) return;
-      const c=document.createElement('canvas'); c.width=w; c.height=h;
-      const ctx=c.getContext('2d',{willReadFrequently:true});
-      ctx.drawImage(img,0,0);
-      const frame=ctx.getImageData(0,0,w,h),p=frame.data;
-      const seen=new Uint8Array(w*h),queue=new Int32Array(w*h);
-      const isBg=i=>{
-        const k=i*4,r=p[k],g=p[k+1],b=p[k+2],a=p[k+3];
-        return a>0 && Math.max(r,g,b)-Math.min(r,g,b)<22 && (r+g+b)/3>145;
-      };
-      let head=0,tail=0;
-      const add=i=>{if(i>=0&&i<w*h&&!seen[i]&&isBg(i)){seen[i]=1;queue[tail++]=i;}};
-      for(let x=0;x<w;x++){add(x);add((h-1)*w+x);}
-      for(let y=0;y<h;y++){add(y*w);add(y*w+w-1);}
-      while(head<tail){
-        const i=queue[head++],x=i%w;
-        if(x>0)add(i-1); if(x<w-1)add(i+1);
-        if(i>=w)add(i-w); if(i<w*(h-1))add(i+w);
-      }
-      for(let i=0;i<seen.length;i++) if(seen[i]) p[i*4+3]=0;
-      ctx.putImageData(frame,0,0);
-      img.src=c.toDataURL('image/png');
-    }catch(e){ /* Keep the original logo if canvas processing is unavailable. */ }
-  };
-  if(img.complete) clean(); else img.addEventListener('load',clean,{once:true});
-})();
 </script>
 <script>function applyTheme(t){const d=t==="dark";document.documentElement.dataset.theme=d?"dark":"light";try{localStorage.setItem("kw-theme",d?"dark":"light")}catch(e){}const i=document.getElementById("themeIcon"),l=document.getElementById("themeLabel");if(i)i.textContent=d?"☀️":"🌙";if(l)l.textContent=d?"Светлая тема":"Тёмная тема";const m=document.querySelector("meta[name=theme-color]");if(m)m.content=d?"#111821":"#faf7f2"}function toggleTheme(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")}document.addEventListener("DOMContentLoaded",()=>applyTheme(document.documentElement.dataset.theme==="dark"?"dark":"light"));</script></body>
 </html>
