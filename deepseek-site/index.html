@@ -329,6 +329,14 @@ html[data-theme="dark"] .filters button,html[data-theme="dark"] .btn-ghost{backg
 .similar-section .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.similar-section .place-body{padding:10px}.similar-section .place-title{font-size:14px}
 html[data-theme="dark"] .map-list-bar,html[data-theme="dark"] .modal-gallery{background:#1c2924;color:#e8eee8;border-color:#35443b}
 @media(max-width:760px){.map-list-bar{align-items:flex-start;flex-direction:column}.similar-section .grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.theme-collections-head{margin:24px 0 16px}.theme-collections-head .h2{margin-bottom:5px}
+.themed-collections-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:38px}
+.theme-collection-card .place-img{aspect-ratio:1.35}.theme-collection-card .place-cat{background:rgba(255,255,255,.94)}
+.theme-collection-card .theme-count{font-size:11px;color:var(--kw-muted)}
+html[data-theme="dark"] .theme-collection-card{background:#1b2923;border-color:#35443b}
+@media(max-width:1080px){.themed-collections-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.themed-collections-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.theme-collection-card .place-body{padding:11px}.theme-collection-card .place-title{font-size:15px}}
 </style>
 </head>
 <body><script>(function(){try{if(localStorage.getItem("kw-theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}})();</script>
@@ -488,6 +496,9 @@ html[data-theme="dark"] .map-list-bar,html[data-theme="dark"] .modal-gallery{bac
       <div class="eyebrow">Под настроение</div>
       <h1 class="h1">Тематические подборки</h1>
     </div>
+    <div class="theme-collections-head"><div class="eyebrow">По настроению</div><h2 class="h2">Куда хочется сегодня</h2><p class="section-subtitle">Готовые идеи для разных планов и погоды</p></div>
+    <div id="themedCollectionsGrid" class="grid themed-collections-grid"></div>
+    <div class="theme-collections-head category-collections-head"><div class="eyebrow">Навигация по каталогу</div><h2 class="h2">Все категории</h2></div>
     <div id="collectionsGrid" class="grid"></div>
   </div>
   
@@ -533,7 +544,7 @@ function plural(n,one,few,many){n=Math.abs(n)%100;const x=n%10;if(n>10&&n<20)ret
 function photo(p){return p?.image || p?.photos?.[0] || p?.photo_url || p?.cover_image || PLACEHOLDER;}
 function normalize(row){
  const lat=(row.latitude ?? row.lat)==null?NaN:Number(row.latitude ?? row.lat), lng=(row.longitude ?? row.lng)==null?NaN:Number(row.longitude ?? row.lng);
- const city=row.city||row.locality||'Не указан', country=row.country||''; const sources=Array.isArray(row.photo_sources)?row.photo_sources.map(x=>typeof x==='string'?x:x?.url).filter(x=>typeof x==='string'&&/^https?:\/\//i.test(x)):[]; const mainImage=[row.image,row.photo_url,row.cover_image,...sources].find(x=>typeof x==='string'&&/^https?:\/\//i.test(x))||''; return {...row,id:String(row.id),title:row.title||row.name||'Без названия',name:row.title||row.name||'Без названия',category:row.category||row.cat||'other',city,country,city_key:city+'||'+country,region:row.region||'',address:row.address||row.addr||'',description:row.description||row.short_description||'',long_description:row.long_description||row.full_description||row.description||'',image:mainImage,latitude:Number.isFinite(lat)?lat:null,longitude:Number.isFinite(lng)?lng:null,rating:row.rating==null?null:Number(row.rating),opening_hours:row.opening_hours||row.hours||'',website:row.website||'',phone:row.phone||'',map_url:row.map_url||'',is_approx:Boolean(row.is_approx)};
+ const city=row.city||row.locality||'Не указан', country=row.country||''; const sources=Array.isArray(row.photo_sources)?row.photo_sources.map(x=>typeof x==='string'?x:x?.url).filter(x=>typeof x==='string'&&/^https?:\/\//i.test(x)):[]; const mainImage=[row.image,row.photo_url,row.cover_image,...sources].find(x=>typeof x==='string'&&/^https?:\/\//i.test(x))||''; return {...row,id:String(row.id),title:row.title||row.name||'Без названия',name:row.title||row.name||'Без названия',category:row.category||row.cat||'other',city,country,city_key:city+'||'+country,region:row.region||'',address:row.address||row.addr||'',description:row.description||row.short_description||'',long_description:row.long_description||row.full_description||row.description||'',image:mainImage,photos:sources,latitude:Number.isFinite(lat)?lat:null,longitude:Number.isFinite(lng)?lng:null,rating:row.rating==null?null:Number(row.rating),opening_hours:row.opening_hours||row.hours||'',website:row.website||'',phone:row.phone||'',map_url:row.map_url||'',is_approx:Boolean(row.is_approx)};
 }
 async function loadPlaces(){
  const all=[]; let offset=0; const pageSize=500;
@@ -546,7 +557,7 @@ async function loadPlaces(){
  }
  if(!all.length) throw new Error('В таблице places нет доступных записей');
  PLACES=all.map(normalize);
- try { const pr=await fetch(`${SUPABASE_URL}/rest/v1/place_photos?select=place_id,url,sort_order&order=sort_order.asc&limit=3000`,{headers:{apikey:SUPABASE_KEY,Accept:'application/json'},cache:'no-store'}); if(pr.ok){const gallery=await pr.json();const byId=new Map();gallery.forEach(x=>{if(/^https?:\/\//i.test(x.url||'')){const k=String(x.place_id);if(!byId.has(k))byId.set(k,[]);byId.get(k).push(x.url);}});PLACES=PLACES.map(p=>({...p,photos:[p.image,...(byId.get(String(p.id))||[])].filter(Boolean)}));} } catch(photoError){console.warn('Дополнительные фотографии не загрузились.',photoError);}
+ try { const pr=await fetch(`${SUPABASE_URL}/rest/v1/place_photos?select=place_id,url,sort_order&order=sort_order.asc&limit=3000`,{headers:{apikey:SUPABASE_KEY,Accept:'application/json'},cache:'no-store'}); if(pr.ok){const gallery=await pr.json();const byId=new Map();gallery.forEach(x=>{if(/^https?:\/\//i.test(x.url||'')){const k=String(x.place_id);if(!byId.has(k))byId.set(k,[]);byId.get(k).push(x.url);}});PLACES=PLACES.map(p=>({...p,photos:[...new Set([p.image,...(p.photos||[]),...(byId.get(String(p.id))||[])].filter(Boolean))]}));} } catch(photoError){console.warn('Дополнительные фотографии не загрузились.',photoError);}
  const cityMap=new Map();
  PLACES.forEach(p=>{const key=p.city_key;if(!p.city.trim())return;const imageRank={attraction:10,embankment:9,park:8,historic:8,viewpoint:8,monument:7,nature:7,museum:6,square:5};const rank=imageRank[p.category]||1;const old=cityMap.get(key)||{key,name:p.city,country:p.country||'',count:0,image:photo(p),imagePriority:p.image?rank:0,lat:[],lng:[]};old.count++;if(p.image&&rank>old.imagePriority){old.image=p.image;old.imagePriority=rank;}if(p.latitude!==null&&p.longitude!==null){old.lat.push(p.latitude);old.lng.push(p.longitude);}cityMap.set(key,old);});
  CITIES=[...cityMap.entries()].map(([key,v])=>({key,...v,latitude:v.lat.length?v.lat.reduce((a,b)=>a+b,0)/v.lat.length:null,longitude:v.lng.length?v.lng.reduce((a,b)=>a+b,0)/v.lng.length:null})).sort((a,b)=>a.name.localeCompare(b.name,'ru'));
@@ -870,6 +881,35 @@ window.createWeekendRoute=function(){
  window.clearMyRoute();ordered.forEach(p=>window.addToMyRoute(p.id));nav('routes');toast('Маршрут на выходные собран из '+ordered.length+' мест');
 };
 document.addEventListener('DOMContentLoaded',()=>{updateCatalogBudget();updateGuideBudget()});
+})();
+
+</script>
+<script id="katyusha-themed-collections">
+
+(function(){
+const oldRender=window.renderCollections;
+const defs=[
+{id:'outdoor',name:'На свежем воздухе',icon:'🌿',desc:'Парки, сады, набережные и красивые виды',cats:['park','nature','garden','embankment','viewpoint','square','beach','sea','trips','resort']},
+{id:'family',name:'С детьми',icon:'🧸',desc:'Зоопарки, аквапарки и семейные развлечения',cats:['zoo','aquarium','aquapark','park','attraction','entertainment']},
+{id:'culture',name:'История и культура',icon:'🏛️',desc:'Музеи, исторические места, театры и пространства',cats:['museum','historic','monument','theatre','cultural_space']},
+{id:'active',name:'Активный отдых',icon:'🎯',desc:'Игры, развлечения, VR и поездки',cats:['gaming','aquapark','entertainment','trips','vr','quest','karting','bowling','billiards','gamecenter']},
+{id:'evening',name:'Вечерний город',icon:'🌙',desc:'Кафе, рестораны, кино, театр и вечерние места',cats:['restaurant','cafe','coffee','lounge','nightclub','cinema','theatre','embankment','viewpoint']},
+{id:'wellness',name:'Спа и перезагрузка',icon:'♨️',desc:'Бани, SPA и места для спокойного отдыха',cats:['spa','bath','thermal','resort']},
+{id:'rainy',name:'На случай дождя',icon:'☔',desc:'Музеи, кафе, кино и развлечения в помещении',cats:['museum','cafe','coffee','mall','cinema','theatre','gaming','entertainment','spa','bath','aquarium','aquapark','cultural_space']},
+{id:'photos',name:'Красивые виды',icon:'📸',desc:'Смотровые площадки, набережные и фотолокации',cats:['viewpoint','embankment','sea','beach','square','garden','historic','attraction','park']},
+{id:'free',name:'Бесплатно',icon:'🆓',desc:'Места, для которых в каталоге указано бесплатное посещение',free:true},
+{id:'coffee',name:'Кофе-пауза',icon:'☕',desc:'Кофейни, кафе и пекарни для короткого отдыха',cats:['coffee','cafe','bakery']}
+];
+function themePlaces(d){return PLACES.filter(p=>d.free?(Number(p.price_min)===0||/бесплат|свободн/i.test(String(p.price_unit||''))):d.cats.includes(p.category))}
+window.renderCollections=function(){
+ oldRender();const grid=$('themedCollectionsGrid');if(!grid)return;
+ grid.innerHTML=defs.map(d=>{const list=themePlaces(d);if(list.length<3)return '';const p=list.find(x=>x.image)||list[0];return '<article class="place-card theme-collection-card" role="button" tabindex="0" onclick="openThemeCollection(\\''+d.id+'\\')" onkeydown="if(event.key===\\'Enter\\')openThemeCollection(\\''+d.id+'\\')"><div class="place-img"><img src="'+esc(photo(p))+'" alt="" loading="lazy"><div class="place-cat">'+d.icon+' Подборка</div></div><div class="place-body"><h3 class="place-title">'+esc(d.name)+'</h3><p class="place-desc">'+esc(d.desc)+'</p><div class="place-foot"><span class="theme-count">'+list.length+' мест</span><span class="place-more">Смотреть →</span></div></div></article>'}).join('');
+};
+window.openThemeCollection=function(id){
+ const d=defs.find(x=>x.id===id);if(!d)return;const list=themePlaces(d);
+ $('modal').innerHTML='<div style="padding:28px;background:linear-gradient(135deg,#344f3c,#202b29);color:#fff;position:relative"><button class="modal-close" onclick="closeModal()">✕</button><div style="font-size:36px;margin-bottom:10px">'+d.icon+'</div><div class="eyebrow" style="color:#e6c18a">Подборка по настроению</div><h2 style="font:700 30px Fraunces,Georgia,serif;margin-bottom:7px">'+esc(d.name)+'</h2><p style="color:#e3e8e2;font-size:13px">'+esc(d.desc)+'</p><p style="margin-top:10px;color:#d4dfd4;font-size:11px">'+list.length+' мест в каталоге</p></div><div class="modal-body"><div class="grid">'+list.map(placeCardHTML).join('')+'</div></div>';
+ $('overlay').classList.add('open');document.body.style.overflow='hidden';
+};
 })();
 
 </script>
