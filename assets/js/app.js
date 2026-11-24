@@ -283,7 +283,7 @@ function renderSheet() {
       ${p.description ? `<p class="sheet__desc">${esc(p.description)}</p>` : ""}
       ${p.address ? `<p class="sheet__detail">${icon("pin")}<span>${esc(p.address)}${p.city ? ` · ${esc(p.city)}` : ""}</span></p>` : ""}
       ${p.opening_hours ? `<p class="sheet__detail">${icon("clock")}<span>Часы работы: ${esc(p.opening_hours)}</span></p>` : ""}
-      ${p.phone ? `<p class="sheet__detail">${icon("phone")}<a href="${esc(telUrl(p.phone))}">${esc(p.phone)}</a></p>` : ""}
+      ${p.phone ? `<p class="sheet__detail"><span class="sheet__detail-label">Телефон</span><a href="${esc(telUrl(p.phone))}">${esc(p.phone)}</a></p>` : ""}
       ${price ? `<p class="sheet__detail">${icon("wallet")}<span>Стоимость: ${esc(price)}</span></p>` : ""}
       ${p.is_approx ? `<p class="note">Положение на карте приблизительное. Google Maps найдёт место по названию.</p>` : ""}
     </div>
