@@ -74,7 +74,7 @@ export function generate(o, seed) {
     const previous = allPlaces.get(key);
     // Предпочитаем актуальную запись из state (Supabase), но сохраняем
     // резервную локальную запись, если в API нет этой точки.
-    allPlaces.set(key, previous ? { ...place, ...previous } : place);
+    allPlaces.set(key, previous ? { ...previous, ...place } : place);
   }
   const targetCity = normalizeCity(o.city);
   const targetAliases = (CITY_ALIASES[o.city] || []).map(normalizeCity);
