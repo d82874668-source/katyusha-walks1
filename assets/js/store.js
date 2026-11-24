@@ -8,7 +8,7 @@ let lastLoadMode = "local";
 async function readSnapshot() {
   try {
     const url = new URL("../data/catalog.json", import.meta.url);
-    const response = await fetch(url, { cache: "default" });
+    const response = await fetch(url, { cache: "no-cache" });
     if (!response.ok) throw new Error(`Static catalog: HTTP ${response.status}`);
     const snapshot = await response.json();
     if (!Array.isArray(snapshot.places) || !snapshot.places.length) throw new Error("Static catalog is empty");
