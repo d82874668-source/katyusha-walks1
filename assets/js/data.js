@@ -2260,7 +2260,7 @@ export const PLACES = [
   "category": "bath",
   "latitude": 57.9101,
   "longitude": 59.9813,
-  "image": null,
+  "image": "https://avatars.mds.yandex.net/get-altay/10092863/2a0000018be2a4f150327ce8b5b7c764e209/S_height",
   "rating": null,
   "is_approx": true,
   "region": "Нижний Тагил",
@@ -2273,7 +2273,8 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": "https://www.google.com/maps/search/?api=1&query=Банный+клуб+Территория+здоровья+Нижний+Тагил+Россия",
-  "source_urls": []
+  "source_urls": [,
+   "https://avatars.mds.yandex.net/get-altay/10092863/2a0000018be2a4f150327ce8b5b7c764e209/S_height"]
  },
  {
   "id": 990007,
@@ -2304,7 +2305,7 @@ export const PLACES = [
   "category": "restaurant",
   "latitude": 57.9101,
   "longitude": 59.9813,
-  "image": null,
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrtVipQGWOeVIBlgdIRfSviPqiXoTVJ0Io9FtkBrn9aRfIer8nNyhtsUSi&s=10",
   "rating": null,
   "is_approx": true,
   "region": "Нижний Тагил",
@@ -2317,7 +2318,8 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": "https://www.google.com/maps/search/?api=1&query=Хачапури+—+Дом+грузинской+кухни+Нижний+Тагил+Россия",
-  "source_urls": []
+  "source_urls": [,
+   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrtVipQGWOeVIBlgdIRfSviPqiXoTVJ0Io9FtkBrn9aRfIer8nNyhtsUSi&s=10"]
  },
  {
   "id": 990009,
@@ -2348,7 +2350,7 @@ export const PLACES = [
   "category": "bath",
   "latitude": 55.7232732,
   "longitude": 37.6392656,
-  "image": null,
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbc6fg1YunRq_lgFttBFWfCgBsjzMYdSFrauOfoh2V6Jx-2YczElroLuQg&s=10",
   "rating": null,
   "is_approx": false,
   "region": "Москва",
@@ -2361,7 +2363,8 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": "https://www.openstreetmap.org/node/11577262670",
-  "source_urls": []
+  "source_urls": [,
+   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbc6fg1YunRq_lgFttBFWfCgBsjzMYdSFrauOfoh2V6Jx-2YczElroLuQg&s=10"]
  },
  {
   "id": 990011,
@@ -2440,7 +2443,7 @@ export const PLACES = [
   "category": "gaming",
   "latitude": 56.8389,
   "longitude": 60.6057,
-  "image": null,
+  "image": "https://avatars.mds.yandex.net/get-altay/5479189/2a0000017dbcd29b642207d6fb0b54aa9a6c/L_height",
   "rating": null,
   "is_approx": true,
   "region": "Екатеринбург",
@@ -2453,7 +2456,8 @@ export const PLACES = [
   "opening_hours": null,
   "phone": null,
   "map_url": "https://www.google.com/maps/search/?api=1&query=INGAME+ARENA+Екатеринбург+Россия",
-  "source_urls": []
+  "source_urls": [,
+   "https://avatars.mds.yandex.net/get-altay/5479189/2a0000017dbcd29b642207d6fb0b54aa9a6c/L_height"]
  },
  {
   "id": 990015,
