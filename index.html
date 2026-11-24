@@ -297,6 +297,8 @@
       <div class="sec__head"><h2 id="h-fav">Избранное <span class="count" id="favCount">0</span></h2><p class="muted" id="favStatus"></p></div>
       <div class="grid grid--fav" id="favGrid"></div>
       <div id="favRoutes"></div>
+      <div class="sec__head sec__head--compact"><h3>Недавно просмотренные</h3><button class="btn btn--sm btn--ghost" id="historyClear" type="button">Очистить историю</button></div>
+      <div class="grid grid--fav" id="historyGrid"></div>
     </div>
   </section>
 
@@ -310,7 +312,7 @@
       <ul class="feats">
         <li><span class="badge badge--lg"><svg class="i"><use href="#i-pin"/></svg></span><div><h3>Места на карте</h3><p class="muted">Все идеи с отметками и карточками. Нажмите на метку, чтобы узнать подробности.</p></div></li>
         <li><span class="badge badge--lg"><svg class="i"><use href="#i-route"/></svg></span><div><h3>Маршруты в один клик</h3><p class="muted">Расстояние и время в пути, переход в Google Maps или OpenStreetMap.</p></div></li>
-        <li><span class="badge badge--lg"><svg class="i"><use href="#i-heart"/></svg></span><div><h3>Общее избранное</h3><p class="muted">Отмечайте места сердечком. С Supabase список синхронизируется на ваших телефонах.</p></div></li>
+        <li><span class="badge badge--lg"><svg class="i"><use href="#i-heart"/></svg></span><div><h3>Ваше избранное</h3><p class="muted">Сохраняйте любимые места и возвращайтесь к недавно просмотренным. Список хранится в браузере.</p></div></li>
       </ul>
       <dl class="counts">
         <div><dd id="cPlaces">0</dd><dt>мест</dt></div>
