@@ -92,7 +92,14 @@ export class MapView {
   setPlaces(places, fit = true, numbered = false) {
     this.markers.forEach((m) => m.remove());
     this.markers.clear();
-    places.forEach((p, idx) => {
+    // Приблизительные точки (обычно центр города) не ставим на карту:
+    // это лучше, чем отправлять человека к заведомо неверному адресу.
+    const exactPlaces = places.filter((p) =>
+      !p.is_approx &&
+      Number.isFinite(Number(p.latitude)) &&
+      Number.isFinite(Number(p.longitude))
+    );
+    exactPlaces.forEach((p, idx) => {
       const c = CATEGORIES[p.category] || { icon: "pin", hue: 340 };
       const m = L.marker([p.latitude, p.longitude], {
         title: p.title,
@@ -106,7 +113,7 @@ export class MapView {
       m.on("click", () => this.onSelect(p.id));
       this.markers.set(p.id, m);
     });
-    if (fit) this.fit(places);
+    if (fit) this.fit(exactPlaces);
   }
 
   fit(places) {
