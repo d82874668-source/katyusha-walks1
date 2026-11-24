@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://d82874668-source.github.io/katyusha-walks1/sitemap.xml
