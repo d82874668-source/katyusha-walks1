@@ -23,7 +23,7 @@ const gPoint = (p) => {
 /** Google Maps: origin можно не передавать, тогда начало = текущее местоположение. */
 export function googleUrl(dest, origin = null, via = [], mode = "drive") {
   let u = `https://www.google.com/maps/dir/?api=1&destination=${gPoint(dest)}&travelmode=${mode === "walk" ? "walking" : "driving"}`;
-  if (origin) u += `&origin=${origin.latitude},${origin.longitude}`;
+  if (origin) u += `&origin=${gPoint(origin)}`;
   if (via.length) u += `&waypoints=${via.map(gPoint).join("%7C")}`;
   return u;
 }
@@ -42,6 +42,7 @@ const OSRM = {
 };
 const cache = new Map();
 export async function route(points, mode = "drive") {
+  if (points.some((p) => p.is_approx)) throw new Error("Нельзя строить точный маршрут: у одного или нескольких мест уточняются координаты");
   const coords = points.map((p) => `${p.longitude},${p.latitude}`).join(";");
   const key = mode + "|" + coords;
   if (cache.has(key)) return cache.get(key);
@@ -123,6 +124,12 @@ export class MapView {
   }
 
   focus(p) {
+    if (p.is_approx) {
+      const note = document.createElement("div");
+      note.textContent = "Точная точка этого места ещё уточняется. Найдите его по названию через Google Maps.";
+      L.popup().setLatLng(this.map.getCenter()).setContent(note).openOn(this.map);
+      return;
+    }
     this.markers.forEach((m) => m.getElement()?.classList.remove("is-active"));
     this.markers.get(p.id)?.getElement()?.classList.add("is-active");
     this.map.flyTo([p.latitude, p.longitude], Math.max(this.map.getZoom(), 13), { duration: 0.8 });
