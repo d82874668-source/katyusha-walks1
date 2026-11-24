@@ -28,7 +28,7 @@ function score(p, role, prev, o, rand) {
   // Место без рейтинга получает нейтральную оценку (как рейтинг ≈ 4.0), чтобы новые достопримечательности не проигрывали заранее
   s += p.rating != null ? (Number(p.rating) - 3) * 0.8 : 0.8;
   if (p.review_count) s += Math.min(Math.log10(1 + Number(p.review_count)) / 3, 1) * 0.6;
-  s += (1 - r.cats.indexOf(c) / r.cats.length) * 0.8;                 // насколько категория типична для роли
+  if (r.cats.length) s += (1 - r.cats.indexOf(c) / r.cats.length) * 0.8; // насколько категория типична для роли
   if (SIGHT_ROLES.has(role) && kindOf(p) === "sight") s += 0.7;      // достопримечательности важнее
   if (ATMOSPHERES[o.atmosphere]?.cats.includes(c)) s += 0.8;
   if (o.interests.size && (o.interests.has(groupOf(p)?.key) || (o.interests.has("sights") && kindOf(p) === "sight"))) s += 1.5;
@@ -120,7 +120,7 @@ export function generate(o, seed) {
 /** Замена одной остановки на следующий лучший вариант той же роли. */
 function swap(index) {
   const { opts: o, stops } = current;
-  const s = stops[index], used = new Set(stops.map((x) => x.place.id)), brands = new Set(stops.filter((_, i) => i !== index).map((x) => brand(x.place)));
+  const s = stops[index], used = new Set(stops.map((x) => String(x.place.id))), brands = new Set(stops.filter((_, i) => i !== index).map((x) => brand(x.place)));
   const rand = rng(Date.now() & 0xffff);
   let p = pick(s.role, used, brands, stops[index - 1]?.place || null, o, rand, 0, new Set([String(s.place.id)]));
   // Если в конкретной категории закончились альтернативы, предложим другое место
