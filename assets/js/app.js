@@ -232,8 +232,9 @@ function renderList() {
 }
 
 function applyFilter(fit = true) {
+  renderChips();
   const list = visible();
-  renderChips(); renderList();
+  renderList();
   mapView?.setPlaces(list, fit);
   if (state.active && !list.some((p) => String(p.id) === String(state.active))) closeSheet();
 }
