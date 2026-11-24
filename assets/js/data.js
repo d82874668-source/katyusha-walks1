@@ -6401,7 +6401,35 @@ export const PLACES = [
   "source_urls": [
    "https://polyanaski.ru/entertainment/akva-park"
   ]
+ },
+ {
+  "id": 990217,
+  "title": "Областной рынок на Громова",
+  "description": "Крупный продуктовый рынок с фермерскими продуктами, мясом, рыбой, молочной продукцией, овощами, фруктами и фудкортом.",
+  "category": "market",
+  "latitude": 56.798049,
+  "longitude": 60.560114,
+  "image": null,
+  "rating": 4.5,
+  "is_approx": false,
+  "region": "Екатеринбург",
+  "city": "Екатеринбург",
+  "address": "Екатеринбург, улица Громова, 145",
+  "price_min": null,
+  "price_max": null,
+  "price_unit": null,
+  "review_count": 5838,
+  "opening_hours": "Ежедневно 09:00–20:00",
+  "phone": "+7 (343) 204-92-55",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=56.798049,60.560114",
+  "source_urls": [
+   "https://www.grvc.ru/",
+   "https://www.grvc.ru/about/",
+   "https://yandex.com/maps/org/regional_market_on_gromova_street/1154153350/",
+   "https://yandex.com/maps/54/yekaterinburg/house/ulitsa_gromova_145/"
+  ]
  }
+
 ];
 
 export const ROUTES = [
