@@ -106,14 +106,17 @@ export class MapView {
     const exactPlaces = places.filter((p) =>
       !p.is_approx && hasExactCoordinates(p)
     );
-    if (!exactPlaces.length) {
+    const approximateCount = places.length - exactPlaces.length;
+    if (approximateCount > 0) {
       if (!this.emptyNotice) {
         this.emptyNotice = document.createElement("div");
         this.emptyNotice.className = "map-empty";
         this.emptyNotice.setAttribute("role", "status");
-        this.emptyNotice.textContent = "Для выбранных мест пока нет точных координат. Они остаются в списке — адреса уточняются.";
         this.map.getContainer().append(this.emptyNotice);
       }
+      this.emptyNotice.textContent = exactPlaces.length
+        ? `На карте ${exactPlaces.length} точных точек. Ещё ${approximateCount} мест пока без подтверждённых координат — они доступны в списке.`
+        : `Для выбранных мест пока нет точных координат. ${approximateCount} мест остаются в списке — адреса уточняются.`;
     } else if (this.emptyNotice) {
       this.emptyNotice.remove();
       this.emptyNotice = null;
