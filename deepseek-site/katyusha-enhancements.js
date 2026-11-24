@@ -183,3 +183,142 @@ window.openMyRouteMap=function(){
  openRouteMapChooser(id);
 };
 })();
+
+/* ===== Premium UX and interaction layer ===== */
+(function(){
+'use strict';
+const $=function(id){return document.getElementById(id)};
+const icons={all:'layers',park:'trees',nature:'mountain',garden:'flower-2',embankment:'waves',viewpoint:'binoculars',square:'landmark',beach:'umbrella',sea:'waves',trips:'route',resort:'palmtree',restaurant:'utensils',cafe:'coffee',coffee:'coffee',bakery:'croissant',museum:'landmark',historic:'landmark',monument:'landmark',theatre:'drama',cultural_space:'building-2',gaming:'gamepad-2',karting:'flag',aquapark:'waves',entertainment:'ticket',vr:'glasses',quest:'puzzle',zoo:'paw-print',aquarium:'fish',hotel:'bed-double',cinema:'clapperboard',spa:'sparkles',bath:'bath',mall:'shopping-bag',nightclub:'music-2',default:'map-pin'};
+function iconFor(k){return icons[k]||icons.default}
+function drawChips(){
+ const host=$('chips');if(!host)return;
+ const used=[...new Set(PLACES.map(p=>p.category).filter(Boolean))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru'));
+ host.innerHTML=[['all','Все'],...used.map(k=>[k,categoryName(k)])].map(([k,label])=>'<button type="button" class="chip'+(state.cat===k?' active':'')+'" onclick="filterCat(decodeURIComponent(\''+encodeURIComponent(k)+'\'))"><i class="chip-icon" data-lucide="'+iconFor(k)+'" aria-hidden="true"></i><span>'+esc(label)+'</span></button>').join('');
+ if(window.lucide&&lucide.createIcons)lucide.createIcons({attrs:{'stroke-width':1.8}});
+}
+window.renderChips=drawChips;
+function priceText(p){
+ const avg=Number(p.avg_check)||0,min=Number(p.price_min),max=Number(p.price_max),unit=window.currencyForCity?currencyForCity(p.city_key):(p.price_unit||'');
+ if(p.is_free===true||min===0||/бесплат/i.test(String(p.price_unit||'')))return 'Бесплатно';
+ if(avg>0)return '≈ '+avg.toLocaleString('ru-RU')+' '+unit;
+ if(min>0&&max>0)return min.toLocaleString('ru-RU')+'–'+max.toLocaleString('ru-RU')+' '+unit;
+ if(max>0)return 'до '+max.toLocaleString('ru-RU')+' '+unit;
+ if(min>0)return 'от '+min.toLocaleString('ru-RU')+' '+unit;
+ return '';
+}
+window.kwImageError=function(img){
+ if(!img||img.dataset.kwFailed)return;img.dataset.kwFailed='1';
+ const holder=img.closest('.place-img,.city-card,.modal-hero,.route-point');
+ if(holder&&holder.classList.contains('place-img')){holder.classList.add('image-fallback');const cat=img.closest('.place-card')?.dataset.category||'default';holder.dataset.fallbackIcon=({park:'🌳',nature:'🏞',restaurant:'🍽',cafe:'☕',museum:'🏛',beach:'🏖',hotel:'⌂',gaming:'🎮'})[cat]||'✦'}
+ img.onerror=null;if(window.PLACEHOLDER)img.src=PLACEHOLDER;
+};
+document.addEventListener('error',function(e){if(e.target&&e.target.tagName==='IMG')window.kwImageError(e.target)},true);
+window.placeCardHTML=function(p){
+ let fav=false;try{fav=favorites.includes(String(p.id))}catch(e){}
+ const price=priceText(p);
+ return '<article class="place-card" data-place-id="'+esc(p.id)+'" data-category="'+esc(p.category||'')+'" tabindex="0" role="button" aria-label="Открыть место '+esc(p.title)+'" onclick="openPlace(\''+esc(p.id)+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openPlace(\''+esc(p.id)+'\')}"><div class="place-img"><img src="'+esc(photo(p))+'" alt="'+esc(p.title)+'" loading="lazy" onerror="window.kwImageError(this)"><div class="place-rating">'+(p.rating?'★ '+esc(p.rating):'Место')+'</div>'+(price?'<div class="place-price">'+esc(price)+'</div>':'')+'<button class="place-fav'+(fav?' active':'')+'" type="button" onclick="event.stopPropagation();toggleFav(\''+esc(p.id)+'\')" aria-label="'+(fav?'Убрать из избранного':'В избранное')+'">'+(fav?'♥':'♡')+'</button><div class="place-cat">'+esc(categoryName(p.category))+'</div></div><div class="place-body"><h3 class="place-title">'+esc(p.title)+'</h3><div class="place-addr">'+esc(p.address||p.city)+'</div><p class="place-desc">'+esc(p.description||'Описание этого места скоро появится.')+'</p><div class="place-foot"><span class="place-city">'+esc(p.city)+'</span><span class="place-more">Подробнее →</span></div></div></article>';
+};
+function wrapChips(){
+ const host=$('chips');if(!host||host.closest('.kw-chip-shell'))return;
+ const shell=document.createElement('div'),left=document.createElement('button'),right=document.createElement('button');
+ shell.className='kw-chip-shell';left.type=right.type='button';left.className=right.className='kw-chip-arrow';left.textContent='‹';right.textContent='›';left.setAttribute('aria-label','Прокрутить категории влево');right.setAttribute('aria-label','Прокрутить категории вправо');
+ host.parentNode.insertBefore(shell,host);shell.append(left,host,right);host.classList.add('kw-chip-scroll');
+ const refresh=function(){left.disabled=host.scrollLeft<=2;right.disabled=host.scrollLeft+host.clientWidth>=host.scrollWidth-2};
+ left.onclick=function(){host.scrollBy({left:-Math.max(220,host.clientWidth*.7),behavior:'smooth'})};right.onclick=function(){host.scrollBy({left:Math.max(220,host.clientWidth*.7),behavior:'smooth'})};
+ host.addEventListener('scroll',refresh,{passive:true});if(window.ResizeObserver)new ResizeObserver(refresh).observe(host);
+ host.addEventListener('wheel',function(e){if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){host.scrollLeft+=e.deltaY;e.preventDefault()}},{passive:false});
+ let down=false,start=0,origin=0;
+ host.addEventListener('pointerdown',function(e){if(e.pointerType==='touch')return;down=true;start=e.clientX;origin=host.scrollLeft;host.classList.add('is-dragging');host.setPointerCapture(e.pointerId)});
+ host.addEventListener('pointermove',function(e){if(down)host.scrollLeft=origin-(e.clientX-start)});
+ const stop=function(){down=false;host.classList.remove('is-dragging')};host.addEventListener('pointerup',stop);host.addEventListener('pointercancel',stop);host.addEventListener('lostpointercapture',stop);refresh();
+}
+const oldRender=window.renderCatalog;
+window.renderCatalog=function(){oldRender();wrapChips();drawChips()};
+const oldFilter=window.filterCat;
+window.filterCat=function(k){oldFilter(k);drawChips()};
+function findCity(value){
+ const q=String(value||'').toLowerCase().trim();if(!q)return null;
+ const entries=CITIES.map(c=>({city:c,full:(c.name+' '+(c.country||'')).toLowerCase()}));
+ return (entries.find(x=>x.full===q)||entries.find(x=>x.city.name.toLowerCase().startsWith(q))||entries.find(x=>x.full.includes(q))||{}).city||null;
+}
+window.openHomeCity=function(){
+ const input=$('homeCity'),q=(input?.value||'').toLowerCase().trim();
+ if(!q||q==='все города'){openCity('all');return}
+ const city=findCity(q);
+ if(city){input.value=city.name;openCity(city.key);return}
+ state.city='all';state.cat='all';state.search=q;$('cityFilter').value='all';$('searchInput').value=q;drawChips();nav('catalog');
+};
+function setupMapSplit(){
+ const view=$('view-map'),stage=view?.querySelector('.map-stage'),bar=view?.querySelector('.map-list-bar'),list=$('mapList');
+ if(!view||!stage||!bar||!list||view.querySelector('.kw-map-split'))return;
+ const split=document.createElement('div'),left=document.createElement('div'),right=document.createElement('div');
+ split.className='kw-map-split';left.className='kw-map-results';right.className='kw-map-canvas';
+ stage.parentNode.insertBefore(split,stage);left.append(bar,list);right.append(stage);split.append(left,right);
+ list.hidden=false;if($('mapListToggle'))$('mapListToggle').hidden=true;
+ const count=document.createElement('p');count.id='kwMapLiveCount';count.className='kw-map-count';bar.insertBefore(count,bar.querySelector('button'));
+}
+function highlight(id,on){
+ if(typeof markers==='undefined')return;
+ const marker=markers.find(m=>String(m._kwPlaceId)===String(id));if(marker&&marker._icon)marker._icon.classList.toggle('kw-marker-active',on);
+ const card=$('mapList')?.querySelector('[data-place-id="'+CSS.escape(String(id))+'"]');if(card)card.classList.toggle('is-map-active',on);
+}
+function renderSplitList(){
+ const list=$('mapList');if(!list)return;const all=filteredPlaces(true),exact=all.filter(p=>!p.is_approx&&hasMapCoords(p));
+ const counter=$('kwMapLiveCount');if(counter)counter.textContent='Найдено '+all.length+' мест · на карте '+exact.length;
+ const parent=list.parentElement,oldScroll=parent?parent.scrollTop:0;
+ list.innerHTML=all.map(placeCardHTML).join('')||'<div class="empty">По этим фильтрам мест не найдено.</div>';
+ if(parent)parent.scrollTop=oldScroll;
+ list.querySelectorAll('[data-place-id]').forEach(card=>{const id=card.dataset.placeId;card.addEventListener('mouseenter',()=>highlight(id,true));card.addEventListener('mouseleave',()=>highlight(id,false))});
+}
+const oldUpdate=window.updateMapMarkers;
+window.updateMapMarkers=function(){
+ oldUpdate();setupMapSplit();renderSplitList();
+ const exact=filteredPlaces(true).filter(p=>!p.is_approx&&hasMapCoords(p));
+ if(typeof markers!=='undefined')markers.forEach((m,i)=>m._kwPlaceId=exact[i]?.id);
+};
+window.toggleMapList=function(){setupMapSplit();renderSplitList()};
+const oldNav=window.nav;
+window.nav=function(view){oldNav(view);if(view==='map')setTimeout(function(){setupMapSplit();renderSplitList();if(typeof mapInst!=='undefined')mapInst?.invalidateSize()},180)};
+const oldMapFilter=window.onMapFilters;
+window.onMapFilters=function(){oldMapFilter();renderSplitList()};
+const oldOpen=window.openPlace;
+window.openPlace=function(id){
+ const result=oldOpen(id),modal=$('modal');if(!modal)return result;
+ const hero=modal.querySelector('.modal-hero'),title=modal.querySelector('.modal-title'),body=modal.querySelector('.modal-body');
+ if(hero&&title&&body){hero.classList.add('kw-modal-photo');modal.insertBefore(title,modal.querySelector('.modal-gallery')||modal.querySelector('#photoCredit')||body)}
+ const p=findPlace(id);
+ if(p&&title){
+  const reviews=Number(p.reviews_count||p.review_count||p.reviews||0),rating=title.querySelector('.modal-badge-rating');
+  if(rating)rating.textContent='★ '+Number(p.rating||0).toFixed(1)+(reviews?' · '+reviews.toLocaleString('ru-RU')+' отзывов':'');
+  if(body&&!body.querySelector('.modal-map-credit'))body.insertAdjacentHTML('beforeend','<div class="modal-map-credit"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a></div>');
+ }
+ return result;
+};
+function ids(){try{return JSON.parse(localStorage.getItem('kwk_my_route')||'[]').map(String).slice(0,12)}catch(e){return[]}}
+function addFloat(){
+ if($('kwRouteFloat'))return;
+ const el=document.createElement('aside');el.id='kwRouteFloat';el.className='kw-route-float';el.hidden=true;
+ el.innerHTML='<strong id="kwRouteFloatCount">Мой маршрут (0 мест)</strong><button type="button" onclick="nav(\\'routes\\');document.getElementById(\\'view-routes\\').scrollIntoView({behavior:\\'smooth\\'})">К маршруту</button><button type="button" class="secondary" onclick="shareMyRoute()">Поделиться маршрутом</button>';
+ document.body.appendChild(el);
+}
+function updateFloat(){addFloat();const a=ids(),el=$('kwRouteFloat'),count=$('kwRouteFloatCount');el.hidden=!a.length;if(count)count.textContent='Мой маршрут ('+a.length+' '+(a.length===1?'место':a.length<5?'места':'мест')+')'}
+window.shareMyRoute=async function(){
+ const a=ids();if(!a.length){toast('Сначала добавьте места в маршрут');return}
+ const u=new URL(location.href);u.searchParams.set('route',a.join(','));const value=u.toString();
+ try{await navigator.clipboard.writeText(value)}catch(e){const t=document.createElement('textarea');t.value=value;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}
+ toast('Ссылка на маршрут скопирована');
+};
+const oldAdd=window.addToMyRoute,oldRemove=window.removeFromMyRoute,oldClear=window.clearMyRoute,oldRoutes=window.renderRoutes;
+if(oldAdd)window.addToMyRoute=function(id){oldAdd(id);updateFloat()};
+if(oldRemove)window.removeFromMyRoute=function(id){oldRemove(id);updateFloat()};
+if(oldClear)window.clearMyRoute=function(){oldClear();updateFloat()};
+if(oldRoutes)window.renderRoutes=function(){oldRoutes();updateFloat()};
+function importRoute(){
+ const raw=new URLSearchParams(location.search).get('route');if(!raw||window._kwSharedRouteLoaded)return;window._kwSharedRouteLoaded=true;
+ const valid=raw.split(',').map(x=>x.trim()).filter(x=>findPlace(x));
+ if(!valid.length)return;valid.forEach(x=>window.addToMyRoute?.(x));updateFloat();toast('Маршрут загружен по ссылке');
+}
+const oldRenderNav=window.renderNav;
+if(oldRenderNav)window.renderNav=function(){oldRenderNav();importRoute();updateFloat()};
+document.addEventListener('DOMContentLoaded',function(){wrapChips();setupMapSplit();addFloat();updateFloat();if(window.lucide?.createIcons)lucide.createIcons()});
+})();
