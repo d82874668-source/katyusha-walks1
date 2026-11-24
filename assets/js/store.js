@@ -5,6 +5,20 @@ import { PLACES, ROUTES } from "./data.js?v=20261124n";
 const LS_KEY = "katyusha:favorites";
 let lastLoadMode = "local";
 
+async function readSnapshot() {
+  try {
+    const url = new URL("../data/catalog.json", import.meta.url);
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Static catalog: HTTP ${response.status}`);
+    const snapshot = await response.json();
+    if (!Array.isArray(snapshot.places) || !snapshot.places.length) throw new Error("Static catalog is empty");
+    return snapshot;
+  } catch (error) {
+    console.warn("Статический снимок каталога недоступен, используется встроенный резерв:", error);
+    return null;
+  }
+}
+
 const projectUrl = () => String(CONFIG.SUPABASE_URL || "")
   .trim()
   .replace(/\/$/, "");
@@ -67,22 +81,29 @@ async function readTable(table, query = "select=*") {
   }
 }
 
-/** Каталог загружается напрямую через REST; сбой избранного не влияет на места. */
+/** Каталог: Supabase как источник истины, статический снимок как полный резерв. */
 export async function loadData() {
+  const snapshot = await readSnapshot();
+  const backupPlaces = snapshot?.places?.length ? snapshot.places : PLACES;
+  const backupRoutes = snapshot?.routes?.length ? snapshot.routes : ROUTES;
   const local = {
-    places: PLACES,
-    routes: ROUTES,
+    places: backupPlaces,
+    routes: backupRoutes,
     favs: new Set(readLocal()),
-    mode: "local",
+    mode: snapshot ? "snapshot" : "local",
   };
 
-  if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_ANON_KEY) return local;
+  if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_ANON_KEY) {
+    lastLoadMode = local.mode;
+    console.info(`Каталог загружен из резервного источника: ${local.places.length} мест`);
+    return local;
+  }
 
   try {
     const remotePlaces = await readTable("places", "select=*&order=id.asc");
     if (!remotePlaces.length) throw new Error("Supabase вернул пустой каталог places");
 
-    let remoteRoutes = ROUTES;
+    let remoteRoutes = backupRoutes;
     try {
       const routes = await readTable("routes", "select=*&order=id.asc");
       if (routes.length) remoteRoutes = routes;
@@ -90,10 +111,10 @@ export async function loadData() {
       console.warn("Маршруты Supabase недоступны, используются резервные:", error);
     }
 
-    const localById = new Map(PLACES.map((place) => [String(place.id), place]));
+    const backupById = new Map(backupPlaces.map((place) => [String(place.id), place]));
     const remoteIds = new Set(remotePlaces.map((place) => String(place.id)));
     const mergedPlaces = remotePlaces.map((remote) => {
-      const backup = localById.get(String(remote.id));
+      const backup = backupById.get(String(remote.id));
       if (!backup) return remote;
       const merged = { ...backup, ...remote };
       [
@@ -109,16 +130,17 @@ export async function loadData() {
     });
 
     lastLoadMode = "supabase";
-    console.info(`Каталог загружен из Supabase: ${mergedPlaces.length} мест, ${remoteRoutes.length} маршрутов`);
+    const allPlaces = [...mergedPlaces, ...backupPlaces.filter((place) => !remoteIds.has(String(place.id)))];
+    console.info(`Каталог загружен из Supabase: ${allPlaces.length} мест, ${remoteRoutes.length} маршрутов`);
     return {
-      places: [...mergedPlaces, ...PLACES.filter((place) => !remoteIds.has(String(place.id)))],
+      places: allPlaces,
       routes: remoteRoutes,
       favs: new Set(readLocal()),
       mode: "supabase",
     };
   } catch (error) {
-    lastLoadMode = "local";
-    console.error("Ошибка загрузки каталога из Supabase; используется локальный резерв:", error);
+    lastLoadMode = local.mode;
+    console.error("Ошибка загрузки каталога из Supabase; используется резервный каталог:", error);
     return local;
   }
 }
