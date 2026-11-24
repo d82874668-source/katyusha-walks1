@@ -103,8 +103,22 @@
   .btn-ghost { background: #f2ede4; color: #1a2332; }
   .btn-ghost:hover { background: #ebe5db; }
   
-  /* MAP */
-  #map { height: 600px; border-radius: 16px; overflow: hidden; border: 1px solid #e8e2d7; }
+  /* MAP — mechanics and styling adapted from the original Katyusha Walks project */
+  .map-stage { position:relative; }
+  #map { height:600px; border-radius:16px; overflow:hidden; border:1px solid #e8e2d7; background:#f1efe9; }
+  .map-tools { position:absolute; z-index:700; top:12px; right:12px; display:flex; flex-direction:column; gap:8px; }
+  .map-tools button { border:1px solid #e8e2d7; border-radius:11px; background:rgba(255,255,255,.94); color:#26342e; box-shadow:0 4px 16px rgba(26,35,50,.14); padding:10px 13px; font:600 12px Inter,system-ui,sans-serif; cursor:pointer; }
+  .map-tools button:hover { background:#fff; transform:translateY(-1px); }
+  .kw-pin-wrap { background:transparent; border:0; }
+  .kw-pin { width:38px;height:38px;border:3px solid #fff;border-radius:50% 50% 50% 8px;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;background:hsl(var(--hue,200) 62% 46%);box-shadow:0 3px 10px rgba(25,35,30,.28);color:#fff;font-size:16px;font-weight:700; }
+  .kw-pin span { transform:rotate(45deg);line-height:1; }
+  .kw-map-note { position:absolute; z-index:650; left:12px; right:100px; top:12px; padding:10px 13px; border-radius:11px; background:rgba(255,255,255,.95); color:#344239; border:1px solid #e8e2d7; box-shadow:0 4px 16px rgba(26,35,50,.12); font-size:12px; }
+  .leaflet-container { font-family:Inter,system-ui,sans-serif; }
+  .leaflet-container .leaflet-control-attribution { background:rgba(255,255,255,.82); color:#68746d; }
+  .leaflet-bar { border:0!important; box-shadow:0 4px 16px rgba(26,35,50,.14)!important; border-radius:11px!important; overflow:hidden; }
+  .leaflet-bar a { color:#26342e!important; }
+  .leaflet-popup-content-wrapper { border-radius:12px; }
+  @media(max-width:600px){#map{height:520px}.map-tools button{padding:9px 10px;font-size:11px}.kw-map-note{font-size:11px;right:94px}}
   
   /* MODAL */
   .overlay { position: fixed; inset: 0; background: rgba(26,35,50,0.75); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: flex-start; justify-content: center; padding: 20px; overflow-y: auto; }
@@ -257,7 +271,14 @@
       <button onclick="resetFilters()">Сбросить</button>
     </div>
     <p id="mapCount" style="color:#6b7785;font-size:13px;margin:0 0 12px"></p>
-    <div id="map"></div>
+    <div class="map-stage">
+      <div id="map" aria-label="Интерактивная карта мест"></div>
+      <div class="map-tools">
+        <button type="button" onclick="locateOnMap()">◎ Моё местоположение</button>
+        <button type="button" onclick="fitMapPlaces()">Показать все места</button>
+      </div>
+      <div id="mapNote" class="kw-map-note" hidden></div>
+    </div>
   </div>
   
   <!-- ROUTES -->
@@ -365,9 +386,38 @@ function resetFilters(){state.city='all';state.cat='all';state.search='';state.m
 function openCity(name){state.city=name;state.mapCity=name;state.cat='all';state.mapCat='all';state.search='';state.mapSearch='';$('cityFilter').value=name;$('mapCityFilter').value=name;$('mapCatFilter').value='all';$('mapSearchFilter').value='';$('searchInput').value='';$('sortFilter').value='default';renderChips();nav('catalog');}
 function toggleFav(id){id=String(id);favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];try{localStorage.setItem('kwk_fav',JSON.stringify(favorites));}catch{};const b=$('favBadge');if(b)b.textContent=favorites.length;if(state.view==='home')renderHomePlaces();if(state.view==='catalog')renderCatalog();if(state.view==='favorites')renderFavorites();if($('overlay').classList.contains('open')&&$('modal').dataset.placeId===id)openPlace(id);toast(favorites.includes(id)?'Добавлено в избранное ♥':'Удалено из избранного');}
 function renderFavorites(){const list=PLACES.filter(p=>favorites.includes(String(p.id)));$('favEmpty').classList.toggle('hide',list.length>0);$('favoritesGrid').innerHTML=list.map(placeCardHTML).join('');}
-function initMap(){if(mapInst||!window.L)return;mapInst=L.map('map').setView([40.4,49.8],5);L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:20,attribution:'© OpenStreetMap © CARTO'}).addTo(mapInst);}
-function updateMapMarkers(){if(!mapInst)return;markers.forEach(m=>mapInst.removeLayer(m));markers=[];const list=filteredPlaces(true).filter(p=>p.latitude!==null&&p.longitude!==null);$('mapCount').textContent=`${list.length} ${plural(list.length,'место','места','мест')} с координатами`;
- list.forEach(p=>{const m=L.marker([p.latitude,p.longitude]).addTo(mapInst).bindPopup(`<div style="min-width:180px"><img src="${esc(photo(p))}" style="width:100%;height:90px;object-fit:cover;border-radius:7px" onerror="this.style.display='none'"><strong>${esc(p.title)}</strong><div style="font-size:12px;color:#6b7785;margin:4px 0">${esc(p.address||p.city)}</div><button onclick="openPlace('${esc(p.id)}')" style="background:#c75d45;color:#fff;border:0;padding:7px 12px;border-radius:7px">Подробнее</button></div>`);markers.push(m);});if(list.length){const bounds=L.latLngBounds(list.map(p=>[p.latitude,p.longitude]));mapInst.fitBounds(bounds.pad(.12),{maxZoom:state.mapCity==='all'?6:15});}else if(state.mapCity!=='all'){const c=CITIES.find(x=>x.key===state.mapCity);if(c?.latitude)mapInst.setView([c.latitude,c.longitude],12);}}
+function hasMapCoords(p){return p&&p.latitude!==null&&p.longitude!==null&&Number.isFinite(Number(p.latitude))&&Number.isFinite(Number(p.longitude))&&Number(p.latitude)>=-90&&Number(p.latitude)<=90&&Number(p.longitude)>=-180&&Number(p.longitude)<=180;}
+function exactMapPlaces(){return filteredPlaces(true).filter(p=>!p.is_approx&&hasMapCoords(p));}
+function initMap(){
+ if(mapInst||!window.L)return;
+ mapInst=L.map('map',{zoomControl:false,attributionControl:true,scrollWheelZoom:false}).setView([40.4,49.87],5);
+ L.control.zoom({position:'topleft'}).addTo(mapInst);
+ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(mapInst);
+ mapInst.on('focus',()=>mapInst.scrollWheelZoom.enable());
+ mapInst.on('blur',()=>mapInst.scrollWheelZoom.disable());
+}
+function updateMapMarkers(){
+ if(!mapInst)return;
+ markers.forEach(m=>mapInst.removeLayer(m));markers=[];
+ const filtered=filteredPlaces(true);
+ const list=filtered.filter(p=>!p.is_approx&&hasMapCoords(p));
+ const approximate=filtered.length-list.length;
+ $('mapCount').textContent=list.length+' '+plural(list.length,'место','места','мест')+' с точными координатами';
+ const note=$('mapNote');
+ if(note){note.hidden=!approximate;note.textContent=approximate?'На карте показаны '+list.length+' точных точек. Ещё '+approximate+' мест без подтверждённых координат доступны в каталоге.':'';}
+ list.forEach(p=>{
+  const hues={spa:165,park:110,square:115,nature:130,restaurant:15,cafe:20,coffee:25,hotel:50,attraction:200,museum:205,monument:215,beach:185,sea:195,gamecenter:235,cinema:215};
+  const hue=hues[p.category]||205;
+  const glyph=categoryIcon(p.category)||'•';
+  const marker=L.marker([Number(p.latitude),Number(p.longitude)],{title:p.title,icon:L.divIcon({className:'kw-pin-wrap',html:'<div class="kw-pin" style="--hue:'+hue+'"><span>'+esc(glyph)+'</span></div>',iconSize:[38,38],iconAnchor:[19,35],popupAnchor:[0,-32]})}).addTo(mapInst);
+  marker.bindPopup('<div style="min-width:190px"><img src="'+esc(photo(p))+'" alt="" style="width:100%;height:92px;object-fit:cover;border-radius:8px;margin-bottom:7px" onerror="this.style.display=\\'none\\'"><strong>'+esc(p.title)+'</strong><div style="font-size:12px;color:#6b7785;margin:4px 0 9px">'+esc(p.address||p.city)+'</div><button onclick="openPlace(\\''+esc(p.id)+'\\')" style="background:#c75d45;color:#fff;border:0;padding:7px 12px;border-radius:8px;cursor:pointer">Подробнее</button></div>');
+  marker.on('click',()=>openPlace(p.id));markers.push(marker);
+ });
+ if(list.length){const bounds=L.latLngBounds(list.map(p=>[Number(p.latitude),Number(p.longitude)]));mapInst.fitBounds(bounds,{padding:[55,55],maxZoom:state.mapCity==='all'?6:15});}
+ else if(state.mapCity!=='all'){const c=CITIES.find(x=>x.key===state.mapCity);if(c&&c.latitude!==null&&c.longitude!==null)mapInst.setView([c.latitude,c.longitude],12);}
+}
+function fitMapPlaces(){if(!mapInst)return;const list=exactMapPlaces();if(list.length)mapInst.fitBounds(L.latLngBounds(list.map(p=>[Number(p.latitude),Number(p.longitude)])),{padding:[55,55],maxZoom:state.mapCity==='all'?6:15});}
+function locateOnMap(){if(!mapInst)return;if(!navigator.geolocation){toast('Геолокация недоступна в этом браузере');return;}navigator.geolocation.getCurrentPosition(({coords})=>{if(window._kwUserMarker)mapInst.removeLayer(window._kwUserMarker);window._kwUserMarker=L.circleMarker([coords.latitude,coords.longitude],{radius:8,color:'#fff',weight:3,fillColor:'#1e4fa3',fillOpacity:1}).addTo(mapInst).bindPopup('Вы здесь');mapInst.flyTo([coords.latitude,coords.longitude],14,{duration:.7});},()=>toast('Разрешите доступ к местоположению в браузере'),{enableHighAccuracy:false,timeout:8000});}
 function openPlace(id){const p=findPlace(id);if(!p)return;const fav=favorites.includes(String(id));const html=`<div class="modal-hero"><img src="${esc(photo(p))}" alt="${esc(p.title)}" onerror="this.src='${PLACEHOLDER}'"><div class="modal-hero-overlay"></div><button class="modal-close" onclick="closeModal()">✕</button><div class="modal-title"><div class="modal-badges"><span class="modal-badge modal-badge-cat">${categoryIcon(p.category)} ${esc(categoryName(p.category))}</span>${p.rating?`<span class="modal-badge modal-badge-rating">★ ${esc(p.rating)}</span>`:''}</div><h2>${esc(p.title)}</h2><p>📍 ${esc(p.address||p.city)}</p></div></div><div class="modal-body"><div class="modal-actions"><button onclick="toggleFav('${esc(p.id)}')" class="btn ${fav?'btn-ghost':'btn-primary'}">${fav?'♥ В избранном':'♡ В избранное'}</button><button onclick="closeModal();showOnMap('${esc(p.id)}')" class="btn btn-ghost">📍 На карте</button>${p.website?`<a class="btn btn-ghost" href="${esc(p.website)}" target="_blank" rel="noopener">Сайт места ↗</a>`:''}</div><div class="modal-section"><div class="modal-section-label">О месте</div><p style="color:#2d3a4d;line-height:1.6">${esc(p.long_description||p.description||'Подробное описание пока не добавлено.')}</p></div><div class="modal-info"><div class="modal-info-card"><div class="label">Часы работы</div><div class="value">${esc(p.opening_hours||'Не указаны')}</div></div><div class="modal-info-card"><div class="label">Город</div><div class="value">${esc(p.city)}</div></div><div class="modal-info-card"><div class="label">Телефон</div><div class="value">${esc(p.phone||'Не указан')}</div></div></div><div class="modal-section" style="margin-top:24px"><div class="modal-section-label">На карте</div><div id="modalMap"></div></div></div>`;$('modal').innerHTML=html;$('modal').dataset.placeId=String(id);$('overlay').classList.add('open');document.body.style.overflow='hidden';if(modalMapInst){modalMapInst.remove();modalMapInst=null;}if(p.latitude!==null&&p.longitude!==null)setTimeout(()=>{if(!$('modalMap'))return;modalMapInst=L.map('modalMap',{attributionControl:false}).setView([p.latitude,p.longitude],15);L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:20}).addTo(modalMapInst);L.marker([p.latitude,p.longitude]).addTo(modalMapInst).bindPopup(p.title).openPopup();},100);}
 function closeModal(){$('overlay').classList.remove('open');document.body.style.overflow='';[modalMapInst,routeMapInst].forEach(m=>m?.remove());modalMapInst=routeMapInst=null;setTimeout(()=>$('modal').innerHTML='',200);}
 function showOnMap(id){const p=findPlace(id);if(!p)return;state.city=p.city_key;state.mapCity=p.city_key;state.cat='all';state.mapCat='all';state.search='';state.mapSearch='';$('cityFilter').value=p.city_key;$('mapCityFilter').value=p.city_key;$('mapCatFilter').value='all';$('mapSearchFilter').value='';$('searchInput').value='';nav('map');}
