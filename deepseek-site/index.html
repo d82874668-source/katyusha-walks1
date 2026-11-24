@@ -453,16 +453,29 @@ function makeLogoBackgroundTransparent(){
   const img=document.querySelector('.logo-image');if(!img)return;
   const process=()=>{
     try{
-      const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;
+      const w=img.naturalWidth,h=img.naturalHeight;if(!w||!h)return;
+      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
       const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);
-      const frame=ctx.getImageData(0,0,canvas.width,canvas.height);const p=frame.data;
-      for(let i=0;i<p.length;i+=4){
-        const r=p[i],g=p[i+1],b=p[i+2],max=Math.max(r,g,b),min=Math.min(r,g,b),brightness=(r+g+b)/3;
-        if(brightness<24 && max-min<32)p[i+3]=0;
-        else if(brightness<68 && max-min<38)p[i+3]=Math.round(p[i+3]*((brightness-24)/44));
+      const frame=ctx.getImageData(0,0,w,h),p=frame.data,total=w*h;
+      const seen=new Uint8Array(total),queue=new Int32Array(total);let head=0,tail=0;
+      const isBackdrop=i=>{
+        const k=i*4,r=p[k],g=p[k+1],b=p[k+2];
+        const hi=Math.max(r,g,b),lo=Math.min(r,g,b),lum=(r+g+b)/3;
+        return lum<148 && (hi-lo)<92;
+      };
+      const add=i=>{if(i>=0&&i<total&&!seen[i]&&isBackdrop(i)){seen[i]=1;queue[tail++]=i;}};
+      for(let x=0;x<w;x++){add(x);add((h-1)*w+x);}
+      for(let y=1;y<h-1;y++){add(y*w);add(y*w+w-1);}
+      while(head<tail){
+        const i=queue[head++],x=i%w,y=(i/w)|0;
+        if(x>0)add(i-1);if(x<w-1)add(i+1);if(y>0)add(i-w);if(y<h-1)add(i+w);
+      }
+      for(let i=0;i<total;i++)if(seen[i]){
+        const k=i*4,lum=(p[k]+p[k+1]+p[k+2])/3;
+        p[k+3]=lum<92?0:Math.round(p[k+3]*Math.max(0,Math.min(1,(lum-92)/56)));
       }
       ctx.putImageData(frame,0,0);img.src=canvas.toDataURL('image/png');
-    }catch(e){console.warn('Не удалось обработать фон логотипа',e);}
+    }catch(e){console.warn('Не удалось сделать фон логотипа прозрачным',e);}
   };
   if(img.complete&&img.naturalWidth)process();else img.addEventListener('load',process,{once:true});
 }
