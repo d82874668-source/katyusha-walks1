@@ -180,7 +180,8 @@
   <section class="sec" id="discover" aria-labelledby="h-disc">
     <div class="wrap">
       <div class="sec__head"><h2 id="h-disc">Открой город</h2><p class="muted">Главное, что стоит увидеть. Начните с этих мест.</p></div>
-      <label class="search city-search"><svg class="i"><use href="#i-search"/></svg><input id="discoverCitySearch" type="search" placeholder="Найти город: Баку, Казань, Сочи…" autocomplete="off" aria-label="Поиск города для достопримечательностей"></label>
+      <div class="chips chips--wrap" id="discoverCountries" role="tablist" aria-label="Страна"></div>
+      <label class="search city-search"><svg class="i"><use href="#i-search"/></svg><input id="discoverCitySearch" type="search" placeholder="Найти город: Баку, Тбилиси, Москва…" autocomplete="off" aria-label="Поиск города для достопримечательностей"></label>
       <div class="chips chips--wrap" id="discoverCities" role="tablist" aria-label="Город"></div>
       <div class="pgrid" id="discoverGrid"></div>
     </div>
