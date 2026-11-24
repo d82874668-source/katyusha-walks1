@@ -19,7 +19,7 @@
   .header { position: sticky; top: 0; z-index: 100; padding: 8px 16px; background: rgba(250,247,242,.96); border-bottom: 1px solid #e9e1d5; box-shadow: 0 5px 22px rgba(40,35,28,.045); backdrop-filter: blur(14px); }
   .header-inner { max-width: 1320px; min-height: 70px; margin: 0 auto; display: grid; grid-template-columns: minmax(230px,1fr) auto auto; align-items: center; gap: 24px; }
   .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
-  .logo{appearance:none;-webkit-appearance:none;width:82px;height:82px;flex:0 0 82px;display:flex;align-items:center;justify-content:center;overflow:visible;border:0!important;outline:0!important;box-shadow:none!important;border-radius:0;background:transparent!important;padding:0;margin:0;line-height:0;font-size:0;cursor:pointer}.logo-image{display:block;width:82px;height:82px;max-width:100%;object-fit:contain;object-position:center;border:0;outline:0;box-shadow:none;border-radius:0;image-rendering:auto}
+  .logo{appearance:none;-webkit-appearance:none;width:82px;height:82px;flex:0 0 82px;display:flex;align-items:center;justify-content:center;overflow:visible;border:0!important;outline:0!important;box-shadow:none!important;border-radius:0;background:transparent!important;padding:0;margin:0;line-height:0;font-size:0;cursor:pointer}.logo-image{display:block;width:82px;height:82px;max-width:100%;object-fit:contain;object-position:center;border:0;outline:0;box-shadow:none;border-radius:0;background:transparent}
   .brand-copy { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
   .brand-name { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 700; letter-spacing: -.025em; color: #202b3a; white-space: nowrap; }
   .brand-tagline { margin-top: 5px; color: #8a7868; font-size: 10px; font-weight: 600; letter-spacing: .105em; text-transform: uppercase; white-space: nowrap; }
@@ -234,7 +234,7 @@ html[data-theme="dark"] .nav .theme-toggle{background:#202b38;border-color:#3a48
 <header class="header">
   <div class="header-inner">
     <div class="brand">
-      <button class="logo" onclick="resetHome()" aria-label="На главную и сбросить фильтры"><img class="logo-image" src="/favicon.svg?v=4" alt="Прогулки с Катюшей" width="82" height="82"></button>
+      <button class="logo" onclick="resetHome()" aria-label="На главную и сбросить фильтры"><img class="logo-image" src="data:image/jpeg;base64,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" alt="Прогулки с Катюшей"></button>
       <div class="brand-copy">
         <div class="brand-name">Прогулки с Катюшей</div>
         <div class="brand-tagline">Открывай интересные места</div>
@@ -557,5 +557,45 @@ async function init(){try{const cats=await loadPlaces();populateFilters();render
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 
 </script>
-<script>function applyTheme(t){const d=t==="dark";document.documentElement.dataset.theme=d?"dark":"light";try{localStorage.setItem("kw-theme",d?"dark":"light")}catch(e){}const i=document.getElementById("themeIcon"),l=document.getElementById("themeLabel");if(i)i.textContent=d?"☀️":"🌙";if(l)l.textContent=d?"Светлая тема":"Тёмная тема";const m=document.querySelector("meta[name=theme-color]");if(m)m.content=d?"#111821":"#faf7f2"}function toggleTheme(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")}document.addEventListener("DOMContentLoaded",()=>applyTheme(document.documentElement.dataset.theme==="dark"?"dark":"light"));</script></body>
+<script>function applyTheme(t){const d=t==="dark";document.documentElement.dataset.theme=d?"dark":"light";try{localStorage.setItem("kw-theme",d?"dark":"light")}catch(e){}const i=document.getElementById("themeIcon"),l=document.getElementById("themeLabel");if(i)i.textContent=d?"☀️":"🌙";if(l)l.textContent=d?"Светлая тема":"Тёмная тема";const m=document.querySelector("meta[name=theme-color]");if(m)m.content=d?"#111821":"#faf7f2"}function toggleTheme(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")}document.addEventListener("DOMContentLoaded",()=>applyTheme(document.documentElement.dataset.theme==="dark"?"dark":"light"));</script><script id="logo-transparent-processing">
+(function(){
+ function cleanOriginalLogo(){
+  const img=document.querySelector('.logo-image');
+  if(!img || img.dataset.cleaned==='1') return;
+  const run=()=>{
+   if(!img.naturalWidth || !img.naturalHeight) return;
+   try{
+    const w=img.naturalWidth,h=img.naturalHeight;
+    const c=document.createElement('canvas'); c.width=w;c.height=h;
+    const x=c.getContext('2d',{willReadFrequently:true});
+    x.drawImage(img,0,0);
+    const im=x.getImageData(0,0,w,h),d=im.data,seen=new Uint8Array(w*h),q=new Int32Array(w*h);
+    const samples=[];
+    for(let xx=0;xx<w;xx++){samples.push((xx)*4,(h-1)*w*4+xx*4);}
+    for(let yy=1;yy<h-1;yy++){samples.push(yy*w*4,(yy*w+w-1)*4);}
+    let sr=0,sg=0,sb=0,n=0;
+    for(const i of samples){sr+=d[i];sg+=d[i+1];sb+=d[i+2];n++;}
+    const br=sr/n,bg=sg/n,bb=sb/n;
+    let head=0,tail=0;
+    function add(p){if(p<0||p>=w*h||seen[p])return;const i=p*4,dr=d[i]-br,dg=d[i+1]-bg,db=d[i+2]-bb;
+      const dist=Math.sqrt(dr*dr+dg*dg+db*db);
+      if(dist<48 && Math.max(d[i],d[i+1],d[i+2])-Math.min(d[i],d[i+1],d[i+2])<55){seen[p]=1;q[tail++]=p;}
+    }
+    for(let xx=0;xx<w;xx++){add(xx);add((h-1)*w+xx);}
+    for(let yy=1;yy<h-1;yy++){add(yy*w);add(yy*w+w-1);}
+    while(head<tail){const p=q[head++],xx=p%w,yy=(p/w)|0;
+      if(xx)add(p-1);if(xx<w-1)add(p+1);if(yy)add(p-w);if(yy<h-1)add(p+w);
+    }
+    for(let p=0;p<w*h;p++)if(seen[p]){const i=p*4;const dist=Math.sqrt((d[i]-br)**2+(d[i+1]-bg)**2+(d[i+2]-bb)**2);
+      d[i+3]=dist<30?0:Math.round(d[i+3]*(dist-30)/18);
+    }
+    x.putImageData(im,0,0);img.src=c.toDataURL('image/png');img.dataset.cleaned='1';
+   }catch(e){console.warn('Не удалось убрать фон логотипа:',e);}
+  };
+  if(img.complete)run();else img.addEventListener('load',run,{once:true});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',cleanOriginalLogo);else cleanOriginalLogo();
+})();
+</script>
+</body>
 </html>
