@@ -219,7 +219,7 @@ function renderRegionFilter() {
 }
 
 const mapCategoryGroups = [
-  { title: "Отдых и wellness", keys: ["spa", "bath", "thermal", "massage", "hotel", "resort", "pool", "gym"] },
+  { title: "Отдых и оздоровление", keys: ["spa", "bath", "thermal", "massage", "hotel", "resort", "pool", "gym"] },
   { title: "Еда и напитки", keys: ["restaurant", "cafe", "coffee", "bakery", "fastfood", "foodcourt", "bar", "pub", "winebar", "lounge", "hookah"] },
   { title: "Ночная жизнь", keys: ["nightclub", "karaoke"] },
   { title: "Развлечения и игры", keys: ["capybara", "zoo", "gaming", "gaming247", "esports", "gamecenter", "vr", "quest", "anticafe", "karting", "billiards", "bowling", "cinema", "entertainment"] },
