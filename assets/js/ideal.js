@@ -106,43 +106,56 @@ function readForm() {
 }
 
 export function renderIdealForm() {
-  const cities = [...new Set(state.places.map((p) => p.city).filter(Boolean))]
-    .map((c) => [c, state.places.filter((p) => p.city === c).length]).sort((a, b) => b[1] - a[1]);
+  const cities = [...new Set(state.places.map((p) => String(p.city || "").trim()).filter(Boolean))]
+    .map((city) => [city, state.places.filter((p) => String(p.city || "").trim() === city).length])
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
   const sel = $("#idealCity");
-  sel.innerHTML = cities.map(([c, n]) => `<option value="${esc(c)}">${esc(c)} (${n})</option>`).join("");
-  sel.value = cities.some(([c]) => c === state.city) ? state.city : cities[0]?.[0] || "";
   const citySearch = $("#idealCitySearch");
   const cityOptions = $("#idealCityOptions");
   const cityPicker = $("#idealCityPicker");
-  const cityAliases = { "Баку": "baku", "Гянджа": "ganja gence", "Шеки": "sheki shaki", "Казань": "kazan", "Сочи": "sochi", "Тбилиси": "tbilisi", "Батуми": "batumi", "Москва": "moscow", "Санкт-Петербург": "saint petersburg spb", "Екатеринбург": "ekaterinburg" };
-  // Нормализуем строку одинаково для запроса и названия: это убирает
-  // различия регистра, "ё/е", пробелов, дефисов и невидимых символов.
-  const norm = (v) => String(v ?? "")
+  const searchWasFocused = document.activeElement === citySearch;
+  const previousQuery = searchWasFocused ? citySearch.value : "";
+  sel.innerHTML = cities.map(([city, count]) => `<option value="${esc(city)}">${esc(city)} (${count})</option>`).join("");
+  sel.value = cities.some(([city]) => city === state.city) ? state.city : cities[0]?.[0] || "";
+
+  // Все варианты строятся из актуального state.places (включая объединённые данные API),
+  // а не из DOM скрытого select: это исключает рассинхронизацию списка и каталога.
+  const cityAliases = {
+    "Баку": ["baku"], "Гянджа": ["ganja", "gence"], "Шеки": ["sheki", "shaki"],
+    "Казань": ["kazan"], "Сочи": ["sochi"], "Тбилиси": ["tbilisi"],
+    "Батуми": ["batumi"], "Москва": ["moscow"], "Санкт-Петербург": ["saintpetersburg", "spb"],
+    "Екатеринбург": ["ekaterinburg"], "Санкт-Петербург": ["saint petersburg", "petersburg"]
+  };
+  const normalizeCity = (value) => String(value ?? "")
     .normalize("NFKC")
     .toLocaleLowerCase("ru")
     .replace(/ё/g, "е")
     .replace(/[^\p{L}\p{N}]+/gu, "");
-  const closeCityOptions = () => { cityOptions.hidden = true; citySearch.setAttribute("aria-expanded", "false"); };
+  const closeCityOptions = () => {
+    cityOptions.hidden = true;
+    citySearch.setAttribute("aria-expanded", "false");
+  };
   const renderCityOptions = () => {
-    // Берём актуальные города из select, а не полагаемся на устаревший снимок массива.
-    const available = [...sel.options]
-      .filter((option) => option.value)
-      .map((option) => [option.value, Number((option.textContent.match(/\((\d+)\)/) || [])[1]) || 0]);
-    const q = norm(citySearch.value);
-    const filtered = available.filter(([city]) => {
-      if (!q) return true;
-      const cityKey = norm(city);
-      const aliasKey = String(cityAliases[city] || "").split(/\s+/).map(norm).filter(Boolean);
-      return cityKey.includes(q) || q.includes(cityKey) || aliasKey.some((alias) => alias.includes(q) || q.includes(alias));
+    const query = normalizeCity(citySearch.value);
+    const filtered = cities.filter(([city]) => {
+      if (!query) return true;
+      const name = normalizeCity(city);
+      const aliases = (cityAliases[city] || []).map(normalizeCity);
+      return name.includes(query) || aliases.some((alias) => alias.includes(query));
     });
     cityOptions.innerHTML = filtered.length
       ? filtered.map(([city, count]) => `<button type="button" class="map-category-option" role="option" aria-selected="${sel.value === city}" data-ideal-city="${esc(city)}"><span>${esc(city)}</span><small>${count} мест</small></button>`).join("")
-      : '<p class="muted" style="padding:8px 10px;font-size:12px">Город не найден. Попробуйте ввести первые буквы.</p>';
+      : '<p class="muted" style="padding:8px 10px;font-size:12px">Город не найден. Попробуйте изменить запрос.</p>';
     cityOptions.hidden = false;
     citySearch.setAttribute("aria-expanded", "true");
   };
-  citySearch.value = sel.value;
-  citySearch.onfocus = renderCityOptions;
+  citySearch.value = searchWasFocused ? previousQuery : sel.value;
+  citySearch.onfocus = () => {
+    // При первом клике выделяем текущее название, чтобы новый ввод заменял его,
+    // а не склеивался с ним (например, «БакуМосква»).
+    citySearch.select();
+    renderCityOptions();
+  };
   citySearch.oninput = renderCityOptions;
   citySearch.onkeydown = (event) => {
     if (event.key === "Escape") { closeCityOptions(); citySearch.blur(); }
