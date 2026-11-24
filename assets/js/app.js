@@ -233,7 +233,16 @@ function renderChips() {
   const inRegion = state.places.filter(matchesMapRegion);
   const counts = new Map();
   inRegion.forEach((p) => p.category && counts.set(p.category, (counts.get(p.category) || 0) + 1));
-  const used = Object.keys(CATEGORIES).filter((k) => counts.has(k));
+  // Sea Breeze и «Белый город» — азербайджанские категории.
+  // Не показываем их в общем каталоге регионов; они доступны при выборе
+  // Азербайджана или конкретного азербайджанского города.
+  const isAzerbaijanContext = state.region !== "all" &&
+    inRegion.length > 0 &&
+    inRegion.every((place) => place.country === "Азербайджан");
+  const azerbaijanOnlyCategories = new Set(["resort", "city"]);
+  const used = Object.keys(CATEGORIES).filter((key) =>
+    counts.has(key) && (isAzerbaijanContext || !azerbaijanOnlyCategories.has(key))
+  );
   if (state.filter !== "all" && !used.includes(state.filter)) state.filter = "all";
   const q = mapCategoryText(mapCategoryQuery);
   const allCount = inRegion.length;
