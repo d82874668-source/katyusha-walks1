@@ -4,7 +4,7 @@ export const state = {
   // карта и фильтры
   filter: "all", region: "all", q: "", minRating: 0, minPrice: null, maxPrice: null, sort: "popularity", active: null, user: null,
   // направления платформы
-  city: "", venueCity: "", venueGroup: "all",
+  city: "all", venueCity: "all", venueGroup: "all",
   plan: { ids: [], mode: "walk", name: "" },
   saved: [],
 };
