@@ -129,9 +129,22 @@ export async function loadData() {
           merged[key] = backup[key];
         }
       });
-      // При конфликте источников выбираем безопасный вариант: если хотя бы один
-      // источник считает точку приблизительной, не выдаём её за точный адрес.
-      merged.is_approx = Boolean(remote.is_approx) || Boolean(backup.is_approx);
+      // Точные координаты и адреса из проверенного резервного каталога
+      // имеют приоритет над устаревшими значениями Supabase.
+      if (backup.is_approx === false && Number.isFinite(Number(backup.latitude)) && Number.isFinite(Number(backup.longitude))) {
+        merged.title = backup.title;
+        merged.category = backup.category;
+        merged.city = backup.city;
+        merged.region = backup.region;
+        merged.address = backup.address;
+        merged.latitude = backup.latitude;
+        merged.longitude = backup.longitude;
+        merged.map_url = backup.map_url;
+        merged.is_approx = false;
+      } else {
+        // Если точность не подтверждена обоими источниками, оставляем отметку.
+        merged.is_approx = Boolean(remote.is_approx) || Boolean(backup.is_approx);
+      }
       // Для Milli Gaming Arena используем фото, подтверждённое пользователем:
       if (String(merged.id) === "15" || merged.title === "Milli Gaming Arena") {
         merged.image = backup.image;
