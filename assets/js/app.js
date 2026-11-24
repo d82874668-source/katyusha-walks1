@@ -391,7 +391,7 @@ function renderDiscover() {
   $("#discoverCities").innerHTML = discoverCountry === "all" ? groupedCityChips(allSights, state.city, discoverCityQuery) : cityChips(cities, state.city, discoverCityQuery);
   const items = countrySights.filter((p) => state.city === "all" || p.city === state.city).sort(byQuality);
   $("#discoverGrid").innerHTML = items.length
-    ? items.map((p) => placeCard(p, favBtn)).join("")
+    ? items.slice(0, 10).map((p) => placeCard(p, favBtn)).join("")
     : `<div class="card empty"><p>Для выбранной страны и города достопримечательностей пока нет в каталоге.</p></div>`;
   hydratePhotos($("#discoverGrid"));
 }
@@ -421,7 +421,7 @@ function renderVenues() {
   const items = inCity.filter((p) => state.venueGroup === "all" || groupOf(p)?.key === state.venueGroup)
     .sort(sort === "price" ? (a, b) => (a.price_min ?? Infinity) - (b.price_min ?? Infinity) : sort === "popular" ? (a, b) => Number(b.review_count || 0) - Number(a.review_count || 0) : byQuality);
   $("#venueGrid").innerHTML = items.length
-    ? items.map((p) => placeCard(p, favBtn)).join("")
+    ? items.slice(0, 10).map((p) => placeCard(p, favBtn)).join("")
     : `<div class="card empty"><p>В городе «${esc(state.venueCity)}» пока нет заведений в этой категории. Выберите другую категорию или город.</p></div>`;
   hydratePhotos($("#venueGrid"));
 }
