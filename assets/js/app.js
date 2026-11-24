@@ -265,27 +265,36 @@ function renderSheet() {
   const c = cat(p);
   const price = priceText(p);
   sheet.hidden = false;
+  const ratingLine = p.rating
+    ? `<span class="sheet__rating">${icon("star")}${esc(p.rating)}${p.review_count != null ? ` (${Number(p.review_count).toLocaleString("ru-RU")} отзывов)` : ""}</span>`
+    : (p.review_count != null ? `<span class="sheet__rating">${Number(p.review_count).toLocaleString("ru-RU")} отзывов</span>` : "");
+  const sourceLink = p.source_urls?.[0]
+    ? `<a href="${esc(p.source_urls[0])}" target="_blank" rel="noopener">Источник информации</a>`
+    : "";
+  const osmLink = !p.is_approx
+    ? `<a href="${osmUrl([state.user || cityOrigin(p), p])}" target="_blank" rel="noopener">OpenStreetMap</a>`
+    : "";
   sheet.innerHTML = `
     <div class="sheet__top"><span class="badge badge--lg" style="--h:${c.hue}">${icon(c.icon)}</span>
-      <div><h3>${esc(p.title)}</h3><p class="muted">${esc(c.title)}${p.rating ? ` · ${icon("star")} ${p.rating}` : ""}</p></div>
+      <div><h3>${esc(p.title)}</h3><p class="muted">${esc(c.title)}${ratingLine ? ` · ${ratingLine}` : ""}</p></div>
       <button class="icon-btn" data-close aria-label="Закрыть">${icon("x")}</button></div>
-    ${cover(p, "sheet__img")}
-    <p class="sheet__desc">${esc(p.description)}</p>
-    ${p.address ? `<p class="muted">${esc(p.address)}${p.city ? ` · ${esc(p.city)}` : ""}</p>` : ""}
-    ${p.opening_hours ? `<p class="muted">Часы работы: ${esc(p.opening_hours)}</p>` : ""}
-    ${p.phone ? `<p class="muted"><a href="${esc(telUrl(p.phone))}">${esc(p.phone)}</a></p>` : ""}
-    ${price ? `<p class="muted">Стоимость: ${esc(price)}</p>` : ""}
-    ${p.review_count != null ? `<p class="muted">${Number(p.review_count).toLocaleString("ru-RU")} отзывов</p>` : ""}
-    ${p.source_urls?.[0] ? `<p class="muted"><a href="${esc(p.source_urls[0])}" target="_blank" rel="noopener">Источник информации</a></p>` : ""}
-    ${p.is_approx ? `<p class="note">Положение на карте приблизительное. Google Maps найдёт место по названию.</p>` : ""}
+    <div class="sheet__media">${cover(p, "sheet__img")}</div>
+    <div class="sheet__content">
+      ${p.description ? `<p class="sheet__desc">${esc(p.description)}</p>` : ""}
+      ${p.address ? `<p class="sheet__detail">${icon("pin")}<span>${esc(p.address)}${p.city ? ` · ${esc(p.city)}` : ""}</span></p>` : ""}
+      ${p.opening_hours ? `<p class="sheet__detail">${icon("clock")}<span>Часы работы: ${esc(p.opening_hours)}</span></p>` : ""}
+      ${p.phone ? `<p class="sheet__detail">${icon("phone")}<a href="${esc(telUrl(p.phone))}">${esc(p.phone)}</a></p>` : ""}
+      ${price ? `<p class="sheet__detail">${icon("wallet")}<span>Стоимость: ${esc(price)}</span></p>` : ""}
+      ${p.is_approx ? `<p class="note">Положение на карте приблизительное. Google Maps найдёт место по названию.</p>` : ""}
+    </div>
     <p class="eta" id="eta">${icon("route")}<span>Считаем маршрут…</span></p>
     <div class="sheet__actions">
       <a class="btn btn--primary" target="_blank" rel="noopener" href="${googleUrl(p, state.user)}">${icon("nav")}Построить маршрут</a>
-      ${!p.is_approx ? `<a class="btn" target="_blank" rel="noopener" href="${osmUrl([state.user || cityOrigin(p), p])}">OpenStreetMap</a>` : ""}
       ${p.map_url ? `<a class="btn" target="_blank" rel="noopener" href="${esc(p.map_url)}">Открыть карточку на карте</a>` : ""}
       <button class="btn" data-plan-add="${p.id}">${icon("plus")}В маршрут</button>
       ${favBtn(p, "icon-btn--lg")}
-    </div>`;
+    </div>
+    <div class="sheet__foot">${osmLink}${osmLink && sourceLink ? `<span aria-hidden="true">·</span>` : ""}${sourceLink}</div>`;
   hydratePhotos(sheet);
 }
 
