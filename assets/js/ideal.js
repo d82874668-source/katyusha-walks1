@@ -113,22 +113,42 @@ export function renderIdealForm() {
   sel.value = cities.some(([c]) => c === state.city) ? state.city : cities[0]?.[0] || "";
   const citySearch = $("#idealCitySearch");
   const cityOptions = $("#idealCityOptions");
+  const cityPicker = $("#idealCityPicker");
   const cityAliases = { "Баку": "baku", "Гянджа": "ganja gence", "Шеки": "sheki shaki", "Казань": "kazan", "Сочи": "sochi", "Тбилиси": "tbilisi", "Батуми": "batumi", "Москва": "moscow", "Санкт-Петербург": "saint petersburg spb", "Екатеринбург": "ekaterinburg" };
   const norm = (v) => String(v || "").toLocaleLowerCase("ru").replace(/ё/g, "е").trim();
-  cityOptions.innerHTML = cities.map(([c, n]) => `<option value="${esc(c)}" label="${n} мест"></option>`).join("");
-  citySearch.value = sel.value;
-  citySearch.oninput = () => {
+  const closeCityOptions = () => { cityOptions.hidden = true; citySearch.setAttribute("aria-expanded", "false"); };
+  const renderCityOptions = () => {
     const q = norm(citySearch.value);
-    if (!q) {
-      sel.value = cities.some(([c]) => c === state.city) ? state.city : cities[0]?.[0] || "";
-      sel.dispatchEvent(new Event("change", { bubbles: true }));
-      return;
-    }
-    const match = cities.find(([c]) => norm(c) === q || norm(cityAliases[c]).split(" ").includes(q)) ||
-      cities.find(([c]) => norm(c).startsWith(q) || norm(cityAliases[c]).split(" ").some((alias) => alias.startsWith(q)));
-    sel.value = match?.[0] || "";
-    sel.dispatchEvent(new Event("change", { bubbles: true }));
+    const filtered = cities.filter(([c]) => !q || norm(c).includes(q) || norm(cityAliases[c]).split(" ").some((alias) => alias.startsWith(q)));
+    cityOptions.innerHTML = filtered.length
+      ? filtered.map(([c, n]) => `<button type="button" class="map-category-option" role="option" aria-selected="${sel.value === c}" data-ideal-city="${esc(c)}"><span>${esc(c)}</span><small>${n} мест</small></button>`).join("")
+      : '<p class="muted" style="padding:8px 10px;font-size:12px">Город не найден</p>';
+    cityOptions.hidden = false;
+    citySearch.setAttribute("aria-expanded", "true");
   };
+  citySearch.value = sel.value;
+  citySearch.onfocus = renderCityOptions;
+  citySearch.oninput = renderCityOptions;
+  citySearch.onkeydown = (event) => {
+    if (event.key === "Escape") { closeCityOptions(); citySearch.blur(); }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const first = cityOptions.querySelector("[data-ideal-city]");
+      if (first) first.click();
+    }
+  };
+  cityOptions.onclick = (event) => {
+    const option = event.target.closest("[data-ideal-city]");
+    if (!option) return;
+    sel.value = option.dataset.idealCity;
+    citySearch.value = sel.value;
+    sel.dispatchEvent(new Event("change", { bubbles: true }));
+    closeCityOptions();
+  };
+  if (!cityPicker.dataset.bound) {
+    document.addEventListener("click", (event) => { if (!cityPicker.contains(event.target)) closeCityOptions(); });
+    cityPicker.dataset.bound = "true";
+  }
   $("#idealMoods").innerHTML = Object.entries(MOODS).map(([k, m], i) =>
     `<label class="mood"><input type="radio" name="mood" value="${k}" ${i === 0 ? "checked" : ""}><span><strong>${esc(m.title)}</strong><small>${esc(m.hint)}</small></span></label>`).join("");
   $("#idealInterests").innerHTML = [["sights", "Достопримечательности"], ...VENUE_GROUPS.map((g) => [g.key, g.title])]
@@ -201,7 +221,7 @@ export const refreshIdeal = () => current && render();
 export function initIdeal({ favBtn }) {
   favBtnFn = favBtn;
   renderIdealForm();
-  $("#idealCity").addEventListener("change", updateCurrency);
+  $("#idealCity").addEventListener("change", () => { updateCurrency(); $("#idealCitySearch").value = $("#idealCity").value; });
   $("#idealForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const o = readForm();
