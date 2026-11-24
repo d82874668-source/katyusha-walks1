@@ -513,5 +513,41 @@ function makeLogoBackgroundTransparent(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{makeLogoBackgroundTransparent();init();});else{makeLogoBackgroundTransparent();init();}
 
 </script>
+<script>
+/* Remove only the edge-connected neutral checkerboard/background.
+   White details enclosed by the sticker remain fully opaque. */
+(function(){
+  const img=document.querySelector('.logo-image');
+  if(!img) return;
+  const clean=()=>{
+    try{
+      const w=img.naturalWidth,h=img.naturalHeight;
+      if(!w||!h) return;
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      const ctx=c.getContext('2d',{willReadFrequently:true});
+      ctx.drawImage(img,0,0);
+      const frame=ctx.getImageData(0,0,w,h),p=frame.data;
+      const seen=new Uint8Array(w*h),queue=new Int32Array(w*h);
+      const isBg=i=>{
+        const k=i*4,r=p[k],g=p[k+1],b=p[k+2],a=p[k+3];
+        return a>0 && Math.max(r,g,b)-Math.min(r,g,b)<22 && (r+g+b)/3>145;
+      };
+      let head=0,tail=0;
+      const add=i=>{if(i>=0&&i<w*h&&!seen[i]&&isBg(i)){seen[i]=1;queue[tail++]=i;}};
+      for(let x=0;x<w;x++){add(x);add((h-1)*w+x);}
+      for(let y=0;y<h;y++){add(y*w);add(y*w+w-1);}
+      while(head<tail){
+        const i=queue[head++],x=i%w;
+        if(x>0)add(i-1); if(x<w-1)add(i+1);
+        if(i>=w)add(i-w); if(i<w*(h-1))add(i+w);
+      }
+      for(let i=0;i<seen.length;i++) if(seen[i]) p[i*4+3]=0;
+      ctx.putImageData(frame,0,0);
+      img.src=c.toDataURL('image/png');
+    }catch(e){ /* Keep the original logo if canvas processing is unavailable. */ }
+  };
+  if(img.complete) clean(); else img.addEventListener('load',clean,{once:true});
+})();
+</script>
 </body>
 </html>
