@@ -29,7 +29,7 @@ for (const place of places) {
   if (!Number.isFinite(Number(place.latitude)) || !Number.isFinite(Number(place.longitude))) {
     errors.push(`Place ${id} has invalid coordinates`);
   }
-  if (place.image && !/^https?:\/\//i.test(place.image)) errors.push(`Place ${id} has invalid image URL`);
+  if (place.image && !/^https?:\/\//i.test(place.image) && !/^(?:\.\/|\/|assets\/)/i.test(place.image)) errors.push(`Place ${id} has invalid image URL`);
   if ((!place.address || !String(place.address).trim()) && !place.is_approx) {
     errors.push(`Place ${id} has no address but is marked as exact`);
   }
