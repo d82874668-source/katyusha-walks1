@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Прогулки с Катюшей</title>
+  <defs>
+    <linearGradient id="bg" x1="16" y1="12" x2="112" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#26384b"/><stop offset="1" stop-color="#111d2b"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="36" y1="25" x2="88" y2="78" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffd58a"/><stop offset="1" stop-color="#e9a45d"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="120" height="120" rx="35" fill="url(#bg)"/>
+  <circle cx="83" cy="39" r="16" fill="url(#sun)"/>
+  <path d="M20 82c13-18 25-27 38-27 13 0 18 10 28 10 8 0 14-5 22-13" fill="none" stroke="#f6e8d1" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M21 100c14-12 25-18 38-18 13 0 20 9 31 9 8 0 14-3 20-8" fill="none" stroke="#d8795d" stroke-width="7" stroke-linecap="round"/>
+  <path d="M58 35c-11 0-20 9-20 20 0 15 20 34 20 34s20-19 20-34c0-11-9-20-20-20Z" fill="#d8795d" stroke="#fff0dc" stroke-width="4"/>
+  <circle cx="58" cy="55" r="7" fill="#fff0dc"/>
+  <path d="m27 27 3 6 6 3-6 3-3 6-3-6-6-3 6-3 3-6Z" fill="#fff0dc" opacity=".92"/>
+</svg>
