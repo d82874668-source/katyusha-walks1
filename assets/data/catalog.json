@@ -11369,6 +11369,54 @@
    "country": "Россия",
    "coord_source": "Координаты объекта из геометки Wikimedia Commons; адрес Богоявленская площадь, 25",
    "description_source": "https://visityaroslavia.ru/places/730"
+  },
+  {
+   "id": 990217,
+   "title": "Областной рынок на Громова",
+   "description": "Крупный продуктовый рынок с фермерскими продуктами, мясом, рыбой, молочной продукцией, овощами, фруктами и фудкортом.",
+   "category": "market",
+   "latitude": 56.798049,
+   "longitude": 60.560114,
+   "image": null,
+   "is_approx": false,
+   "region": "Екатеринбург",
+   "city": "Екатеринбург",
+   "address": "Екатеринбург, улица Громова, 145",
+   "price_min": null,
+   "price_max": null,
+   "price_unit": null,
+   "rating": 4.5,
+   "review_count": 5838,
+   "opening_hours": "Ежедневно 09:00–20:00",
+   "phone": "+7 (343) 204-92-55",
+   "map_url": "https://www.google.com/maps/search/?api=1&query=56.798049,60.560114",
+   "source_urls": [
+    "https://www.grvc.ru/",
+    "https://www.grvc.ru/about/",
+    "https://yandex.com/maps/org/regional_market_on_gromova_street/1154153350/",
+    "https://yandex.com/maps/54/yekaterinburg/house/ulitsa_gromova_145/"
+   ],
+   "website": "https://www.grvc.ru/",
+   "status": "active",
+   "verification_status": "verified",
+   "subcategory": "Продуктовый рынок",
+   "features": {
+    "farm_products": true,
+    "food_court": true,
+    "parking": true
+   },
+   "additional_services": [
+    "Фермерские продукты",
+    "Фудкорт",
+    "Парковка"
+   ],
+   "photo_sources": [],
+   "avg_check": null,
+   "official_name": "Областной рынок на Громова",
+   "original_name": "Областной рынок на Громова",
+   "country": "Россия",
+   "coord_source": "https://yandex.com/maps/54/yekaterinburg/house/ulitsa_gromova_145/",
+   "description_source": "https://www.grvc.ru/about/"
   }
  ],
  "routes": [
