@@ -124,13 +124,14 @@ export class MapView {
           close.setAttribute("aria-label", "Закрыть предупреждение");
           close.textContent = "×";
           close.addEventListener("click", () => {
-            this.dismissedNoticeSignature = noticeSignature;
+            this.dismissedNoticeSignature = this.emptyNotice?.dataset.signature || noticeSignature;
             this.emptyNotice?.remove();
             this.emptyNotice = null;
           });
           this.emptyNotice.append(message, close);
           this.map.getContainer().append(this.emptyNotice);
         }
+        this.emptyNotice.dataset.signature = noticeSignature;
         const message = this.emptyNotice.querySelector(".map-empty__text");
         if (message) message.textContent = exactPlaces.length
           ? `На карте ${exactPlaces.length} точных точек. Ещё ${approximateCount} мест без подтверждённых координат — они доступны в списке.`
