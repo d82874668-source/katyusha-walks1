@@ -208,7 +208,12 @@ export function renderIdealForm() {
     citySearch.select();
     renderCityOptions();
   };
-  citySearch.oninput = () => { renderCityOptions(); sel.value = matchCity(citySearch.value, cities)?.[0] || ""; };
+  citySearch.oninput = () => {
+    renderCityOptions();
+    // При непустом запросе выбираем ближайшее совпадение; очистка поля
+    // не стирает уже выбранный город из скрытой формы.
+    if (citySearch.value.trim()) sel.value = matchCity(citySearch.value, cities)?.[0] || "";
+  };
   citySearch.onkeydown = (event) => {
     if (event.key === "Escape") { closeCityOptions(); citySearch.blur(); }
     if (event.key === "Enter") {
