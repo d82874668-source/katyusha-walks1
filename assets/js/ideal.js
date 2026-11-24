@@ -1,6 +1,7 @@
 // «Мой идеальный день»: подбор программы по настроению, городу, бюджету, времени и интересам.
 // Алгоритм детерминирован при одном seed и не использует внешние сервисы: работает офлайн на данных каталога.
 import { state } from "./state.js?v=20261124r";
+import { PLACES } from "./data.js?v=20261124mapcategories";
 import { $, $$, icon, esc, cat, cover, toast, fmtMin } from "./ui.js?v=20261124n";
 import { MOODS, ROLES, ATMOSPHERES, VENUE_GROUPS, kindOf, groupOf, visitMinutes, currencyFor } from "./taxonomy.js?v=20261124idealfallback";
 import { estimateLeg, haversineKm, fmtDist } from "./map.js?v=20261124n";
@@ -139,15 +140,38 @@ function matchCity(query, cities) {
   return matches[0] || null;
 }
 
+function availableCities() {
+  // Объединяем актуальные данные API и локальный каталог. Если API временно
+  // вернул пустой/неполный список, города из встроенной базы не исчезают.
+  const merged = [...(Array.isArray(state.places) ? state.places : []), ...PLACES];
+  const byCity = new Map();
+  for (const place of merged) {
+    const city = String(place?.city || "").trim();
+    const key = normalizeCity(city);
+    if (!city || !key) continue;
+    if (!byCity.has(key)) byCity.set(key, { city, ids: new Set() });
+    const entry = byCity.get(key);
+    if (place.id != null) entry.ids.add(String(place.id));
+    else entry.ids.add(`fallback-${entry.ids.size}`);
+  }
+  return [...byCity.values()]
+    .map(({ city, ids }) => [city, ids.size])
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
+}
+
 function readForm() {
   const f = $("#idealForm"), data = new FormData(f);
   const budget = data.get("budget") === "" ? null : Number(data.get("budget"));
-  const typedCity = $("#idealCitySearch").value.trim();
-  const cities = [...new Set(state.places.map((p) => String(p.city || "").trim()).filter(Boolean))]
-    .map((city) => [city, state.places.filter((p) => String(p.city || "").trim() === city).length]);
+  const citySearch = $("#idealCitySearch");
+  const typedCity = citySearch.value.trim();
+  const cities = availableCities();
   const matchedCity = matchCity(typedCity, cities);
   const city = typedCity ? matchedCity?.[0] || "" : data.get("city") || "";
-  if (city) $("#idealCity").value = city;
+  if (city) {
+    $("#idealCity").value = city;
+    citySearch.value = city;
+    $("#idealCity").dispatchEvent(new Event("change", { bubbles: true }));
+  }
   return {
     mood: data.get("mood") || "romantic", city, cityQuery: typedCity, cityResolved: Boolean(city),
     budget: Number.isFinite(budget) ? budget : null,
@@ -158,9 +182,7 @@ function readForm() {
 }
 
 export function renderIdealForm() {
-  const cities = [...new Set(state.places.map((p) => String(p.city || "").trim()).filter(Boolean))]
-    .map((city) => [city, state.places.filter((p) => String(p.city || "").trim() === city).length])
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
+  const cities = availableCities();
   const sel = $("#idealCity");
   const citySearch = $("#idealCitySearch");
   const cityOptions = $("#idealCityOptions");
@@ -210,16 +232,24 @@ export function renderIdealForm() {
   };
   citySearch.oninput = () => {
     renderCityOptions();
-    // При непустом запросе выбираем ближайшее совпадение; очистка поля
-    // не стирает уже выбранный город из скрытой формы.
-    if (citySearch.value.trim()) sel.value = matchCity(citySearch.value, cities)?.[0] || "";
+    // Автоматически фиксируем лучший результат даже без клика по подсказке.
+    const best = matchCity(citySearch.value, cities);
+    if (citySearch.value.trim() && best) {
+      sel.value = best[0];
+      updateCurrency();
+    }
   };
   citySearch.onkeydown = (event) => {
     if (event.key === "Escape") { closeCityOptions(); citySearch.blur(); }
     if (event.key === "Enter") {
       event.preventDefault();
-      const first = cityOptions.querySelector("[data-ideal-city]");
-      if (first) first.click();
+      const best = matchCity(citySearch.value, cities);
+      if (best) {
+        sel.value = best[0];
+        citySearch.value = best[0];
+        sel.dispatchEvent(new Event("change", { bubbles: true }));
+        closeCityOptions();
+      }
     }
   };
   cityOptions.onclick = (event) => {
