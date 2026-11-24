@@ -8,4 +8,6 @@ export const state = {
   plan: { ids: [], mode: "walk", name: "" },
   saved: [],
 };
-export const byId = (id) => state.places.find((p) => p.id === id);
+// Supabase может сериализовать bigint как строку, а локальные ID — как числа.
+// Сравниваем нормализованно, чтобы карточка всегда открывала правильную запись.
+export const byId = (id) => state.places.find((p) => String(p.id) === String(id));
