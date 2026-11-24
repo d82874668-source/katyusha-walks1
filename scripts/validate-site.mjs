@@ -32,6 +32,7 @@ if (!robots.includes("Sitemap: " + sitemapUrl)) errors.push("robots.txt does not
 if (!sitemap.includes("<loc>" + canonical + "</loc>")) errors.push("Sitemap does not contain the canonical URL");
 if (!ui.includes('alt="${esc(p.title)}"')) errors.push("Place image alt text is missing");
 if (!app.includes("historyGrid") || !app.includes("recordVisit(p.id)")) errors.push("Recently viewed places feature is missing");
+if (!app.includes("customCollections") || !app.includes("createCustomCollection") || !app.includes("shareCustomCollection")) errors.push("Personal collections feature is missing");
 if (app.includes("Синхронизируется между вашими устройствами")) errors.push("Favorites UI claims cross-device sync without authentication");
 if (!map.includes("hasExactCoordinates") || !map.includes("approximate: true")) errors.push("Map coordinate safety guards are missing");
 if (!planner.includes("hasExactCoordinates")) errors.push("Planner coordinate safety guards are missing");
@@ -43,5 +44,5 @@ if (errors.length) {
   errors.forEach((error) => console.error(" - " + error));
   process.exitCode = 1;
 } else {
-  console.log("PASSED: SEO metadata, accessibility entry point, sitemap, personal history and coordinate safeguards.");
+  console.log("PASSED: SEO metadata, accessibility, sitemap, personal history, custom collections and coordinate safeguards.");
 }
