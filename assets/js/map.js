@@ -93,6 +93,7 @@ export class MapView {
     }).addTo(this.map);
     this.routeLayer = L.layerGroup().addTo(this.map);
     this.emptyNotice = null;
+    this.dismissedNoticeSignature = null;
     // Колесо мыши масштабирует только после клика по карте: страница не «залипает» при скролле.
     this.map.on("focus", () => this.map.scrollWheelZoom.enable());
     this.map.on("blur", () => this.map.scrollWheelZoom.disable());
@@ -106,20 +107,42 @@ export class MapView {
     const exactPlaces = places.filter((p) =>
       !p.is_approx && hasExactCoordinates(p)
     );
-    const approximateCount = places.length - exactPlaces.length;
+    const approximatePlaces = places.filter((p) => p.is_approx || !hasExactCoordinates(p));
+    const approximateCount = approximatePlaces.length;
+    const noticeSignature = approximatePlaces.map((p) => String(p.id)).sort().join("|");
     if (approximateCount > 0) {
-      if (!this.emptyNotice) {
-        this.emptyNotice = document.createElement("div");
-        this.emptyNotice.className = "map-empty";
-        this.emptyNotice.setAttribute("role", "status");
-        this.map.getContainer().append(this.emptyNotice);
+      if (this.dismissedNoticeSignature !== noticeSignature) {
+        if (!this.emptyNotice) {
+          this.emptyNotice = document.createElement("div");
+          this.emptyNotice.className = "map-empty";
+          this.emptyNotice.setAttribute("role", "status");
+          const message = document.createElement("span");
+          message.className = "map-empty__text";
+          const close = document.createElement("button");
+          close.className = "map-empty__close";
+          close.type = "button";
+          close.setAttribute("aria-label", "Закрыть предупреждение");
+          close.textContent = "×";
+          close.addEventListener("click", () => {
+            this.dismissedNoticeSignature = noticeSignature;
+            this.emptyNotice?.remove();
+            this.emptyNotice = null;
+          });
+          this.emptyNotice.append(message, close);
+          this.map.getContainer().append(this.emptyNotice);
+        }
+        const message = this.emptyNotice.querySelector(".map-empty__text");
+        if (message) message.textContent = exactPlaces.length
+          ? `На карте ${exactPlaces.length} точных точек. Ещё ${approximateCount} мест без подтверждённых координат — они доступны в списке.`
+          : `У ${approximateCount} выбранных мест координаты ещё уточняются. Они доступны в списке.`;
+      } else if (this.emptyNotice) {
+        this.emptyNotice.remove();
+        this.emptyNotice = null;
       }
-      this.emptyNotice.textContent = exactPlaces.length
-        ? `На карте ${exactPlaces.length} точных точек. Ещё ${approximateCount} мест пока без подтверждённых координат — они доступны в списке.`
-        : `Для выбранных мест пока нет точных координат. ${approximateCount} мест остаются в списке — адреса уточняются.`;
-    } else if (this.emptyNotice) {
-      this.emptyNotice.remove();
+    } else {
+      if (this.emptyNotice) this.emptyNotice.remove();
       this.emptyNotice = null;
+      this.dismissedNoticeSignature = null;
     }
     exactPlaces.forEach((p, idx) => {
       const c = CATEGORIES[p.category] || { icon: "pin", hue: 340 };
