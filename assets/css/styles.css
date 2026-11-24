@@ -121,7 +121,7 @@ h3{font-size:18px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
 .hero{position:relative;min-height:min(100svh,860px);display:flex;align-items:center;padding:calc(var(--nav-h) + 40px) 0 72px;background:var(--sky);overflow:hidden}
 .hero__towers{position:absolute;right:max(0px,calc((100% - 1180px)/2 - 40px));bottom:0;height:min(88%,640px);width:auto;pointer-events:none;opacity:.92;transform-origin:50% 100%;animation:rise 1.4s cubic-bezier(.2,.8,.2,1) both}
 [data-theme="dark"] .hero__towers{filter:drop-shadow(0 0 60px rgba(255,92,128,.35))}
-.hero__in{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.6fr);gap:40px;align-items:end}
+.hero__in{position:relative;display:grid;grid-template-columns:1fr;gap:40px;align-items:end}
 .hero h1{font:400 clamp(52px,9.5vw,128px)/.92 var(--display);letter-spacing:-.025em;margin-bottom:24px;max-width:9ch;animation:in .9s .1s cubic-bezier(.2,.8,.2,1) both}
 .hero .lead{animation:in .9s .25s cubic-bezier(.2,.8,.2,1) both;color:color-mix(in srgb,var(--ink) 72%,transparent)}
 .hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;animation:in .9s .4s cubic-bezier(.2,.8,.2,1) both}
@@ -578,7 +578,7 @@ a,button,input,select{ -webkit-tap-highlight-color:transparent }
   filter:saturate(.62);
 }
 [data-theme="dark"] .hero__towers{opacity:.35;filter:saturate(.7) drop-shadow(0 0 60px rgba(217,133,101,.2))}
-.hero__in{grid-template-columns:minmax(0,1.25fr) minmax(260px,.58fr);gap:56px;align-items:end}
+.hero__in{grid-template-columns:1fr;gap:56px;align-items:end}
 .hero__copy{padding-bottom:20px}
 .hero h1{font-size:clamp(54px,8.2vw,112px);line-height:.94;max-width:10ch;letter-spacing:-.045em}
 .hero .lead{font-size:clamp(17px,1.7vw,20px);max-width:48ch;color:color-mix(in srgb,var(--ink) 76%,transparent)}
@@ -904,7 +904,7 @@ h3{letter-spacing:-.025em}
   z-index:-1;
 }
 .hero__towers{display:none}
-.hero__in{grid-template-columns:minmax(0,1.2fr) minmax(270px,.55fr);gap:48px;align-items:end}
+.hero__in{grid-template-columns:1fr;gap:48px;align-items:end}
 .hero__copy{padding-bottom:18px}
 .hero h1{font-size:clamp(54px,7.8vw,106px);line-height:.94;max-width:10ch;margin-bottom:20px}
 .hero .lead{max-width:47ch;font-size:clamp(17px,1.55vw,20px);color:var(--muted)}
