@@ -212,9 +212,21 @@
     .modal-hero { height: 220px; }
     .modal-title h2 { font-size: 22px; }
   }
-</style>
+html[data-theme="dark"] body{background:#111821;color:#e7edf4}
+html[data-theme="dark"] .header{background:#111821;border-color:#293544}
+html[data-theme="dark"] .brand-name{color:#fff}
+html[data-theme="dark"] .place-card,html[data-theme="dark"] .modal{background:#1b2633;color:#e7edf4;border-color:#334153}
+html[data-theme="dark"] .place-desc,html[data-theme="dark"] .modal-section p{color:#d0d9e3!important}
+html[data-theme="dark"] .place-addr,html[data-theme="dark"] .place-city{color:#aab7c5}
+html[data-theme="dark"] .filters select,html[data-theme="dark"] .filters input,html[data-theme="dark"] .chip{background:#202b38;color:#e7edf4;border-color:#3a4858}
+html[data-theme="dark"] .filters button,html[data-theme="dark"] .btn-ghost{background:#2b3949;color:#e7edf4}
+html[data-theme="dark"] .modal-info-card,html[data-theme="dark"] .route-point,html[data-theme="dark"] .map-chooser{background:#202b38;color:#e7edf4}
+.theme-toggle{padding:10px 13px;border:1px solid #e8e2d7;border-radius:999px;background:#fff;color:#26342e;font:600 12px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+html[data-theme="dark"] .theme-toggle{background:#202b38;border-color:#3a4858;color:#e7edf4}
+@media(max-width:1100px){.header-inner{grid-template-columns:auto 1fr auto}.theme-toggle{grid-column:3;grid-row:1}.header-cta{grid-column:2;grid-row:1}}
+@media(max-width:640px){.theme-toggle{padding:9px 10px;font-size:11px}.header-cta{padding:9px 11px;font-size:11px}}</style>
 </head>
-<body>
+<body><script>(function(){try{if(localStorage.getItem("kw-theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}})();</script>
 
 <div id="errorBanner" class="error-banner"></div>
 
@@ -228,7 +240,7 @@
       </div>
    </div>
     <nav class="nav" id="nav" aria-label="Основная навигация"></nav>
-    <button class="header-cta" onclick="nav('catalog')">Найти место <span aria-hidden="true">↗</span></button>
+    <button class="header-cta" onclick="nav('catalog')">Найти место <span aria-hidden="true">↗</span></button><button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()"><span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная тема</span></button>
   </div>
 </header>
 
@@ -610,5 +622,5 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   if(img.complete) clean(); else img.addEventListener('load',clean,{once:true});
 })();
 </script>
-</body>
+<script>function applyTheme(t){const d=t==="dark";document.documentElement.dataset.theme=d?"dark":"light";try{localStorage.setItem("kw-theme",d?"dark":"light")}catch(e){}const i=document.getElementById("themeIcon"),l=document.getElementById("themeLabel");if(i)i.textContent=d?"☀️":"🌙";if(l)l.textContent=d?"Светлая тема":"Тёмная тема";const m=document.querySelector("meta[name=theme-color]");if(m)m.content=d?"#111821":"#faf7f2"}function toggleTheme(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")}document.addEventListener("DOMContentLoaded",()=>applyTheme(document.documentElement.dataset.theme==="dark"?"dark":"light"));</script></body>
 </html>
