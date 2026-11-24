@@ -996,6 +996,11 @@ h3{letter-spacing:-.025em}
 .route{padding:20px}
 .route h3{font-size:18px}
 .fav{padding:13px}
+.sec__head--compact{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:26px 0 12px}
+.sec__head--compact h3{margin:0;font:600 19px/1.25 var(--font);letter-spacing:-.02em}
+#historyGrid .fav{flex-wrap:wrap}
+#historyGrid .fav__t{min-width:160px}
+
 .about{gap:34px 56px}
 .counts{gap:14px 44px}
 .foot{background:var(--surface);padding:34px 0 calc(34px + env(safe-area-inset-bottom))}
@@ -1018,6 +1023,10 @@ h3{letter-spacing:-.025em}
   .sec[data-collapsible="true"]>.wrap{width:min(100% - 32px,1240px)}
   .sec[data-collapsible="true"] .sec__head h2{font-size:34px}
   .sec[data-collapsible="true"] .sec__head>.muted{display:block;font-size:13px}
+  .sec__head--compact{align-items:center;margin:22px 0 10px}
+  #historyGrid .fav{gap:8px;padding:11px}
+  #historyGrid .fav__t{flex:1 1 calc(100% - 60px);min-width:0}
+  #historyGrid .fav .btn{flex:1 1 auto;min-height:40px}
   .mapbox{height:auto;min-height:0;grid-template-columns:1fr}
   .mapbox__side{max-height:380px}
   .mapbox__stage{min-height:360px}
