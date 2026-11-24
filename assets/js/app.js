@@ -198,18 +198,17 @@ const visible = () => {
 };
 
 function renderRegionFilter() {
-  const select = $("#regionFilter");
-  // В фильтре доступны и конкретные города, и страны/административные регионы.
+  const input = $("#regionFilter");
+  // Подсказки доступны при вводе города, страны или региона с клавиатуры.
   const values = [...new Set(state.places.flatMap((p) =>
     [p.city, p.country, p.region].map((value) => String(value || "").trim()).filter(Boolean)
   ))].sort((a, b) => a.localeCompare(b, "ru"));
   const selected = values.includes(state.region) ? state.region : "all";
-  select.innerHTML = [
-    '<option value="all">Все города и регионы</option>',
-    ...values.map((value) => `<option value="${esc(value)}">${esc(value)}</option>`)
-  ].join("");
+  $("#regionOptions").innerHTML = values.map((value) =>
+    `<option value="${esc(value)}"></option>`
+  ).join("");
   state.region = selected;
-  select.value = selected;
+  input.value = selected === "all" ? "" : selected;
 }
 
 function renderChips() {
@@ -639,10 +638,32 @@ $("#historyClear")?.addEventListener("click", () => {
 $("#search").addEventListener("input", (e) => { state.q = e.target.value; applyFilter(); });
 $("#resetFilters").addEventListener("click", () => {
   Object.assign(state, { filter: "all", region: "all", q: "", minRating: 0, minPrice: null, maxPrice: null, sort: "popularity" });
-  $("#search").value = ""; $("#regionFilter").value = "all"; $("#priceMin").value = ""; $("#priceMax").value = "";
+  $("#search").value = ""; $("#regionFilter").value = ""; $("#priceMin").value = ""; $("#priceMax").value = "";
   $("#minRating").value = "0"; $("#sortPlaces").value = "popularity"; closeSheet(); applyFilter();
 });
-$("#regionFilter").addEventListener("change", (e) => { state.region = e.target.value; closeSheet(); applyFilter(); });
+const regionInput = $("#regionFilter");
+function applyTypedRegion() {
+  const raw = regionInput.value.trim();
+  if (!raw) state.region = "all";
+  else {
+    const values = [...new Set(state.places.flatMap((p) =>
+      [p.city, p.country, p.region].map((value) => String(value || "").trim()).filter(Boolean)
+    ))];
+    const match = values.find((value) => value.toLocaleLowerCase("ru") === raw.toLocaleLowerCase("ru"));
+    if (match) state.region = match;
+    else {
+      const suggestion = values.find((value) => value.toLocaleLowerCase("ru").startsWith(raw.toLocaleLowerCase("ru")));
+      if (suggestion) { state.region = suggestion; regionInput.value = suggestion; }
+      else { state.region = raw; }
+    }
+  }
+  closeSheet();
+  applyFilter();
+}
+regionInput.addEventListener("change", applyTypedRegion);
+regionInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { e.preventDefault(); applyTypedRegion(); regionInput.blur(); }
+});
 $("#priceMin").addEventListener("input", (e) => { state.minPrice = e.target.value === "" ? null : Number(e.target.value); applyFilter(); });
 $("#priceMax").addEventListener("input", (e) => { state.maxPrice = e.target.value === "" ? null : Number(e.target.value); applyFilter(); });
 $("#minRating").addEventListener("change", (e) => { state.minRating = Number(e.target.value); applyFilter(); });
