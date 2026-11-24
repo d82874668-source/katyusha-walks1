@@ -920,5 +920,21 @@ window.openThemeCollection=function(id){
 })();
 
 </script>
+<script id="katyusha-custom-route-maps">
+
+(function(){
+window.openMyRouteMap=function(){
+ let ids=[];try{ids=JSON.parse(localStorage.getItem('kwk_my_route')||'[]').map(String)}catch(e){}
+ const pts=ids.map(findPlace).filter(p=>p&&hasMapCoords(p)&&!p.is_approx);
+ if(pts.length<2){toast('Добавьте минимум два места с точными координатами');return}
+ const id='__my_custom_route__';let route=ROUTES.find(r=>String(r.id)===id);
+ if(!route){route={id,city:pts[0].city,name:'Мой маршрут',duration:'',distance:'',desc:'Ваш личный маршрут из сохранённых мест.',points:ids};ROUTES.unshift(route)}
+ else{route.city=pts[0].city;route.points=ids;route.desc='Ваш личный маршрут из сохранённых мест.'}
+ openRoute(id);
+ openRouteMapChooser(id);
+};
+})();
+
+</script>
 </body>
 </html>
