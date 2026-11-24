@@ -2,11 +2,11 @@
 import { CATEGORIES, PLACES, ROUTES } from "./data.js?v=20261124n";
 import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124n";
 import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./map.js?v=20261124p";
-import { state, byId } from "./state.js?v=20261124n";
+import { state, byId } from "./state.js?v=20261124r";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124n";
 import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124n";
-import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124n";
-import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124n";
+import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124r";
+import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124r";
 
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
 const cityOrigin = (place) => {
@@ -230,7 +230,7 @@ function applyFilter(fit = true) {
   const list = visible();
   renderChips(); renderList();
   mapView?.setPlaces(list, fit);
-  if (state.active && !list.some((p) => p.id === state.active)) closeSheet();
+  if (state.active && !list.some((p) => String(p.id) === String(state.active))) closeSheet();
 }
 
 /* ---------- Карточка места поверх карты ---------- */
@@ -246,7 +246,7 @@ function openPlace(id, { scroll = false } = {}) {
   renderSheet(); renderList();
   // Расстояние и время считаем от пользователя (если разрешил геолокацию) или от центра города
   route([origin, p]).then((r) => {
-    if (state.active !== id) return;
+    if (String(state.active) !== String(id)) return;
     const el = $("#eta");
     if (el) el.innerHTML = `${icon("route")}<span><strong>${fmtDist(r.km)}</strong> · <strong>${fmtDur(r.min)}</strong> на машине от ${state.user ? "вас" : esc(origin.label || p.city || CENTER.label)}</span>`;
   }).catch(() => { const el = $("#eta"); if (el) el.textContent = "Расстояние сейчас недоступно"; });
