@@ -64,7 +64,30 @@ function retime(stops, o) {
 
 export function generate(o, seed) {
   const rand = rng(seed), mood = MOODS[o.mood], limit = o.hours * 60;
-  o.pool = state.places.filter((p) => p.city === o.city && Number.isFinite(+p.latitude) && Number.isFinite(+p.longitude));
+  // Подбор должен использовать тот же объединённый каталог, что и поиск города.
+  // Supabase может вернуть неполный набор/вариант написания города; локальный
+  // каталог остаётся резервом, а одинаковые ID не дублируются.
+  const allPlaces = new Map();
+  for (const place of [...PLACES, ...(Array.isArray(state.places) ? state.places : [])]) {
+    if (!place || place.id == null) continue;
+    const key = String(place.id);
+    const previous = allPlaces.get(key);
+    // Предпочитаем актуальную запись из state (Supabase), но сохраняем
+    // резервную локальную запись, если в API нет этой точки.
+    allPlaces.set(key, previous ? { ...place, ...previous } : place);
+  }
+  const targetCity = normalizeCity(o.city);
+  const targetAliases = (CITY_ALIASES[o.city] || []).map(normalizeCity);
+  const cityMatches = (value) => {
+    const key = normalizeCity(value);
+    return key === targetCity || targetAliases.includes(key) ||
+      (targetAliases.some((alias) => alias === key));
+  };
+  o.pool = [...allPlaces.values()].filter((p) =>
+    cityMatches(p.city) && Number.isFinite(Number(p.latitude)) &&
+    Number.isFinite(Number(p.longitude)) && String(p.latitude).trim() !== "" &&
+    String(p.longitude).trim() !== ""
+  );
   const stops = [], used = new Set(), brands = new Set(), missing = new Set();
   let spent = 0, clock = mood.start * 60;
   const roles = [...mood.roles, ...EXTRA_ROLES, ...EXTRA_ROLES];
