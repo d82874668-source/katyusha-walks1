@@ -3,7 +3,7 @@
 
 /** Категории, которые считаются достопримечательностями («Открой город»). Остальное — заведения («Куда сходить»). */
 export const SIGHT_CATS = new Set([
-  "city", "attraction", "museum", "exhibition", "viewpoint", "park", "garden", "square", "embankment", "beach", "sea", "trips", "monument", "historic", "nature", "excursion",
+  "city", "attraction", "museum", "exhibition", "viewpoint", "park", "garden", "square", "embankment", "beach", "sea", "trips", "monument", "historic", "nature", "excursion", "zoo", "capybara",
 ]);
 export const kindOf = (p) => (SIGHT_CATS.has(p.category) ? "sight" : "venue");
 
@@ -15,9 +15,9 @@ export const VENUE_GROUPS = [
   { key: "bar", title: "Бары", cats: ["bar", "pub", "winebar"] },
   { key: "spa", title: "Бани и SPA", cats: ["spa", "bath", "thermal", "pool", "resort", "massage", "hotel"] },
   { key: "gaming", title: "Компьютерные клубы", cats: ["gaming", "gaming247", "esports", "gamecenter", "vr"] },
-  { key: "mall", title: "Торговые центры", cats: ["mall", "shop", "market", "entertainment", "quest", "karaoke", "zoo", "capybara", "recreation", "gym", "theatre", "karting", "boat"] },
-  { key: "cinema", title: "Кинотеатры", cats: ["cinema"] },
-  { key: "culture", title: "Культурные пространства", cats: ["cultural_space"] },
+  { key: "mall", title: "Торговые центры и рынки", cats: ["mall", "shop", "market"] },
+  { key: "fun", title: "Развлечения и активный отдых", cats: ["entertainment", "quest", "karaoke", "recreation", "gym", "karting", "boat", "cinema", "bowling", "billiards"] },
+  { key: "culture", title: "Театры и культурные пространства", cats: ["cultural_space", "theatre"] },
   { key: "aquapark", title: "Аквапарки", cats: ["aquapark"] },
   { key: "night", title: "Ночные клубы", cats: ["nightclub"] },
   { key: "bowling", title: "Боулинг и бильярд", cats: ["bowling", "billiards"] },
