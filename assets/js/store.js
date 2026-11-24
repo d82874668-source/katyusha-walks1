@@ -1,6 +1,6 @@
 // Слой данных: Supabase REST API + резервный локальный каталог.
 import { CONFIG } from "./config.js?v=20261124n";
-import { PLACES, ROUTES } from "./data.js?v=20261124n";
+import { PLACES, ROUTES } from "./data.js?v=20261124o";
 
 const LS_KEY = "katyusha:favorites";
 let lastLoadMode = "local";
@@ -132,6 +132,12 @@ export async function loadData() {
       // При конфликте источников выбираем безопасный вариант: если хотя бы один
       // источник считает точку приблизительной, не выдаём её за точный адрес.
       merged.is_approx = Boolean(remote.is_approx) || Boolean(backup.is_approx);
+      // Для Milli Gaming Arena используем фото, подтверждённое пользователем:
+      if (String(merged.id) === "15" || merged.title === "Milli Gaming Arena") {
+        merged.image = backup.image;
+        if (Array.isArray(backup.source_urls)) merged.source_urls = backup.source_urls;
+        if (Array.isArray(backup.photo_sources)) merged.photo_sources = backup.photo_sources;
+      }
       return merged;
     });
 
