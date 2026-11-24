@@ -588,7 +588,7 @@ $("#discoverCitySearch").addEventListener("input", (e) => {
 });
 $("#venueCitySearch").addEventListener("input", (e) => {
   venueCityQuery = e.target.value;
-  const cities = citiesFor((p) => kindOf(p) === "venue");
+  const cities = citiesFor((p) => kindOf(p) === "venue" && p.category !== "aquapark");
   $("#venueCities").innerHTML = cityChips(cities, state.venueCity, venueCityQuery);
 });
 $("#fitBtn").addEventListener("click", () => { ensureMap().clearRoute(); mapView.fit(visible()); });
