@@ -410,7 +410,7 @@ function updateMapMarkers(){
   const hue=hues[p.category]||205;
   const glyph=categoryIcon(p.category)||'•';
   const marker=L.marker([Number(p.latitude),Number(p.longitude)],{title:p.title,icon:L.divIcon({className:'kw-pin-wrap',html:'<div class="kw-pin" style="--hue:'+hue+'"><span>'+esc(glyph)+'</span></div>',iconSize:[38,38],iconAnchor:[19,35],popupAnchor:[0,-32]})}).addTo(mapInst);
-  marker.bindPopup('<div style="min-width:190px"><img src="'+esc(photo(p))+'" alt="" style="width:100%;height:92px;object-fit:cover;border-radius:8px;margin-bottom:7px" onerror="this.style.display=\\'none\\'"><strong>'+esc(p.title)+'</strong><div style="font-size:12px;color:#6b7785;margin:4px 0 9px">'+esc(p.address||p.city)+'</div><button onclick="openPlace(\\''+esc(p.id)+'\\')" style="background:#c75d45;color:#fff;border:0;padding:7px 12px;border-radius:8px;cursor:pointer">Подробнее</button></div>');
+  marker.bindPopup('<div style="min-width:190px"><img src="'+esc(photo(p))+'" alt="" style="width:100%;height:92px;object-fit:cover;border-radius:8px;margin-bottom:7px"><strong>'+esc(p.title)+'</strong><div style="font-size:12px;color:#6b7785;margin:4px 0 9px">'+esc(p.address||p.city)+'</div><small>Нажмите на метку, чтобы открыть карточку</small></div>');
   marker.on('click',()=>openPlace(p.id));markers.push(marker);
  });
  if(list.length){const bounds=L.latLngBounds(list.map(p=>[Number(p.latitude),Number(p.longitude)]));mapInst.fitBounds(bounds,{padding:[55,55],maxZoom:state.mapCity==='all'?6:15});}
