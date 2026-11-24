@@ -679,3 +679,85 @@ button,a{touch-action:manipulation}
  .header .brand .logo{flex-basis:48px!important}
  .header .brand .brand-name{font-size:14px!important}
 }
+
+
+/* ===== Brand identity refresh: balanced desktop + mobile logo ===== */
+.header .header-inner{align-items:center!important}
+.header .brand{
+  display:flex!important;align-items:center!important;gap:13px!important;
+  min-width:0!important;flex-wrap:nowrap!important;
+}
+.header .brand .logo{
+  appearance:none!important;-webkit-appearance:none!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 64px!important;width:64px!important;height:64px!important;
+  min-width:64px!important;max-width:64px!important;
+  padding:0!important;margin:0!important;overflow:visible!important;
+  border:0!important;border-radius:19px!important;background:transparent!important;
+  box-shadow:0 5px 16px rgba(18,29,43,.14)!important;
+  cursor:pointer!important;line-height:0!important;
+}
+.header .brand .logo-image{
+  display:block!important;width:64px!important;height:64px!important;
+  min-width:64px!important;max-width:64px!important;
+  object-fit:contain!important;object-position:center!important;
+  border:0!important;border-radius:19px!important;background:transparent!important;
+  filter:drop-shadow(0 2px 3px rgba(16,27,40,.12))!important;
+}
+.header .brand .brand-copy{
+  display:flex!important;flex:0 1 auto!important;flex-direction:column!important;
+  justify-content:center!important;min-width:0!important;gap:0!important;
+}
+.header .brand .brand-name{
+  display:block!important;font-family:'Fraunces',Georgia,serif!important;
+  font-size:clamp(18px,1.55vw,22px)!important;font-weight:700!important;
+  letter-spacing:-.035em!important;line-height:1.12!important;
+  white-space:nowrap!important;
+}
+.header .brand .brand-tagline{
+  display:block!important;margin-top:5px!important;
+  font-size:9px!important;font-weight:700!important;
+  letter-spacing:.12em!important;line-height:1.25!important;
+  white-space:nowrap!important;
+}
+.mobile-theme-toggle{display:none}
+@media(min-width:1101px){
+  .header{padding-top:7px!important;padding-bottom:7px!important}
+  .header-inner{min-height:78px!important;grid-template-columns:minmax(255px,1fr) auto auto!important;gap:22px!important}
+  .header .brand .logo,.header .brand .logo-image{width:66px!important;height:66px!important;min-width:66px!important;max-width:66px!important}
+  .header .brand .logo{flex-basis:66px!important}
+}
+@media(min-width:761px) and (max-width:1100px){
+  .header-inner{min-height:74px!important}
+  .header .brand .logo,.header .brand .logo-image{width:60px!important;height:60px!important;min-width:60px!important;max-width:60px!important}
+  .header .brand .logo{flex-basis:60px!important}
+  .header .brand .brand-name{font-size:19px!important}
+}
+@media(max-width:760px){
+  .header .header-inner{display:flex!important;align-items:center!important;justify-content:space-between!important;min-height:60px!important;gap:9px!important}
+  .header .brand{flex:1 1 auto!important;width:auto!important;min-width:0!important;min-height:58px!important;gap:10px!important}
+  .header .brand .logo,.header .brand .logo-image{
+    width:48px!important;height:48px!important;min-width:48px!important;max-width:48px!important;
+  }
+  .header .brand .logo{flex:0 0 48px!important;border-radius:15px!important}
+  .header .brand .logo-image{border-radius:15px!important}
+  .header .brand .brand-copy{flex:1 1 auto!important;min-width:0!important}
+  .header .brand .brand-name{font-size:clamp(14px,4.1vw,17px)!important;line-height:1.13!important;white-space:normal!important}
+  .header .brand .brand-tagline{margin-top:4px!important;font-size:7.5px!important;letter-spacing:.09em!important;white-space:normal!important}
+  .mobile-theme-toggle{
+    display:flex!important;flex:0 0 42px!important;align-items:center!important;justify-content:center!important;
+    width:42px!important;height:42px!important;margin:0 1px 0 0!important;
+    border:1px solid rgba(255,255,255,.22)!important;border-radius:14px!important;
+    background:linear-gradient(145deg,#34465b,#202f42)!important;color:#fff!important;
+    font-size:20px!important;line-height:1!important;
+    box-shadow:0 4px 12px rgba(0,0,0,.2)!important;
+  }
+}
+@media(max-width:380px){
+  .header .brand{gap:8px!important}
+  .header .brand .logo,.header .brand .logo-image{width:44px!important;height:44px!important;min-width:44px!important;max-width:44px!important}
+  .header .brand .logo{flex-basis:44px!important}
+  .header .brand .brand-name{font-size:14px!important}
+  .header .brand .brand-tagline{font-size:7px!important;letter-spacing:.07em!important}
+  .mobile-theme-toggle{width:40px!important;height:40px!important;flex-basis:40px!important}
+}
