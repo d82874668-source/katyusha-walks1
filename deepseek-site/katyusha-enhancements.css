@@ -761,3 +761,24 @@ button,a{touch-action:manipulation}
   .header .brand .brand-tagline{font-size:7px!important;letter-spacing:.07em!important}
   .mobile-theme-toggle{width:40px!important;height:40px!important;flex-basis:40px!important}
 }
+
+
+/* Original brand artwork: preserve the supplied illustration and its natural proportions. */
+.header .brand .logo{
+  width:84px!important;height:70px!important;flex:0 0 84px!important;
+  padding:0!important;overflow:visible!important;background:transparent!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+}
+.header .brand .logo-image{
+  display:block!important;width:100%!important;height:100%!important;
+  min-width:0!important;max-width:none!important;object-fit:contain!important;
+  object-position:center!important;border-radius:0!important;filter:none!important;
+}
+@media(max-width:700px){
+  .header .brand .logo{width:58px!important;height:48px!important;flex:0 0 58px!important}
+  .header .brand .logo-image{width:100%!important;height:100%!important}
+}
+@media(max-width:380px){
+  .header .brand .logo{width:50px!important;height:42px!important;flex-basis:50px!important}
+}
