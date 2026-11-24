@@ -449,7 +449,24 @@ function openRoute(id){const r=ROUTES.find(x=>x.id===id);if(!r)return;const pts=
 function openCollection(id){const c=COLLECTIONS.find(x=>x.id===id);if(!c)return;const list=c.places.map(findPlace).filter(Boolean);$('modal').innerHTML=`<div style="padding:32px;background:linear-gradient(135deg,#c75d45,#a84a37);color:#fff;position:relative"><button class="modal-close" onclick="closeModal()">✕</button><div style="font-size:42px">${c.icon}</div><div class="eyebrow" style="color:#ffe4d6">Подборка</div><h2>${esc(c.name)}</h2><p>${list.length} мест</p></div><div style="padding:24px"><div class="grid">${list.map(placeCardHTML).join('')}</div></div>`;$('overlay').classList.add('open');document.body.style.overflow='hidden';}
 function pluralCities(){return CITIES.length;}
 async function init(){try{const cats=await loadPlaces();populateFilters();renderNav();renderHomeCities();renderHomePlaces();renderChips();$('homeCity').onchange=e=>openCity(e.target.value);$('homeCity').insertAdjacentHTML('afterbegin','');$('errorBanner').classList.remove('show');const hero=$('view-home').querySelector('.hero img');if(hero&&PLACES[0])hero.src=photo(PLACES[0]);$('view-home').querySelector('.hero-sub').textContent=`${PLACES.length} мест · ${CITIES.length} городов · маршруты и подборки`;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal();});console.info(`Новый сайт DeepSeek: ${PLACES.length} записей прочитано из Supabase`);}catch(err){console.error(err);$('errorBanner').textContent='Не удалось загрузить каталог из основной базы: '+err.message;$('errorBanner').classList.add('show');$('homeCities').innerHTML='<div class="empty">Проверьте подключение к базе данных.</div>';}}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+function makeLogoBackgroundTransparent(){
+  const img=document.querySelector('.logo-image');if(!img)return;
+  const process=()=>{
+    try{
+      const canvas=document.createElement('canvas');canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;
+      const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);
+      const frame=ctx.getImageData(0,0,canvas.width,canvas.height);const p=frame.data;
+      for(let i=0;i<p.length;i+=4){
+        const r=p[i],g=p[i+1],b=p[i+2],max=Math.max(r,g,b),min=Math.min(r,g,b),brightness=(r+g+b)/3;
+        if(brightness<24 && max-min<32)p[i+3]=0;
+        else if(brightness<68 && max-min<38)p[i+3]=Math.round(p[i+3]*((brightness-24)/44));
+      }
+      ctx.putImageData(frame,0,0);img.src=canvas.toDataURL('image/png');
+    }catch(e){console.warn('Не удалось обработать фон логотипа',e);}
+  };
+  if(img.complete&&img.naturalWidth)process();else img.addEventListener('load',process,{once:true});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{makeLogoBackgroundTransparent();init();});else{makeLogoBackgroundTransparent();init();}
 
 </script>
 </body>
