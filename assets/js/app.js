@@ -5,8 +5,8 @@ import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./ma
 import { state, byId } from "./state.js?v=20261124r";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124n";
 import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124n";
-import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124r";
-import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124r";
+import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124s";
+import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124s";
 
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
 const cityOrigin = (place) => {
@@ -219,7 +219,7 @@ function renderList() {
   const list = visible();
   $("#placeList").innerHTML = list.length ? list.map((p) => {
     const c = cat(p);
-    return `<li><div class="row ${state.active === p.id ? "is-active" : ""}" data-place="${p.id}" role="button" tabindex="0">
+    return `<li><div class="row ${String(state.active) === String(p.id) ? "is-active" : ""}" data-place="${p.id}" role="button" tabindex="0">
       <span class="badge" style="--h:${c.hue}">${icon(c.icon)}</span>
       <span class="row__t"><strong>${esc(p.title)}</strong><small>${esc(c.title)}</small></span>
       ${favBtn(p)}</div></li>`;
@@ -380,7 +380,7 @@ function renderRoutes() {
 }
 
 async function showRoute(id) {
-  const r = state.routes.find((x) => x.id === id);
+  const r = state.routes.find((x) => String(x.id) === String(id));
   const stops = r.places.map(byId).filter(Boolean);
   if (stops.length < 2) return;
   state.region = stops[0].region || "Азербайджан";
