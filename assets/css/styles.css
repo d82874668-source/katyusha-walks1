@@ -1261,3 +1261,47 @@ main,.wrap,.nav__in,.hero__in,.mapbox,.mapbox__stage,#mapCanvas,.leaflet-contain
   #menu a{color:rgba(255,255,255,.92)}
   #menu a:hover,#menu a[aria-current]{color:#fff;background:rgba(255,255,255,.15)}
 }
+
+
+/* ===== Города сгруппированы по регионам ===== */
+#discoverCities{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:12px;
+  overflow:visible;
+  padding:8px 0 16px;
+}
+#discoverCities>.chip{align-self:flex-start}
+.city-region-group{
+  min-width:0;
+  padding:10px 12px 11px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:color-mix(in srgb,var(--surface) 78%,var(--bg));
+}
+.city-region-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 0 8px;
+  color:var(--ink);
+  font-size:13px;
+}
+.city-region-heading span{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:500;
+}
+.city-region-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.city-region-chips .chip{margin:0}
+@media(max-width:760px){
+  #discoverCities{gap:9px}
+  .city-region-group{padding:9px}
+  .city-region-chips{gap:5px}
+}
