@@ -147,7 +147,7 @@ async function toggleFav(id) {
   const ok = await setFavorite(id, on, state.favs);
   if (!ok) toast("Не удалось синхронизировать, сохранено на этом устройстве");
   else toast(on ? "Добавлено в избранное" : "Убрано из избранного");
-  renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); renderAquaparks(); refreshIdeal();
+  renderFavs(); renderList(); renderSheet(); renderDiscover(); renderVenues(); refreshIdeal();
 }
 const favBtn = (p, cls = "") => {
   const on = state.favs.has(p.id);
@@ -316,7 +316,6 @@ const cityChips = (list, active, query = "") => {
 };
 let discoverCityQuery = "";
 let venueCityQuery = "";
-let waterCityQuery = "";
 const byQuality = (a, b) => (Number(b.rating || 0) - Number(a.rating || 0)) || (Number(b.review_count || 0) - Number(a.review_count || 0)) || (!!b.image - !!a.image) || String(a.title).localeCompare(String(b.title), "ru");
 
 function renderDiscover() {
