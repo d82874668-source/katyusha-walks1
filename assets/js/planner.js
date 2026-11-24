@@ -1,7 +1,7 @@
 // «Спланируй прогулку»: ручной конструктор маршрута (добавление, порядок, режим, участки, сохранение, ссылка).
 import { state, byId } from "./state.js?v=20261124r";
 import { $, $$, icon, esc, cat, toast, fmtMin } from "./ui.js?v=20261124n";
-import { MapView, route, estimateLeg, haversineKm, googleUrl, osmUrl, fmtDist, fmtDur } from "./map.js?v=20261124n";
+import { MapView, route, estimateLeg, haversineKm, googleUrl, osmUrl, fmtDist, fmtDur } from "./map.js?v=20261124v";
 import { visitMinutes, currencyFor } from "./taxonomy.js?v=20261124n";
 
 const LS_PLAN = "rfn:plan", LS_SAVED = "rfn:saved-routes";
@@ -35,6 +35,7 @@ const move = (from, to) => {
 /** Порядок по ближайшему соседу: первая точка остаётся, дальше всегда идём к ближайшей из оставшихся. */
 function optimize() {
   const pts = stops();
+  if (pts.some((p) => p.is_approx)) return toast("Сначала уточним координаты всех мест — иначе порядок может получиться неверным");
   if (pts.length < 3) return toast("Для оптимизации нужно минимум три места");
   const left = pts.slice(1), order = [pts[0]];
   while (left.length) {
@@ -61,6 +62,14 @@ async function refreshLegs() {
   legs = []; legsExact = false;
   paintLegs(pts);
   if (pts.length < 2) return drawMap(pts, null);
+  if (pts.some((p) => p.is_approx)) {
+    legs = pts.slice(1).map((p, i) =>
+      (p.is_approx || pts[i].is_approx) ? { unknown: true } : estimateLeg(pts[i], p, state.plan.mode)
+    );
+    paintLegs(pts);
+    drawMap(pts, null);
+    return;
+  }
   let info = null;
   try { info = await route(pts, state.plan.mode); } catch { /* используем оценку */ }
   if (my !== token) return;
@@ -72,28 +81,34 @@ async function refreshLegs() {
 function paintLegs(pts) {
   $$("[data-leg]").forEach((el) => {
     const l = legs[+el.dataset.leg];
-    el.innerHTML = l ? `${icon(state.plan.mode === "walk" ? "walk" : "car")}${legsExact ? "" : "≈ "}${fmtDist(l.km)} · ${fmtDur(l.min)}` : `${icon("route")}считаем…`;
+    el.innerHTML = l?.unknown
+      ? `${icon("pin")}точка уточняется`
+      : l ? `${icon(state.plan.mode === "walk" ? "walk" : "car")}${legsExact ? "" : "≈ "}${fmtDist(l.km)} · ${fmtDur(l.min)}`
+      : `${icon("route")}считаем…`;
     el.classList.toggle("is-far", !!l && state.plan.mode === "walk" && l.km > 4);
   });
   const t = $("#planTotals");
   if (!t) return;
   if (!pts.length) { t.innerHTML = ""; return; }
-  const km = legs.reduce((s, l) => s + l.km, 0), min = legs.reduce((s, l) => s + l.min, 0);
+  const knownLegs = legs.filter((l) => !l.unknown);
+  const hasUnknown = knownLegs.length !== legs.length;
+  const km = knownLegs.reduce((s, l) => s + l.km, 0), min = knownLegs.reduce((s, l) => s + l.min, 0);
   const visit = pts.reduce((s, p) => s + visitMinutes(p), 0);
   const cur = currencyFor(pts[0]);
   const priced = pts.filter((p) => p.price_min != null && currencyFor(p) === cur);
   const cost = priced.reduce((s, p) => s + Number(p.price_min), 0);
   const cities = new Set(pts.map((p) => p.city).filter(Boolean));
-  const far = legs.some((l) => state.plan.mode === "walk" && l.km > 4);
+  const far = knownLegs.some((l) => state.plan.mode === "walk" && l.km > 4);
   t.innerHTML = `<div class="totals">
       <div><strong>${pts.length}</strong><span>${pts.length === 1 ? "остановка" : "остановок"}</span></div>
-      <div><strong>${legs.length ? fmtDist(km) : "…"}</strong><span>${legsExact ? "по дорогам" : legs.length ? "оценка" : ""}</span></div>
-      <div><strong>${legs.length ? fmtDur(min) : "…"}</strong><span>в пути</span></div>
+      <div><strong>${hasUnknown ? "—" : legs.length ? fmtDist(km) : "…"}</strong><span>${hasUnknown ? "не рассчитано" : legsExact ? "по дорогам" : legs.length ? "оценка" : ""}</span></div>
+      <div><strong>${hasUnknown ? "—" : legs.length ? fmtDur(min) : "…"}</strong><span>в пути</span></div>
       <div><strong>${fmtMin(visit)}</strong><span>на посещение</span></div>
       ${priced.length ? `<div><strong>≈ ${cost.toLocaleString("ru-RU")} ${cur}</strong><span>билеты и чеки, на чел.${priced.length < pts.length ? `, по ${priced.length} из ${pts.length}` : ""}</span></div>` : ""}
     </div>
     ${cities.size > 1 ? `<p class="note">Места находятся в разных городах: проверьте, что маршрут действительно один.</p>` : ""}
-    ${far ? `<p class="note">Некоторые участки длиннее 4 км. Для них удобнее переключиться на автомобиль.</p>` : ""}`;
+    ${far ? `<p class="note">Некоторые участки длиннее 4 км. Для них удобнее переключиться на автомобиль.</p>` : ""}
+    ${hasUnknown ? `<p class="note">Для мест без подтверждённых координат расстояние не рассчитывается. Google Maps найдёт их по названию.</p>` : ""}`;
 }
 
 /* ---------- Карта планировщика ---------- */
@@ -106,6 +121,11 @@ function drawMap(pts, info) {
   planMap.setPlaces(pts, false, true);
   planMap.clearRoute();
   if (!pts.length) return;
+  if (pts.some((p) => p.is_approx)) {
+    const exact = pts.filter((p) => !p.is_approx);
+    if (exact.length) planMap.fit(exact);
+    return;
+  }
   const line = info?.line || pts.map((p) => [p.latitude, p.longitude]);
   L.polyline(line, { color: "#D8365C", weight: 5, opacity: 0.9, dashArray: info ? null : "8 8", lineCap: "round" }).addTo(planMap.routeLayer);
   planMap.map.fitBounds(L.latLngBounds(line), { padding: [50, 50], maxZoom: 15 });
@@ -134,7 +154,7 @@ export function renderPlanner() {
   $("#planActions").innerHTML = `
     <button class="btn btn--sm" data-plan-act="optimize" ${pts.length < 3 ? "disabled" : ""}>${icon("refresh")}Оптимизировать порядок</button>
     ${ok2 ? `<a class="btn btn--sm" target="_blank" rel="noopener" href="${googleUrl(pts.at(-1), pts[0], pts.slice(1, -1).slice(0, 8), state.plan.mode)}">${icon("nav")}Google Maps</a>
-    <a class="btn btn--sm" target="_blank" rel="noopener" href="${osmUrl(pts, state.plan.mode)}">OpenStreetMap</a>` : ""}
+    ${pts.every((p) => !p.is_approx) ? `<a class="btn btn--sm" target="_blank" rel="noopener" href="${osmUrl(pts, state.plan.mode)}">OpenStreetMap</a>` : ""}` : ""}
     <button class="btn btn--sm btn--primary" data-plan-act="save" ${has ? "" : "disabled"}>${icon("bookmark")}Сохранить</button>
     <button class="btn btn--sm" data-plan-act="share" ${has ? "" : "disabled"}>${icon("share")}Поделиться</button>
     <button class="btn btn--sm" data-plan-act="clear" ${has ? "" : "disabled"}>Очистить</button>`;
