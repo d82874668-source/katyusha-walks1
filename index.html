@@ -74,9 +74,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-<link rel="stylesheet" href="assets/css/styles.css?v=20261124compactcards">
+<link rel="stylesheet" href="assets/css/styles.css?v=20261124mapfirst10">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script type="module" src="assets/js/app.js?v=20261124compactcards"></script>
+<script type="module" src="assets/js/app.js?v=20261124mapfirst10"></script>
 </head>
 <body>
 <a class="skip-link" href="#top">Перейти к содержимому</a>
@@ -127,10 +127,10 @@
     </a>
     <nav id="menu" aria-label="Разделы сайта">
       <a href="#discover">Открой город</a>
+      <a href="#map">Карта</a>
       <a href="#venues">Куда сходить</a>
       <a href="#planner">Прогулка</a>
       <a href="#ideal">Идеальный день</a>
-      <a href="#map">Карта</a>
       <a href="#collections">Подборки</a>
       <a href="#favorites">Избранное</a>
     </nav>
@@ -173,6 +173,38 @@
       <a class="dir" href="#venues"><span class="badge badge--lg"><svg class="i"><use href="#i-utensils"/></svg></span><h3>Куда сходить</h3><p class="muted">Кафе, рестораны, SPA, аквапарки, развлечения и места для отдыха.</p><small id="dirVenues"></small></a>
       <a class="dir" href="#planner"><span class="badge badge--lg"><svg class="i"><use href="#i-route"/></svg></span><h3>Спланируй прогулку</h3><p class="muted">Соберите маршрут из мест, поменяйте порядок и поделитесь ссылкой.</p><small>Пешком и на авто</small></a>
       <a class="dir dir--hero" href="#ideal"><span class="badge badge--lg"><svg class="i"><use href="#i-sparkles"/></svg></span><h3>Мой идеальный день</h3><p class="muted">Выберите настроение, бюджет и время, а программа соберётся сама.</p><small>10 сценариев</small></a>
+    </div>
+  </section>
+
+  <!-- Карта -->
+  <section class="sec" id="map" aria-labelledby="h-map">
+    <div class="wrap">
+      <div class="sec__head"><h2 id="h-map">Карта мест</h2><p class="muted">Фильтруйте по подборкам или ищите по названию. Места с приблизительными координатами остаются в списке, но не получают ложную точку на карте.</p></div>
+      <div class="mapbox">
+        <div class="mapbox__side">
+          <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Найти место" autocomplete="off" aria-label="Поиск по названию, адресу, городу и описанию"></label>
+          <label class="search"><svg class="i"><use href="#i-pin"/></svg><input id="regionFilter" type="search" list="regionOptions" placeholder="Введите город или страну" autocomplete="off" aria-label="Введите город, страну или регион"><datalist id="regionOptions"></datalist></label>
+          <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="priceMin" type="number" min="0" step="any" placeholder="Мин. цена, местная валюта" aria-label="Минимальная цена в местной валюте"></label>
+          <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="priceMax" type="number" min="0" step="any" placeholder="Макс. цена, местная валюта" aria-label="Максимальная цена в местной валюте"></label>
+          <label class="search"><svg class="i"><use href="#i-star"/></svg><select id="minRating" aria-label="Минимальный рейтинг">
+            <option value="0">Любой рейтинг</option><option value="3">От 3.0</option><option value="4">От 4.0</option><option value="4.5">От 4.5</option>
+          </select></label>
+          <label class="search"><svg class="i"><use href="#i-fit"/></svg><select id="sortPlaces" aria-label="Сортировка мест">
+            <option value="popularity">Сначала популярные</option><option value="rating">По рейтингу</option><option value="price">По стоимости</option><option value="alphabetical">По алфавиту</option>
+          </select></label>
+          <button class="btn btn--ghost" id="resetFilters" type="button">Сбросить фильтры</button>
+          <div class="chips" id="chips" role="tablist" aria-label="Подборки"></div>
+          <ul class="list" id="placeList"></ul>
+        </div>
+        <div class="mapbox__stage">
+          <div id="mapCanvas" aria-label="Интерактивная карта"></div>
+          <div class="mapbox__tools">
+            <button class="icon-btn glass" id="locateBtn" aria-label="Моё местоположение" title="Моё местоположение"><svg class="i"><use href="#i-locate"/></svg></button>
+            <button class="icon-btn glass" id="fitBtn" aria-label="Показать все места" title="Показать все места"><svg class="i"><use href="#i-fit"/></svg></button>
+          </div>
+          <div class="sheet glass" id="sheet" hidden></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -247,38 +279,6 @@
         <button class="btn btn--primary btn--lg" type="submit"><svg class="i"><use href="#i-sparkles"/></svg>Составить программу</button>
       </form>
       <div class="ideal__result" id="idealResult" aria-live="polite"></div>
-    </div>
-  </section>
-
-  <!-- Карта -->
-  <section class="sec" id="map" aria-labelledby="h-map">
-    <div class="wrap">
-      <div class="sec__head"><h2 id="h-map">Карта мест</h2><p class="muted">Фильтруйте по подборкам или ищите по названию. Места с приблизительными координатами остаются в списке, но не получают ложную точку на карте.</p></div>
-      <div class="mapbox">
-        <div class="mapbox__side">
-          <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Найти место" autocomplete="off" aria-label="Поиск по названию, адресу, городу и описанию"></label>
-          <label class="search"><svg class="i"><use href="#i-pin"/></svg><input id="regionFilter" type="search" list="regionOptions" placeholder="Введите город или страну" autocomplete="off" aria-label="Введите город, страну или регион"><datalist id="regionOptions"></datalist></label>
-          <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="priceMin" type="number" min="0" step="any" placeholder="Мин. цена, местная валюта" aria-label="Минимальная цена в местной валюте"></label>
-          <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="priceMax" type="number" min="0" step="any" placeholder="Макс. цена, местная валюта" aria-label="Максимальная цена в местной валюте"></label>
-          <label class="search"><svg class="i"><use href="#i-star"/></svg><select id="minRating" aria-label="Минимальный рейтинг">
-            <option value="0">Любой рейтинг</option><option value="3">От 3.0</option><option value="4">От 4.0</option><option value="4.5">От 4.5</option>
-          </select></label>
-          <label class="search"><svg class="i"><use href="#i-fit"/></svg><select id="sortPlaces" aria-label="Сортировка мест">
-            <option value="popularity">Сначала популярные</option><option value="rating">По рейтингу</option><option value="price">По стоимости</option><option value="alphabetical">По алфавиту</option>
-          </select></label>
-          <button class="btn btn--ghost" id="resetFilters" type="button">Сбросить фильтры</button>
-          <div class="chips" id="chips" role="tablist" aria-label="Подборки"></div>
-          <ul class="list" id="placeList"></ul>
-        </div>
-        <div class="mapbox__stage">
-          <div id="mapCanvas" aria-label="Интерактивная карта"></div>
-          <div class="mapbox__tools">
-            <button class="icon-btn glass" id="locateBtn" aria-label="Моё местоположение" title="Моё местоположение"><svg class="i"><use href="#i-locate"/></svg></button>
-            <button class="icon-btn glass" id="fitBtn" aria-label="Показать все места" title="Показать все места"><svg class="i"><use href="#i-fit"/></svg></button>
-          </div>
-          <div class="sheet glass" id="sheet" hidden></div>
-        </div>
-      </div>
     </div>
   </section>
 
