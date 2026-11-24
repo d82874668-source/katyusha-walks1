@@ -180,7 +180,10 @@ const visible = () => {
     const priceMin = p.price_min == null ? null : Number(p.price_min);
     const priceMax = p.price_max == null ? null : Number(p.price_max);
     const hasPrice = priceMin != null && priceMax != null && Number.isFinite(priceMin) && Number.isFinite(priceMax);
-    return (state.filter === "all" || p.category === state.filter) &&
+    const categoryMatches = state.filter === "all" ||
+      p.category === state.filter ||
+      (state.filter === "spa" && p.category === "bath");
+    return categoryMatches &&
       matchesMapRegion(p) &&
       (!q || haystack.includes(q)) &&
       (!state.minRating || (rating != null && rating >= state.minRating)) &&
@@ -232,7 +235,12 @@ const mapCategoryText = (value) => String(value || "").toLocaleLowerCase("ru").r
 function renderChips() {
   const inRegion = state.places.filter(matchesMapRegion);
   const counts = new Map();
-  inRegion.forEach((p) => p.category && counts.set(p.category, (counts.get(p.category) || 0) + 1));
+  inRegion.forEach((p) => {
+    if (!p.category) return;
+    // «Бани» и «SPA» объединены в один пункт карты.
+    const key = p.category === "bath" ? "spa" : p.category;
+    counts.set(key, (counts.get(key) || 0) + 1);
+  });
   // Sea Breeze и «Белый город» — азербайджанские категории.
   // Не показываем их в общем каталоге регионов; они доступны при выборе
   // Азербайджана или конкретного азербайджанского города.
