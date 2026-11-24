@@ -5,8 +5,8 @@ import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./ma
 import { state, byId } from "./state.js?v=20261124r";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124n";
 import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124n";
-import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124s";
-import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124s";
+import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124t";
+import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124t";
 
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
 const cityOrigin = (place) => {
