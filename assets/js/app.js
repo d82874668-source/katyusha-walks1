@@ -155,6 +155,17 @@ const favBtn = (p, cls = "") => {
 };
 
 /* ---------- Карта: фильтры и список ---------- */
+// Фильтр карты работает по фактическому городу/стране, а не только по полю region:
+ // в каталоге region местами означает город, местами область или страну.
+const matchesMapRegion = (place) => {
+  if (state.region === "all") return true;
+  const selected = String(state.region).trim();
+  const cityExists = state.places.some((item) => String(item.city || "").trim() === selected);
+  if (cityExists) return String(place.city || "").trim() === selected;
+  return String(place.country || "").trim() === selected ||
+    String(place.region || "").trim() === selected;
+};
+
 const visible = () => {
   const q = state.q.trim().toLocaleLowerCase("ru");
   const list = state.places.filter((p) => {
@@ -165,7 +176,7 @@ const visible = () => {
     const priceMax = p.price_max == null ? null : Number(p.price_max);
     const hasPrice = priceMin != null && priceMax != null && Number.isFinite(priceMin) && Number.isFinite(priceMax);
     return (state.filter === "all" || p.category === state.filter) &&
-      (state.region === "all" || (p.region || "Азербайджан") === state.region) &&
+      matchesMapRegion(p) &&
       (!q || haystack.includes(q)) &&
       (!state.minRating || (rating != null && rating >= state.minRating)) &&
       ((state.minPrice == null && state.maxPrice == null) || (hasPrice &&
@@ -188,19 +199,23 @@ const visible = () => {
 
 function renderRegionFilter() {
   const select = $("#regionFilter");
-  const regions = [...new Set(state.places.map((p) => String(p.region || "").trim()).filter(Boolean))]
-    .sort((a, b) => a.localeCompare(b, "ru"));
-  const selected = regions.includes(state.region) ? state.region : "all";
+  // В фильтре доступны и конкретные города, и страны/административные регионы.
+  const values = [...new Set(state.places.flatMap((p) =>
+    [p.city, p.country, p.region].map((value) => String(value || "").trim()).filter(Boolean)
+  ))].sort((a, b) => a.localeCompare(b, "ru"));
+  const selected = values.includes(state.region) ? state.region : "all";
   select.innerHTML = [
     '<option value="all">Все города и регионы</option>',
-    ...regions.map((region) => `<option value="${esc(region)}">${esc(region)}</option>`)
+    ...values.map((value) => `<option value="${esc(value)}">${esc(value)}</option>`)
   ].join("");
   state.region = selected;
   select.value = selected;
 }
 
 function renderChips() {
-  const used = Object.keys(CATEGORIES).filter((k) => state.places.some((p) => p.category === k));
+  const inRegion = state.places.filter(matchesMapRegion);
+  const used = Object.keys(CATEGORIES).filter((k) => inRegion.some((p) => p.category === k));
+  if (state.filter !== "all" && !used.includes(state.filter)) state.filter = "all";
   $("#chips").innerHTML = [["all", "Все"], ...used.map((k) => [k, CATEGORIES[k].title])]
     .map(([k, t]) => `<button class="chip" role="tab" aria-selected="${state.filter === k}" data-cat="${k}">${esc(t)}</button>`).join("");
 }
