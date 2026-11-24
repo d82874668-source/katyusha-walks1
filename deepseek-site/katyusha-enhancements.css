@@ -808,3 +808,7 @@ html[data-theme="dark"] .mobile-theme-toggle{
  background:#e8edf3!important;color:#172333!important;border-color:#8795a5!important
 }
 html[data-theme="light"] body{background:#faf7f2;color:#1a2332}
+
+/* Rating badge: keep long review counts readable without covering card controls. */
+.place-rating{max-width:calc(100% - 58px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;line-height:1.25;backdrop-filter:blur(8px)}
+@media(max-width:420px){.place-rating{font-size:10px;padding:5px 7px;max-width:calc(100% - 54px)}}
