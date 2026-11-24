@@ -13,7 +13,8 @@ const stops = () => state.plan.ids.map(byId).filter(Boolean);
 
 /* ---------- Операции над маршрутом ---------- */
 export function setPlan(ids, mode = state.plan.mode, name = "") {
-  state.plan = { ids: [...new Set(ids)].filter((id) => byId(id)), mode: mode === "drive" ? "drive" : "walk", name };
+  const normalizedIds = [...new Set(ids.map(Number).filter(Number.isFinite))].filter((id) => byId(id));
+  state.plan = { ids: normalizedIds, mode: mode === "drive" ? "drive" : "walk", name };
   commit();
 }
 export function addToPlan(id) {
@@ -22,7 +23,7 @@ export function addToPlan(id) {
   if (state.plan.ids.some((existing) => String(existing) === String(normalizedId))) return toast("Это место уже в маршруте");
   state.plan.ids.push(normalizedId);
   commit();
-  toast(`Добавлено в маршрут: ${byId(id)?.title}`);
+  toast(`Добавлено в маршрут: ${byId(normalizedId)?.title}`);
 }
 const removeAt = (i) => { state.plan.ids.splice(i, 1); commit(); };
 const move = (from, to) => {
