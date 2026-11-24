@@ -1367,24 +1367,28 @@ main,.wrap,.nav__in,.hero__in,.mapbox,.mapbox__stage,#mapCanvas,.leaflet-contain
 @media(max-width:350px){#discoverGrid,#venueGrid{grid-template-columns:1fr}}
 
 
-/* Удобный каталог категорий в фильтрах карты — по тому же принципу, что выбор города. */
-.map-category-picker{padding:4px 12px 14px;border-bottom:1px solid var(--line)}
+/* Выпадающий селектор категорий карты — в стиле выбора города. */
+.map-category-picker{position:relative;padding:4px 12px 14px;border-bottom:1px solid var(--line);z-index:8}
 .map-category-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:8px 4px 0}
 .map-category-title strong{font-size:14px;font-weight:650;color:var(--ink)}
 .map-category-title span{font-size:11px;color:var(--muted)}
-.map-category-search{height:40px;margin:10px 0 8px;padding:0 12px;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
-.map-category-list{display:flex;flex-direction:column;gap:8px;padding:0;max-height:310px;overflow-y:auto;overflow-x:hidden}
-.map-category-all{align-self:flex-start}
-.map-category-group{min-width:0;padding:8px 9px;border:1px solid var(--line);border-radius:13px;background:color-mix(in srgb,var(--surface) 78%,var(--bg))}
-.map-category-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;font-size:11px}
-.map-category-heading strong{font-size:12px;font-weight:650;color:var(--ink)}
+.map-category-search{height:44px;margin:10px 0 0;padding:0 13px;border:1px solid var(--line);border-radius:13px;background:var(--surface);box-shadow:0 5px 18px -16px rgba(31,48,41,.4)}
+.map-category-search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 13%,transparent)}
+.map-category-search input{font-size:13px;min-width:0}
+.map-category-list{position:absolute;top:calc(100% - 7px);left:12px;right:12px;display:flex;flex-direction:column;gap:6px;padding:9px;max-height:330px;overflow-y:auto;overflow-x:hidden;border:1px solid var(--line);border-radius:15px;background:var(--surface);box-shadow:0 18px 42px rgba(20,30,24,.18);z-index:30}
+.map-category-list[hidden]{display:none}
+.map-category-all{margin-bottom:2px}
+.map-category-group{min-width:0;padding:7px 8px;border:1px solid var(--line);border-radius:11px;background:color-mix(in srgb,var(--surface) 78%,var(--bg))}
+.map-category-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 5px;font-size:11px}
+.map-category-heading strong{font-size:11px;font-weight:650;color:var(--ink)}
 .map-category-heading span{font-size:10px;color:var(--muted);white-space:nowrap}
-.map-category-options{display:flex;flex-wrap:wrap;gap:5px}
-.map-category-options .chip{margin:0;max-width:100%;padding:6px 9px;font-size:11px;line-height:1.25}
-.map-category-options .chip small{font-size:10px;opacity:.65}
-.map-category-options .chip[aria-selected="true"]{background:var(--caspian);border-color:var(--caspian);color:#fff}
+.map-category-options{display:flex;flex-direction:column;gap:2px}
+.map-category-option{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:35px;padding:7px 9px;border:0;border-radius:8px;background:transparent;color:var(--ink);font:500 12px/1.25 var(--font);text-align:left;cursor:pointer}
+.map-category-option:hover{background:var(--surface-2)}
+.map-category-option[aria-selected="true"]{background:var(--accent-soft);color:var(--accent);font-weight:650}
+.map-category-option small{flex:none;color:var(--muted);font-size:10px}
 @media(max-width:720px){
  .map-category-picker{order:3;padding:4px 12px 10px}
- .map-category-list{max-height:220px}
- .map-category-options .chip{padding:6px 8px;font-size:11px}
+ .map-category-list{max-height:260px}
+ .map-category-search{height:42px}
 }
