@@ -170,12 +170,19 @@ h3{font-size:18px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
 .leaflet-tile-pane{filter:var(--tile-filter)}
 
 .map-empty{
-  position:absolute;z-index:500;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:min(360px,calc(100% - 32px));padding:14px 16px;border:1px solid var(--line);
-  border-radius:16px;background:var(--glass);color:var(--ink);text-align:center;
-  font-size:13px;line-height:1.5;box-shadow:var(--shadow);backdrop-filter:blur(12px);
-  pointer-events:none;
+  position:absolute;z-index:1050;left:50%;top:12px;transform:translateX(-50%);
+  display:flex;align-items:flex-start;gap:10px;width:min(440px,calc(100% - 76px));
+  padding:10px 12px;border:1px solid var(--line);border-radius:14px;
+  background:var(--glass);color:var(--ink);text-align:left;font-size:12px;line-height:1.4;
+  box-shadow:var(--shadow);backdrop-filter:blur(12px);pointer-events:auto;
 }
+.map-empty__text{flex:1;min-width:0}
+.map-empty__close{
+  flex:0 0 26px;width:26px;height:26px;margin:-3px -4px 0 0;border:0;border-radius:9px;
+  background:var(--surface-2);color:var(--ink);font-size:20px;line-height:1;cursor:pointer;
+}
+.map-empty__close:hover{background:var(--accent-soft)}
+@media(max-width:560px){.map-empty{top:10px;width:calc(100% - 64px);font-size:11px;padding:8px 10px}}
 .leaflet-container .leaflet-control-attribution{background:var(--glass);color:var(--muted);backdrop-filter:blur(8px);border-radius:8px 0 0 0}
 .leaflet-control-attribution a{color:inherit}
 .leaflet-bar{border:0!important;box-shadow:var(--shadow)!important;border-radius:14px!important;overflow:hidden}
