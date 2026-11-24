@@ -1,7 +1,7 @@
 // «Спланируй прогулку»: ручной конструктор маршрута (добавление, порядок, режим, участки, сохранение, ссылка).
 import { state, byId } from "./state.js?v=20261124r";
 import { $, $$, icon, esc, cat, toast, fmtMin } from "./ui.js?v=20261124n";
-import { MapView, route, estimateLeg, haversineKm, googleUrl, osmUrl, fmtDist, fmtDur } from "./map.js?v=20261124w";
+import { MapView, route, estimateLeg, haversineKm, googleUrl, osmUrl, fmtDist, fmtDur, hasExactCoordinates } from "./map.js?v=20261124w";
 import { visitMinutes, currencyFor } from "./taxonomy.js?v=20261124n";
 
 const LS_PLAN = "rfn:plan", LS_SAVED = "rfn:saved-routes";
@@ -35,7 +35,7 @@ const move = (from, to) => {
 /** Порядок по ближайшему соседу: первая точка остаётся, дальше всегда идём к ближайшей из оставшихся. */
 function optimize() {
   const pts = stops();
-  if (pts.some((p) => p.is_approx)) return toast("Сначала уточним координаты всех мест — иначе порядок может получиться неверным");
+  if (pts.some((p) => p.is_approx || !hasExactCoordinates(p))) return toast("Сначала уточним координаты всех мест — иначе порядок может получиться неверным");
   if (pts.length < 3) return toast("Для оптимизации нужно минимум три места");
   const left = pts.slice(1), order = [pts[0]];
   while (left.length) {
