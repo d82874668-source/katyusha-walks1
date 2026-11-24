@@ -239,6 +239,7 @@ const sheet = $("#sheet");
 function openPlace(id, { scroll = false } = {}) {
   const p = byId(id);
   if (!p) return;
+  recordVisit(p.id);
   const origin = state.user || cityOrigin(p);
   state.active = id;
   if (scroll) $("#map").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -430,9 +431,34 @@ function renderCollections() {
   }).join("");
 }
 
+const HISTORY_KEY = "katyusha:recent-places";
+function readHistory() {
+  try {
+    const value = JSON.parse(localStorage.getItem(HISTORY_KEY));
+    return Array.isArray(value) ? value : [];
+  } catch { return []; }
+}
+function recordVisit(id) {
+  const next = [{ id: Number(id), viewedAt: Date.now() }, ...readHistory().filter((x) => String(x.id) !== String(id))].slice(0, 12);
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch {}
+  renderHistory();
+}
+function renderHistory() {
+  const root = $("#historyGrid");
+  if (!root) return;
+  const items = readHistory().map((entry) => ({ entry, place: byId(entry.id) })).filter((x) => x.place);
+  root.innerHTML = items.length ? items.map(({ entry, place: p }) => {
+    const c = cat(p);
+    const when = new Date(entry.viewedAt).toLocaleDateString("ru-RU", { day: "numeric", month: "short" });
+    return `<article class="card fav"><span class="badge" style="--h:${c.hue}">${icon(c.icon)}</span>
+      <div class="fav__t"><h3>${esc(p.title)}</h3><p class="muted">${esc(p.city || "")} · ${when}</p></div>
+      <button class="btn btn--sm" data-place-open="${p.id}">Открыть</button>
+      <button class="btn btn--sm btn--ghost" data-history-remove="${p.id}" aria-label="Убрать ${esc(p.title)} из истории">Убрать</button></article>`;
+  }).join("") : `<div class="empty card"><p>Здесь появятся места, которые вы недавно открывали.</p></div>`;
+}
 function renderFavs() {
   const items = state.places.filter((p) => state.favs.has(p.id));
-  $("#favStatus").textContent = state.mode === "supabase" ? "Синхронизируется между вашими устройствами" : "Хранится только на этом устройстве";
+  $("#favStatus").textContent = "Хранится в этом браузере. Для синхронизации между устройствами потребуется вход.";
   $("#favCount").textContent = items.length;
   $("#favGrid").innerHTML = items.length ? items.map((p) => {
     const c = cat(p);
@@ -461,9 +487,14 @@ function renderHero() {
 
 /* ---------- Делегирование событий ---------- */
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-fav],[data-close],[data-city],[data-water-city],[data-vgroup],[data-cat],[data-place],[data-place-open],[data-collection],[data-show-route]");
+  const t = e.target.closest("[data-fav],[data-close],[data-city],[data-water-city],[data-vgroup],[data-cat],[data-place],[data-place-open],[data-collection],[data-show-route],[data-history-remove]");
   if (!t) return;
   if (t.dataset.fav) { e.stopPropagation(); return toggleFav(+t.dataset.fav); }
+  if (t.dataset.historyRemove) {
+    const next = readHistory().filter((x) => String(x.id) !== String(t.dataset.historyRemove));
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch {}
+    return renderHistory();
+  }
   if (t.hasAttribute("data-close")) return closeSheet();
   if (t.dataset.waterCity) { waterCity = t.dataset.waterCity; waterCityQuery = ""; $("#waterparkCitySearch").value = ""; return renderAquaparks(); }
   if (t.dataset.city) {
@@ -488,6 +519,11 @@ document.addEventListener("click", (e) => {
 });
 $("#placeList").addEventListener("keydown", (e) => {
   if ((e.key === "Enter" || e.key === " ") && e.target.dataset.place) { e.preventDefault(); openPlace(+e.target.dataset.place); }
+});
+$("#historyClear")?.addEventListener("click", () => {
+  try { localStorage.removeItem(HISTORY_KEY); } catch {}
+  renderHistory();
+  toast("История очищена");
 });
 $("#search").addEventListener("input", (e) => { state.q = e.target.value; applyFilter(); });
 $("#resetFilters").addEventListener("click", () => {
@@ -524,6 +560,7 @@ $("#locateBtn").addEventListener("click", async () => {
 
 /* ---------- Запуск ---------- */
 function renderCatalog() {
+  renderHistory();
   renderRegionFilter();
   renderHero(); renderDirections(); renderDiscover(); renderVenues(); renderAquaparks();
   renderChips(); renderList(); renderRoutes(); renderCollections(); renderFavs();
