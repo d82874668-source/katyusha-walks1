@@ -311,7 +311,7 @@ const countryOf = (place) => place.country || (/Грузия|Тбилиси|Ба
 let discoverCountry = "all";
 let venueCountry = "all";
 const countryChips = (list, active) => [
-  `<button class="chip" role="tab" aria-selected="${active === "all"}" data-country="all">Все страны <small>${list.reduce((n, x) => n + x[1], 0)}</small></button>`,
+  `<button class="chip" role="tab" aria-selected="${active === "all"}" data-country="all">Все регионы <small>${list.reduce((n, x) => n + x[1], 0)}</small></button>`,
   ...list.map(([name, count]) => `<button class="chip" role="tab" aria-selected="${name === active}" data-country="${esc(name)}">${esc(name)} <small>${count}</small></button>`)
 ].join("");
 const citySearchText = (value) => String(value || "").toLocaleLowerCase("ru").replace(/ё/g, "е").trim();
@@ -322,6 +322,33 @@ const cityChips = (list, active, query = "") => {
   return filtered.length
     ? allButton + filtered.map(([c, n]) => `<button class="chip" role="tab" aria-selected="${c === active}" data-city="${esc(c)}">${esc(c)} <small>${n}</small></button>`).join("")
     : `<p class="city-empty">Город не найден. Попробуйте другое название.</p>`;
+};
+const groupedCityChips = (places, active, query = "") => {
+  const q = citySearchText(query);
+  const groups = new Map();
+  places.forEach((place) => {
+    if (!place.city) return;
+    const country = countryOf(place);
+    if (!groups.has(country)) groups.set(country, new Map());
+    const cities = groups.get(country);
+    cities.set(place.city, (cities.get(place.city) || 0) + 1);
+  });
+  const sortedGroups = [...groups].map(([country, cities]) => ({
+    country,
+    cities: [...cities].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru")),
+    total: [...cities.values()].reduce((sum, count) => sum + count, 0)
+  })).sort((a, b) => b.total - a.total || a.country.localeCompare(b.country, "ru"));
+  const allCount = sortedGroups.reduce((sum, group) => sum + group.total, 0);
+  const allButton = !q ? `<button class="chip" role="tab" aria-selected="${active === "all"}" data-city="all">Все города <small>${allCount}</small></button>` : "";
+  const sections = sortedGroups.map((group) => {
+    const cities = q ? group.cities.filter(([city]) => citySearchText(`${city} ${cityAliases[city] || ""}`).includes(q)) : group.cities;
+    if (!cities.length) return "";
+    return `<div class="city-region-group">
+      <div class="city-region-heading"><strong>${esc(group.country)}</strong><span>${group.total} мест</span></div>
+      <div class="city-region-chips">${cities.map(([city, count]) => `<button class="chip" role="tab" aria-selected="${city === active}" data-city="${esc(city)}">${esc(city)} <small>${count}</small></button>`).join("")}</div>
+    </div>`;
+  }).join("");
+  return allButton + (sections || (q ? `<p class="city-empty">Город не найден. Попробуйте другое название.</p>` : ""));
 };
 let discoverCityQuery = "";
 let venueCityQuery = "";
@@ -339,7 +366,7 @@ function renderDiscover() {
   countrySights.forEach((p) => p.city && cityCounts.set(p.city, (cityCounts.get(p.city) || 0) + 1));
   const cities = [...cityCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
   if (state.city !== "all" && !cities.some(([city]) => city === state.city)) state.city = "all";
-  $("#discoverCities").innerHTML = cityChips(cities, state.city, discoverCityQuery);
+  $("#discoverCities").innerHTML = discoverCountry === "all" ? groupedCityChips(allSights, state.city, discoverCityQuery) : cityChips(cities, state.city, discoverCityQuery);
   const items = countrySights.filter((p) => state.city === "all" || p.city === state.city).sort(byQuality);
   $("#discoverGrid").innerHTML = items.length
     ? items.map((p, i) => placeCard(p, favBtn, { large: i < 2 && items.length > 3 })).join("")
