@@ -62,9 +62,9 @@ async function refreshLegs() {
   legs = []; legsExact = false;
   paintLegs(pts);
   if (pts.length < 2) return drawMap(pts, null);
-  if (pts.some((p) => p.is_approx)) {
+  if (pts.some((p) => p.is_approx || !hasExactCoordinates(p))) {
     legs = pts.slice(1).map((p, i) =>
-      (p.is_approx || pts[i].is_approx) ? { unknown: true } : estimateLeg(pts[i], p, state.plan.mode)
+      (p.is_approx || pts[i].is_approx || !hasExactCoordinates(p) || !hasExactCoordinates(pts[i])) ? { unknown: true } : estimateLeg(pts[i], p, state.plan.mode)
     );
     paintLegs(pts);
     drawMap(pts, null);
@@ -121,8 +121,8 @@ function drawMap(pts, info) {
   planMap.setPlaces(pts, false, true);
   planMap.clearRoute();
   if (!pts.length) return;
-  if (pts.some((p) => p.is_approx)) {
-    const exact = pts.filter((p) => !p.is_approx);
+  if (pts.some((p) => p.is_approx || !hasExactCoordinates(p))) {
+    const exact = pts.filter((p) => !p.is_approx && hasExactCoordinates(p));
     if (exact.length) planMap.fit(exact);
     return;
   }
