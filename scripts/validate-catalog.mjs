@@ -26,8 +26,10 @@ for (const place of places) {
 
   if (!String(place.title || "").trim()) errors.push(`Place ${id} has no title`);
   if (!categories.has(place.category)) errors.push(`Place ${id} uses unknown category: ${place.category}`);
-  if (!Number.isFinite(Number(place.latitude)) || !Number.isFinite(Number(place.longitude))) {
-    errors.push(`Place ${id} has invalid coordinates`);
+  const hasRawCoordinates = place.latitude != null && place.longitude != null && String(place.latitude).trim() !== "" && String(place.longitude).trim() !== "";
+  const latitude = Number(place.latitude), longitude = Number(place.longitude);
+  if (!hasRawCoordinates || !Number.isFinite(latitude) || !Number.isFinite(longitude) || latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+    errors.push(`Place ${id} has invalid or missing coordinates`);
   }
   if (place.image && !/^https?:\/\//i.test(place.image) && !/^(?:\.\/|\/|assets\/)/i.test(place.image)) errors.push(`Place ${id} has invalid image URL`);
   if ((!place.address || !String(place.address).trim()) && !place.is_approx) {
@@ -41,6 +43,8 @@ for (const place of places) {
 
 if (!mapSource.includes("!p.is_approx")) errors.push("Map does not filter approximate coordinates");
 if (!mapSource.includes("p.is_approx")) errors.push("Approximate-coordinate guard missing in map module");
+if (!mapSource.includes("hasExactCoordinates")) errors.push("Strict coordinate validation missing in map module");
+if (!mapSource.includes("approximate: true")) errors.push("Approximate route guard missing in map module");
 if (!storeSource.includes("readSnapshot")) errors.push("Static catalog fallback missing");
 
 const missingImages = places.filter((p) => !p.image).length;
