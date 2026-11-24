@@ -54,7 +54,13 @@
     }
 
     resetInitialScroll();
-    window.addEventListener("pageshow", resetInitialScroll);
+    window.addEventListener("pageshow", function () {
+      resetInitialScroll();
+      requestAnimationFrame(resetInitialScroll);
+      setTimeout(resetInitialScroll, 100);
+      setTimeout(resetInitialScroll, 500);
+      setTimeout(resetInitialScroll, 1500);
+    });
     document.addEventListener("DOMContentLoaded", resetInitialScroll, { once: true });
     window.addEventListener("load", function () {
       resetInitialScroll();
@@ -68,9 +74,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-<link rel="stylesheet" href="assets/css/styles.css?v=20261124h">
+<link rel="stylesheet" href="assets/css/styles.css?v=20261124i">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script type="module" src="assets/js/app.js?v=20261124aj"></script>
+<script type="module" src="assets/js/app.js?v=20261124ak"></script>
 </head>
 <body>
 <a class="skip-link" href="#top">Перейти к содержимому</a>
