@@ -74,9 +74,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-<link rel="stylesheet" href="assets/css/styles.css?v=20261124mapfirst10">
+<link rel="stylesheet" href="assets/css/styles.css?v=20261124categoryselect">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script type="module" src="assets/js/app.js?v=20261124mapcategories"></script>
+<script type="module" src="assets/js/app.js?v=20261124categoryselect"></script>
 </head>
 <body>
 <a class="skip-link" href="#top">Перейти к содержимому</a>
@@ -194,9 +194,9 @@
           </select></label>
           <button class="btn btn--ghost" id="resetFilters" type="button">Сбросить фильтры</button>
           <div class="map-category-picker">
-            <div class="map-category-title"><strong>Категории мест</strong><span>Выберите, что хотите найти</span></div>
-            <label class="search map-category-search"><svg class="i"><use href="#i-search"/></svg><input id="categorySearch" type="search" placeholder="Найти категорию: SPA, бары, капибары…" autocomplete="off" aria-label="Поиск категории на карте"></label>
-            <div class="chips map-category-list" id="chips" role="tablist" aria-label="Категории мест"></div>
+            <div class="map-category-title"><strong>Категория мест</strong><span>Выберите из списка или введите название</span></div>
+            <label class="search map-category-search"><svg class="i"><use href="#i-search"/></svg><input id="categorySearch" type="search" placeholder="Все категории или начните вводить…" autocomplete="off" aria-label="Выбрать категорию мест"></label>
+            <div class="map-category-list" id="chips" role="listbox" aria-label="Список категорий" hidden></div>
           </div>
           <ul class="list" id="placeList"></ul>
         </div>
