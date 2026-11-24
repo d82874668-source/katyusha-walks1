@@ -123,8 +123,8 @@ export function renderIdealForm() {
   const cityAliases = {
     "Баку": ["baku"], "Гянджа": ["ganja", "gence"], "Шеки": ["sheki", "shaki"],
     "Казань": ["kazan"], "Сочи": ["sochi"], "Тбилиси": ["tbilisi"],
-    "Батуми": ["batumi"], "Москва": ["moscow"], "Санкт-Петербург": ["saintpetersburg", "spb"],
-    "Екатеринбург": ["ekaterinburg"], "Санкт-Петербург": ["saint petersburg", "petersburg"]
+    "Батуми": ["batumi"], "Москва": ["moscow"], "Санкт-Петербург": ["saintpetersburg", "saint petersburg", "petersburg", "spb"],
+    "Екатеринбург": ["ekaterinburg"]
   };
   const normalizeCity = (value) => String(value ?? "")
     .normalize("NFKC")
