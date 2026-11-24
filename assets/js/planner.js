@@ -17,8 +17,10 @@ export function setPlan(ids, mode = state.plan.mode, name = "") {
   commit();
 }
 export function addToPlan(id) {
-  if (state.plan.ids.includes(id)) return toast("Это место уже в маршруте");
-  state.plan.ids.push(id);
+  const normalizedId = Number(id);
+  if (!Number.isFinite(normalizedId)) return toast("Не удалось определить место");
+  if (state.plan.ids.some((existing) => String(existing) === String(normalizedId))) return toast("Это место уже в маршруте");
+  state.plan.ids.push(normalizedId);
   commit();
   toast(`Добавлено в маршрут: ${byId(id)?.title}`);
 }
@@ -206,7 +208,7 @@ export function savePlanAs(ids, mode, name) { setPlan(ids, mode, name); savePlan
 function renderResults() {
   const q = $("#planSearch").value.trim().toLocaleLowerCase("ru"), box = $("#planResults");
   if (!q) { box.hidden = true; return; }
-  const found = state.places.filter((p) => !state.plan.ids.includes(p.id) &&
+  const found = state.places.filter((p) => !state.plan.ids.some((id) => String(id) === String(p.id)) &&
     [p.title, p.city, p.address, cat(p).title].filter(Boolean).join(" ").toLocaleLowerCase("ru").includes(q)).slice(0, 8);
   box.hidden = false;
   box.innerHTML = found.length ? found.map((p) => `<li><button data-plan-add="${p.id}" data-keep="1"><strong>${esc(p.title)}</strong><small>${esc(cat(p).title)}${p.city ? ` · ${esc(p.city)}` : ""}</small>${icon("plus")}</button></li>`).join("") : `<li class="empty">Ничего не найдено</li>`;
