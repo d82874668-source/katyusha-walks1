@@ -221,10 +221,11 @@ html[data-theme="dark"] .place-addr,html[data-theme="dark"] .place-city{color:#a
 html[data-theme="dark"] .filters select,html[data-theme="dark"] .filters input,html[data-theme="dark"] .chip{background:#202b38;color:#e7edf4;border-color:#3a4858}
 html[data-theme="dark"] .filters button,html[data-theme="dark"] .btn-ghost{background:#2b3949;color:#e7edf4}
 html[data-theme="dark"] .modal-info-card,html[data-theme="dark"] .route-point,html[data-theme="dark"] .map-chooser{background:#202b38;color:#e7edf4}
-.theme-toggle{padding:10px 13px;border:1px solid #e8e2d7;border-radius:999px;background:#fff;color:#26342e;font:600 12px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
-html[data-theme="dark"] .theme-toggle{background:#202b38;border-color:#3a4858;color:#e7edf4}
-@media(max-width:1100px){.header-inner{grid-template-columns:auto 1fr auto}.theme-toggle{grid-column:3;grid-row:1}.header-cta{grid-column:2;grid-row:1}}
-@media(max-width:640px){.theme-toggle{padding:9px 10px;font-size:11px}.header-cta{padding:9px 11px;font-size:11px}}</style>
+.nav .theme-toggle{border:1px solid #e8e2d7;background:#fff;color:#26342e;padding:9px 12px}
+.nav .theme-toggle:hover{border-color:#d9b6a8}
+html[data-theme="dark"] .nav .theme-toggle{background:#202b38;border-color:#3a4858;color:#e7edf4}
+@media(max-width:1100px){.header-cta{grid-column:2;grid-row:1}}
+@media(max-width:640px){.nav .theme-toggle{padding:9px 11px;font-size:12px}.header-cta{padding:9px 11px;font-size:11px}}</style>
 </head>
 <body><script>(function(){try{if(localStorage.getItem("kw-theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}})();</script>
 
@@ -240,7 +241,7 @@ html[data-theme="dark"] .theme-toggle{background:#202b38;border-color:#3a4858;co
       </div>
    </div>
     <nav class="nav" id="nav" aria-label="Основная навигация"></nav>
-    <button class="header-cta" onclick="nav('catalog')">Найти место <span aria-hidden="true">↗</span></button><button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()"><span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная тема</span></button>
+    <button class="header-cta" onclick="nav('catalog')">Найти место <span aria-hidden="true">↗</span></button>
   </div>
 </header>
 
@@ -418,7 +419,7 @@ function categoryName(key){return CAT_NAMES[key]||key||'Другое';}
 function categoryIcon(key){return CAT_ICONS[key]||CAT_ICONS.default;}
 function resetHome(){resetFilters();nav('home');}
 function nav(view){state.view=view;['home','catalog','map','routes','collections','favorites'].forEach(v=>$('view-'+v)?.classList.toggle('hide',v!==view));renderNav();if(view==='catalog')renderCatalog();if(view==='favorites')renderFavorites();if(view==='routes')renderRoutes();if(view==='collections')renderCollections();if(view==='map')setTimeout(()=>{initMap();updateMapMarkers();mapInst?.invalidateSize();},120);window.scrollTo({top:0,behavior:'smooth'});}
-function renderNav(){const items=[['home','Главная'],['catalog','Каталог'],['map','Карта'],['routes','Маршруты'],['collections','Подборки'],['favorites','♥ Избранное']];$('nav').innerHTML=items.map(([v,label])=>`<button onclick="nav('${v}')" class="nav-btn${state.view===v?' active':''}">${label}${v==='favorites'?` <span class="badge" id="favBadge">${favorites.length}</span>`:''}</button>`).join('');}
+function renderNav(){const items=[['home','Главная'],['catalog','Каталог'],['map','Карта'],['routes','Маршруты'],['collections','Подборки'],['favorites','♥ Избранное']];$('nav').innerHTML=items.map(([v,label])=>`<button onclick="nav('${v}')" class="nav-btn${state.view===v?' active':''}">${label}${v==='favorites'?` <span class="badge" id="favBadge">${favorites.length}</span>`:''}</button>`).join('')+`<button class="nav-btn theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="Переключить тему"><span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная тема</span></button>`;}
 function populateFilters(){const options='<option value="all">Все города</option>'+CITIES.map(c=>`<option value="${esc(c.key)}">${esc(c.name)}${c.country?' · '+esc(c.country):''}</option>`).join('');['cityFilter','mapCityFilter'].forEach(id=>$(id).innerHTML=options);$('homeCityOptions').innerHTML='<option value="Все города"></option>'+CITIES.map(c=>`<option value="${esc(c.name)}${c.country?' · '+esc(c.country):''}"></option>`).join('');$('homeCity').value='';const cats='<option value="all">Все категории</option>'+[...new Set(PLACES.map(p=>p.category))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru')).map(k=>`<option value="${esc(k)}">${categoryIcon(k)} ${esc(categoryName(k))}</option>`).join('');$('mapCatFilter').innerHTML=cats;}
 function placeCardHTML(p){const fav=favorites.includes(String(p.id));return `<article class="place-card" onclick="openPlace('${esc(p.id)}')"><div class="place-img"><img src="${esc(photo(p))}" alt="${esc(p.title)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'"><div class="place-rating">${p.rating?'★ '+esc(p.rating):'Место'}</div><button class="place-fav${fav?' active':''}" onclick="event.stopPropagation();toggleFav('${esc(p.id)}')" aria-label="В избранное">${fav?'♥':'♡'}</button><div class="place-cat">${categoryIcon(p.category)} ${esc(categoryName(p.category))}</div></div><div class="place-body"><h3 class="place-title">${esc(p.title)}</h3><div class="place-addr">📍 ${esc(p.address||p.city)}</div><p class="place-desc">${esc(p.description||'Описание этого места скоро появится.')}</p><div class="place-foot"><span class="place-city">${esc(p.city)}</span><span class="place-more">Подробнее →</span></div></div></article>`;}
 function renderHomeCities(){ $('homeCities').innerHTML=CITIES.map(c=>`<button class="city-card" onclick="openCity(decodeURIComponent('${encodeURIComponent(c.key)}'))"><img src="${esc(c.image||PLACEHOLDER)}" alt="${esc(c.name)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'"><div class="city-card-overlay"></div><div class="city-card-text"><div class="name">${esc(c.name)}</div><div class="count">${c.count} ${plural(c.count,'место','места','мест')}${c.country?' · '+esc(c.country):''}</div></div></button>`).join('');}
