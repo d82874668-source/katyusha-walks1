@@ -782,3 +782,29 @@ button,a{touch-action:manipulation}
 @media(max-width:380px){
   .header .brand .logo{width:50px!important;height:42px!important;flex-basis:50px!important}
 }
+
+
+/* Theme toggle reliability + consistent light/dark surfaces */
+html[data-theme="dark"] body{background:#111821!important;color:#e7edf4!important}
+html[data-theme="dark"] .header{background:rgba(17,24,33,.97)!important;border-color:#293544!important}
+html[data-theme="dark"] .header .brand-name{color:#f5f7fa!important}
+html[data-theme="dark"] .header .brand-tagline{color:#aab7c5!important}
+html[data-theme="dark"] main{color:#e7edf4}
+html[data-theme="dark"] .section-head,html[data-theme="dark"] .h1,html[data-theme="dark"] .h2,
+html[data-theme="dark"] .section-title,html[data-theme="dark"] .empty-title{color:#e7edf4}
+html[data-theme="dark"] .place-card,html[data-theme="dark"] .modal,
+html[data-theme="dark"] .city-card-info,html[data-theme="dark"] .collection-card,
+html[data-theme="dark"] .guide-panel,html[data-theme="dark"] .route-panel{
+ background:#1b2633!important;color:#e7edf4!important;border-color:#334153!important
+}
+html[data-theme="dark"] .filters select,html[data-theme="dark"] .filters input,
+html[data-theme="dark"] .hero-search,html[data-theme="dark"] .hero-search input,
+html[data-theme="dark"] .chip,html[data-theme="dark"] .btn-ghost{
+ background:#202b38!important;color:#e7edf4!important;border-color:#3a4858!important
+}
+html[data-theme="dark"] .place-desc,html[data-theme="dark"] .place-addr,
+html[data-theme="dark"] .place-city,html[data-theme="dark"] .empty-text{color:#aebdcb!important}
+html[data-theme="dark"] .mobile-theme-toggle{
+ background:#e8edf3!important;color:#172333!important;border-color:#8795a5!important
+}
+html[data-theme="light"] body{background:#faf7f2;color:#1a2332}
