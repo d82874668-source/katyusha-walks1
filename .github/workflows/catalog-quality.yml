@@ -24,6 +24,8 @@ jobs:
           node-version: 20
       - name: Validate catalog data
         run: node scripts/validate-catalog.mjs
+      - name: Validate site metadata and safeguards
+        run: node scripts/validate-site.mjs
       - name: Check JavaScript syntax
         shell: bash
         run: |
