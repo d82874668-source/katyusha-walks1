@@ -682,8 +682,8 @@ $("#historyClear")?.addEventListener("click", () => {
 });
 $("#search").addEventListener("input", (e) => { state.q = e.target.value; applyFilter(); });
 const categoryInput = $("#categorySearch");
-categoryInput.addEventListener("focus", () => { mapCategoryOpen = true; mapCategoryQuery = ""; renderChips(); });
-categoryInput.addEventListener("click", () => { mapCategoryOpen = true; mapCategoryQuery = ""; renderChips(); });
+categoryInput.addEventListener("focus", () => { mapCategoryOpen = true; mapCategoryQuery = ""; categoryInput.value = ""; renderChips(); });
+categoryInput.addEventListener("click", () => { mapCategoryOpen = true; if (categoryInput.value === (state.filter === "all" ? "" : CATEGORIES[state.filter]?.title || "")) categoryInput.value = ""; mapCategoryQuery = ""; renderChips(); });
 categoryInput.addEventListener("input", (e) => {
   mapCategoryQuery = e.target.value;
   mapCategoryOpen = true;
@@ -701,6 +701,7 @@ categoryInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
     const q = mapCategoryText(categoryInput.value);
+    if (!q) return;
     const inRegion = state.places.filter(matchesMapRegion);
     const used = [...new Set(inRegion.map((p) => p.category).filter(Boolean))];
     const match = used.find((key) => mapCategoryText(CATEGORIES[key]?.title) === q)
