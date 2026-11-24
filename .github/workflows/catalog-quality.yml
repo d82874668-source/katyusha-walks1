@@ -1,0 +1,33 @@
+name: Catalog quality checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "assets/data/catalog.json"
+      - "assets/js/**"
+      - "scripts/validate-catalog.mjs"
+      - "index.html"
+      - ".github/workflows/catalog-quality.yml"
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate catalog data
+        run: node scripts/validate-catalog.mjs
+      - name: Check JavaScript syntax
+        shell: bash
+        run: |
+          set -e
+          for file in assets/js/*.js; do
+            node --input-type=module --check < "$file"
+          done
