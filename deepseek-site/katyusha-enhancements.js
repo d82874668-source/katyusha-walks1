@@ -198,8 +198,8 @@ function drawChips(){
 }
 window.renderChips=drawChips;
 function priceText(p){
- const avg=Number(p.avg_check)||0,min=Number(p.price_min),max=Number(p.price_max),unit=window.currencyForCity?currencyForCity(p.city_key):(p.price_unit||'');
- if(p.is_free===true||min===0||/бесплат/i.test(String(p.price_unit||'')))return 'Бесплатно';
+ const avg=Number(p.avg_check)||0,minRaw=p.price_min,maxRaw=p.price_max,min=minRaw===null||minRaw===undefined||minRaw===''?NaN:Number(minRaw),max=maxRaw===null||maxRaw===undefined||maxRaw===''?NaN:Number(maxRaw),unit=window.currencyForCity?currencyForCity(p.city_key):(p.price_unit||'');
+ if(p.is_free===true||(min===0&&minRaw!==null&&minRaw!==undefined&&minRaw!=='')||/бесплат/i.test(String(p.price_unit||'')))return 'Бесплатно';
  if(avg>0)return '≈ '+avg.toLocaleString('ru-RU')+' '+unit;
  if(min>0&&max>0)return min.toLocaleString('ru-RU')+'–'+max.toLocaleString('ru-RU')+' '+unit;
  if(max>0)return 'до '+max.toLocaleString('ru-RU')+' '+unit;
@@ -209,7 +209,7 @@ function priceText(p){
 window.kwImageError=function(img){
  if(!img||img.dataset.kwFailed)return;img.dataset.kwFailed='1';
  const holder=img.closest('.place-img,.city-card,.modal-hero,.route-point');
- if(holder&&holder.classList.contains('place-img')){holder.classList.add('image-fallback');const cat=img.closest('.place-card')?.dataset.category||'default';holder.dataset.fallbackIcon=({park:'🌳',nature:'🏞',restaurant:'🍽',cafe:'☕',museum:'🏛',beach:'🏖',hotel:'⌂',gaming:'🎮'})[cat]||'✦'}
+ if(holder){holder.classList.add('image-fallback');const cat=img.closest('.place-card')?.dataset.category||'default';holder.dataset.fallbackIcon=({park:'🌳',nature:'🏞',restaurant:'🍽',cafe:'☕',museum:'🏛',beach:'🏖',hotel:'⌂',gaming:'🎮'})[cat]||'✦'}
  img.onerror=null;if(window.PLACEHOLDER)img.src=PLACEHOLDER;
 };
 document.addEventListener('error',function(e){if(e.target&&e.target.tagName==='IMG')window.kwImageError(e.target)},true);
@@ -298,7 +298,7 @@ function ids(){try{return JSON.parse(localStorage.getItem('kwk_my_route')||'[]')
 function addFloat(){
  if($('kwRouteFloat'))return;
  const el=document.createElement('aside');el.id='kwRouteFloat';el.className='kw-route-float';el.hidden=true;
- el.innerHTML='<strong id="kwRouteFloatCount">Мой маршрут (0 мест)</strong><button type="button" onclick="nav(\\'routes\\');document.getElementById(\\'view-routes\\').scrollIntoView({behavior:\\'smooth\\'})">К маршруту</button><button type="button" class="secondary" onclick="shareMyRoute()">Поделиться маршрутом</button>';
+ el.innerHTML='<strong id="kwRouteFloatCount">Мой маршрут (0 мест)</strong><button type="button" onclick="nav(\'routes\');document.getElementById(\'view-routes\').scrollIntoView({behavior:\'smooth\'})">К маршруту</button><button type="button" class="secondary" onclick="shareMyRoute()">Поделиться маршрутом</button>';
  document.body.appendChild(el);
 }
 function updateFloat(){addFloat();const a=ids(),el=$('kwRouteFloat'),count=$('kwRouteFloatCount');el.hidden=!a.length;if(count)count.textContent='Мой маршрут ('+a.length+' '+(a.length===1?'место':a.length<5?'места':'мест')+')'}
