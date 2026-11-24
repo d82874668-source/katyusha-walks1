@@ -1,6 +1,6 @@
 // Слой данных: Supabase REST API + резервный локальный каталог.
 import { CONFIG } from "./config.js?v=20261124n";
-import { PLACES, ROUTES } from "./data.js?v=20261124p";
+import { PLACES, ROUTES } from "./data.js?v=20261124q";
 
 const LS_KEY = "katyusha:favorites";
 let lastLoadMode = "local";
