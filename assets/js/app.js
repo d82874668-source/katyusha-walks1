@@ -4,9 +4,9 @@ import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124
 import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur, hasExactCoordinates } from "./map.js?v=20261124noticefix";
 import { state, byId } from "./state.js?v=20261124s";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124p";
-import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124audit";
+import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124idealfallback";
 import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124x";
-import { initIdeal, refreshIdeal, renderIdealForm } from "./ideal.js?v=20261124idealcityfix2";
+import { initIdeal, refreshIdeal, renderIdealForm } from "./ideal.js?v=20261124typedcityfix";
 
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
 const cityOrigin = (place) => {
