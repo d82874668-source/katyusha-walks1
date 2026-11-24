@@ -1,7 +1,7 @@
 // Точка входа: рендер секций, навигация, взаимодействие с картой.
 import { CATEGORIES, PLACES, ROUTES } from "./data.js?v=20261124q";
 import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124z";
-import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur, hasExactCoordinates } from "./map.js?v=20261124x2";
+import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur, hasExactCoordinates } from "./map.js?v=20261124noticefix";
 import { state, byId } from "./state.js?v=20261124s";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124p";
 import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124audit";
@@ -157,13 +157,18 @@ const favBtn = (p, cls = "") => {
 /* ---------- Карта: фильтры и список ---------- */
 // Фильтр карты работает по фактическому городу/стране, а не только по полю region:
  // в каталоге region местами означает город, местами область или страну.
+const regionValues = () => [...new Set(state.places.flatMap((p) =>
+  [p.country, p.region, p.city].map((value) => String(value || "").trim()).filter(Boolean)
+))];
+
 const matchesMapRegion = (place) => {
   if (state.region === "all") return true;
   const selected = String(state.region).trim();
-  const cityExists = state.places.some((item) => String(item.city || "").trim() === selected);
-  if (cityExists) return String(place.city || "").trim() === selected;
-  return String(place.country || "").trim() === selected ||
-    String(place.region || "").trim() === selected;
+  // Город, административный регион и страна — равноправные варианты фильтра.
+  // Совпадение проверяется по всем трём полям, чтобы не терять места,
+  // у которых region заполнен областью, а city — населённым пунктом.
+  return [place.city, place.region, place.country]
+    .some((value) => String(value || "").trim() === selected);
 };
 
 const visible = () => {
@@ -199,14 +204,16 @@ const visible = () => {
 
 function renderRegionFilter() {
   const input = $("#regionFilter");
-  // Подсказки доступны при вводе города, страны или региона с клавиатуры.
-  const values = [...new Set(state.places.flatMap((p) =>
-    [p.city, p.country, p.region].map((value) => String(value || "").trim()).filter(Boolean)
-  ))].sort((a, b) => a.localeCompare(b, "ru"));
+  // Полный справочник: страны, административные регионы/области и все города каталога.
+  const values = regionValues().sort((a, b) => a.localeCompare(b, "ru"));
   const selected = values.includes(state.region) ? state.region : "all";
-  $("#regionOptions").innerHTML = values.map((value) =>
-    `<option value="${esc(value)}"></option>`
-  ).join("");
+  $("#regionOptions").innerHTML = values.map((value) => {
+    const country = state.places.some((p) => p.country === value);
+    const region = state.places.some((p) => p.region === value);
+    const city = state.places.some((p) => p.city === value);
+    const type = [country && "страна", region && "регион", city && "город"].filter(Boolean).join(" · ");
+    return `<option value="${esc(value)}" label="${esc(type)}"></option>`;
+  }).join("");
   state.region = selected;
   input.value = selected === "all" ? "" : selected;
 }
@@ -444,7 +451,7 @@ async function showRoute(id) {
   const r = state.routes.find((x) => String(x.id) === String(id));
   const stops = r.places.map(byId).filter(Boolean);
   if (stops.length < 2) return;
-  state.region = stops[0].region || "Азербайджан";
+  state.region = stops[0].city || stops[0].region || stops[0].country || "Азербайджан";
   $("#regionFilter").value = state.region;
   state.filter = "all"; state.q = ""; $("#search").value = "";
   closeSheet(); applyFilter(false);
@@ -646,9 +653,7 @@ function applyTypedRegion() {
   const raw = regionInput.value.trim();
   if (!raw) state.region = "all";
   else {
-    const values = [...new Set(state.places.flatMap((p) =>
-      [p.city, p.country, p.region].map((value) => String(value || "").trim()).filter(Boolean)
-    ))];
+    const values = regionValues();
     const match = values.find((value) => value.toLocaleLowerCase("ru") === raw.toLocaleLowerCase("ru"));
     if (match) state.region = match;
     else {
