@@ -1,6 +1,6 @@
 // Точка входа: рендер секций, навигация, взаимодействие с картой.
-import { CATEGORIES, PLACES, ROUTES } from "./data.js?v=20261124shartashphoto";
-import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124shartashphoto";
+import { CATEGORIES, PLACES, ROUTES } from "./data.js?v=20261124bakuclubs";
+import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124bakuclubs";
 import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur, hasExactCoordinates } from "./map.js?v=20261124noticefix";
 import { state, byId } from "./state.js?v=20261124s";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124p";
