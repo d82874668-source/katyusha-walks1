@@ -78,6 +78,16 @@ export function generate(o, seed) {
     clock += travel + visitMinutes(p);
     if (p.price_min != null && currencyFor(p) === currencyFor(o.pool[0])) spent += Number(p.price_min);
   }
+  // Если сценарий не нашёл профильных категорий, предлагаем универсальные места города.
+  if (!stops.length && o.pool.length) {
+    const cur = currencyFor(o.pool[0]);
+    const fallback = o.pool
+      .filter((p) => !(o.budget != null && p.price_min != null && currencyFor(p) === cur && Number(p.price_min) > o.budget))
+      .map((p) => [p, score(p, "discover", null, o, rand)])
+      .sort((a, b) => b[1] - a[1]);
+    const count = Math.min(3, fallback.length, Math.max(1, Math.floor(limit / 120)));
+    for (const [place] of fallback.slice(0, count)) stops.push({ place, role: "discover" });
+  }
   retime(stops, o);
   const found = new Set(stops.map((x) => x.role));
   return { opts: o, stops, seed, missing: [...missing].filter((r) => !found.has(r)) };
