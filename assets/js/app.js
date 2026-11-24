@@ -5,8 +5,8 @@ import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./ma
 import { state, byId } from "./state.js?v=20261124r";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124n";
 import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124n";
-import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124v";
-import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124v";
+import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124w";
+import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124w";
 
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
 const cityOrigin = (place) => {
@@ -244,6 +244,12 @@ function openPlace(id, { scroll = false } = {}) {
   ensureMap().clearRoute();
   mapView.focus(p);
   renderSheet(); renderList();
+  // Для приблизительных координат не рассчитываем расстояние по центру города.
+  if (p.is_approx) {
+    const el = $("#eta");
+    if (el) el.textContent = "Точная точка уточняется — расстояние пока не рассчитываем";
+    return;
+  }
   // Расстояние и время считаем от пользователя (если разрешил геолокацию) или от центра города
   route([origin, p]).then((r) => {
     if (String(state.active) !== String(id)) return;
@@ -275,7 +281,7 @@ function renderSheet() {
     <p class="eta" id="eta">${icon("route")}<span>Считаем маршрут…</span></p>
     <div class="sheet__actions">
       <a class="btn btn--primary" target="_blank" rel="noopener" href="${googleUrl(p, state.user)}">${icon("nav")}Построить маршрут</a>
-      <a class="btn" target="_blank" rel="noopener" href="${osmUrl([state.user || cityOrigin(p), p])}">OpenStreetMap</a>
+      ${!p.is_approx ? `<a class="btn" target="_blank" rel="noopener" href="${osmUrl([state.user || cityOrigin(p), p])}">OpenStreetMap</a>` : ""}
       ${p.map_url ? `<a class="btn" target="_blank" rel="noopener" href="${esc(p.map_url)}">Открыть карточку на карте</a>` : ""}
       <button class="btn" data-plan-add="${p.id}">${icon("plus")}В маршрут</button>
       ${favBtn(p, "icon-btn--lg")}
