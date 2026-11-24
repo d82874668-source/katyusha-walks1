@@ -510,7 +510,8 @@ function renderHistory() {
 function renderFavs() {
   const items = state.places.filter((p) => state.favs.has(p.id));
   $("#favStatus").textContent = "Хранится в этом браузере. Для синхронизации между устройствами потребуется вход.";
-  $("#favCount").textContent = items.length;\n  renderCustomCollections();
+  $("#favCount").textContent = items.length;
+  renderCustomCollections();
   $("#favGrid").innerHTML = items.length ? items.map((p) => {
     const c = cat(p);
     return `<article class="card fav"><span class="badge" style="--h:${c.hue}">${icon(c.icon)}</span>
