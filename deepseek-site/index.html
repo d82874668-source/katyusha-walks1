@@ -454,7 +454,7 @@ function normalize(row){
 async function loadPlaces(){
  const all=[]; let offset=0; const pageSize=500;
  while(true){
-  const url=`${SUPABASE_URL}/rest/v1/places?select=id,title,description,category,subcategory,latitude,longitude,image,rating,is_approx,region,city,address,opening_hours,phone,map_url,website,country,features,additional_services,photo_sources,avg_check,price_min,price_max,price_unit&status=eq.active&order=id.asc&limit=${pageSize}&offset=${offset}`;
+  const url=`${SUPABASE_URL}/rest/v1/places?select=id,title,description,category,subcategory,latitude,longitude,image,rating,review_count,rating_source,is_approx,region,city,address,opening_hours,phone,map_url,website,country,features,additional_services,photo_sources,avg_check,price_min,price_max,price_unit&status=eq.active&order=id.asc&limit=${pageSize}&offset=${offset}`;
   const response=await fetch(url,{headers:{apikey:SUPABASE_KEY,Accept:'application/json'},cache:'no-store'});
   if(!response.ok) throw new Error(`База данных ответила HTTP ${response.status}: ${await response.text()}`);
   const batch=await response.json(); if(!Array.isArray(batch)) throw new Error('База вернула неожиданный формат данных');
@@ -678,6 +678,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 <script>function applyTheme(t){const d=t==="dark";document.documentElement.dataset.theme=d?"dark":"light";try{localStorage.setItem("kw-theme",d?"dark":"light")}catch(e){}const i=document.getElementById("themeIcon"),l=document.getElementById("themeLabel");if(i)i.textContent=d?"☀️":"🌙";if(l)l.textContent=d?"Светлая тема":"Тёмная тема";const m=document.querySelector("meta[name=theme-color]");if(m)m.content=d?"#111821":"#faf7f2"}function toggleTheme(){applyTheme(document.documentElement.dataset.theme==="dark"?"light":"dark")}document.addEventListener("DOMContentLoaded",()=>applyTheme(document.documentElement.dataset.theme==="dark"?"dark":"light"));</script>
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
-<script src="katyusha-enhancements.js?v=4"></script>
+<script src="katyusha-enhancements.js?v=5"></script>
 </body>
 </html>
