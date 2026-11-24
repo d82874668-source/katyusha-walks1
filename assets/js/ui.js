@@ -41,7 +41,7 @@ async function fetchJson(url) {
   return response.json();
 }
 async function lookupPlacePhoto(title, city) {
-  const cacheKey = `katyusha:photo:${normalizePhotoText(title)}:${normalizePhotoText(city)}`;
+  const cacheKey = `katyusha:photo:v2:${normalizePhotoText(title)}:${normalizePhotoText(city)}`;
   try {
     const cached = localStorage.getItem(cacheKey);
     if (cached === "none") return null;
@@ -112,7 +112,7 @@ export function hydratePhotos(root = document) {
         node.classList.add("cover--art", "cover--art--failed");
         node.replaceChildren();
         node.innerHTML = placeholder;
-        const cacheKey = `katyusha:photo:${normalizePhotoText(node.dataset.photoTitle)}:${normalizePhotoText(node.dataset.photoCity)}`;
+        const cacheKey = `katyusha:photo:v2:${normalizePhotoText(node.dataset.photoTitle)}:${normalizePhotoText(node.dataset.photoCity)}`;
         try { localStorage.removeItem(cacheKey); } catch {}
       }, { once: true });
       node.replaceChildren(img);
