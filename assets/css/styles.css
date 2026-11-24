@@ -1365,3 +1365,26 @@ main,.wrap,.nav__in,.hero__in,.mapbox,.mapbox__stage,#mapCanvas,.leaflet-contain
   #discoverGrid .pcard__actions .btn,#venueGrid .pcard__actions .btn{padding:5px 7px;font-size:10px}
 }
 @media(max-width:350px){#discoverGrid,#venueGrid{grid-template-columns:1fr}}
+
+
+/* Удобный каталог категорий в фильтрах карты — по тому же принципу, что выбор города. */
+.map-category-picker{padding:4px 12px 14px;border-bottom:1px solid var(--line)}
+.map-category-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:8px 4px 0}
+.map-category-title strong{font-size:14px;font-weight:650;color:var(--ink)}
+.map-category-title span{font-size:11px;color:var(--muted)}
+.map-category-search{height:40px;margin:10px 0 8px;padding:0 12px;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
+.map-category-list{display:flex;flex-direction:column;gap:8px;padding:0;max-height:310px;overflow-y:auto;overflow-x:hidden}
+.map-category-all{align-self:flex-start}
+.map-category-group{min-width:0;padding:8px 9px;border:1px solid var(--line);border-radius:13px;background:color-mix(in srgb,var(--surface) 78%,var(--bg))}
+.map-category-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;font-size:11px}
+.map-category-heading strong{font-size:12px;font-weight:650;color:var(--ink)}
+.map-category-heading span{font-size:10px;color:var(--muted);white-space:nowrap}
+.map-category-options{display:flex;flex-wrap:wrap;gap:5px}
+.map-category-options .chip{margin:0;max-width:100%;padding:6px 9px;font-size:11px;line-height:1.25}
+.map-category-options .chip small{font-size:10px;opacity:.65}
+.map-category-options .chip[aria-selected="true"]{background:var(--caspian);border-color:var(--caspian);color:#fff}
+@media(max-width:720px){
+ .map-category-picker{order:3;padding:4px 12px 10px}
+ .map-category-list{max-height:220px}
+ .map-category-options .chip{padding:6px 8px;font-size:11px}
+}
