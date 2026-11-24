@@ -4,7 +4,7 @@ import { state } from "./state.js?v=20261124r";
 import { $, $$, icon, esc, cat, cover, toast, fmtMin } from "./ui.js?v=20261124n";
 import { MOODS, ROLES, ATMOSPHERES, VENUE_GROUPS, kindOf, groupOf, visitMinutes, currencyFor } from "./taxonomy.js?v=20261124n";
 import { estimateLeg, haversineKm, fmtDist } from "./map.js?v=20261124n";
-import { setPlan, sharePlan, savePlanAs } from "./planner.js?v=20261124r";
+import { setPlan, sharePlan, savePlanAs } from "./planner.js?v=20261124s";
 
 const EXTRA_ROLES = ["walk", "drinks", "night", "cafe"]; // если время ещё осталось, а сценарий закончился
 const SIGHT_ROLES = new Set(["walk", "photo", "culture"]);
@@ -44,7 +44,7 @@ function score(p, role, prev, o, rand) {
 function pick(role, used, brands, prev, o, rand, spent, exclude = new Set()) {
   const cur = currencyFor(o.pool[0]);
   const cand = o.pool.filter((p) =>
-    ROLES[role].cats.includes(p.category) && !used.has(p.id) && !exclude.has(p.id) && !brands.has(brand(p)) &&
+    ROLES[role].cats.includes(p.category) && !used.has(String(p.id)) && !exclude.has(String(p.id)) && !brands.has(brand(p)) &&
     !(o.budget != null && p.price_min != null && currencyFor(p) === cur && spent + Number(p.price_min) > o.budget));
   if (!cand.length) return null;
   return cand.map((p) => [p, score(p, role, prev, o, rand)]).sort((a, b) => b[1] - a[1])[0][0];
@@ -74,7 +74,7 @@ export function generate(o, seed) {
     const travel = prev ? estimateLeg(prev, p, o.transport).min : 0;
     if (stops.length && clock + travel + visitMinutes(p) - mood.start * 60 > limit + 20) continue; // не влезает по времени
     stops.push({ place: p, role });
-    used.add(p.id); brands.add(brand(p));
+    used.add(String(p.id)); brands.add(brand(p));
     clock += travel + visitMinutes(p);
     if (p.price_min != null && currencyFor(p) === currencyFor(o.pool[0])) spent += Number(p.price_min);
   }
