@@ -11471,7 +11471,7 @@
       "category": "market",
       "latitude": 56.830254,
       "longitude": 60.637567,
-      "image": null,
+      "image": "https://lh3.googleusercontent.com/grass-cs/AABkmLftZ8XsRIPCxxXIuLdHGF7og7DmUTDXh5avdf0EUIfT6V_4m3AyKibnGC07Q6NUpADdIrCSkMcbcRAOgzS8aqwuMDv1bUdAC-asi5zWZQzV5jOZ-FMMCya_fNOcl97a6l04ekY=s294-w294-h220-n-k-no",
       "is_approx": false,
       "region": "Екатеринбург",
       "city": "Екатеринбург",
@@ -11486,7 +11486,8 @@
       "map_url": "https://www.google.com/maps/search/?api=1&query=56.830254,60.637567",
       "source_urls": [
         "https://ekaterinburg.spravka-region.ru/tags/rynki/Sartasskij-rynok-14",
-        "https://ekaterinburg.orgsprav.com/rynki/1971957.html"
+        "https://ekaterinburg.orgsprav.com/rynki/1971957.html",
+        "https://lh3.googleusercontent.com/grass-cs/AABkmLftZ8XsRIPCxxXIuLdHGF7og7DmUTDXh5avdf0EUIfT6V_4m3AyKibnGC07Q6NUpADdIrCSkMcbcRAOgzS8aqwuMDv1bUdAC-asi5zWZQzV5jOZ-FMMCya_fNOcl97a6l04ekY=s294-w294-h220-n-k-no"
       ],
       "website": null,
       "status": "active",
@@ -11494,7 +11495,13 @@
       "subcategory": "Продуктовый рынок",
       "features": {},
       "additional_services": [],
-      "photo_sources": [],
+      "photo_sources": [
+        {
+          "url": "https://lh3.googleusercontent.com/grass-cs/AABkmLftZ8XsRIPCxxXIuLdHGF7og7DmUTDXh5avdf0EUIfT6V_4m3AyKibnGC07Q6NUpADdIrCSkMcbcRAOgzS8aqwuMDv1bUdAC-asi5zWZQzV5jOZ-FMMCya_fNOcl97a6l04ekY=s294-w294-h220-n-k-no",
+          "source": "Предоставлено пользователем",
+          "license": null
+        }
+      ],
       "avg_check": null,
       "official_name": "Шарташский рынок",
       "original_name": "Шарташский рынок",
