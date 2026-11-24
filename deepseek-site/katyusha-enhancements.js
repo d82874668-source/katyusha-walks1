@@ -6,10 +6,23 @@ try{myRoute=JSON.parse(localStorage.getItem('kwk_my_route')||'[]').map(String).s
 const oldNav=window.nav,oldOpen=window.openPlace,oldPopulate=window.populateFilters,oldRenderRoutes=window.renderRoutes;
 const saveRecent=()=>{try{localStorage.setItem('kwk_recent',JSON.stringify(recent))}catch(e){}};
 const saveRoute=()=>{try{localStorage.setItem('kwk_my_route',JSON.stringify(myRoute))}catch(e){}};
-function fillGuide(){
-const c=$('guideCity'),k=$('guideCategory');if(c){const old=c.value||'all';c.innerHTML='<option value="all">Любой город</option>'+CITIES.slice().sort((a,b)=>a.name.localeCompare(b.name,'ru')).map(x=>'<option value="'+esc(x.key)+'">'+esc(x.name)+(x.country?' · '+esc(x.country):'')+'</option>').join('');c.value=[...c.options].some(o=>o.value===old)?old:'all'}
-if(k){const old=k.value||'all',used=[...new Set(PLACES.map(p=>p.category))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru'));k.innerHTML='<option value="all">Любые места</option>'+used.map(x=>'<option value="'+esc(x)+'">'+esc(categoryName(x))+'</option>').join('');k.value=[...k.options].some(o=>o.value===old)?old:'all'}
+let lastGuideCity='all';
+function syncGuideCats(preserve){
+ const el=$('guideCategory');if(!el)return;
+ const city=$('guideCity')?.value||'all',old=preserve?el.value:'all';
+ const used=[...new Set(PLACES.filter(p=>city==='all'||p.city_key===city).map(p=>p.category))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru'));
+ el.innerHTML='<option value="all">Любые места</option>'+used.map(x=>'<option value="'+esc(x)+'">'+esc(categoryName(x))+'</option>').join('');
+ el.value=used.includes(old)?old:'all';
 }
+function fillGuide(){
+ const c=$('guideCity');if(c){const old=c.value||'all';c.innerHTML='<option value="all">Любой город</option>'+CITIES.slice().sort((a,b)=>a.name.localeCompare(b.name,'ru')).map(x=>'<option value="'+esc(x.key)+'">'+esc(x.name)+(x.country?' · '+esc(x.country):'')+'</option>').join('');c.value=[...c.options].some(o=>o.value===old)?old:'all'}
+ lastGuideCity=$('guideCity')?.value||'all';syncGuideCats(true);window.updateGuideBudget?.();
+}
+window.updateGuideFilters=function(){
+ const city=$('guideCity')?.value||'all',input=$('guideBudget');
+ if(city!==lastGuideCity&&input)input.value='';
+ lastGuideCity=city;syncGuideCats(true);window.updateGuideBudget?.();
+};
 function syncMapCats(preserve){
 const el=$('mapCatFilter');if(!el)return;const city=$('mapCityFilter')?.value||'all',old=preserve?el.value:'all';
 const used=[...new Set(PLACES.filter(p=>city==='all'||p.city_key===city).map(p=>p.category))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru'));
@@ -61,7 +74,7 @@ window.openPlace=function(id){
  const photos=[...new Set((Array.isArray(p.photos)?p.photos:[]).filter(x=>typeof x==='string'&&/^https?:\/\//i.test(x)))].slice(0,10);
  if(photos.length>1&&!modal.querySelector('.modal-gallery')){const hero=modal.querySelector('.modal-hero img'),body=modal.querySelector('.modal-body'),gallery=document.createElement('div');gallery.className='modal-gallery';gallery.innerHTML=photos.map((url,i)=>'<button type="button" class="'+(i===0?'active':'')+'" aria-label="Фото '+(i+1)+'"><img src="'+esc(url)+'" alt="" loading="lazy"></button>').join('');gallery.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!hero)return;gallery.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));hero.src=b.querySelector('img').src});if(body)modal.insertBefore(gallery,body)}
  const info=modal.querySelector('.modal-info');
- if(info&&!info.dataset.priceAdded){const min=Number(p.price_min||0),max=Number(p.price_max||0),avg=Number(p.avg_check||0),label=avg?'Средний чек':(min||max?'Стоимость':''),value=avg?avg.toLocaleString('ru-RU')+' ₽':(min&&max?min.toLocaleString('ru-RU')+'–'+max.toLocaleString('ru-RU')+' ₽':min?'от '+min.toLocaleString('ru-RU')+' ₽':max?'до '+max.toLocaleString('ru-RU')+' ₽':'');if(label&&value){const card=document.createElement('div');card.className='modal-info-card';card.innerHTML='<div class="label">'+label+'</div><div class="value">'+value+'</div>';info.appendChild(card)}info.dataset.priceAdded='1'}
+ if(info&&!info.dataset.priceAdded){const min=Number(p.price_min||0),max=Number(p.price_max||0),avg=Number(p.avg_check||0),unit=window.currencyForCity?.(p.city_key)||'₽',label=avg?'Средний чек':(min||max?'Стоимость':''),value=avg?avg.toLocaleString('ru-RU')+' '+unit:(min&&max?min.toLocaleString('ru-RU')+'–'+max.toLocaleString('ru-RU')+' '+unit:min?'от '+min.toLocaleString('ru-RU')+' '+unit:max?'до '+max.toLocaleString('ru-RU')+' '+unit:'');if(label&&value){const card=document.createElement('div');card.className='modal-info-card';card.innerHTML='<div class="label">'+label+'</div><div class="value">'+value+'</div>';info.appendChild(card)}info.dataset.priceAdded='1'}
  const body=modal.querySelector('.modal-body');
  if(body&&!body.querySelector('.similar-section')){const similar=PLACES.filter(x=>String(x.id)!==String(p.id)&&x.city_key===p.city_key&&x.category===p.category).slice(0,3);if(similar.length){const section=document.createElement('section');section.className='similar-section';section.innerHTML='<h3>Похожие места в этом городе</h3><div class="grid">'+similar.map(placeCardHTML).join('')+'</div>';body.appendChild(section)}}
  return result;
@@ -79,13 +92,17 @@ function currencyFor(cityKey){
  const c=CITIES.find(x=>x.key===cityKey)?.country||'';
  return ({'Россия':'₽','Азербайджан':'AZN','Казахстан':'KZT','Грузия':'GEL','Турция':'TRY','Узбекистан':'UZS','Армения':'AMD','Беларусь':'BYN'})[c]||'местная валюта';
 }
+window.currencyForCity=currencyFor;
 function updateCatalogBudget(){
  const el=$('priceFilter');if(!el)return;const city=$('cityFilter')?.value||'all';
  const data=PLACES.filter(p=>p.city_key===city&&hasPrice(p));
  if(city==='all'){el.innerHTML='<option value="0">Выберите город для бюджета</option>';el.value='0';el.disabled=true;return}
  if(!data.length){el.innerHTML='<option value="0">Цены не указаны</option>';el.value='0';el.disabled=true;return}
  const old=el.value||'0',cur=currencyFor(city);el.disabled=false;
- el.innerHTML='<option value="0">Любой бюджет</option>'+[500,1000,3000,5000,10000].map(n=>'<option value="'+n+'">До '+n.toLocaleString('ru-RU')+' '+cur+'</option>').join('');
+ const maxPrice=Math.max(...data.map(p=>Math.max(Number(p.avg_check)||0,Number(p.price_min)||0,Number(p.price_max)||0)));
+ const nice=n=>{const power=Math.pow(10,Math.floor(Math.log10(Math.max(1,n))));return Math.ceil(n/power)*power};
+ const thresholds=[.2,.4,.6,.8,1].map(r=>nice(maxPrice*r)).filter((n,i,a)=>n>0&&a.indexOf(n)===i).sort((a,b)=>a-b);
+ el.innerHTML='<option value="0">Любой бюджет</option>'+thresholds.map(n=>'<option value="'+n+'">До '+n.toLocaleString('ru-RU')+' '+cur+'</option>').join('');
  el.value=[...el.options].some(o=>o.value===old)?old:'0';
 }
 window.updateGuideBudget=function(){
