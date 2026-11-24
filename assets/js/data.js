@@ -6429,6 +6429,57 @@ export const PLACES = [
    "https://yandex.com/maps/54/yekaterinburg/house/ulitsa_gromova_145/"
   ]
  }
+,
+ {
+  "id": 990218,
+  "title": "Шарташский рынок",
+  "description": "Городской продуктовый рынок с мясом, рыбой, молочной продукцией, овощами и фруктами.",
+  "category": "market",
+  "latitude": 56.830254,
+  "longitude": 60.637567,
+  "image": null,
+  "rating": 4.1,
+  "is_approx": false,
+  "region": "Екатеринбург",
+  "city": "Екатеринбург",
+  "address": "Екатеринбург, улица Восточная, 15А",
+  "price_min": null,
+  "price_max": null,
+  "price_unit": null,
+  "review_count": 4496,
+  "opening_hours": "Вторник–воскресенье 08:00–19:00, понедельник выходной",
+  "phone": "+7 (343) 254-40-85",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=56.830254,60.637567",
+  "source_urls": [
+   "https://ekaterinburg.spravka-region.ru/tags/rynki/Sartasskij-rynok-14",
+   "https://ekaterinburg.orgsprav.com/rynki/1971957.html"
+  ]
+ },
+ {
+  "id": 990219,
+  "title": "Верх-Исетский сельскохозяйственный рынок",
+  "description": "Специализированный сельскохозяйственный рынок с продуктами и товарами местных производителей.",
+  "category": "market",
+  "latitude": 56.850137,
+  "longitude": 60.554221,
+  "image": null,
+  "rating": 4.2,
+  "is_approx": false,
+  "region": "Екатеринбург",
+  "city": "Екатеринбург",
+  "address": "Екатеринбург, улица Халтурина, 37/15",
+  "price_min": null,
+  "price_max": null,
+  "price_unit": null,
+  "review_count": 2773,
+  "opening_hours": "Вторник–воскресенье 09:00–18:00, понедельник выходной",
+  "phone": "+7 (343) 245-60-16",
+  "map_url": "https://www.google.com/maps/search/?api=1&query=56.850137,60.554221",
+  "source_urls": [
+   "https://ekb.guidebook.ru/ekaterinburg/halturina/verh-isetskiy-spetsializirovanniy-selskohozyaystvenniy-rinok.html",
+   "https://yandex.com/maps/"
+  ]
+ }
 
 ];
 
