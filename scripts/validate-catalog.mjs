@@ -41,6 +41,18 @@ for (const place of places) {
   names.add(key);
 }
 
+const routeIds = new Set();
+for (const route of routes) {
+  const id = String(route.id);
+  if (!id || id === "undefined" || routeIds.has(id)) errors.push(`Duplicate or missing route id: ${id}`);
+  routeIds.add(id);
+  if (!String(route.title || "").trim()) errors.push(`Route ${id} has no title`);
+  if (!Array.isArray(route.places) || route.places.length < 2) errors.push(`Route ${id} has fewer than two stops`);
+  else for (const placeId of route.places) {
+    if (!ids.has(String(placeId))) errors.push(`Route ${id} references missing place: ${placeId}`);
+  }
+}
+
 if (!mapSource.includes("!p.is_approx")) errors.push("Map does not filter approximate coordinates");
 if (!mapSource.includes("p.is_approx")) errors.push("Approximate-coordinate guard missing in map module");
 if (!mapSource.includes("hasExactCoordinates")) errors.push("Strict coordinate validation missing in map module");
