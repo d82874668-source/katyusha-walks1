@@ -4,7 +4,7 @@ import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124
 import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur, hasExactCoordinates } from "./map.js?v=20261124x2";
 import { state, byId } from "./state.js?v=20261124s";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124p";
-import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124n";
+import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124audit";
 import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124x";
 import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124w";
 
@@ -375,7 +375,7 @@ function renderDiscover() {
 }
 
 function renderVenues() {
-  const allVenues = state.places.filter((p) => kindOf(p) === "venue" && p.category !== "aquapark");
+  const allVenues = state.places.filter((p) => kindOf(p) === "venue");
   const countryCounts = new Map();
   allVenues.forEach((p) => { const country = countryOf(p); countryCounts.set(country, (countryCounts.get(country) || 0) + 1); });
   const countries = [...countryCounts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"));
@@ -640,7 +640,7 @@ $("#discoverCitySearch").addEventListener("input", (e) => {
 });
 $("#venueCitySearch").addEventListener("input", (e) => {
   venueCityQuery = e.target.value;
-  const cities = citiesFor((p) => kindOf(p) === "venue" && p.category !== "aquapark" && (venueCountry === "all" || countryOf(p) === venueCountry));
+  const cities = citiesFor((p) => kindOf(p) === "venue" && (venueCountry === "all" || countryOf(p) === venueCountry));
   $("#venueCities").innerHTML = cityChips(cities, state.venueCity, venueCityQuery);
 });
 $("#fitBtn").addEventListener("click", () => { ensureMap().clearRoute(); mapView.fit(visible()); });
