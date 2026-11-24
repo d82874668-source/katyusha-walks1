@@ -6,6 +6,13 @@ export const CENTER = { latitude: 40.3725, longitude: 49.8355, label: "площ�
 
 const icon = (n) => `<svg class="i"><use href="#i-${n}"/></svg>`;
 
+// Не считаем null/пустую строку координатой 0,0: это частая причина ложных маркеров.
+export const hasExactCoordinates = (p) => {
+  if (!p || p.latitude == null || p.longitude == null || String(p.latitude).trim() === "" || String(p.longitude).trim() === "") return false;
+  const lat = Number(p.latitude), lon = Number(p.longitude);
+  return Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
+};
+
 export const fmtDist = (km) => (km < 10 ? km.toFixed(1) : Math.round(km)) + " км";
 export const fmtDur = (min) => {
   const m = Math.round(min);
@@ -16,7 +23,7 @@ export const fmtDur = (min) => {
 
 // Если координаты приблизительные, Google ищет место по названию: так надёжнее.
 const gPoint = (p) => {
-  if (!p.is_approx) return `${p.latitude},${p.longitude}`;
+  if (!p.is_approx && hasExactCoordinates(p)) return `${p.latitude},${p.longitude}`;
   return encodeURIComponent([p.title, p.address, p.city, p.region].filter(Boolean).join(", "));
 };
 
@@ -42,7 +49,7 @@ const OSRM = {
 };
 const cache = new Map();
 export async function route(points, mode = "drive") {
-  if (points.some((p) => p.is_approx)) throw new Error("Нельзя строить точный маршрут: у одного или нескольких мест уточняются координаты");
+  if (points.some((p) => p.is_approx || !hasExactCoordinates(p))) throw new Error("Нельзя строить точный маршрут: у одного или нескольких мест уточняются координаты");
   const coords = points.map((p) => `${p.longitude},${p.latitude}`).join(";");
   const key = mode + "|" + coords;
   if (cache.has(key)) return cache.get(key);
@@ -96,9 +103,7 @@ export class MapView {
     // Приблизительные точки (обычно центр города) не ставим на карту:
     // это лучше, чем отправлять человека к заведомо неверному адресу.
     const exactPlaces = places.filter((p) =>
-      !p.is_approx &&
-      Number.isFinite(Number(p.latitude)) &&
-      Number.isFinite(Number(p.longitude))
+      !p.is_approx && hasExactCoordinates(p)
     );
     exactPlaces.forEach((p, idx) => {
       const c = CATEGORIES[p.category] || { icon: "pin", hue: 340 };
@@ -124,7 +129,7 @@ export class MapView {
   }
 
   focus(p) {
-    if (p.is_approx) {
+    if (p.is_approx || !hasExactCoordinates(p)) {
       const note = document.createElement("div");
       note.textContent = "Точная точка этого места ещё уточняется. Найдите его по названию через Google Maps.";
       L.popup().setLatLng(this.map.getCenter()).setContent(note).openOn(this.map);
@@ -140,6 +145,12 @@ export class MapView {
   /** Рисует маршрут по дорогам; при ошибке OSRM рисует прямую пунктиром. */
   async drawRoute(points, mode = "drive") {
     this.clearRoute();
+    // Не рисуем вымышленную линию через центры городов и пустые координаты.
+    if (points.some((p) => p.is_approx || !hasExactCoordinates(p))) {
+      const exactPoints = points.filter((p) => !p.is_approx && hasExactCoordinates(p));
+      if (exactPoints.length) this.fit(exactPoints);
+      return { approximate: true, exactStops: exactPoints.length, totalStops: points.length };
+    }
     let line, info = null;
     try { info = await route(points, mode); line = info.line; }
     catch { line = points.map((p) => [p.latitude, p.longitude]); }
