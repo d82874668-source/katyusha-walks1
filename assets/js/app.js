@@ -1,12 +1,12 @@
 // Точка входа: рендер секций, навигация, взаимодействие с картой.
 import { CATEGORIES, PLACES, ROUTES } from "./data.js?v=20261124n";
 import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124u";
-import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./map.js?v=20261124p";
+import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur } from "./map.js?v=20261124v";
 import { state, byId } from "./state.js?v=20261124r";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124n";
 import { kindOf, groupOf, VENUE_GROUPS } from "./taxonomy.js?v=20261124n";
-import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124t";
-import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124t";
+import { initPlanner, addToPlan, renderPlanner } from "./planner.js?v=20261124v";
+import { initIdeal, refreshIdeal } from "./ideal.js?v=20261124v";
 
 const categoryAliases = { gaming: ["ПК-клубы", "PC-клубы", "игровые компьютерные клубы"], gaming247: ["круглосуточные компьютерные клубы", "24/7"] };
 const cityOrigin = (place) => {
