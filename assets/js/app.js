@@ -431,6 +431,57 @@ function renderCollections() {
   }).join("");
 }
 
+const COLLECTIONS_KEY = "katyusha:custom-collections";
+function readCustomCollections() {
+  try {
+    const value = JSON.parse(localStorage.getItem(COLLECTIONS_KEY));
+    return Array.isArray(value) ? value : [];
+  } catch { return []; }
+}
+function renderCustomCollections() {
+  const root = $("#customCollections");
+  if (!root) return;
+  const items = readCustomCollections();
+  root.innerHTML = items.length ? items.map((collection) => {
+    const places = (collection.placeIds || []).map(byId).filter(Boolean);
+    const preview = places.slice(0, 3).map((p) => p.title).join(" · ");
+    return `<article class="collection custom-collection">
+      <span class="badge">${icon("heart")}</span>
+      <h3>${esc(collection.title)}</h3>
+      <p>${esc(preview || "Места из вашего избранного")}</p>
+      <small>${places.length} мест</small>
+      <div class="collection__actions">
+        <button class="btn btn--sm btn--primary" data-custom-open="${esc(collection.id)}">В маршрут</button>
+        <button class="btn btn--sm" data-custom-share="${esc(collection.id)}">Поделиться</button>
+        <button class="btn btn--sm btn--ghost" data-custom-delete="${esc(collection.id)}">Удалить</button>
+      </div>
+    </article>`;
+  }).join("") : `<div class="empty card"><p>Сохраните избранные места в отдельную подборку — например, «Романтический вечер» или «Выходные с детьми».</p></div>`;
+}
+function createCustomCollection(title) {
+  const placeIds = state.places.filter((p) => state.favs.has(p.id)).map((p) => p.id);
+  if (!placeIds.length) return toast("Сначала добавьте места в избранное");
+  const items = readCustomCollections();
+  items.unshift({ id: String(Date.now()), title, placeIds, createdAt: Date.now() });
+  try { localStorage.setItem(COLLECTIONS_KEY, JSON.stringify(items.slice(0, 30))); } catch {}
+  renderCustomCollections();
+  toast("Подборка сохранена");
+}
+async function shareCustomCollection(id) {
+  const collection = readCustomCollections().find((x) => String(x.id) === String(id));
+  if (!collection) return;
+  const url = new URL(location.href);
+  url.searchParams.set("plan", (collection.placeIds || []).join(","));
+  url.searchParams.set("mode", "walk");
+  url.searchParams.set("name", collection.title);
+  try {
+    if (navigator.share) { await navigator.share({ title: collection.title, url: url.toString() }); return; }
+    await navigator.clipboard.writeText(url.toString());
+    toast("Ссылка на подборку скопирована");
+  } catch (error) {
+    if (error?.name !== "AbortError") window.prompt("Скопируйте ссылку на подборку:", url.toString());
+  }
+}
 const HISTORY_KEY = "katyusha:recent-places";
 function readHistory() {
   try {
@@ -459,7 +510,7 @@ function renderHistory() {
 function renderFavs() {
   const items = state.places.filter((p) => state.favs.has(p.id));
   $("#favStatus").textContent = "Хранится в этом браузере. Для синхронизации между устройствами потребуется вход.";
-  $("#favCount").textContent = items.length;
+  $("#favCount").textContent = items.length;\n  renderCustomCollections();
   $("#favGrid").innerHTML = items.length ? items.map((p) => {
     const c = cat(p);
     return `<article class="card fav"><span class="badge" style="--h:${c.hue}">${icon(c.icon)}</span>
@@ -487,7 +538,7 @@ function renderHero() {
 
 /* ---------- Делегирование событий ---------- */
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-fav],[data-close],[data-city],[data-water-city],[data-vgroup],[data-cat],[data-place],[data-place-open],[data-collection],[data-show-route],[data-history-remove]");
+  const t = e.target.closest("[data-fav],[data-close],[data-city],[data-water-city],[data-vgroup],[data-cat],[data-place],[data-place-open],[data-collection],[data-show-route],[data-history-remove],[data-custom-open],[data-custom-share],[data-custom-delete]");
   if (!t) return;
   if (t.dataset.fav) { e.stopPropagation(); return toggleFav(+t.dataset.fav); }
   if (t.dataset.historyRemove) {
@@ -495,6 +546,20 @@ document.addEventListener("click", (e) => {
     try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch {}
     return renderHistory();
   }
+  if (t.dataset.customDelete) {
+    const next = readCustomCollections().filter((x) => String(x.id) !== String(t.dataset.customDelete));
+    try { localStorage.setItem(COLLECTIONS_KEY, JSON.stringify(next)); } catch {}
+    return renderCustomCollections();
+  }
+  if (t.dataset.customOpen) {
+    const collection = readCustomCollections().find((x) => String(x.id) === String(t.dataset.customOpen));
+    if (!collection) return;
+    collection.placeIds.forEach((id) => addToPlan(id));
+    $("#planner")?.scrollIntoView({ behavior: "smooth" });
+    toast("Места добавлены в конструктор прогулки");
+    return;
+  }
+  if (t.dataset.customShare) return shareCustomCollection(t.dataset.customShare);
   if (t.hasAttribute("data-close")) return closeSheet();
   if (t.dataset.waterCity) { waterCity = t.dataset.waterCity; waterCityQuery = ""; $("#waterparkCitySearch").value = ""; return renderAquaparks(); }
   if (t.dataset.city) {
@@ -519,6 +584,14 @@ document.addEventListener("click", (e) => {
 });
 $("#placeList").addEventListener("keydown", (e) => {
   if ((e.key === "Enter" || e.key === " ") && e.target.dataset.place) { e.preventDefault(); openPlace(+e.target.dataset.place); }
+});
+$("#customCollectionForm")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const input = $("#customCollectionName");
+  const title = input?.value.trim();
+  if (!title) return toast("Введите название подборки");
+  createCustomCollection(title);
+  input.value = "";
 });
 $("#historyClear")?.addEventListener("click", () => {
   try { localStorage.removeItem(HISTORY_KEY); } catch {}
