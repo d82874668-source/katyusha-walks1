@@ -530,7 +530,20 @@ function renderHomeCities(){ const top=CITIES.slice().sort((a,b)=>b.count-a.coun
 function renderHomePlaces(){const list=PLACES.slice().sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0)).slice(0,8);$('homePlaces').innerHTML=list.map(placeCardHTML).join('');}
 function filteredPlaces(map=false){const city=map?state.mapCity:state.city,cat=map?state.mapCat:state.cat,q=(map?state.mapSearch:state.search).trim().toLocaleLowerCase('ru');return PLACES.filter(p=>(city==='all'||p.city_key===city)&&(cat==='all'||p.category===cat)&&(!q||[p.title,p.address,p.description,p.city,p.country,categoryName(p.category)].join(' ').toLocaleLowerCase('ru').includes(q)));}
 function renderChips(){const used=[...new Set(PLACES.map(p=>p.category))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru'));$('chips').innerHTML=[['all','Все'],...used.map(k=>[k,categoryName(k)])].map(([k,label])=>`<button type="button" class="chip${state.cat===k?' active':''}" onclick="filterCat(decodeURIComponent('${encodeURIComponent(k)}'))">${categorySvgIcon(k)}<span>${esc(label)}</span></button>`).join('');}
-function renderCatalog(){state.city=$('cityFilter').value||state.city;state.mapCity=state.city;state.mapCat=state.cat;state.search=$('searchInput').value||'';state.mapSearch=state.search;const list=filteredPlaces();const sort=$('sortFilter').value;if(sort==='rating')list.sort((a,b)=>(b.rating||0)-(a.rating||0));if(sort==='name')list.sort((a,b)=>a.title.localeCompare(b.title,'ru'));$('catalogCount').textContent=`${list.length} ${plural(list.length,'место','места','мест')}`;$('catalogGrid').innerHTML=list.length?list.map(placeCardHTML).join(''):`<div class="empty" style="grid-column:1/-1"><div class="empty-emoji">🔍</div><div class="empty-title">Ничего не найдено</div><div class="empty-text">Измените фильтры или выберите другой город.</div><button onclick="resetFilters()" class="btn btn-primary">Сбросить фильтры</button></div>`;renderChips();$('mapCityFilter').value=state.city;$('mapCatFilter').value=state.cat;$('mapSearchFilter').value=state.search;}
+function spreadPlacesAcrossCities(places){
+ const groups=new Map();
+ places.forEach(p=>{const key=p.city_key||p.city||'__unknown__';if(!groups.has(key))groups.set(key,[]);groups.get(key).push(p);});
+ const queues=[...groups.values()];
+ const spread=[];
+ let remaining=places.length;
+ while(remaining>0){
+  for(let i=0;i<queues.length;i++){
+   if(queues[i].length){spread.push(queues[i].shift());remaining--;}
+  }
+ }
+ return spread;
+}
+function renderCatalog(){state.city=$('cityFilter').value||state.city;state.mapCity=state.city;state.mapCat=state.cat;state.search=$('searchInput').value||'';state.mapSearch=state.search;const list=filteredPlaces();const sort=$('sortFilter').value;if(sort==='rating')list.sort((a,b)=>(b.rating||0)-(a.rating||0));else if(sort==='name')list.sort((a,b)=>a.title.localeCompare(b.title,'ru'));else if(state.city==='all')list.splice(0,list.length,...spreadPlacesAcrossCities(list));$('catalogCount').textContent=`${list.length} ${plural(list.length,'место','места','мест')}`;$('catalogGrid').innerHTML=list.length?list.map(placeCardHTML).join(''):`<div class="empty" style="grid-column:1/-1"><div class="empty-emoji">🔍</div><div class="empty-title">Ничего не найдено</div><div class="empty-text">Измените фильтры или выберите другой город.</div><button onclick="resetFilters()" class="btn btn-primary">Сбросить фильтры</button></div>`;renderChips();$('mapCityFilter').value=state.city;$('mapCatFilter').value=state.cat;$('mapSearchFilter').value=state.search;}
 function render(){renderCatalog();}
 function filterCat(k){state.cat=k;state.mapCat=k;$('mapCatFilter').value=k;renderCatalog();if(state.view==='map')updateMapMarkers();}
 function onCity(v){state.city=v;state.mapCity=v;$('mapCityFilter').value=v;renderCatalog();if(state.view==='map')updateMapMarkers();}
