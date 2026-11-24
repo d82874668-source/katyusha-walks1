@@ -7,6 +7,9 @@ on:
       - "assets/data/catalog.json"
       - "assets/js/**"
       - "scripts/validate-catalog.mjs"
+      - "scripts/validate-site.mjs"
+      - "robots.txt"
+      - "sitemap.xml"
       - "index.html"
       - ".github/workflows/catalog-quality.yml"
   pull_request:
