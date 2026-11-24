@@ -434,7 +434,7 @@ function openMapChooser(id){
  const links=lat!==null?[
   ['🌐','Google Карты','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(lat+','+lon)],
   ['🟡','Яндекс Карты','https://yandex.ru/maps/?pt='+encodeURIComponent(lon+','+lat)+'&z=16&l=map'],
-  ['🟢','2ГИС','https://2gis.ru/geo/'+encodeURIComponent(lon+','+lat)],
+  ['🟢','2ГИС','https://2gis.ru/search/'+q],
   ['🍎','Apple Карты','https://maps.apple.com/?ll='+encodeURIComponent(lat+','+lon)+'&q='+encodeURIComponent(p.title)],
   ['🗺️','OpenStreetMap','https://www.openstreetmap.org/?mlat='+lat+'&mlon='+lon+'#map=16/'+lat+'/'+lon]
  ]:[
