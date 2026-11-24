@@ -55,7 +55,7 @@
 
 /* ===== База ===== */
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 12px);-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 12px);-webkit-text-size-adjust:100%}\nhtml{overflow-anchor:none} body{overflow-anchor:none}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--font);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
 body.menu-open{overflow:hidden}
 h1,h2,h3,p,ul,ol,dl,dd{margin:0}
