@@ -76,7 +76,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <link rel="stylesheet" href="assets/css/styles.css?v=20261124citycompact">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script type="module" src="assets/js/app.js?v=20261124mapregionfix"></script>
+<script type="module" src="assets/js/app.js?v=20261124keyboardregion"></script>
 </head>
 <body>
 <a class="skip-link" href="#top">Перейти к содержимому</a>
@@ -257,16 +257,7 @@
       <div class="mapbox">
         <div class="mapbox__side">
           <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="search" type="search" placeholder="Найти место" autocomplete="off" aria-label="Поиск по названию, адресу, городу и описанию"></label>
-          <label class="search"><svg class="i"><use href="#i-pin"/></svg><select id="regionFilter" aria-label="Город или регион">
-            <option value="all" selected>Все города и регионы</option>
-            <option value="Азербайджан">Азербайджан</option>
-            <option value="Екатеринбург">Екатеринбург</option>
-            <option value="Москва">Москва</option>
-            <option value="Санкт-Петербург">Санкт-Петербург</option>
-            <option value="Нижний Тагил">Нижний Тагил</option>
-            <option value="Грузия">Грузия</option>
-            <option value="Посёлок Аять, Свердловская область">Посёлок Аять, Свердловская область</option>
-          </select></label>
+          <label class="search"><svg class="i"><use href="#i-pin"/></svg><input id="regionFilter" type="search" list="regionOptions" placeholder="Введите город или страну" autocomplete="off" aria-label="Введите город, страну или регион"><datalist id="regionOptions"></datalist></label>
           <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="priceMin" type="number" min="0" step="any" placeholder="Мин. цена, местная валюта" aria-label="Минимальная цена в местной валюте"></label>
           <label class="search"><svg class="i"><use href="#i-search"/></svg><input id="priceMax" type="number" min="0" step="any" placeholder="Макс. цена, местная валюта" aria-label="Максимальная цена в местной валюте"></label>
           <label class="search"><svg class="i"><use href="#i-star"/></svg><select id="minRating" aria-label="Минимальный рейтинг">
