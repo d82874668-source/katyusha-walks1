@@ -44,7 +44,7 @@ function score(p, role, prev, o, rand) {
 function pick(role, used, brands, prev, o, rand, spent, exclude = new Set()) {
   const cur = currencyFor(o.pool[0]);
   const cand = o.pool.filter((p) =>
-    ROLES[role].cats.includes(p.category) && !used.has(String(p.id)) && !exclude.has(String(p.id)) && !brands.has(brand(p)) &&
+    (!ROLES[role].cats.length || ROLES[role].cats.includes(p.category)) && !used.has(String(p.id)) && !exclude.has(String(p.id)) && !brands.has(brand(p)) &&
     !(o.budget != null && p.price_min != null && currencyFor(p) === cur && spent + Number(p.price_min) > o.budget));
   if (!cand.length) return null;
   return cand.map((p) => [p, score(p, role, prev, o, rand)]).sort((a, b) => b[1] - a[1])[0][0];
