@@ -121,18 +121,18 @@ export function renderIdealForm() {
     .normalize("NFKC")
     .toLocaleLowerCase("ru")
     .replace(/ё/g, "е")
-    .replace(/[^\\p{L}\\p{N}]+/gu, "");
+    .replace(/[^\p{L}\p{N}]+/gu, "");
   const closeCityOptions = () => { cityOptions.hidden = true; citySearch.setAttribute("aria-expanded", "false"); };
   const renderCityOptions = () => {
     // Берём актуальные города из select, а не полагаемся на устаревший снимок массива.
     const available = [...sel.options]
       .filter((option) => option.value)
-      .map((option) => [option.value, Number((option.textContent.match(/\\((\\d+)\\)/) || [])[1]) || 0]);
+      .map((option) => [option.value, Number((option.textContent.match(/\((\d+)\)/) || [])[1]) || 0]);
     const q = norm(citySearch.value);
     const filtered = available.filter(([city]) => {
       if (!q) return true;
       const cityKey = norm(city);
-      const aliasKey = String(cityAliases[city] || "").split(/\\s+/).map(norm).filter(Boolean);
+      const aliasKey = String(cityAliases[city] || "").split(/\s+/).map(norm).filter(Boolean);
       return cityKey.includes(q) || q.includes(cityKey) || aliasKey.some((alias) => alias.includes(q) || q.includes(alias));
     });
     cityOptions.innerHTML = filtered.length
