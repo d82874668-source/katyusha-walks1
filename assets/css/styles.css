@@ -1396,9 +1396,12 @@ main,.wrap,.nav__in,.hero__in,.mapbox,.mapbox__stage,#mapCanvas,.leaflet-contain
 /* Подсказки города в конструкторе идеального дня — в стиле селектора карты. */
 .ideal-city-picker{position:relative;z-index:12}
 .ideal-city-picker>label{display:block;margin-bottom:7px;font-size:13px;font-weight:600;color:var(--ink)}
-.ideal-city-picker .map-category-search{margin:0;height:46px}
+.ideal-city-picker .map-category-search{
+  display:flex;width:100%;min-width:0;box-sizing:border-box;margin:0;height:46px;
+}
 .ideal-city-picker .map-category-search input{
-  width:100%;min-width:0;height:100%;padding:0;border:0!important;outline:0!important;
+  display:block;flex:1 1 0;width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+  height:100%;padding:0;border:0!important;outline:0!important;
   box-shadow:none!important;background:transparent!important;
 }
 .ideal-city-picker .map-category-search input:focus,
