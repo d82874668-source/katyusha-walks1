@@ -216,7 +216,7 @@ document.addEventListener('error',function(e){if(e.target&&e.target.tagName==='I
 window.placeCardHTML=function(p){
  let fav=false;try{fav=favorites.includes(String(p.id))}catch(e){}
  const price=priceText(p);
- return '<article class="place-card" data-place-id="'+esc(p.id)+'" data-category="'+esc(p.category||'')+'" tabindex="0" role="button" aria-label="Открыть место '+esc(p.title)+'" onclick="openPlace(\''+esc(p.id)+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openPlace(\''+esc(p.id)+'\')}"><div class="place-img"><img src="'+esc(photo(p))+'" alt="'+esc(p.title)+'" loading="lazy" onerror="window.kwImageError(this)"><div class="place-rating">'+(p.rating?'★ '+esc(p.rating)+(p.review_count?' · '+Number(p.review_count).toLocaleString('ru-RU')+' отзывов':''):'Место')+'</div>'+(price?'<div class="place-price">'+esc(price)+'</div>':'')+'<button class="place-fav'+(fav?' active':'')+'" type="button" onclick="event.stopPropagation();toggleFav(\''+esc(p.id)+'\')" aria-label="'+(fav?'Убрать из избранного':'В избранное')+'">'+(fav?'♥':'♡')+'</button><div class="place-cat">'+esc(categoryName(p.category))+'</div></div><div class="place-body"><h3 class="place-title">'+esc(p.title)+'</h3><div class="place-addr">'+esc(p.address||p.city)+'</div><p class="place-desc">'+esc(p.description||'Описание этого места скоро появится.')+'</p><div class="place-foot"><span class="place-city">'+esc(p.city)+'</span><span class="place-more">Подробнее →</span></div></div></article>';
+ return '<article class="place-card" data-place-id="'+esc(p.id)+'" data-category="'+esc(p.category||'')+'" tabindex="0" role="button" aria-label="Открыть место '+esc(p.title)+'" onclick="openPlace(\''+esc(p.id)+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openPlace(\''+esc(p.id)+'\')}"><div class="place-img"><img src="'+esc(photo(p))+'" alt="'+esc(p.title)+'" loading="lazy" onerror="window.kwImageError(this)">'+(p.rating?'<div class="place-rating">★ '+esc(p.rating)+(p.review_count?' · '+Number(p.review_count).toLocaleString('ru-RU')+' отзывов':'')+'</div>':'')+'+(price?'<div class="place-price">'+esc(price)+'</div>':'')+'<button class="place-fav'+(fav?' active':'')+'" type="button" onclick="event.stopPropagation();toggleFav(\''+esc(p.id)+'\')" aria-label="'+(fav?'Убрать из избранного':'В избранное')+'">'+(fav?'♥':'♡')+'</button><div class="place-cat">'+esc(categoryName(p.category))+'</div></div><div class="place-body"><h3 class="place-title">'+esc(p.title)+'</h3><div class="place-addr">'+esc(p.address||p.city)+'</div><p class="place-desc">'+esc(p.description||'Описание этого места скоро появится.')+'</p><div class="place-foot"><span class="place-city">'+esc(p.city)+'</span><span class="place-more">Подробнее →</span></div></div></article>';
 };
 function wrapChips(){
  const host=$('chips');if(!host||host.closest('.kw-chip-shell'))return;
@@ -321,4 +321,70 @@ function importRoute(){
 const oldRenderNav=window.renderNav;
 if(oldRenderNav)window.renderNav=function(){oldRenderNav();importRoute();updateFloat()};
 document.addEventListener('DOMContentLoaded',function(){wrapChips();setupMapSplit();addFloat();updateFloat();if(window.lucide?.createIcons)lucide.createIcons()});
+})();
+
+
+/* ===== Country-first filter repair: keep catalog and map in sync ===== */
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+function categoriesFor(country,city){
+ return [...new Set(PLACES.filter(p=>(country==='all'||p.country===country)&&(city==='all'||p.city_key===city)).map(p=>p.category).filter(Boolean))]
+ .sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru'));
+}
+function syncMapCategory(country,city,preserve){
+ const el=$('mapCatFilter');if(!el)return;
+ const old=preserve?(el.value||state.mapCat||state.cat):'all',used=categoriesFor(country,city);
+ el.innerHTML='<option value="all">Все категории</option>'+used.map(k=>'<option value="'+esc(k)+'">'+esc(categoryName(k))+'</option>').join('');
+ el.value=used.includes(old)?old:'all';state.mapCat=el.value;
+}
+function syncControls(country,city){
+ const c=$('countryFilter'),mc=$('mapCountryFilter');
+ if(c)c.value=country;if(mc)mc.value=country;
+ if(typeof updateCityFilterOptions==='function')updateCityFilterOptions(country,city);
+ const ci=$('cityFilter'),mi=$('mapCityFilter');
+ if(ci)ci.value=city;if(mi)mi.value=city;
+}
+function repaint(mapToo){
+ if(typeof window.renderCatalog==='function')window.renderCatalog();
+ if((mapToo||state.view==='map')&&typeof window.updateMapMarkers==='function')window.updateMapMarkers();
+}
+window.onCountry=function(value){
+ const country=value||'all',city='all';
+ state.country=state.mapCountry=country;state.city=state.mapCity=city;
+ syncControls(country,city);syncMapCategory(country,city,true);
+ state.cat=state.mapCat||'all';if($('mapCatFilter'))$('mapCatFilter').value=state.cat;
+ repaint(true);
+};
+window.onCity=function(value){
+ const country=$('countryFilter')?.value||state.country||'all',city=value||'all';
+ state.country=state.mapCountry=country;state.city=state.mapCity=city;
+ syncControls(country,city);syncMapCategory(country,city,true);
+ state.cat=state.mapCat||'all';if($('mapCatFilter'))$('mapCatFilter').value=state.cat;
+ repaint(true);
+};
+window.onMapCountry=function(value){
+ const country=value||'all',city='all';
+ state.country=state.mapCountry=country;state.city=state.mapCity=city;
+ syncControls(country,city);syncMapCategory(country,city,true);
+ state.cat=state.mapCat||'all';if($('mapCatFilter'))$('mapCatFilter').value=state.cat;
+ repaint(true);
+};
+window.onMapFilters=function(){
+ const country=$('mapCountryFilter')?.value||'all';
+ const city=$('mapCityFilter')?.value||'all';
+ syncControls(country,city);syncMapCategory(country,city,true);
+ state.country=state.mapCountry=country;state.city=state.mapCity=city;
+ state.cat=state.mapCat=$('mapCatFilter')?.value||'all';
+ state.search=state.mapSearch=$('mapSearchFilter')?.value||'';
+ if($('searchInput'))$('searchInput').value=state.search;
+ if($('mapSearchFilter'))$('mapSearchFilter').value=state.search;
+ repaint(true);
+};
+window.filterCat=function(value){
+ state.cat=state.mapCat=value||'all';
+ if($('mapCatFilter'))$('mapCatFilter').value=state.mapCat;
+ repaint(true);
+ if(typeof window.renderChips==='function')window.renderChips();
+};
 })();
