@@ -107,7 +107,7 @@ function readForm() {
 
 export function renderIdealForm() {
   const cities = [...new Set(state.places.map((p) => p.city).filter(Boolean))]
-    .map((c) => [c, state.places.filter((p) => p.city === c).length]).filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]);
+    .map((c) => [c, state.places.filter((p) => p.city === c).length]).sort((a, b) => b[1] - a[1]);
   const sel = $("#idealCity");
   sel.innerHTML = cities.map(([c, n]) => `<option value="${esc(c)}">${esc(c)} (${n})</option>`).join("");
   sel.value = cities.some(([c]) => c === state.city) ? state.city : cities[0]?.[0] || "";
