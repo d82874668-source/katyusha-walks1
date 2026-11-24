@@ -17,8 +17,8 @@
   .header { position: sticky; top: 0; z-index: 100; padding: 8px 16px; background: rgba(250,247,242,.96); border-bottom: 1px solid #e9e1d5; box-shadow: 0 5px 22px rgba(40,35,28,.045); backdrop-filter: blur(14px); }
   .header-inner { max-width: 1320px; min-height: 70px; margin: 0 auto; display: grid; grid-template-columns: minmax(230px,1fr) auto auto; align-items: center; gap: 24px; }
   .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
-  .logo { width: auto; height: 76px; flex: 0 0 auto; display: flex; align-items: center; justify-content: flex-start; overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; cursor: pointer; padding: 0; position: relative; z-index: 20; }
-  .logo-image { display: block; width: auto; height: 76px; max-width: min(46vw, 340px); object-fit: contain; object-position: left center; border-radius: 0; }
+  .logo { width: auto; height: 72px; flex: 0 0 auto; display: flex; align-items: center; justify-content: flex-start; overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; cursor: pointer; padding: 0; position: relative; z-index: 20; }
+  .logo-image { display: block; width: auto; height: 72px; max-width: min(38vw, 320px); object-fit: contain; object-position: left center; border-radius: 0; }
   .brand-copy { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
   .brand-name { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 700; letter-spacing: -.025em; color: #202b3a; white-space: nowrap; }
   .brand-tagline { margin-top: 5px; color: #8a7868; font-size: 10px; font-weight: 600; letter-spacing: .105em; text-transform: uppercase; white-space: nowrap; }
@@ -39,7 +39,8 @@
   @media(max-width:640px) {
     .header { padding: 8px 12px; }
     .header-inner { min-height: 58px; gap: 7px 10px; }
-    .logo { width: 40px; height: 40px; flex-basis: 40px; }
+    .logo { width: auto; height: 54px; flex: 0 0 auto; }
+    .logo-image { width: auto; height: 54px; max-width: min(52vw, 250px); }
     .brand { gap: 8px; }
     .brand-name { font-size: 16px; }
     .brand-tagline { font-size: 8px; letter-spacing: .07em; }
