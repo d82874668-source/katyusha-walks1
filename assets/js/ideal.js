@@ -122,8 +122,24 @@ function swap(index) {
   const { opts: o, stops } = current;
   const s = stops[index], used = new Set(stops.map((x) => x.place.id)), brands = new Set(stops.filter((_, i) => i !== index).map((x) => brand(x.place)));
   const rand = rng(Date.now() & 0xffff);
-  const p = pick(s.role, used, brands, stops[index - 1]?.place || null, o, rand, 0, new Set([s.place.id]));
-  if (!p) return toast("Для этой остановки нет других подходящих мест");
+  let p = pick(s.role, used, brands, stops[index - 1]?.place || null, o, rand, 0, new Set([String(s.place.id)]));
+  // Если в конкретной категории закончились альтернативы, предложим другое место
+  // того же типа (достопримечательность или заведение), а не оставим кнопку без результата.
+  if (!p) {
+    const sameKind = o.pool.filter((candidate) =>
+      !used.has(String(candidate.id)) &&
+      !brands.has(brand(candidate)) &&
+      kindOf(candidate) === kindOf(s.place) &&
+      !(o.budget != null && candidate.price_min != null &&
+        currencyFor(candidate) === currencyFor(o.pool[0]) &&
+        Number(candidate.price_min) > o.budget)
+    );
+    if (sameKind.length) {
+      p = sameKind.map((candidate) => [candidate, score(candidate, "discover", stops[index - 1]?.place || null, o, rand)])
+        .sort((a, b) => b[1] - a[1])[0][0];
+    }
+  }
+  if (!p) return toast("В этом городе больше нет подходящих альтернатив для этой остановки");
   s.place = p; retime(stops, o); render();
 }
 
@@ -328,7 +344,7 @@ function render() {
   box.innerHTML = `
     <div class="ideal__head">
       <div><h3>${esc(mood.title)}, ${esc(o.city)}</h3>
-        <p class="muted">${clock(stops[0].start)}–${clock(end)} · ${stops.length} остановок · ${fmtMin(end - stops[0].start)} · дорога ≈ ${fmtDist(km)} ${o.transport === "walk" ? "пешком" : "на авто"}${priced.length ? ` · ≈ ${(cost * o.people).toLocaleString("ru-RU")} ${cur} на ${o.people} чел.` : ""}</p></div>
+        <p class="muted">${clock(stops[0].start)}–${clock(end)} · ${stops.length} остановок · ${fmtMin(end - stops[0].start)} · дорога ≈ ${fmtDist(km)} ${o.transport === "walk" ? "пешком" : "на авто"}${priced.length ? ` · ${priced.length === stops.length ? "≈ " : "известная часть ≈ "}${(cost * o.people).toLocaleString("ru-RU")} ${cur} на ${o.people} чел.` : ""}</p></div>
       <div class="ideal__act">
         <button class="btn btn--sm" data-ideal="again">${icon("refresh")}Другой вариант</button>
         <button class="btn btn--sm btn--primary" data-ideal="plan">${icon("route")}В планировщик</button>
@@ -380,7 +396,8 @@ export function initIdeal({ favBtn }) {
     $("#idealResult").scrollIntoView({ behavior: "smooth", block: "start" });
   });
   $("#idealResult").addEventListener("click", (e) => {
-    const t = e.target.closest("[data-ideal],[data-ideal-swap]");
+    const target = e.target instanceof Element ? e.target : e.target?.parentElement;
+    const t = target?.closest("[data-ideal],[data-ideal-swap]");
     if (!t || !current) return;
     if (t.dataset.idealSwap != null) return swap(+t.dataset.idealSwap);
     const ids = current.stops.map((s) => s.place.id), mode = current.opts.transport;
