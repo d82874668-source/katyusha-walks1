@@ -121,11 +121,17 @@ export async function loadData() {
         "description", "image", "rating", "region", "city", "address",
         "price_min", "price_max", "price_unit", "review_count",
         "opening_hours", "phone", "map_url", "source_urls",
+        "verification_status", "coord_source", "description_source",
+        "country", "website", "subcategory", "features", "additional_services",
+        "photo_sources", "avg_check", "official_name", "original_name",
       ].forEach((key) => {
         if (remote[key] == null || (Array.isArray(remote[key]) && !remote[key].length)) {
           merged[key] = backup[key];
         }
       });
+      // При конфликте источников выбираем безопасный вариант: если хотя бы один
+      // источник считает точку приблизительной, не выдаём её за точный адрес.
+      merged.is_approx = Boolean(remote.is_approx) || Boolean(backup.is_approx);
       return merged;
     });
 
