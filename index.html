@@ -192,12 +192,12 @@
           <label class="search"><svg class="i"><use href="#i-fit"/></svg><select id="sortPlaces" aria-label="Сортировка мест">
             <option value="popularity">Сначала популярные</option><option value="rating">По рейтингу</option><option value="price">По стоимости</option><option value="alphabetical">По алфавиту</option>
           </select></label>
-          <button class="btn btn--ghost" id="resetFilters" type="button">Сбросить фильтры</button>
           <div class="map-category-picker">
             <div class="map-category-title"><strong>Категория мест</strong><span>Выберите из списка или введите название</span></div>
             <label class="search map-category-search"><svg class="i"><use href="#i-search"/></svg><input id="categorySearch" type="search" placeholder="Все категории или начните вводить…" autocomplete="off" aria-label="Выбрать категорию мест"></label>
             <div class="map-category-list" id="chips" role="listbox" aria-label="Список категорий" hidden></div>
           </div>
+          <button class="btn btn--ghost" id="resetFilters" type="button">Сбросить фильтры</button>
           <ul class="list" id="placeList"></ul>
         </div>
         <div class="mapbox__stage">
