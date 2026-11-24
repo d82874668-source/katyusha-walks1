@@ -94,13 +94,55 @@ function swap(index) {
 }
 
 /* ---------- Форма ---------- */
+const CITY_ALIASES = {
+  "Баку": ["baku"], "Гянджа": ["ganja", "gence"], "Шеки": ["sheki", "shaki"],
+  "Казань": ["kazan"], "Сочи": ["sochi"], "Тбилиси": ["tbilisi"],
+  "Батуми": ["batumi"], "Москва": ["moscow"],
+  "Санкт-Петербург": ["saintpetersburg", "saint petersburg", "petersburg", "spb"],
+  "Екатеринбург": ["ekaterinburg"]
+};
+const normalizeCity = (value) => String(value ?? "")
+  .normalize("NFKC")
+  .toLocaleLowerCase("ru")
+  .replace(/ё/g, "е")
+  .replace(/[^\p{L}\p{N}]+/gu, "");
+
+function matchCity(query, cities) {
+  const q = normalizeCity(query);
+  if (!q) return null;
+  const matches = cities.filter(([city]) => {
+    const name = normalizeCity(city);
+    const aliases = (CITY_ALIASES[city] || []).map(normalizeCity);
+    return name.includes(q) || aliases.some((alias) => alias.includes(q));
+  });
+  matches.sort(([a], [b]) => {
+    const rank = (city) => {
+      const name = normalizeCity(city);
+      if (name === q) return 0;
+      if (name.startsWith(q)) return 1;
+      if (name.includes(q)) return 2;
+      const aliases = (CITY_ALIASES[city] || []).map(normalizeCity);
+      return aliases.some((alias) => alias === q) ? 3 : 4;
+    };
+    return rank(a) - rank(b) || a.localeCompare(b, "ru");
+  });
+  return matches[0] || null;
+}
+
 function readForm() {
   const f = $("#idealForm"), data = new FormData(f);
   const budget = data.get("budget") === "" ? null : Number(data.get("budget"));
+  const typedCity = $("#idealCitySearch").value.trim();
+  const cities = [...new Set(state.places.map((p) => String(p.city || "").trim()).filter(Boolean))]
+    .map((city) => [city, state.places.filter((p) => String(p.city || "").trim() === city).length]);
+  const matchedCity = matchCity(typedCity, cities);
+  const city = typedCity ? matchedCity?.[0] || "" : data.get("city") || "";
+  if (city) $("#idealCity").value = city;
   return {
-    mood: data.get("mood") || "romantic", city: data.get("city"), budget: Number.isFinite(budget) ? budget : null,
+    mood: data.get("mood") || "romantic", city, cityQuery: typedCity, cityResolved: Boolean(city),
+    budget: Number.isFinite(budget) ? budget : null,
     hours: Number(data.get("hours")), people: Math.max(1, Number(data.get("people")) || 1),
-    transport: data.get("transport"), atmosphere: data.get("atmosphere"),
+    transport: data.get("transport"), atmosphere: data.get("atmosphere") || "any",
     interests: new Set($$('#idealInterests input:checked').map((i) => i.value)),
   };
 }
@@ -118,31 +160,27 @@ export function renderIdealForm() {
   sel.innerHTML = cities.map(([city, count]) => `<option value="${esc(city)}">${esc(city)} (${count})</option>`).join("");
   sel.value = cities.some(([city]) => city === state.city) ? state.city : cities[0]?.[0] || "";
 
-  // Все варианты строятся из актуального state.places (включая объединённые данные API),
-  // а не из DOM скрытого select: это исключает рассинхронизацию списка и каталога.
-  const cityAliases = {
-    "Баку": ["baku"], "Гянджа": ["ganja", "gence"], "Шеки": ["sheki", "shaki"],
-    "Казань": ["kazan"], "Сочи": ["sochi"], "Тбилиси": ["tbilisi"],
-    "Батуми": ["batumi"], "Москва": ["moscow"], "Санкт-Петербург": ["saintpetersburg", "saint petersburg", "petersburg", "spb"],
-    "Екатеринбург": ["ekaterinburg"]
-  };
-  const normalizeCity = (value) => String(value ?? "")
-    .normalize("NFKC")
-    .toLocaleLowerCase("ru")
-    .replace(/ё/g, "е")
-    .replace(/[^\p{L}\p{N}]+/gu, "");
+  // Все варианты строятся из актуального state.places (включая данные API).
   const closeCityOptions = () => {
     cityOptions.hidden = true;
     citySearch.setAttribute("aria-expanded", "false");
   };
   const renderCityOptions = () => {
-    const query = normalizeCity(citySearch.value);
-    const filtered = cities.filter(([city]) => {
-      if (!query) return true;
+    const query = citySearch.value;
+    const q = normalizeCity(query);
+    const matched = q ? cities.filter(([city]) => {
       const name = normalizeCity(city);
-      const aliases = (cityAliases[city] || []).map(normalizeCity);
-      return name.includes(query) || aliases.some((alias) => alias.includes(query));
-    });
+      const aliases = (CITY_ALIASES[city] || []).map(normalizeCity);
+      return name.includes(q) || aliases.some((alias) => alias.includes(q));
+    }) : cities;
+    const best = matchCity(query, cities);
+    if (query.trim()) {
+      sel.value = best?.[0] || "";
+      updateCurrency();
+    }
+    const filtered = best
+      ? [...matched].sort(([a], [b]) => a === best[0] ? -1 : b === best[0] ? 1 : 0)
+      : matched;
     cityOptions.innerHTML = filtered.length
       ? filtered.map(([city, count]) => `<button type="button" class="map-category-option" role="option" aria-selected="${sel.value === city}" data-ideal-city="${esc(city)}"><span>${esc(city)}</span><small>${count} мест</small></button>`).join("")
       : '<p class="muted" style="padding:8px 10px;font-size:12px">Город не найден. Попробуйте изменить запрос.</p>';
@@ -150,13 +188,17 @@ export function renderIdealForm() {
     citySearch.setAttribute("aria-expanded", "true");
   };
   citySearch.value = searchWasFocused ? previousQuery : sel.value;
+  if (citySearch.value) {
+    const initialMatch = matchCity(citySearch.value, cities);
+    if (initialMatch) sel.value = initialMatch[0];
+  }
   citySearch.onfocus = () => {
     // При первом клике выделяем текущее название, чтобы новый ввод заменял его,
     // а не склеивался с ним (например, «БакуМосква»).
     citySearch.select();
     renderCityOptions();
   };
-  citySearch.oninput = renderCityOptions;
+  citySearch.oninput = () => { renderCityOptions(); sel.value = matchCity(citySearch.value, cities)?.[0] || ""; };
   citySearch.onkeydown = (event) => {
     if (event.key === "Escape") { closeCityOptions(); citySearch.blur(); }
     if (event.key === "Enter") {
@@ -198,7 +240,12 @@ function render() {
   const { opts: o, stops } = current;
   const mood = MOODS[o.mood];
   if (!stops.length) {
-    box.innerHTML = `<div class="card empty"><p>Для города «${esc(o.city)}» в каталоге пока недостаточно мест под такой сценарий. Выберите другое настроение или город.</p></div>`;
+    const message = !o.pool.length
+      ? `В каталоге пока нет мест для города «${esc(o.city)}». Выберите другой город или попробуйте позже.`
+      : o.budget != null
+        ? `Не удалось подобрать места для города «${esc(o.city)}» в указанном бюджете. Увеличьте бюджет или уберите ограничение.`
+        : `В каталоге города «${esc(o.city)}» пока недостаточно данных для этой программы. Попробуйте другой сценарий.`;
+    box.innerHTML = `<div class="card empty"><p>${message}</p></div>`;
     return;
   }
   const cur = currencyFor(o.pool[0]);
@@ -253,6 +300,12 @@ export function initIdeal({ favBtn }) {
   $("#idealForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const o = readForm();
+    if (!o.cityResolved) {
+      const query = o.cityQuery || "не указан";
+      $("#idealResult").innerHTML = `<div class="card empty"><p>Не удалось распознать город «${esc(query)}». Введите название или выберите город из подсказок.</p></div>`;
+      $("#idealResult").scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
     state.city = o.city;
     current = generate(o, Math.floor(Math.random() * 1e6));
     render();
