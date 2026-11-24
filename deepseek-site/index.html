@@ -72,7 +72,13 @@
   
   /* GRIDS */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px; }
-  .grid-cities { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
+  .grid-cities { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 760px) { .grid-cities { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } }
+  .city-card { aspect-ratio: 16 / 10; border-radius: 14px; }
+  .city-card-rank { position:absolute; top:10px; left:10px; z-index:2; min-width:26px; height:26px; padding:0 7px; display:flex; align-items:center; justify-content:center; border-radius:999px; color:#1a2332; background:rgba(255,255,255,.92); font-size:12px; font-weight:800; box-shadow:0 2px 8px rgba(0,0,0,.12); }
+  .city-card-text { bottom:11px; left:12px; right:12px; }
+  .city-card-text .name { font-size:16px; }
+  .city-card-text .count { font-size:12px; }
   
   /* CITY CARD */
   .city-card { position: relative; aspect-ratio: 3 / 4; border-radius: 16px; overflow: hidden; cursor: pointer; border: none; padding: 0; background: #ebe5db; text-align: left; font-family: inherit; }
@@ -268,6 +274,7 @@ html[data-theme="dark"] .nav .theme-toggle{background:#202b38;border-color:#3a48
         <div>
           <div class="eyebrow">Направления</div>
           <h2 class="h2">Популярные города</h2>
+          <p class="section-subtitle">8 городов с самым большим выбором мест в каталоге</p>
         </div>
       </div>
       <div id="homeCities" class="grid-cities"></div>
@@ -422,7 +429,7 @@ function nav(view){state.view=view;['home','catalog','map','routes','collections
 function renderNav(){const items=[['home','Главная'],['catalog','Каталог'],['map','Карта'],['routes','Маршруты'],['collections','Подборки'],['favorites','♥ Избранное']];$('nav').innerHTML=items.map(([v,label])=>`<button onclick="nav('${v}')" class="nav-btn${state.view===v?' active':''}">${label}${v==='favorites'?` <span class="badge" id="favBadge">${favorites.length}</span>`:''}</button>`).join('')+`<button class="nav-btn theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="Переключить тему"><span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная тема</span></button>`;}
 function populateFilters(){const options='<option value="all">Все города</option>'+CITIES.map(c=>`<option value="${esc(c.key)}">${esc(c.name)}${c.country?' · '+esc(c.country):''}</option>`).join('');['cityFilter','mapCityFilter'].forEach(id=>$(id).innerHTML=options);$('homeCityOptions').innerHTML='<option value="Все города"></option>'+CITIES.map(c=>`<option value="${esc(c.name)}${c.country?' · '+esc(c.country):''}"></option>`).join('');$('homeCity').value='';const cats='<option value="all">Все категории</option>'+[...new Set(PLACES.map(p=>p.category))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru')).map(k=>`<option value="${esc(k)}">${categoryIcon(k)} ${esc(categoryName(k))}</option>`).join('');$('mapCatFilter').innerHTML=cats;}
 function placeCardHTML(p){const fav=favorites.includes(String(p.id));return `<article class="place-card" onclick="openPlace('${esc(p.id)}')"><div class="place-img"><img src="${esc(photo(p))}" alt="${esc(p.title)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'"><div class="place-rating">${p.rating?'★ '+esc(p.rating):'Место'}</div><button class="place-fav${fav?' active':''}" onclick="event.stopPropagation();toggleFav('${esc(p.id)}')" aria-label="В избранное">${fav?'♥':'♡'}</button><div class="place-cat">${categoryIcon(p.category)} ${esc(categoryName(p.category))}</div></div><div class="place-body"><h3 class="place-title">${esc(p.title)}</h3><div class="place-addr">📍 ${esc(p.address||p.city)}</div><p class="place-desc">${esc(p.description||'Описание этого места скоро появится.')}</p><div class="place-foot"><span class="place-city">${esc(p.city)}</span><span class="place-more">Подробнее →</span></div></div></article>`;}
-function renderHomeCities(){ $('homeCities').innerHTML=CITIES.map(c=>`<button class="city-card" onclick="openCity(decodeURIComponent('${encodeURIComponent(c.key)}'))"><img src="${esc(c.image||PLACEHOLDER)}" alt="${esc(c.name)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'"><div class="city-card-overlay"></div><div class="city-card-text"><div class="name">${esc(c.name)}</div><div class="count">${c.count} ${plural(c.count,'место','места','мест')}${c.country?' · '+esc(c.country):''}</div></div></button>`).join('');}
+function renderHomeCities(){ const top=CITIES.slice().sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name,'ru')).slice(0,8); $('homeCities').innerHTML=top.map((c,i)=>`<button class="city-card" onclick="openCity(decodeURIComponent('${encodeURIComponent(c.key)}'))" aria-label="${esc(c.name)}, ${c.count} ${plural(c.count,'место','места','мест')}"><img src="${esc(c.image||PLACEHOLDER)}" alt="${esc(c.name)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'"><div class="city-card-overlay"></div><span class="city-card-rank">${i+1}</span><div class="city-card-text"><div class="name">${esc(c.name)}</div><div class="count">${c.count} ${plural(c.count,'место','места','мест')}${c.country?' · '+esc(c.country):''}</div></div></button>`).join('');}
 function renderHomePlaces(){const list=PLACES.slice().sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0)).slice(0,8);$('homePlaces').innerHTML=list.map(placeCardHTML).join('');}
 function filteredPlaces(map=false){const city=map?state.mapCity:state.city,cat=map?state.mapCat:state.cat,q=(map?state.mapSearch:state.search).trim().toLocaleLowerCase('ru');return PLACES.filter(p=>(city==='all'||p.city_key===city)&&(cat==='all'||p.category===cat)&&(!q||[p.title,p.address,p.description,p.city,p.country,categoryName(p.category)].join(' ').toLocaleLowerCase('ru').includes(q)));}
 function renderChips(){const used=[...new Set(PLACES.map(p=>p.category))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru'));$('chips').innerHTML=[['all','✨ Все'],...used.map(k=>[k,categoryIcon(k)+' '+categoryName(k)])].map(([k,label])=>`<button class="chip${state.cat===k?' active':''}" onclick="filterCat(decodeURIComponent('${encodeURIComponent(k)}'))">${esc(label)}</button>`).join('');}
