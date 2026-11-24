@@ -1,7 +1,7 @@
 // «Мой идеальный день»: подбор программы по настроению, городу, бюджету, времени и интересам.
 // Алгоритм детерминирован при одном seed и не использует внешние сервисы: работает офлайн на данных каталога.
 import { state } from "./state.js?v=20261124r";
-import { PLACES } from "./data.js?v=20261124bakufood6";
+import { PLACES } from "./data.js?v=20261124bakufood7";
 import { $, $$, icon, esc, cat, cover, toast, fmtMin } from "./ui.js?v=20261124n";
 import { MOODS, ROLES, ATMOSPHERES, VENUE_GROUPS, kindOf, groupOf, visitMinutes, currencyFor } from "./taxonomy.js?v=20261124mealfix";
 import { estimateLeg, haversineKm, fmtDist } from "./map.js?v=20261124n";
