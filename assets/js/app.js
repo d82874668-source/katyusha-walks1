@@ -227,6 +227,7 @@ const mapCategoryGroups = [
   { title: "Культура и город", keys: ["city", "monument", "historic", "theatre", "museum", "exhibition", "cultural_space", "attraction", "market", "shop", "mall", "excursion", "recreation"] }
 ];
 let mapCategoryQuery = "";
+let mapCategoryOpen = false;
 const mapCategoryText = (value) => String(value || "").toLocaleLowerCase("ru").replace(/ё/g, "е").trim();
 function renderChips() {
   const inRegion = state.places.filter(matchesMapRegion);
@@ -236,22 +237,25 @@ function renderChips() {
   if (state.filter !== "all" && !used.includes(state.filter)) state.filter = "all";
   const q = mapCategoryText(mapCategoryQuery);
   const allCount = inRegion.length;
-  const allButton = !q ? `<button class="chip map-category-all" role="tab" aria-selected="${state.filter === "all"}" data-cat="all">Все категории <small>${allCount}</small></button>` : "";
+  const allButton = `<button class="map-category-option map-category-all" role="option" aria-selected="${state.filter === "all"}" data-cat="all"><span>Все категории</span><small>${allCount}</small></button>`;
   const known = new Set();
   const sections = mapCategoryGroups.map((group) => {
     const keys = group.keys.filter((key) => used.includes(key));
     keys.forEach((key) => known.add(key));
     const filtered = keys.filter((key) => !q || mapCategoryText(`${CATEGORIES[key].title} ${CATEGORIES[key].blurb || ""} ${(categoryAliases[key] || []).join(" ")}`).includes(q));
     if (!filtered.length) return "";
-    const total = filtered.reduce((sum, key) => sum + counts.get(key), 0);
     return `<div class="map-category-group">
-      <div class="map-category-heading"><strong>${esc(group.title)}</strong><span>${total} мест</span></div>
-      <div class="map-category-options">${filtered.map((key) => `<button class="chip" role="tab" aria-selected="${state.filter === key}" data-cat="${key}">${esc(CATEGORIES[key].title)} <small>${counts.get(key)}</small></button>`).join("")}</div>
+      <div class="map-category-heading"><strong>${esc(group.title)}</strong><span>${filtered.reduce((sum,key)=>sum+counts.get(key),0)} мест</span></div>
+      <div class="map-category-options">${filtered.map((key) => `<button class="map-category-option" role="option" aria-selected="${state.filter === key}" data-cat="${key}"><span>${esc(CATEGORIES[key].title)}</span><small>${counts.get(key)}</small></button>`).join("")}</div>
     </div>`;
   }).join("");
-  const other = used.filter((key) => !known.has(key) && (!q || mapCategoryText(CATEGORIES[key].title).includes(q)));
-  const otherHtml = other.length ? `<div class="map-category-group"><div class="map-category-heading"><strong>Другие категории</strong><span>${other.reduce((sum,key)=>sum+counts.get(key),0)} мест</span></div><div class="map-category-options">${other.map((key) => `<button class="chip" role="tab" aria-selected="${state.filter === key}" data-cat="${key}">${esc(CATEGORIES[key].title)} <small>${counts.get(key)}</small></button>`).join("")}</div></div>` : "";
-  $("#chips").innerHTML = allButton + sections + otherHtml || `<p class="city-empty">Категории не найдены. Попробуйте другой запрос.</p>`;
+  const other = used.filter((key) => !known.has(key) && (!q || mapCategoryText(`${CATEGORIES[key].title} ${(categoryAliases[key] || []).join(" ")}`).includes(q)));
+  const otherHtml = other.length ? `<div class="map-category-group"><div class="map-category-heading"><strong>Другие категории</strong><span>${other.reduce((sum,key)=>sum+counts.get(key),0)} мест</span></div><div class="map-category-options">${other.map((key) => `<button class="map-category-option" role="option" aria-selected="${state.filter === key}" data-cat="${key}"><span>${esc(CATEGORIES[key].title)}</span><small>${counts.get(key)}</small></button>`).join("")}</div></div>` : "";
+  const menu = $("#chips");
+  menu.innerHTML = allButton + sections + otherHtml || `<p class="city-empty">Категории не найдены. Попробуйте другой запрос.</p>`;
+  menu.hidden = !mapCategoryOpen;
+  const input = $("#categorySearch");
+  if (document.activeElement !== input && !mapCategoryQuery) input.value = state.filter === "all" ? "" : CATEGORIES[state.filter]?.title || "";
 }
 
 function renderList() {
@@ -643,7 +647,13 @@ document.addEventListener("click", (e) => {
     $("#discoverCitySearch").value = ""; return renderDiscover();
   }
   if (t.dataset.vgroup) { state.venueGroup = t.dataset.vgroup; return renderVenues(); }
-  if (t.dataset.cat) { state.filter = t.dataset.cat; return applyFilter(); }
+  if (t.dataset.cat) {
+    state.filter = t.dataset.cat;
+    mapCategoryQuery = "";
+    mapCategoryOpen = false;
+    $("#categorySearch").value = state.filter === "all" ? "" : CATEGORIES[state.filter]?.title || "";
+    return applyFilter();
+  }
   if (t.dataset.place) return openPlace(+t.dataset.place);
   if (t.dataset.placeOpen) {
     const place = byId(+t.dataset.placeOpen);
@@ -671,11 +681,50 @@ $("#historyClear")?.addEventListener("click", () => {
   toast("История очищена");
 });
 $("#search").addEventListener("input", (e) => { state.q = e.target.value; applyFilter(); });
-$("#categorySearch").addEventListener("input", (e) => { mapCategoryQuery = e.target.value; renderChips(); });
+const categoryInput = $("#categorySearch");
+categoryInput.addEventListener("focus", () => { mapCategoryOpen = true; mapCategoryQuery = ""; renderChips(); });
+categoryInput.addEventListener("click", () => { mapCategoryOpen = true; mapCategoryQuery = ""; renderChips(); });
+categoryInput.addEventListener("input", (e) => {
+  mapCategoryQuery = e.target.value;
+  mapCategoryOpen = true;
+  renderChips();
+});
+categoryInput.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    mapCategoryOpen = false;
+    mapCategoryQuery = "";
+    categoryInput.value = state.filter === "all" ? "" : CATEGORIES[state.filter]?.title || "";
+    renderChips();
+    categoryInput.blur();
+    return;
+  }
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const q = mapCategoryText(categoryInput.value);
+    const inRegion = state.places.filter(matchesMapRegion);
+    const used = [...new Set(inRegion.map((p) => p.category).filter(Boolean))];
+    const match = used.find((key) => mapCategoryText(CATEGORIES[key]?.title) === q)
+      || used.find((key) => mapCategoryText(`${CATEGORIES[key]?.title || ""} ${(categoryAliases[key] || []).join(" ")}`).includes(q));
+    if (match) {
+      state.filter = match;
+      mapCategoryQuery = "";
+      mapCategoryOpen = false;
+      categoryInput.value = CATEGORIES[match].title;
+      applyFilter();
+    }
+  }
+});
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".map-category-picker") && mapCategoryOpen) {
+    mapCategoryOpen = false;
+    mapCategoryQuery = "";
+    renderChips();
+  }
+});
 
 $("#resetFilters").addEventListener("click", () => {
   Object.assign(state, { filter: "all", region: "all", q: "", minRating: 0, minPrice: null, maxPrice: null, sort: "popularity" });
-  $("#search").value = ""; $("#regionFilter").value = ""; $("#categorySearch").value = ""; mapCategoryQuery = ""; $("#priceMin").value = ""; $("#priceMax").value = "";
+  $("#search").value = ""; $("#regionFilter").value = ""; $("#categorySearch").value = ""; mapCategoryQuery = ""; mapCategoryOpen = false; $("#priceMin").value = ""; $("#priceMax").value = "";
   $("#minRating").value = "0"; $("#sortPlaces").value = "popularity"; closeSheet(); applyFilter();
 });
 const regionInput = $("#regionFilter");
