@@ -407,8 +407,8 @@ html[data-theme="dark"] .map-list-bar,html[data-theme="dark"] .modal-gallery{bac
   <div id="view-guide" class="hide" style="padding-top:32px">
     <div class="guide-hero"><div class="eyebrow">Помощник Катюша</div><h1 class="h1">Куда отправимся?</h1><p>Подберём интересные места под ваш город, свободное время и бюджет. Рекомендации строятся по реальным данным каталога.</p></div>
     <div class="guide-panel">
-      <div class="guide-field"><label for="guideCity">Город</label><select id="guideCity"><option value="all">Любой город</option></select></div>
-      <div class="guide-field"><label for="guideBudget">Бюджет на человека</label><div class="guide-input-wrap"><input id="guideBudget" type="number" min="0" step="500" value="5000"><span>₽</span></div></div>
+      <div class="guide-field"><label for="guideCity">Город</label><select id="guideCity" onchange="updateGuideBudget()"><option value="all">Выберите город</option></select></div>
+      <div class="guide-field"><label for="guideBudget">Бюджет на человека · необязательно</label><div class="guide-input-wrap"><input id="guideBudget" type="number" min="0" step="100" placeholder="Сначала выберите город" disabled><span id="guideCurrency">—</span></div></div>
       <div class="guide-field"><label for="guideDuration">Сколько времени</label><select id="guideDuration"><option value="2">Около 2 часов</option><option value="4" selected>Полдня · 4 часа</option><option value="6">Весь день · 6 часов</option></select></div>
       <div class="guide-field"><label for="guideCategory">Что интересно</label><select id="guideCategory"><option value="all">Любые места</option></select></div>
       <button class="btn btn-primary guide-submit" type="button" onclick="generateGuide()">Подобрать места ↗</button>
@@ -537,7 +537,7 @@ function normalize(row){
 async function loadPlaces(){
  const all=[]; let offset=0; const pageSize=500;
  while(true){
-  const url=`${SUPABASE_URL}/rest/v1/places?select=id,title,description,category,subcategory,latitude,longitude,image,rating,is_approx,region,city,address,opening_hours,phone,map_url,website,country,features,additional_services,photo_sources,avg_check&status=eq.active&order=id.asc&limit=${pageSize}&offset=${offset}`;
+  const url=`${SUPABASE_URL}/rest/v1/places?select=id,title,description,category,subcategory,latitude,longitude,image,rating,is_approx,region,city,address,opening_hours,phone,map_url,website,country,features,additional_services,photo_sources,avg_check,price_min,price_max,price_unit&status=eq.active&order=id.asc&limit=${pageSize}&offset=${offset}`;
   const response=await fetch(url,{headers:{apikey:SUPABASE_KEY,Accept:'application/json'},cache:'no-store'});
   if(!response.ok) throw new Error(`База данных ответила HTTP ${response.status}: ${await response.text()}`);
   const batch=await response.json(); if(!Array.isArray(batch)) throw new Error('База вернула неожиданный формат данных');
@@ -547,7 +547,7 @@ async function loadPlaces(){
  PLACES=all.map(normalize);
  try { const pr=await fetch(`${SUPABASE_URL}/rest/v1/place_photos?select=place_id,url,sort_order&order=sort_order.asc&limit=3000`,{headers:{apikey:SUPABASE_KEY,Accept:'application/json'},cache:'no-store'}); if(pr.ok){const gallery=await pr.json();const byId=new Map();gallery.forEach(x=>{if(/^https?:\/\//i.test(x.url||'')){const k=String(x.place_id);if(!byId.has(k))byId.set(k,[]);byId.get(k).push(x.url);}});PLACES=PLACES.map(p=>({...p,photos:[p.image,...(byId.get(String(p.id))||[])].filter(Boolean)}));} } catch(photoError){console.warn('Дополнительные фотографии не загрузились.',photoError);}
  const cityMap=new Map();
- PLACES.forEach(p=>{const key=p.city_key;if(!p.city.trim())return;const old=cityMap.get(key)||{key,name:p.city,country:p.country||'',count:0,image:photo(p),lat:[],lng:[]};old.count++;if((!old.image||old.image===PLACEHOLDER)&&p.image)old.image=p.image;if(p.latitude!==null&&p.longitude!==null){old.lat.push(p.latitude);old.lng.push(p.longitude);}cityMap.set(key,old);});
+ PLACES.forEach(p=>{const key=p.city_key;if(!p.city.trim())return;const imageRank={attraction:10,embankment:9,park:8,historic:8,viewpoint:8,monument:7,nature:7,museum:6,square:5};const rank=imageRank[p.category]||1;const old=cityMap.get(key)||{key,name:p.city,country:p.country||'',count:0,image:photo(p),imagePriority:p.image?rank:0,lat:[],lng:[]};old.count++;if(p.image&&rank>old.imagePriority){old.image=p.image;old.imagePriority=rank;}if(p.latitude!==null&&p.longitude!==null){old.lat.push(p.latitude);old.lng.push(p.longitude);}cityMap.set(key,old);});
  CITIES=[...cityMap.entries()].map(([key,v])=>({key,...v,latitude:v.lat.length?v.lat.reduce((a,b)=>a+b,0)/v.lat.length:null,longitude:v.lng.length?v.lng.reduce((a,b)=>a+b,0)/v.lng.length:null})).sort((a,b)=>a.name.localeCompare(b.name,'ru'));
  const catMap=new Map();PLACES.forEach(p=>catMap.set(p.category,(catMap.get(p.category)||0)+1));
  const categoryKeys=[...catMap.keys()].sort((a,b)=>(CAT_NAMES[a]||a).localeCompare(CAT_NAMES[b]||b,'ru'));
@@ -740,7 +740,7 @@ async function openRoute(id){
 }
 function openCollection(id){const c=COLLECTIONS.find(x=>x.id===id);if(!c)return;const list=c.places.map(findPlace).filter(Boolean);$('modal').innerHTML=`<div style="padding:32px;background:linear-gradient(135deg,#c75d45,#a84a37);color:#fff;position:relative"><button class="modal-close" onclick="closeModal()">✕</button><div style="font-size:42px">${c.icon}</div><div class="eyebrow" style="color:#ffe4d6">Подборка</div><h2>${esc(c.name)}</h2><p>${list.length} мест</p></div><div style="padding:24px"><div class="grid">${list.map(placeCardHTML).join('')}</div></div>`;$('overlay').classList.add('open');document.body.style.overflow='hidden';}
 function pluralCities(){return CITIES.length;}
-async function init(){try{const cats=await loadPlaces();populateFilters();renderNav();renderHomeCities();renderHomePlaces();renderChips();$('homeCity').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();openHomeCity();}});$('homeCity').addEventListener('change',()=>{const v=$('homeCity').value.trim();if(!v||v==='Все города')openCity('all');else{const q=v.toLocaleLowerCase('ru');const c=CITIES.find(x=>x.name.toLocaleLowerCase('ru')===q||`${x.name}${x.country?' · '+x.country:''}`.toLocaleLowerCase('ru')===q);if(c)openCity(c.key);}});$('errorBanner').classList.remove('show');const hero=$('view-home').querySelector('.hero img');if(hero&&PLACES[0])hero.src=photo(PLACES[0]);$('view-home').querySelector('.hero-sub').textContent=`${PLACES.length} мест · ${CITIES.length} городов · маршруты и подборки`;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal();});console.info(`Новый сайт DeepSeek: ${PLACES.length} записей прочитано из Supabase`);}catch(err){console.error(err);$('errorBanner').textContent='Не удалось загрузить каталог из основной базы: '+err.message;$('errorBanner').classList.add('show');$('homeCities').innerHTML='<div class="empty">Проверьте подключение к базе данных.</div>';}}
+async function init(){try{const cats=await loadPlaces();populateFilters();renderNav();renderHomeCities();renderHomePlaces();renderChips();$('homeCity').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();openHomeCity();}});$('homeCity').addEventListener('change',()=>{const v=$('homeCity').value.trim();if(!v||v==='Все города')openCity('all');else{const q=v.toLocaleLowerCase('ru');const c=CITIES.find(x=>x.name.toLocaleLowerCase('ru')===q||`${x.name}${x.country?' · '+x.country:''}`.toLocaleLowerCase('ru')===q);if(c)openCity(c.key);}});$('errorBanner').classList.remove('show');const hero=$('view-home').querySelector('.hero img');const heroPlace=PLACES.find(p=>p.image&&['attraction','embankment','park','historic','viewpoint','nature'].includes(p.category))||PLACES[0];if(hero&&heroPlace)hero.src=photo(heroPlace);$('view-home').querySelector('.hero-sub').textContent=`${PLACES.length} мест · ${CITIES.length} городов · маршруты и подборки`;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal();});console.info(`Новый сайт DeepSeek: ${PLACES.length} записей прочитано из Supabase`);}catch(err){console.error(err);$('errorBanner').textContent='Не удалось загрузить каталог из основной базы: '+err.message;$('errorBanner').classList.add('show');$('homeCities').innerHTML='<div class="empty">Проверьте подключение к базе данных.</div>';}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 
 </script>
@@ -817,6 +817,58 @@ window.openPlace=function(id){
  return result;
 };
 document.addEventListener('DOMContentLoaded',()=>{if($('mapList'))renderMapList()});
+})();
+
+</script>
+<script id="katyusha-local-currency-and-budget">
+
+(function(){
+function hasPrice(p){return Number(p.avg_check||p.price_min||p.price_max||0)>0}
+function currencyFor(cityKey){
+ const p=PLACES.find(x=>x.city_key===cityKey&&hasPrice(x)&&x.price_unit),unit=p?.price_unit||'';
+ if(/AZN/i.test(unit))return 'AZN';if(/GEL/i.test(unit))return 'GEL';if(/KZT/i.test(unit))return 'KZT';if(/RUB|₽/i.test(unit))return '₽';
+ const c=CITIES.find(x=>x.key===cityKey)?.country||'';
+ return ({'Россия':'₽','Азербайджан':'AZN','Казахстан':'KZT','Грузия':'GEL','Турция':'TRY','Узбекистан':'UZS','Армения':'AMD','Беларусь':'BYN'})[c]||'местная валюта';
+}
+function updateCatalogBudget(){
+ const el=$('priceFilter');if(!el)return;const city=$('cityFilter')?.value||'all';
+ const data=PLACES.filter(p=>p.city_key===city&&hasPrice(p));
+ if(city==='all'){el.innerHTML='<option value="0">Выберите город для бюджета</option>';el.value='0';el.disabled=true;return}
+ if(!data.length){el.innerHTML='<option value="0">Цены не указаны</option>';el.value='0';el.disabled=true;return}
+ const old=el.value||'0',cur=currencyFor(city);el.disabled=false;
+ el.innerHTML='<option value="0">Любой бюджет</option>'+[500,1000,3000,5000,10000].map(n=>'<option value="'+n+'">До '+n.toLocaleString('ru-RU')+' '+cur+'</option>').join('');
+ el.value=[...el.options].some(o=>o.value===old)?old:'0';
+}
+window.updateGuideBudget=function(){
+ const city=$('guideCity')?.value||'all',input=$('guideBudget'),unit=$('guideCurrency');if(!input||!unit)return;
+ const data=PLACES.filter(p=>p.city_key===city&&hasPrice(p));
+ if(city==='all'){input.disabled=true;input.value='';input.placeholder='Сначала выберите город';unit.textContent='—';return}
+ if(!data.length){input.disabled=true;input.value='';input.placeholder='Цены не указаны';unit.textContent=currencyFor(city);return}
+ input.disabled=false;input.placeholder='Например, 3000';unit.textContent=currencyFor(city);
+};
+const oldRender=window.renderCatalog;
+window.renderCatalog=function(){oldRender();updateCatalogBudget()};
+const oldOnCity=window.onCity;
+window.onCity=function(v){oldOnCity(v);updateCatalogBudget()};
+const oldMapFilters=window.onMapFilters;
+window.onMapFilters=function(){oldMapFilters();updateCatalogBudget()};
+window.generateGuide=function(){
+ const city=$('guideCity')?.value||'all',budget=city==='all'?0:Math.max(0,Number($('guideBudget')?.value||0)),duration=Number($('guideDuration')?.value||4),cat=$('guideCategory')?.value||'all';
+ let list=PLACES.filter(p=>(city==='all'||p.city_key===city)&&(cat==='all'||p.category===cat));
+ if(budget>0)list=list.filter(p=>{const n=Number(p.avg_check||p.price_min||p.price_max||0);return !n||n<=budget});
+ list.sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));list=list.slice(0,duration===2?4:duration===4?6:8);
+ const unit=city==='all'?'':currencyFor(city);
+ $('guideCaption').textContent=list.length?'Подобрали '+list.length+' вариантов'+(budget?' в пределах '+budget.toLocaleString('ru-RU')+' '+unit:'')+'.':'По этим параметрам пока ничего не нашлось.';
+ $('guideResults').innerHTML=list.length?list.map(placeCardHTML).join(''):'<div class="empty" style="grid-column:1/-1"><div class="empty-title">Попробуем иначе?</div><div class="empty-text">Измените город, бюджет или категорию.</div></div>';
+};
+window.createWeekendRoute=function(){
+ const city=$('guideCity')?.value||'all';if(city==='all'){toast('Сначала выберите город');return}
+ let pts=PLACES.filter(p=>p.city_key===city&&hasMapCoords(p)&&!p.is_approx).sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0));
+ if(pts.length<2){toast('Недостаточно мест с точными координатами');return}
+ const ordered=[pts.shift()];while(pts.length&&ordered.length<6){const last=ordered[ordered.length-1];let best=0,bestD=Infinity;pts.forEach((p,i)=>{const r=x=>x*Math.PI/180,dl=r(p.latitude-last.latitude),dn=r(p.longitude-last.longitude),a=Math.sin(dl/2)**2+Math.cos(r(last.latitude))*Math.cos(r(p.latitude))*Math.sin(dn/2)**2,d=6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));if(d<bestD){bestD=d;best=i}});ordered.push(pts.splice(best,1)[0])}
+ window.clearMyRoute();ordered.forEach(p=>window.addToMyRoute(p.id));nav('routes');toast('Маршрут на выходные собран из '+ordered.length+' мест');
+};
+document.addEventListener('DOMContentLoaded',()=>{updateCatalogBudget();updateGuideBudget()});
 })();
 
 </script>
