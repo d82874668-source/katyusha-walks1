@@ -74,13 +74,22 @@ export const VISIT_MIN = {
 };
 export const visitMinutes = (p) => VISIT_MIN[p.category] ?? 60;
 
-/** Валюта по региону: нужна, чтобы подписывать бюджет и итоговую стоимость. */
+/** Местная валюта выбранной страны. Страна важнее единицы цены отдельной карточки. */
 export function currencyFor(p) {
-  const unit = `${p?.price_unit || ""}`;
-  const m = unit.match(/\b(AZN|RUB|GEL|USD|EUR)\b/) || (unit.includes("₽") ? ["", "RUB"] : null);
-  if (m) return m[1];
-  const r = `${p?.region || ""} ${p?.city || ""}`;
-  if (/Азербайджан|Баку/.test(r)) return "AZN";
-  if (/Грузия|Тбилиси|Батуми/.test(r)) return "GEL";
-  return "RUB";
+  const country = String(p?.country || "").trim().toLocaleLowerCase("ru");
+  if (/азербайджан/.test(country)) return "AZN";
+  if (/россия/.test(country)) return "RUB";
+  if (/грузия/.test(country)) return "GEL";
+  if (/казахстан/.test(country)) return "KZT";
+
+  // Резерв для старых записей, где поле country ещё не заполнено.
+  const region = `${p?.region || ""} ${p?.city || ""}`;
+  if (/Азербайджан|Баку/.test(region)) return "AZN";
+  if (/Грузия|Тбилиси|Батуми/.test(region)) return "GEL";
+  if (/Казахстан|Алматы|Астана/.test(region)) return "KZT";
+  if (/Россия|Москва|Санкт-Петербург|Екатеринбург/.test(region)) return "RUB";
+
+  const unit = String(p?.price_unit || "");
+  const match = unit.match(/\b(AZN|RUB|GEL|KZT|USD|EUR)\b/) || (unit.includes("₽") ? ["", "RUB"] : null);
+  return match ? match[1] : "RUB";
 }
