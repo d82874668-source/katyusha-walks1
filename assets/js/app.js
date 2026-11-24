@@ -404,10 +404,12 @@ async function showRoute(id) {
   closeSheet(); applyFilter(false);
   $("#map").scrollIntoView({ behavior: "smooth", block: "start" });
   const info = await ensureMap().drawRoute(stops);
-  const msg = info ? `${r.title}: ${fmtDist(info.km)}, ${fmtDur(info.min)} в пути` : `${r.title}: маршрут показан по прямой`;
+  const msg = info?.approximate
+    ? `${r.title}: линия не построена — координаты ${info.totalStops - info.exactStops} остановок ещё уточняются. Названия можно открыть в Google Maps.`
+    : info ? `${r.title}: ${fmtDist(info.km)}, ${fmtDur(info.min)} в пути` : `${r.title}: маршрут показан по прямой`;
   toast(msg);
   const el = $(`[data-route="${id}"] [data-route-eta]`);
-  if (el && info) el.innerHTML = `${icon("route")}<span><strong>${fmtDist(info.km)}</strong> · <strong>${fmtDur(info.min)}</strong> по дорогам</span>`;
+  if (el && info && !info.approximate) el.innerHTML = `${icon("route")}<span><strong>${fmtDist(info.km)}</strong> · <strong>${fmtDur(info.min)}</strong> по дорогам</span>`;
 }
 
 /* ---------- Подборки, галерея, избранное ---------- */
