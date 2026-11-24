@@ -269,7 +269,7 @@
       <form class="card ideal__form" id="idealForm">
         <fieldset><legend>Настроение</legend><div class="moods" id="idealMoods"></div></fieldset>
         <div class="ideal__fields">
-          <label class="field"><span>Город</span><input id="idealCitySearch" type="search" list="idealCityOptions" placeholder="Начните вводить город…" autocomplete="off" aria-label="Поиск города для идеального дня"><datalist id="idealCityOptions"></datalist><select name="city" id="idealCity" hidden></select></label>
+          <div class="field ideal-city-picker" id="idealCityPicker"><label for="idealCitySearch">Город</label><div class="search map-category-search"><svg class="i"><use href="#i-pin"/></svg><input id="idealCitySearch" type="search" placeholder="Начните вводить город…" autocomplete="off" aria-label="Поиск города для идеального дня" aria-expanded="false" aria-controls="idealCityOptions"></div><div class="map-category-list ideal-city-options" id="idealCityOptions" role="listbox" hidden></div><select name="city" id="idealCity" hidden></select></div>
           <label class="field"><span>Продолжительность</span><select name="hours"><option value="3">2–3 часа</option><option value="5">Полдня</option><option value="8" selected>Целый день</option><option value="12">Максимум</option></select></label>
           <label class="field"><span>Участники</span><input name="people" type="number" min="1" max="20" value="2" inputmode="numeric"></label>
           <label class="field"><span>Бюджет на человека, <b id="budgetCur"></b></span><input name="budget" type="number" min="0" step="any" placeholder="Без ограничений" inputmode="decimal"></label>
