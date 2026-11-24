@@ -127,6 +127,7 @@ const oldRender=window.renderCollections;
 const defs=[
 {id:'outdoor',name:'На свежем воздухе',icon:'🌿',desc:'Парки, сады, набережные и красивые виды',cats:['park','nature','garden','embankment','viewpoint','square','beach','sea','trips','resort']},
 {id:'family',name:'С детьми',icon:'🧸',desc:'Зоопарки, аквапарки и семейные развлечения',cats:['zoo','aquarium','aquapark','park','attraction','entertainment']},
+{id:'date',name:'Идея для свидания',icon:'♥',desc:'Красивые виды, уютные кафе и спокойный отдых',cats:['viewpoint','embankment','sea','beach','restaurant','cafe','lounge','spa','resort']},
 {id:'culture',name:'История и культура',icon:'🏛️',desc:'Музеи, исторические места, театры и пространства',cats:['museum','historic','monument','theatre','cultural_space']},
 {id:'active',name:'Активный отдых',icon:'🎯',desc:'Игры, развлечения, VR и поездки',cats:['gaming','aquapark','entertainment','trips','vr','quest','karting','bowling','billiards','gamecenter']},
 {id:'evening',name:'Вечерний город',icon:'🌙',desc:'Кафе, рестораны, кино, театр и вечерние места',cats:['restaurant','cafe','coffee','lounge','nightclub','cinema','theatre','embankment','viewpoint']},
@@ -139,7 +140,7 @@ const defs=[
 function themePlaces(d){return PLACES.filter(p=>d.free?(Number(p.price_min)===0||/бесплат|свободн/i.test(String(p.price_unit||''))):d.cats.includes(p.category))}
 function themeCardMarkup(d){const list=themePlaces(d);if(list.length<3)return '';const p=list.find(x=>x.image)||list[0];return '<article class="place-card theme-collection-card" role="button" tabindex="0" data-theme-id="'+d.id+'"><div class="place-img"><img src="'+esc(photo(p))+'" alt="" loading="lazy"><div class="place-cat">'+d.icon+' Подборка</div></div><div class="place-body"><h3 class="place-title">'+esc(d.name)+'</h3><p class="place-desc">'+esc(d.desc)+'</p><div class="place-foot"><span class="theme-count">'+list.length+' мест</span><span class="place-more">Смотреть →</span></div></div></article>'}
 function bindThemeCards(grid){grid?.querySelectorAll('[data-theme-id]').forEach(card=>{card.addEventListener('click',()=>window.openThemeCollection(card.dataset.themeId));card.addEventListener('keydown',e=>{if(e.key==='Enter')window.openThemeCollection(card.dataset.themeId)})})}
-function renderHomeThemes(){const grid=$('homeThemesGrid');if(!grid)return;grid.innerHTML=['outdoor','family','culture','active'].map(id=>themeCardMarkup(defs.find(d=>d.id===id))).join('');bindThemeCards(grid)}
+function renderHomeThemes(){const grid=$('homeThemesGrid');if(!grid)return;grid.innerHTML=['outdoor','family','date','active'].map(id=>themeCardMarkup(defs.find(d=>d.id===id))).join('');bindThemeCards(grid)}
 const oldHome=window.renderHomePlaces;
 window.renderHomePlaces=function(){oldHome();renderHomeThemes()};
 window.renderCollections=function(){oldRender();const grid=$('themedCollectionsGrid');if(!grid)return;grid.innerHTML=defs.map(themeCardMarkup).join('');bindThemeCards(grid)};
