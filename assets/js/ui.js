@@ -55,11 +55,17 @@ async function lookupPlacePhoto(title, city) {
     const data = await fetchJson(url);
     const pages = Object.values(data.query?.pages || []);
     const tokens = normalizePhotoText(title).split(" ").filter((x) => x.length > 3);
+    const cityTokens = normalizePhotoText(city).split(" ").filter((x) => x.length > 3);
     const ranked = pages.map((page) => {
       const name = normalizePhotoText(page.title);
-      return { page, score: tokens.reduce((n, token) => n + (name.includes(token) ? 1 : 0), 0) };
+      const titleScore = tokens.reduce((n, token) => n + (name.includes(token) ? 1 : 0), 0);
+      const cityScore = cityTokens.reduce((n, token) => n + (name.includes(token) ? 1 : 0), 0);
+      return { page, titleScore, cityScore, score: titleScore * 2 + cityScore };
     }).sort((a, b) => b.score - a.score);
-    const image = ranked.find((x) => x.score > 0)?.page.imageinfo?.[0]?.thumburl;
+    // Не берём случайную картинку только из-за одного общего слова.
+    const best = ranked[0];
+    const image = best && best.titleScore >= Math.min(2, tokens.length) && (cityTokens.length === 0 || best.cityScore > 0)
+      ? best.page.imageinfo?.[0]?.thumburl : null;
     if (image) { try { localStorage.setItem(cacheKey, image); } catch {} return image; }
   } catch {}
   // Если в Commons нет подходящего файла, используем миниатюру статьи Wikipedia.
@@ -70,11 +76,16 @@ async function lookupPlacePhoto(title, city) {
       const data = await fetchJson(url);
       const pages = Object.values(data.query?.pages || []);
       const titleTokens = normalizePhotoText(title).split(" ").filter((x) => x.length > 3);
+      const cityTokens = normalizePhotoText(city).split(" ").filter((x) => x.length > 3);
       const ranked = pages.map((page) => {
         const name = normalizePhotoText(page.title);
-        return { page, score: titleTokens.reduce((n, token) => n + (name.includes(token) ? 1 : 0), 0) };
+        const titleScore = titleTokens.reduce((n, token) => n + (name.includes(token) ? 1 : 0), 0);
+        const cityScore = cityTokens.reduce((n, token) => n + (name.includes(token) ? 1 : 0), 0);
+        return { page, titleScore, cityScore, score: titleScore * 2 + cityScore };
       }).sort((a, b) => b.score - a.score);
-      const image = ranked.find((x) => x.score > 0)?.page.thumbnail?.source || pages.find((x) => x.thumbnail)?.thumbnail?.source;
+      const best = ranked[0];
+      const image = best && best.titleScore >= Math.min(2, titleTokens.length) && (cityTokens.length === 0 || best.cityScore > 0)
+        ? best.page.thumbnail?.source : null;
       if (image) { try { localStorage.setItem(cacheKey, image); } catch {} return image; }
     } catch {}
   }
@@ -91,13 +102,16 @@ export function hydratePhotos(root = document) {
     }
     photoPromises.get(key).then((url) => {
       if (!url || !node.isConnected) return;
+      const placeholder = node.innerHTML;
       const img = document.createElement("img");
       img.src = url;
       img.alt = `${node.dataset.photoTitle} — ${node.dataset.photoCity}`;
       img.loading = "lazy";
       img.decoding = "async";
       img.addEventListener("error", () => {
-        node.classList.add("cover--art--failed");
+        node.classList.add("cover--art", "cover--art--failed");
+        node.replaceChildren();
+        node.innerHTML = placeholder;
         const cacheKey = `katyusha:photo:${normalizePhotoText(node.dataset.photoTitle)}:${normalizePhotoText(node.dataset.photoCity)}`;
         try { localStorage.removeItem(cacheKey); } catch {}
       }, { once: true });
