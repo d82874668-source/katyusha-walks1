@@ -239,7 +239,7 @@ function renderResults() {
 export function initPlanner() {
   state.saved = read(LS_SAVED, []);
   const draft = read(LS_PLAN, null);
-  if (draft?.ids) state.plan = { ids: draft.ids.filter((id) => byId(id)), mode: draft.mode === "drive" ? "drive" : "walk", name: draft.name || "" };
+  if (draft?.ids) state.plan = { ids: [...new Set(draft.ids.map(Number).filter(Number.isFinite))].filter((id) => byId(id)), mode: draft.mode === "drive" ? "drive" : "walk", name: draft.name || "" };
   if (!loadFromUrl()) { renderPlanner(); refreshLegs(); }
 
   document.addEventListener("click", (e) => {
