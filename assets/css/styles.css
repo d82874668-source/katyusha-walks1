@@ -1178,3 +1178,86 @@ main,.wrap,.nav__in,.hero__in,.mapbox,.mapbox__stage,#mapCanvas,.leaflet-contain
   #collections .grid--cols{grid-template-columns:1fr}
   #collections .collection{min-height:0}
 }
+
+
+/* ===== Финальная компактность подборок и контрастная навигация ===== */
+#collections.sec{padding-block:24px}
+#collections .sec__head{margin-bottom:12px}
+#collections .grid--cols{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  align-items:stretch;
+}
+#collections .collection{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr) auto;
+  align-items:center;
+  justify-content:stretch;
+  gap:8px;
+  min-width:0;
+  min-height:64px;
+  height:auto;
+  padding:9px 11px;
+  border-radius:14px;
+  text-align:left;
+}
+#collections .collection .badge{
+  width:32px;
+  height:32px;
+  margin:0;
+  border-radius:10px;
+}
+#collections .collection h3{
+  width:auto;
+  min-width:0;
+  margin:0;
+  font-size:13px;
+  line-height:1.25;
+  overflow-wrap:anywhere;
+}
+#collections .collection p{display:none}
+#collections .collection small{
+  width:auto;
+  margin:0;
+  padding:0;
+  font-size:10px;
+  white-space:nowrap;
+}
+@media(max-width:1100px){
+  #collections .grid--cols{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  #collections .grid--cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #collections .collection{grid-template-columns:30px minmax(0,1fr);min-height:58px;padding:8px}
+  #collections .collection .badge{width:28px;height:28px}
+  #collections .collection small{grid-column:2;font-size:10px}
+}
+@media(max-width:390px){
+  #collections .grid--cols{grid-template-columns:1fr}
+}
+
+/* Белая навигация на контрастной тёмно-зелёной панели */
+.nav,
+.nav.is-scrolled,
+.nav[data-open="true"]{
+  background:rgba(31,48,41,.97);
+  color:#fff;
+  box-shadow:0 1px 0 rgba(255,255,255,.12),0 8px 26px rgba(0,0,0,.12);
+  backdrop-filter:blur(18px) saturate(1.2);
+  -webkit-backdrop-filter:blur(18px) saturate(1.2);
+}
+.nav .brand{color:#fff}
+.nav .brand__mark{background:rgba(255,255,255,.16);color:#fff}
+#menu a{color:rgba(255,255,255,.88)}
+#menu a:hover,
+#menu a[aria-current]{
+  color:#fff;
+  background:rgba(255,255,255,.15);
+}
+.nav__tools .icon-btn,
+.nav__burger{color:#fff}
+@media(max-width:1020px){
+  #menu{background:rgba(31,48,41,.99);border-bottom:1px solid rgba(255,255,255,.14)}
+  #menu a{color:rgba(255,255,255,.92)}
+  #menu a:hover,#menu a[aria-current]{color:#fff;background:rgba(255,255,255,.15)}
+}
