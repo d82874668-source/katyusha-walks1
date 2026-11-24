@@ -1,6 +1,6 @@
 // Точка входа: рендер секций, навигация, взаимодействие с картой.
-import { CATEGORIES, PLACES, ROUTES } from "./data.js?v=20261124ekbclubs";
-import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124ekbclubs";
+import { CATEGORIES, PLACES, ROUTES } from "./data.js?v=20261124mapcategories";
+import { loadData, setFavorite, subscribeFavorites } from "./store.js?v=20261124mapcategories";
 import { MapView, CENTER, googleUrl, osmUrl, route, fmtDist, fmtDur, hasExactCoordinates } from "./map.js?v=20261124noticefix";
 import { state, byId } from "./state.js?v=20261124s";
 import { $, $$, icon, esc, telUrl, cat, priceText, placeCard, toast, cover, hydratePhotos } from "./ui.js?v=20261124p";
@@ -218,12 +218,40 @@ function renderRegionFilter() {
   input.value = selected === "all" ? "" : selected;
 }
 
+const mapCategoryGroups = [
+  { title: "Отдых и wellness", keys: ["spa", "bath", "thermal", "massage", "hotel", "resort", "pool", "gym"] },
+  { title: "Еда и напитки", keys: ["restaurant", "cafe", "coffee", "bakery", "fastfood", "foodcourt", "bar", "pub", "winebar", "lounge", "hookah"] },
+  { title: "Ночная жизнь", keys: ["nightclub", "karaoke"] },
+  { title: "Развлечения и игры", keys: ["capybara", "zoo", "gaming", "gaming247", "esports", "gamecenter", "vr", "quest", "anticafe", "karting", "billiards", "bowling", "cinema", "entertainment"] },
+  { title: "Прогулки и природа", keys: ["park", "square", "nature", "garden", "sea", "boat", "beach", "aquapark", "embankment", "viewpoint", "trips"] },
+  { title: "Культура и город", keys: ["city", "monument", "historic", "theatre", "museum", "exhibition", "cultural_space", "attraction", "market", "shop", "mall", "excursion", "recreation"] }
+];
+let mapCategoryQuery = "";
+const mapCategoryText = (value) => String(value || "").toLocaleLowerCase("ru").replace(/ё/g, "е").trim();
 function renderChips() {
   const inRegion = state.places.filter(matchesMapRegion);
-  const used = Object.keys(CATEGORIES).filter((k) => inRegion.some((p) => p.category === k));
+  const counts = new Map();
+  inRegion.forEach((p) => p.category && counts.set(p.category, (counts.get(p.category) || 0) + 1));
+  const used = Object.keys(CATEGORIES).filter((k) => counts.has(k));
   if (state.filter !== "all" && !used.includes(state.filter)) state.filter = "all";
-  $("#chips").innerHTML = [["all", "Все"], ...used.map((k) => [k, CATEGORIES[k].title])]
-    .map(([k, t]) => `<button class="chip" role="tab" aria-selected="${state.filter === k}" data-cat="${k}">${esc(t)}</button>`).join("");
+  const q = mapCategoryText(mapCategoryQuery);
+  const allCount = inRegion.length;
+  const allButton = !q ? `<button class="chip map-category-all" role="tab" aria-selected="${state.filter === "all"}" data-cat="all">Все категории <small>${allCount}</small></button>` : "";
+  const known = new Set();
+  const sections = mapCategoryGroups.map((group) => {
+    const keys = group.keys.filter((key) => used.includes(key));
+    keys.forEach((key) => known.add(key));
+    const filtered = keys.filter((key) => !q || mapCategoryText(`${CATEGORIES[key].title} ${CATEGORIES[key].blurb || ""} ${(categoryAliases[key] || []).join(" ")}`).includes(q));
+    if (!filtered.length) return "";
+    const total = filtered.reduce((sum, key) => sum + counts.get(key), 0);
+    return `<div class="map-category-group">
+      <div class="map-category-heading"><strong>${esc(group.title)}</strong><span>${total} мест</span></div>
+      <div class="map-category-options">${filtered.map((key) => `<button class="chip" role="tab" aria-selected="${state.filter === key}" data-cat="${key}">${esc(CATEGORIES[key].title)} <small>${counts.get(key)}</small></button>`).join("")}</div>
+    </div>`;
+  }).join("");
+  const other = used.filter((key) => !known.has(key) && (!q || mapCategoryText(CATEGORIES[key].title).includes(q)));
+  const otherHtml = other.length ? `<div class="map-category-group"><div class="map-category-heading"><strong>Другие категории</strong><span>${other.reduce((sum,key)=>sum+counts.get(key),0)} мест</span></div><div class="map-category-options">${other.map((key) => `<button class="chip" role="tab" aria-selected="${state.filter === key}" data-cat="${key}">${esc(CATEGORIES[key].title)} <small>${counts.get(key)}</small></button>`).join("")}</div></div>` : "";
+  $("#chips").innerHTML = allButton + sections + otherHtml || `<p class="city-empty">Категории не найдены. Попробуйте другой запрос.</p>`;
 }
 
 function renderList() {
@@ -643,9 +671,11 @@ $("#historyClear")?.addEventListener("click", () => {
   toast("История очищена");
 });
 $("#search").addEventListener("input", (e) => { state.q = e.target.value; applyFilter(); });
+$("#categorySearch").addEventListener("input", (e) => { mapCategoryQuery = e.target.value; renderChips(); });
+
 $("#resetFilters").addEventListener("click", () => {
   Object.assign(state, { filter: "all", region: "all", q: "", minRating: 0, minPrice: null, maxPrice: null, sort: "popularity" });
-  $("#search").value = ""; $("#regionFilter").value = ""; $("#priceMin").value = ""; $("#priceMax").value = "";
+  $("#search").value = ""; $("#regionFilter").value = ""; $("#categorySearch").value = ""; mapCategoryQuery = ""; $("#priceMin").value = ""; $("#priceMax").value = "";
   $("#minRating").value = "0"; $("#sortPlaces").value = "popularity"; closeSheet(); applyFilter();
 });
 const regionInput = $("#regionFilter");
