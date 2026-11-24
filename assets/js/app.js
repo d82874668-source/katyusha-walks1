@@ -485,7 +485,7 @@ async function showRoute(id) {
   if (stops.length < 2) return;
   state.region = stops[0].city || stops[0].region || stops[0].country || "Азербайджан";
   $("#regionFilter").value = state.region;
-  state.filter = "all"; state.q = ""; $("#search").value = "";
+  state.filter = "all"; state.q = "";
   closeSheet(); applyFilter(false);
   $("#map").scrollIntoView({ behavior: "smooth", block: "start" });
   const info = await ensureMap().drawRoute(stops);
@@ -658,10 +658,10 @@ document.addEventListener("click", (e) => {
   if (t.dataset.placeOpen) {
     const place = byId(+t.dataset.placeOpen);
     if (place?.region) { state.region = place.region; $("#regionFilter").value = state.region; }
-    state.filter = "all"; state.q = ""; $("#search").value = ""; applyFilter(false);
+    state.filter = "all"; state.q = ""; applyFilter(false);
     return openPlace(+t.dataset.placeOpen, { scroll: true });
   }
-  if (t.dataset.collection) { state.filter = t.dataset.collection; state.q = ""; $("#search").value = ""; closeSheet(); applyFilter(); return $("#map").scrollIntoView({ behavior: "smooth" }); }
+  if (t.dataset.collection) { state.filter = t.dataset.collection; state.q = ""; closeSheet(); applyFilter(); return $("#map").scrollIntoView({ behavior: "smooth" }); }
   if (t.dataset.showRoute) return showRoute(+t.dataset.showRoute);
 });
 $("#placeList").addEventListener("keydown", (e) => {
@@ -680,7 +680,6 @@ $("#historyClear")?.addEventListener("click", () => {
   renderHistory();
   toast("История очищена");
 });
-$("#search").addEventListener("input", (e) => { state.q = e.target.value; applyFilter(); });
 const categoryInput = $("#categorySearch");
 categoryInput.addEventListener("focus", () => { mapCategoryOpen = true; mapCategoryQuery = ""; categoryInput.value = ""; renderChips(); });
 categoryInput.addEventListener("click", () => { mapCategoryOpen = true; if (categoryInput.value === (state.filter === "all" ? "" : CATEGORIES[state.filter]?.title || "")) categoryInput.value = ""; mapCategoryQuery = ""; renderChips(); });
@@ -725,7 +724,7 @@ document.addEventListener("click", (e) => {
 
 $("#resetFilters").addEventListener("click", () => {
   Object.assign(state, { filter: "all", region: "all", q: "", minRating: 0, minPrice: null, maxPrice: null, sort: "popularity" });
-  $("#search").value = ""; $("#regionFilter").value = ""; $("#categorySearch").value = ""; mapCategoryQuery = ""; mapCategoryOpen = false; $("#priceMin").value = ""; $("#priceMax").value = "";
+  $("#regionFilter").value = ""; $("#categorySearch").value = ""; mapCategoryQuery = ""; mapCategoryOpen = false; $("#priceMin").value = ""; $("#priceMax").value = "";
   $("#minRating").value = "0"; $("#sortPlaces").value = "popularity"; closeSheet(); applyFilter();
 });
 const regionInput = $("#regionFilter");
