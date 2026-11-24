@@ -156,15 +156,15 @@
     {
       "id": 5,
       "title": "Capybara Land",
-      "description": "Nasimi Gardens, Шамахы. Знакомство с капибарами, кафе и сувенирный магазин.",
+      "description": "Специализированная ферма капибар на территории комплекса Nasimi Gardens в Шамахы. Посетители могут увидеть, погладить и покормить животных. В комплексе также есть кафе, сувенирный магазин и семейные зоны.",
       "category": "capybara",
-      "latitude": 40.6314,
-      "longitude": 48.6364,
+      "latitude": 40.63644487827378,
+      "longitude": 48.61395865656243,
       "image": "https://shimal.news/storage/thumbs/aspect/2025/12/15/pHnlj69hWnSFTgnMaUSFta2fRAr2JVMUrF40shKB.png",
       "is_approx": true,
       "region": "Азербайджан",
       "city": "Шамахы",
-      "address": null,
+      "address": "Nasimi Gardens, Şamaxı–İsmayıllı yolu, Şамахы, Azerbaijan",
       "price_min": null,
       "price_max": null,
       "price_unit": null,
@@ -174,12 +174,12 @@
       "phone": null,
       "map_url": null,
       "source_urls": [
-        "https://shimal.news/cemiyyet/samaxida-kapibaralar-meskunlasib",
-        "https://shimal.news/storage/thumbs/aspect/2025/12/15/pHnlj69hWnSFTgnMaUSFta2fRAr2JVMUrF40shKB.png"
+        "https://president.az/en/articles/view/73522",
+        "https://openchargemap.io/poi/details/513732"
       ],
       "website": null,
       "status": "active",
-      "verification_status": "needs_review",
+      "verification_status": "partially_verified",
       "subcategory": null,
       "features": {},
       "additional_services": [],
@@ -188,8 +188,8 @@
       "official_name": null,
       "original_name": null,
       "country": "Азербайджан",
-      "coord_source": null,
-      "description_source": null
+      "coord_source": "Координаты комплекса Nasimi Gardens; точка самой фермы капибар не подтверждена",
+      "description_source": "Официальная публикация о комплексе Nasimi Gardens"
     },
     {
       "id": 6,
