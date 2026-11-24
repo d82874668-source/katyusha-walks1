@@ -29,7 +29,7 @@ export const ROLES = {
   walk:    { title: "Прогулка", cats: ["park", "garden", "square", "embankment", "city", "beach", "sea", "viewpoint", "attraction"] },
   photo:   { title: "Красивое место", cats: ["viewpoint", "attraction", "city", "embankment", "square", "park"] },
   culture: { title: "Культура", cats: ["museum", "exhibition", "attraction", "zoo", "cultural_space"] },
-  meal:    { title: "Обед или ужин", cats: ["restaurant", "cafe", "foodcourt"] },
+  meal:    { title: "Обед или ужин", cats: ["restaurant", "cafe", "foodcourt", "fastfood"] },
   cafe:    { title: "Кофе и десерты", cats: ["coffee", "bakery", "cafe", "anticafe"] },
   drinks:  { title: "Кафе или бар", cats: ["cafe", "coffee", "bar", "pub", "winebar", "lounge", "hookah"] },
   fun:     { title: "Развлечения", cats: ["entertainment", "vr", "quest", "karaoke", "billiards", "bowling", "gaming", "gaming247", "esports", "gamecenter", "aquapark", "cinema"] },
