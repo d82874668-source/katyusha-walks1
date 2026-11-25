@@ -1092,3 +1092,5 @@ html[data-theme="light"] .map-tools button{
   html[data-theme="light"] .header .brand .brand-name{color:#202b29!important}
   html[data-theme="light"] .header .brand .brand-tagline{color:#737d76!important}
 }
+
+/* Theme menu/logo mobile visibility patch deployment marker */
