@@ -856,3 +856,181 @@ html[data-theme="light"] body{background:#faf7f2;color:#1a2332}
  #chips .chip{flex:0 0 auto;min-height:44px;padding:10px 13px;font-size:12px}
  .mobile-theme-toggle{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;z-index:1301!important;position:relative!important}
 }
+
+/* ===== v13: reliable mobile category filters + complete theme palettes ===== */
+/* Keep category controls in the catalog visible regardless of the horizontal chip shell. */
+#view-catalog #chips,
+#view-catalog .kw-chip-shell{
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+  clip:auto!important;
+  position:relative!important;
+}
+#view-catalog .kw-chip-shell{align-items:center!important;gap:6px!important;margin:8px 0 18px!important}
+#view-catalog #chips{
+  flex:1 1 auto!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  min-height:48px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  padding:5px 3px 10px!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior-x:contain!important;
+  touch-action:pan-x!important;
+}
+#view-catalog #chips .chip{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  visibility:visible!important;
+  opacity:1!important;
+  min-height:42px!important;
+  white-space:nowrap!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+}
+#view-catalog .kw-multi-filter-note{
+  display:block!important;visibility:visible!important;opacity:1!important;
+  margin:0 0 8px 2px!important;font-size:12px!important;line-height:1.45!important;
+}
+#view-catalog .kw-chip-arrow{display:grid!important;flex:0 0 30px!important;width:30px!important;height:30px!important}
+@media(max-width:760px){
+  #view-catalog .filters{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important}
+  #view-catalog .filters>*{min-width:0!important;max-width:100%!important}
+  #view-catalog .filters input{grid-column:1/-1!important;width:100%!important}
+  #view-catalog .kw-chip-shell{display:block!important;width:100%!important;margin:8px 0 18px!important}
+  #view-catalog .kw-chip-arrow{display:none!important}
+  #view-catalog #chips{display:flex!important;width:100%!important;min-height:50px!important;gap:8px!important;padding:5px 2px 12px!important}
+  #view-catalog #chips .chip{min-height:44px!important;padding:10px 13px!important;font-size:12px!important}
+  #view-catalog .kw-multi-filter-note{font-size:11px!important;margin:0 0 8px 2px!important}
+}
+
+/* Light theme: reset the always-dark premium layer, not just a few isolated controls. */
+html[data-theme="light"]{
+  color-scheme:light!important;
+  --kw-bg:#f6f5ef!important;
+  --kw-panel:#ffffff!important;
+  --kw-panel-strong:#ffffff!important;
+  --kw-line:#e5e6dd!important;
+  --kw-text:#202b29!important;
+  --kw-ink:#202b29!important;
+  --kw-muted:#737d76!important;
+  --kw-accent:#b85b43!important;
+  --kw-accent-2:#c66b50!important;
+  --kw-shadow:0 14px 38px rgba(33,43,38,.075)!important;
+}
+html[data-theme="light"],
+html[data-theme="light"] body{
+  background:#f6f5ef!important;
+  color:#202b29!important;
+  color-scheme:light!important;
+}
+html[data-theme="light"] body{background-image:none!important}
+html[data-theme="light"] .header{
+  background:rgba(250,249,245,.97)!important;
+  border-bottom:1px solid #e5e6dd!important;
+  box-shadow:0 3px 20px rgba(33,43,38,.06)!important;
+  -webkit-backdrop-filter:blur(16px)!important;backdrop-filter:blur(16px)!important;
+}
+html[data-theme="light"] .brand-name,
+html[data-theme="light"] .h1,
+html[data-theme="light"] .h2,
+html[data-theme="light"] .section-title,
+html[data-theme="light"] .empty-title,
+html[data-theme="light"] main{color:#202b29!important}
+html[data-theme="light"] .brand-tagline,
+html[data-theme="light"] .section-subtitle,
+html[data-theme="light"] .guide-hero p,
+html[data-theme="light"] .discovery-tile small{color:#737d76!important}
+html[data-theme="light"] .header .nav button{color:#526057!important}
+html[data-theme="light"] .header .nav button:hover,
+html[data-theme="light"] .header .nav button.active{
+  color:#344f3c!important;background:#e9eee7!important;
+}
+html[data-theme="light"] .header .nav button.active:after{background:#b85b43!important}
+html[data-theme="light"] .header-cta,
+html[data-theme="light"] .btn-primary,
+html[data-theme="light"] .hero-search button{
+  background:#b85b43!important;color:#fff!important;border-color:#b85b43!important;
+}
+html[data-theme="light"] .place-card,
+html[data-theme="light"] .discovery-tile,
+html[data-theme="light"] .route-builder,
+html[data-theme="light"] .guide-panel,
+html[data-theme="light"] .builder-stop,
+html[data-theme="light"] .map-list-bar,
+html[data-theme="light"] .theme-collection-card,
+html[data-theme="light"] .collection-card,
+html[data-theme="light"] .route-panel,
+html[data-theme="light"] .modal,
+html[data-theme="light"] .modal-title,
+html[data-theme="light"] .modal-body,
+html[data-theme="light"] .map-chooser,
+html[data-theme="light"] .route-point,
+html[data-theme="light"] .modal-info-card{
+  background:#fff!important;color:#202b29!important;border-color:#e5e6dd!important;
+  box-shadow:0 8px 26px rgba(33,43,38,.055)!important;
+}
+html[data-theme="light"] .place-title,
+html[data-theme="light"] .modal-title h2,
+html[data-theme="light"] .modal-info-card .value,
+html[data-theme="light"] .route-builder h2,
+html[data-theme="light"] .builder-stop-info b,
+html[data-theme="light"] .map-list-bar b{color:#202b29!important}
+html[data-theme="light"] .place-addr,
+html[data-theme="light"] .place-desc,
+html[data-theme="light"] .place-city,
+html[data-theme="light"] .place-more,
+html[data-theme="light"] .modal-title p,
+html[data-theme="light"] .modal-body p,
+html[data-theme="light"] .modal-info-card .label,
+html[data-theme="light"] .builder-stop-info small,
+html[data-theme="light"] .route-builder p,
+html[data-theme="light"] .empty-text,
+html[data-theme="light"] .route-empty{color:#737d76!important}
+html[data-theme="light"] .filters select,
+html[data-theme="light"] .filters input,
+html[data-theme="light"] .guide-field select,
+html[data-theme="light"] .guide-field input,
+html[data-theme="light"] .guide-field textarea,
+html[data-theme="light"] .hero-search,
+html[data-theme="light"] .hero-search input,
+html[data-theme="light"] .chip,
+html[data-theme="light"] .btn-ghost,
+html[data-theme="light"] .filters button,
+html[data-theme="light"] .guide-shortcuts button,
+html[data-theme="light"] .builder-stop button,
+html[data-theme="light"] .map-chooser a,
+html[data-theme="light"] .map-chooser button{
+  background:#fff!important;color:#26342e!important;border:1px solid #e1e5dc!important;
+}
+html[data-theme="light"] .filters select option{background:#fff!important;color:#26342e!important}
+html[data-theme="light"] .filters input::placeholder,
+html[data-theme="light"] .hero-search input::placeholder{color:#89938b!important}
+html[data-theme="light"] .chip.active{
+  background:#344f3c!important;color:#fff!important;border-color:#344f3c!important;
+}
+html[data-theme="light"] .kw-chip-arrow{
+  background:#fff!important;color:#344f3c!important;border-color:#dfe5dc!important;
+}
+html[data-theme="light"] .kw-multi-filter-note{color:#737d76!important}
+html[data-theme="light"] .place-foot,
+html[data-theme="light"] .similar-section{border-color:#e5e6dd!important}
+html[data-theme="light"] .modal-overlay,
+html[data-theme="light"] .overlay{background:rgba(26,35,50,.58)!important}
+html[data-theme="light"] .photo-credit{background:#fff!important;color:#737d76!important}
+html[data-theme="light"] .mobile-theme-toggle{
+  background:#fff!important;color:#26342e!important;border-color:#d9e0d7!important;
+  box-shadow:0 3px 12px rgba(33,43,38,.12)!important;
+}
+html[data-theme="light"] .kw-map-note,
+html[data-theme="light"] .map-tools button{
+  background:rgba(255,255,255,.96)!important;color:#26342e!important;border-color:#e5e6dd!important;
+}
