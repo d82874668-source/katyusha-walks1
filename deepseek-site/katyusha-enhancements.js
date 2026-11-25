@@ -387,10 +387,15 @@ window.onMapFilters=function(){
  repaint(true);
 };
 window.filterCat=function(value){
- state.cat=state.mapCat=value||'all';
+ const key=value||'all';
+ if(key==='all')state.catalogCats=[];
+ else{const selected=new Set(Array.isArray(state.catalogCats)?state.catalogCats:[]);if(selected.has(key))selected.delete(key);else selected.add(key);state.catalogCats=[...selected];}
+ state.cat=state.catalogCats.length===1?state.catalogCats[0]:'all';
+ state.mapCat=state.cat;
  if($('mapCatFilter'))$('mapCatFilter').value=state.mapCat;
  repaint(true);
  if(typeof window.renderChips==='function')window.renderChips();
+ if(typeof window.renderCatalog==='function')window.renderCatalog();
 };
 })();
 
