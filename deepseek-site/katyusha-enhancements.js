@@ -194,11 +194,12 @@ function drawChips(){
  const host=$('chips');if(!host)return;
  const used=[...new Set(PLACES.map(p=>p.category).filter(Boolean))].sort((a,b)=>categoryName(a).localeCompare(categoryName(b),'ru'));
  const selected=Array.isArray(state.catalogCats)?state.catalogCats:[];
- host.innerHTML=[['all','Все'],...used.map(k=>[k,categoryName(k)])].map(([k,label])=>'<button type="button" class="chip'+((k==='all'?!selected.length:selected.includes(k))?' active':'')+'" aria-pressed="'+(k==='all'?!selected.length:selected.includes(k))+'" onclick="filterCat(decodeURIComponent(\\''+encodeURIComponent(k)+'\\'))"><i class="chip-icon" data-lucide="'+iconFor(k)+'" aria-hidden="true"></i><span>'+esc(label)+'</span></button>').join('');
+ host.innerHTML=[['all','Все'],...used.map(k=>[k,categoryName(k)])].map(([k,label])=>'<button type="button" class="chip'+((k==='all'?!selected.length:selected.includes(k))?' active':'')+'" data-category="'+encodeURIComponent(k)+'" aria-pressed="'+(k==='all'?!selected.length:selected.includes(k))+'"><i class="chip-icon" data-lucide="'+iconFor(k)+'" aria-hidden="true"></i><span>'+esc(label)+'</span></button>').join('');
  let note=host.parentElement.querySelector('.kw-multi-filter-note');
  if(!note){note=document.createElement('div');note.className='kw-multi-filter-note';host.parentElement.insertBefore(note,host);}
- note.textContent=selected.length?'Выбрано категорий: '+selected.length+' · места из любой выбранной категории':'Можно выбрать несколько категорий одновременно';
+ note.textContent=selected.length?'Выбрано категорий: '+selected.length+' · показаны места из любой выбранной категории':'Можно выбрать несколько категорий одновременно';
  if(window.lucide&&lucide.createIcons)lucide.createIcons({attrs:{'stroke-width':1.8}});
+ if(!host.dataset.multiFilterBound){host.dataset.multiFilterBound='1';host.addEventListener('click',event=>{const button=event.target.closest('button[data-category]');if(!button)return;const value=decodeURIComponent(button.dataset.category||'all');if(typeof window.filterCat==='function')window.filterCat(value);});}
 }
 window.renderChips=drawChips;
 function priceText(p){
@@ -406,51 +407,3 @@ window.filterCat=function(value){
 })();
 
 
-/* ===== Multi-category catalog filters ===== */
-(function(){
- 'use strict';
- const $=id=>document.getElementById(id);
- const baseFiltered=window.filteredPlaces;
- if(typeof baseFiltered!=='function')return;
- if(!Array.isArray(state.catalogCats))state.catalogCats=[];
- window.filteredPlaces=function(map){
-  if(map)return baseFiltered(true);
-  const chosen=Array.isArray(state.catalogCats)?state.catalogCats:[];
-  const previous=state.cat;state.cat='all';
-  let list=baseFiltered(false);
-  state.cat=previous;
-  return chosen.length?list.filter(p=>chosen.includes(p.category)):list;
- };
- window.filterCat=function(value){
-  const key=value||'all';
-  if(key==='all')state.catalogCats=[];
-  else{
-   const selected=new Set(Array.isArray(state.catalogCats)?state.catalogCats:[]);
-   if(selected.has(key))selected.delete(key);else selected.add(key);
-   state.catalogCats=[...selected];
-  }
-  state.cat=state.catalogCats.length===1?state.catalogCats[0]:'all';
-  state.mapCat=state.catalogCats.length===1?state.catalogCats[0]:'all';
-  if($('mapCatFilter'))$('mapCatFilter').value=state.mapCat;
-  if(typeof window.renderCatalog==='function')window.renderCatalog();
-  if(state.view==='map'&&typeof window.updateMapMarkers==='function')window.updateMapMarkers();
-  if(typeof window.renderChips==='function')window.renderChips();
- };
- const prune=function(){
-  const country=$('countryFilter')?.value||'all',city=$('cityFilter')?.value||'all';
-  const allowed=new Set(PLACES.filter(p=>(country==='all'||p.country===country)&&(city==='all'||p.city_key===city)).map(p=>p.category));
-  state.catalogCats=(state.catalogCats||[]).filter(k=>allowed.has(k));
-  if(state.catalogCats.length===1){state.cat=state.catalogCats[0];state.mapCat=state.catalogCats[0];}
-  else{state.cat='all';state.mapCat='all';}
-  if($('mapCatFilter')&&[...$('mapCatFilter').options].some(o=>o.value===state.mapCat))$('mapCatFilter').value=state.mapCat;
- };
- ['onCountry','onCity'].forEach(name=>{
-  const original=window[name];if(typeof original!=='function')return;
-  window[name]=function(value){const result=original(value);prune();if(typeof window.renderCatalog==='function')window.renderCatalog();if(typeof window.renderChips==='function')window.renderChips();return result;};
- });
- const reset=window.resetFilters;
- if(typeof reset==='function')window.resetFilters=function(){state.catalogCats=[];return reset.apply(this,arguments);};
- const css=document.createElement('style');
- css.textContent='.kw-multi-filter-note{font-size:12px;color:#7b746b;margin:-10px 0 12px 2px}.chip[aria-pressed="true"]{box-shadow:0 0 0 2px rgba(199,93,69,.16)}';
- document.head.appendChild(css);
-})();
