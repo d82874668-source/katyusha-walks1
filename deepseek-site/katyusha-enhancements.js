@@ -400,6 +400,26 @@ window.filterCat=function(value){
 })();
 
 
+
+/* ===== v13 mobile catalog safety net ===== */
+(function(){
+ const baseNav=window.nav;
+ if(typeof baseNav==='function'&&!baseNav.__kwMobileCatalogFix){
+  const wrapped=function(view){
+   const result=baseNav.apply(this,arguments);
+   if(view==='catalog'){
+    const host=document.getElementById('chips');
+    if(host){host.hidden=false;host.removeAttribute('hidden');host.style.display='flex';drawChips();}
+   }
+   return result;
+  };
+  wrapped.__kwMobileCatalogFix=true;
+  window.nav=wrapped;
+ }
+ const host=document.getElementById('chips');
+ if(host){host.hidden=false;host.removeAttribute('hidden');}
+})();
+
 /* ===== HOME PAGE PHOTO INTEGRITY ===== */
 (function(){
  const root=document.getElementById('view-home');if(!root)return;
