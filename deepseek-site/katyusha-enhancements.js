@@ -388,3 +388,15 @@ window.filterCat=function(value){
  if(typeof window.renderChips==='function')window.renderChips();
 };
 })();
+
+
+/* ===== HOME PAGE PHOTO INTEGRITY ===== */
+(function(){
+ const root=document.getElementById('view-home');if(!root)return;
+ document.addEventListener('error',function(event){
+  const img=event.target;if(!(img instanceof HTMLImageElement)||!root.contains(img)||img.closest('.hero'))return;
+  const card=img.closest('.place-card,.city-card');if(!card)return;
+  const grid=card.parentElement;card.remove();
+  if(grid&&!grid.children.length){const section=grid.closest('section');if(section)section.hidden=true;}
+ },true);
+})();
