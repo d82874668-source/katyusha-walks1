@@ -409,7 +409,7 @@ window.filterCat=function(value){
    const result=baseNav.apply(this,arguments);
    if(view==='catalog'){
     const host=document.getElementById('chips');
-    if(host){host.hidden=false;host.removeAttribute('hidden');host.style.display='flex';drawChips();}
+    if(host){host.hidden=false;host.removeAttribute('hidden');host.style.display='flex';if(typeof window.renderChips==='function')window.renderChips();}
    }
    return result;
   };
